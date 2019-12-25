@@ -6,11 +6,14 @@
  */
 
 #include "../logging/logging.h"
+#include "fl_shader.h"
 #include "rendering.h"
 
 void Renderer::close() {
 	log_progress("Closing rendering libraries");
-	glDeleteProgram( gProgramID );
+
+	if ( cur_shader )
+		delete cur_shader;
 
 	SDL_DestroyWindow( window );
 	window = NULL;

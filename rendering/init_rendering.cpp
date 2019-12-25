@@ -4,55 +4,23 @@
  */
 
 #include "../logging/logging.h"
+#include "fl_shader.h"
 #include "rendering.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-bool Renderer::init_gl() {
-	log_progress("Initializing OpenGL");
-
-	gProgramID = glCreateProgram();
-
-	GLuint vertex_shader_id = attach_shader( "shaders/basic_vertex_shader.glfs", GL_VERTEX_SHADER );
-	if (vertex_shader_id == 0)
-		return false;
-
-	GLuint fragment_shader_id = attach_shader( "shaders/basic_fragment_shader.glfs", GL_FRAGMENT_SHADER );
-	if (fragment_shader_id == 0)
-		return false;
-
-	// Link program
-	
-	glLinkProgram( gProgramID );
-	
-	GLint programSuccess = GL_TRUE;
-	glGetProgramiv( gProgramID, GL_LINK_STATUS, &programSuccess );
-	if ( programSuccess != GL_TRUE ) {
-		log_error("Error Linking program");
-		return false;
-	}
-
-	// Clean up shaders
-	glDeleteShader( vertex_shader_id );
-	glDeleteShader( fragment_shader_id );
-
-	// Get vertex attribute location
-	gVertexPos2DLocation = glGetAttribLocation( gProgramID, "LVertexPos2D" );
-	if ( gVertexPos2DLocation == -1 ) {
-		log_error("LVertexPos2D is not a valid glsl program variable");
-		return false;
-	}
-
-	glClearColor( 0.1f, 0.f, 0.f, 0.05f );
+bool Renderer::init_shaders() {
+	cur_shader = new FLShader("basic_shader");
+	cur_shader->create_program();
 
 	// VBO
 	GLfloat vertexData[] = 
 	{
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f,
-		-0.5f, 0.5f
+		0.f, 0.f,
+		16.f, 0.f,
+		16.f, 16.f,
+		0.f, 16.f
 	};
 
 	// IBO
@@ -67,6 +35,37 @@ bool Renderer::init_gl() {
 	glGenBuffers( 1, &gIBO );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
+
+	return true;
+}
+
+bool Renderer::init_gl() {
+	log_progress("Initializing OpenGL");
+
+	// Set viewport
+	glViewport( 0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT );
+
+	// Initialize projection matrix
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
+	glOrtho( 0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 1.0, -1.0);
+
+	// Initialize modelview matrix
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
+
+	glClearColor( 0.1f, 0.f, 0.f, 0.05f );
+	glEnable( GL_TEXTURE_2D );
+	glEnable( GL_BLEND );
+	glDisable( GL_DEPTH_TEST );
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+	GLenum error = glGetError();
+
+	if ( error != GL_NO_ERROR ) {
+		log_error("Could not initialize OpenGL");
+		return false;
+	}
 
 	return true;
 }
@@ -120,6 +119,10 @@ bool Renderer::init() {
 	}
 	if (!init_gl()) {
 		log_error("Could not initialize OpenGL");
+		return false;
+	}
+	if (!init_shaders()) {
+		log_error("Could not initialize shaders");
 		return false;
 	}
 

@@ -11,12 +11,13 @@
 #include <SDL2/SDL_opengl.h>
 #include <string>
 
+class FLShader;
+
 class Renderer {
 	private:
 		Renderer() : 	window(NULL),
 				context(0),
-				gProgramID(0),
-				gVertexPos2DLocation(-1),
+				cur_shader(nullptr),
 				gVBO(0),
 				gIBO(0)
 		{};
@@ -31,19 +32,18 @@ class Renderer {
 		// Member variables
 		SDL_Window* window;
 		SDL_GLContext context;
-		GLuint gProgramID;
-		GLint gVertexPos2DLocation;
 		GLuint gVBO;
 		GLuint gIBO;
+
+		FLShader *cur_shader;
 
 		// Private methods
 		bool init_sdl();	
 		bool init_window();	
 		bool init_gl();	
+		bool init_shaders();
 	public:
 		// Public methods
-		GLuint attach_shader(const GLchar* source[], GLenum shaderType);
-		GLuint attach_shader(std::string path, GLenum shaderType);
 		void render_and_swap();
 		void close();
 
