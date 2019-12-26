@@ -33,7 +33,7 @@ void Renderer::render() {
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
 
 		shader->set_vertex_pointer( 0, NULL );
-		glDrawElements( GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL );
+		glDrawElements( GL_TRIANGLE_STRIP, 10, GL_UNSIGNED_INT, NULL );
 	
 	shader->disable_vertex_pointer();
 }

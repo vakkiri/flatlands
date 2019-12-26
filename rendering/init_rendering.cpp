@@ -10,6 +10,8 @@
 #include "fl_rect_shader.h"
 #include "rendering.h"
 
+#define PRIMITIVE_RESTART 65535
+
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
@@ -62,7 +64,7 @@ bool Renderer::init_shaders() {
 	};
 
 	// IBO
-	GLuint indexData[] = { 0, 1, 2, 3, 4, 5, 6, 7};
+	GLuint indexData[] = { 1, 0, 2, 3, PRIMITIVE_RESTART, 5, 4, 6, 7, PRIMITIVE_RESTART};
 
 	// Create VBO
 	glGenBuffers( 1, &gVBO );
@@ -72,7 +74,7 @@ bool Renderer::init_shaders() {
 	// Create IBO
 	glGenBuffers( 1, &gIBO );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 2 * 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 2 * 5 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
 
 	return true;
 }
@@ -89,6 +91,8 @@ bool Renderer::init_gl() {
 	glEnable( GL_BLEND );
 	glDisable( GL_DEPTH_TEST );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glEnable(GL_PRIMITIVE_RESTART);
+	glPrimitiveRestartIndex(PRIMITIVE_RESTART);
 
 	if ( (error = glGetError()) != GL_NO_ERROR ) {
 		log_error("Could not initialize OpenGL");
