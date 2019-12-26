@@ -10,4 +10,4 @@ The following libraries are used:
 
 SDL2
 OpenGL 3.x
-
+OpenGL Mathematics (libglm-dev)

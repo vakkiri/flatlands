@@ -6,35 +6,36 @@
  */
 
 #include <fstream>
+#include <glm/ext.hpp>
 
+#include "../basic_types/basic_types.h"
 #include "../logging/logging.h"
-#include "fl_shader.h"
+#include "fl_rect_shader.h"
 #include "rendering.h"
 
 #define DEFAULT_PROGRAM 0
 
 void Renderer::render() {
 	glClear( GL_COLOR_BUFFER_BIT );
-	glLoadIdentity();
 
-	if ( cur_shader )
-		glUseProgram( cur_shader->get_program() );
-	else
+	if ( !cur_shader ) {
 		log_warning( "No shader for rendering." );
+		return;
+	}
 
-	glEnableClientState( GL_VERTEX_ARRAY );
+	FLRectShader* shader = (FLRectShader*) cur_shader;
+	shader->set_modelview(glm::mat4(1.0));
+	shader->update_modelview();
 
-		// set vertex data in VBO
+	shader->enable_vertex_pointer();
+
 		glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-		glVertexPointer(2, GL_FLOAT, 0, NULL);
-
-		// set index data in IBO and render
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
-		glDrawElements( GL_QUADS, 4, GL_UNSIGNED_INT, NULL );
 
-	glDisableClientState( GL_VERTEX_ARRAY );
-
-	glUseProgram( DEFAULT_PROGRAM );
+		shader->set_vertex_pointer( 0, NULL );
+		glDrawElements( GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL );
+	
+	shader->disable_vertex_pointer();
 }
 
 void Renderer::render_and_swap() {

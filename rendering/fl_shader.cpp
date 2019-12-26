@@ -5,6 +5,7 @@
  *
  */
 
+#include <glm/ext.hpp>
 #include <fstream>
 
 #include "../logging/logging.h"
@@ -26,10 +27,10 @@ FLShader::~FLShader() {
 }
 
 bool FLShader::bind() {
+	GLenum error;
 	glUseProgram( program_id );
 
-	GLenum error = glGetError();
-
+	error = glGetError();
 	if ( error != GL_NO_ERROR ) {
 		log_error( "Error binding shader." );
 		return false;
@@ -85,6 +86,7 @@ bool FLShader::create_program(std::string program_name) {
 	GLuint vertex_shader = load_shader( v_path, GL_VERTEX_SHADER );
 
 	if ( vertex_shader == 0 ) {
+		log_error("Error loading vertex shader.");
 		glDeleteProgram( program_id );
 		program_id = NO_PROGRAM;
 		return false;
@@ -93,6 +95,7 @@ bool FLShader::create_program(std::string program_name) {
 	GLuint fragment_shader = load_shader( f_path, GL_FRAGMENT_SHADER );
 
 	if ( fragment_shader == 0 ) {
+		log_error("Error loading fragment shader.");
 		glDeleteShader( vertex_shader );
 		glDeleteProgram( program_id );
 		program_id = NO_PROGRAM;
@@ -116,6 +119,21 @@ bool FLShader::create_program(std::string program_name) {
 	glDeleteShader( vertex_shader );
 	glDeleteShader( fragment_shader );
 
+	// Get matrix uniform locations
+	projection_matrix_location = glGetUniformLocation( program_id, "LProjectionMatrix");
+	
+	if ( projection_matrix_location == -1 ) {
+		log_error( "Could not load shader projection uniform" );
+		return false;
+	}
+
+	modelview_matrix_location = glGetUniformLocation( program_id, "LModelViewMatrix");
+
+	if ( modelview_matrix_location == -1 ) {
+		log_error( "Could not load shader modelview uniform" );
+		return false;
+	}
+
 	return true;
 }
 
@@ -125,4 +143,20 @@ bool FLShader::create_program() {
 
 GLuint FLShader::get_program() {
 	return program_id;
+}
+
+void FLShader::set_projection( glm::mat4 matrix ) {
+	projection_matrix = matrix;
+}
+
+void FLShader::update_projection() {
+	glUniformMatrix4fv( projection_matrix_location, 1, GL_FALSE, glm::value_ptr( projection_matrix ));
+}
+
+void FLShader::set_modelview( glm::mat4 matrix ) {
+	modelview_matrix = matrix;
+}
+
+void FLShader::update_modelview() {
+	glUniformMatrix4fv( modelview_matrix_location, 1, GL_FALSE, glm::value_ptr( modelview_matrix ));
 }

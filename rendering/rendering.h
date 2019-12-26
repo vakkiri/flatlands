@@ -42,6 +42,9 @@ class Renderer {
 		bool init_window();	
 		bool init_gl();	
 		bool init_shaders();
+	protected:
+		unsigned int screen_height;
+		unsigned int screen_width;
 	public:
 		// Public methods
 		void render_and_swap();

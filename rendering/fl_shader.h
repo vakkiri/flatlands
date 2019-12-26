@@ -12,16 +12,20 @@
 
 #include <string>
 #include <SDL2/SDL_opengl.h>
-
+#include <glm/glm.hpp>
 class FLShader {
 	public:
 		FLShader();
 		FLShader(std::string name);
 		virtual ~FLShader();
 
-		bool create_program(std::string program_name);
-		bool create_program();
+		virtual bool create_program(std::string program_name);
+		virtual bool create_program();
 
+		void set_projection( glm::mat4 matrix );
+		void update_projection();
+		void set_modelview( glm::mat4 matrix );
+		void update_modelview();
 		bool bind();
 		void unbind();
 
@@ -33,6 +37,11 @@ class FLShader {
 		std::string name;
 		GLuint program_id;
 
+		glm::mat4 projection_matrix;
+		GLint projection_matrix_location;
+
+		glm::mat4 modelview_matrix;
+		GLint modelview_matrix_location;
 };
 
 #endif

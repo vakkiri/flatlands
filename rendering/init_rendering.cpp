@@ -3,67 +3,96 @@
  *
  */
 
+#include <iostream>
+#include <glm/ext.hpp>
+
 #include "../logging/logging.h"
-#include "fl_shader.h"
+#include "fl_rect_shader.h"
 #include "rendering.h"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 bool Renderer::init_shaders() {
-	cur_shader = new FLShader("basic_shader");
-	cur_shader->create_program();
+	GLenum error;
 
+	log_progress("Initializing shaders");
+	cur_shader = new FLRectShader("basic_shader");
+	cur_shader->create_program();
+	cur_shader->bind();
+	
+	if ( (error = glGetError()) != GL_NO_ERROR ) {
+		log_error("Could not create shader");
+		std::cout << "Error: " << error;
+		return false;
+	}
+
+	//initialize shader matrices
+	cur_shader->set_projection( glm::ortho<GLfloat>( 0.0, (float)screen_width, (float)screen_height, 0.0, 1.0, -1.0) );
+	cur_shader->update_projection();
+
+	if ( (error = glGetError()) != GL_NO_ERROR ) {
+		log_error("Could not set shader projection matrix");
+		std::cout << "Error: " << error;
+		return false;
+	}
+
+	cur_shader->set_modelview( glm::mat4() );
+	cur_shader->update_modelview();
+
+	if ( (error = glGetError()) != GL_NO_ERROR ) {
+		log_error("Could not set shader modelview matrix");
+		std::cout << "Error: " << error;
+		return false;
+	}
 	// VBO
 	GLfloat vertexData[] = 
 	{
-		0.f, 0.f,
+		// rect 1
+		0, 0.f,
 		16.f, 0.f,
 		16.f, 16.f,
-		0.f, 16.f
+		0.f, 16.f,
+
+		// rect 2
+		32, 32,
+		64, 32,
+		64, 64,
+		32, 64
 	};
 
 	// IBO
-	GLuint indexData[] = { 0, 1, 2, 3 };
+	GLuint indexData[] = { 0, 1, 2, 3, 4, 5, 6, 7};
 
 	// Create VBO
 	glGenBuffers( 1, &gVBO );
 	glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-	glBufferData( GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, 2 * 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
 	
 	// Create IBO
 	glGenBuffers( 1, &gIBO );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 2 * 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
 
 	return true;
 }
 
 bool Renderer::init_gl() {
+	GLenum error;
 	log_progress("Initializing OpenGL");
 
 	// Set viewport
-	glViewport( 0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT );
+	glViewport( 0.f, 0.f, (float) screen_width, (float) screen_height );
 
-	// Initialize projection matrix
-	glMatrixMode( GL_PROJECTION );
-	glLoadIdentity();
-	glOrtho( 0.0, SCREEN_WIDTH, SCREEN_HEIGHT, 0.0, 1.0, -1.0);
-
-	// Initialize modelview matrix
-	glMatrixMode( GL_MODELVIEW );
-	glLoadIdentity();
-
-	glClearColor( 0.1f, 0.f, 0.f, 0.05f );
+	glClearColor( 0.1f, 0.f, 0.05f, 1.0f );
 	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_BLEND );
 	glDisable( GL_DEPTH_TEST );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-	GLenum error = glGetError();
-
-	if ( error != GL_NO_ERROR ) {
+	if ( (error = glGetError()) != GL_NO_ERROR ) {
 		log_error("Could not initialize OpenGL");
+		std::cout << "Error: " << error;
 		return false;
 	}
 
@@ -73,7 +102,7 @@ bool Renderer::init_gl() {
 bool Renderer::init_window() {
 	log_progress("Creating window");
 
-	window = SDL_CreateWindow( "shift", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+	window = SDL_CreateWindow( "shift", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
 	if ( window == nullptr ) {
 		log_error( SDL_GetError() );
 		return false;
@@ -108,7 +137,9 @@ bool Renderer::init_sdl() {
 
 bool Renderer::init() {
 	log_progress("Initializing rendering engine");
-	
+	screen_width = SCREEN_WIDTH;
+	screen_height = SCREEN_WIDTH;
+
 	if (!init_sdl()) {
 		log_error("Could not initialize SDL");
 		return false;

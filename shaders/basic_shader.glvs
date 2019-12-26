@@ -2,9 +2,12 @@
 
 uniform mat4 LProjectionMatrix;
 uniform mat4 LModelViewMatrix;
+
 in vec2 LVertexPos2D;
+out vec4 multiColor;
 
 void main() {
+	multiColor = vec4( 0.0, 1.0, 0.0, 1.0 );
 	gl_Position = LProjectionMatrix * LModelViewMatrix * vec4( LVertexPos2D.x, LVertexPos2D.y, 0.0, 1.0 );
 }
 
