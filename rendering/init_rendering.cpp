@@ -28,6 +28,29 @@ bool Renderer::init_shaders() {
 		return false;
 	}
 
+	std::vector<rect> rects;
+	rect r1;
+	r1.x = 0.f;
+	r1.y = 0.f;
+	r1.w = 16.f;
+	r1.h = 16.f;
+	rect r2;
+	r2.x = 40.f;
+	r2.y = 50.f;
+	r2.w = 16.f;
+	r2.h = 16.f;
+	rect r3;
+	r3.x = 400.f;
+	r3.y = 200.f;
+	r3.w = 16.f;
+	r3.h = 16.f;
+
+	rects.push_back(r1);
+	rects.push_back(r2);
+	rects.push_back(r3);
+	
+	static_rect_shader.set_geometry(rects);
+
 	//initialize shader projection matrix
 	static_rect_shader.set_projection( glm::ortho<GLfloat>( 0.0, screen_width, screen_height, 0.0, 1.0, -1.0 ) );
 	static_rect_shader.update_projection();
@@ -36,8 +59,9 @@ bool Renderer::init_shaders() {
 	static_rect_shader.set_camera( glm::mat4(1.0) );
 	static_rect_shader.update_camera();
 
+
 	if ( (error = glGetError()) != GL_NO_ERROR ) {
-		log_error("Could not set shader modelview matrix");
+		log_error("Could not set shader camera matrix");
 		std::cout << "Error: " << error;
 		return false;
 	}

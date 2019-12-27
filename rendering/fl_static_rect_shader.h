@@ -7,24 +7,23 @@
 #ifndef FL_STATIC_RECT_SHADER_H_
 #define FL_STATIC_RECT_SHADER_H_
 
+#include <vector>
+#include "../common/basic_types.h"
 #include "fl_polygon_shader.h"
 
 class FLStaticRectShader : public FLPolygonShader {
 	public:
 		FLStaticRectShader() : FLPolygonShader(){};
 		virtual bool create_program( std::string program_name );
-		virtual void draw_rects8();
-		virtual void draw_rects16();
-		virtual void draw_rects32();
+		virtual void draw_rects();
 
+		void set_geometry(std::vector<rect> &rects);
 	protected:
-		virtual bool init_poly_buffers();
-
-	private:
-		GLuint rect8_vao;
-		GLuint rect16_vao;
-		GLuint rect32_vao;
-
+		GLuint rect_vbo;
+		GLuint rect_ibo;
+		GLuint rect_vao;
+		unsigned int num_indices;
+		unsigned int num_verts;
 };
 
 #endif

@@ -15,7 +15,7 @@
 void Renderer::render() {
 	glClear( GL_COLOR_BUFFER_BIT );
 
-	static_rect_shader.draw_rects8();
+	static_rect_shader.draw_rects();
 }
 
 void Renderer::render_and_swap() {

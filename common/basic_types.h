@@ -12,16 +12,11 @@
 
 class FLPolygonShader;
 
-struct vec2f {
+struct rect {
 	float x;
 	float y;
-};
-
-struct vec4f {
-	float r;
-	float g;
-	float b;
-	float a;
+	float w;
+	float h;
 };
 
 #endif
