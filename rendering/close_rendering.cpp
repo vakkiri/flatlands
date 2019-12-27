@@ -12,9 +12,6 @@
 void Renderer::close() {
 	log_progress("Closing rendering libraries");
 
-	if ( cur_shader )
-		delete cur_shader;
-
 	SDL_DestroyWindow( window );
 	window = NULL;
 

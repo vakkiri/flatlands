@@ -8,6 +8,7 @@
 
 #include "logging/logging.h"
 #include "rendering/rendering.h"
+#include "common/basic_types.h"
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();

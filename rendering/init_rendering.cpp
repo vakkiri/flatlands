@@ -7,7 +7,7 @@
 #include <glm/ext.hpp>
 
 #include "../logging/logging.h"
-#include "fl_rect_shader.h"
+#include "../common/basic_types.h"
 #include "rendering.h"
 
 #define PRIMITIVE_RESTART 65535
@@ -19,9 +19,8 @@ bool Renderer::init_shaders() {
 	GLenum error;
 
 	log_progress("Initializing shaders");
-	cur_shader = new FLRectShader("basic_shader");
-	cur_shader->create_program();
-	cur_shader->bind();
+	static_rect_shader.create_program("instanced_rect_shader");
+	static_rect_shader.bind();
 	
 	if ( (error = glGetError()) != GL_NO_ERROR ) {
 		log_error("Could not create shader");
@@ -29,52 +28,19 @@ bool Renderer::init_shaders() {
 		return false;
 	}
 
-	//initialize shader matrices
-	cur_shader->set_projection( glm::ortho<GLfloat>( 0.0, (float)screen_width, (float)screen_height, 0.0, 1.0, -1.0) );
-	cur_shader->update_projection();
+	//initialize shader projection matrix
+	static_rect_shader.set_projection( glm::ortho<GLfloat>( 0.0, screen_width, screen_height, 0.0, 1.0, -1.0 ) );
+	static_rect_shader.update_projection();
 
-	if ( (error = glGetError()) != GL_NO_ERROR ) {
-		log_error("Could not set shader projection matrix");
-		std::cout << "Error: " << error;
-		return false;
-	}
-
-	cur_shader->set_modelview( glm::mat4() );
-	cur_shader->update_modelview();
+	//initialize shader camera matrix
+	static_rect_shader.set_camera( glm::mat4(1.0) );
+	static_rect_shader.update_camera();
 
 	if ( (error = glGetError()) != GL_NO_ERROR ) {
 		log_error("Could not set shader modelview matrix");
 		std::cout << "Error: " << error;
 		return false;
 	}
-	// VBO
-	GLfloat vertexData[] = 
-	{
-		// rect 1
-		0, 0.f,
-		16.f, 0.f,
-		16.f, 16.f,
-		0.f, 16.f,
-
-		// rect 2
-		32, 32,
-		64, 32,
-		64, 64,
-		32, 64
-	};
-
-	// IBO
-	GLuint indexData[] = { 1, 0, 2, 3, PRIMITIVE_RESTART, 5, 4, 6, 7, PRIMITIVE_RESTART};
-
-	// Create VBO
-	glGenBuffers( 1, &gVBO );
-	glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-	glBufferData( GL_ARRAY_BUFFER, 2 * 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
-	
-	// Create IBO
-	glGenBuffers( 1, &gIBO );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 2 * 5 * sizeof(GLuint), indexData, GL_STATIC_DRAW );
 
 	return true;
 }

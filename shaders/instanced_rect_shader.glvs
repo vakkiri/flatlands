@@ -1,0 +1,13 @@
+#version 140
+
+uniform mat4 projectionMatrix;
+uniform mat4 cameraMatrix;
+
+in vec2 vertexPos;
+out vec4 fColor;
+
+void main() {
+	fColor = vec4(0.0, 0.5, 1.0, 1.0);
+	gl_Position = projectionMatrix * cameraMatrix * vec4( vertexPos.x, vertexPos.y, 0.0, 1.0 );
+}
+

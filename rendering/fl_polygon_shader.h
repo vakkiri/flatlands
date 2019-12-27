@@ -5,20 +5,23 @@
  *
  */
 
+#ifndef FL_POLYGON_SHADER_H_
+#define FL_POLYGON_SHADER_H_
+
 #include "fl_shader.h"
 
-class FLRectShader : public FLShader {
+class FLPolygonShader : public FLShader {
 	public:
-		FLRectShader() : FLShader(){};
-		FLRectShader(std::string name) : FLShader(name){};
+		FLPolygonShader() : FLShader(){};
 
-		virtual bool create_program(std::string program_name);
-		virtual bool create_program();
+		virtual bool create_program( std::string program_name );
 
 		void set_vertex_pointer( GLsizei stride, const GLvoid* data );
 		void enable_vertex_pointer();
 		void disable_vertex_pointer();
+
 	protected:
-		GLint vertex_pos_2d_location;
+		GLint vertex_pos_location;
 };
 
+#endif 

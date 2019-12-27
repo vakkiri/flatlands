@@ -11,15 +11,12 @@
 #include <SDL2/SDL_opengl.h>
 #include <string>
 
-class FLShader;
+#include "fl_static_rect_shader.h"
 
 class Renderer {
 	private:
 		Renderer() : 	window(NULL),
-				context(0),
-				cur_shader(nullptr),
-				gVBO(0),
-				gIBO(0)
+				context(0)
 		{};
 
 		// Disallow copying
@@ -32,16 +29,16 @@ class Renderer {
 		// Member variables
 		SDL_Window* window;
 		SDL_GLContext context;
-		GLuint gVBO;
-		GLuint gIBO;
 
-		FLShader *cur_shader;
+		// Basic Shaders
+		FLStaticRectShader static_rect_shader;
 
 		// Private methods
 		bool init_sdl();	
 		bool init_window();	
 		bool init_gl();	
 		bool init_shaders();
+
 	protected:
 		unsigned int screen_height;
 		unsigned int screen_width;
