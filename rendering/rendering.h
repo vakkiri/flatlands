@@ -9,9 +9,11 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <glm/glm.hpp>
 #include <string>
+#include <vector>
 
-#include "fl_static_rect_shader.h"
+class FLRenderable;
 
 class Renderer {
 	private:
@@ -24,14 +26,13 @@ class Renderer {
 		Renderer& operator=(Renderer const&) = delete;
 
 		// Methods
+		void clear_null_renderables();
 		void render();
 
 		// Member variables
 		SDL_Window* window;
 		SDL_GLContext context;
-
-		// Basic Shaders
-		FLStaticRectShader static_rect_shader;
+		std::vector<FLRenderable*> renderables;
 
 		// Private methods
 		bool init_sdl();	
@@ -42,8 +43,11 @@ class Renderer {
 	protected:
 		unsigned int screen_height;
 		unsigned int screen_width;
+		glm::mat4 projection_matrix;
 	public:
 		// Public methods
+		glm::mat4 get_projection_matrix();
+		void add_renderable(FLRenderable* r);
 		void render_and_swap();
 		void close();
 

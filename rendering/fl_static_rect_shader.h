@@ -13,7 +13,7 @@
 
 class FLStaticRectShader : public FLPolygonShader {
 	public:
-		FLStaticRectShader() : FLPolygonShader(){};
+		FLStaticRectShader();
 		virtual bool create_program( std::string program_name );
 		virtual void draw_rects();
 

@@ -8,11 +8,13 @@
 
 #include "logging/logging.h"
 #include "rendering/rendering.h"
-#include "common/basic_types.h"
+#include "common/common.h"
+#include "tilemap/tilemap.h"
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
-
+	FLTilemap tilemap(renderer, 512, 512);
+	tilemap.update_shader();
 	bool quit = false;
 
 	SDL_Event e;

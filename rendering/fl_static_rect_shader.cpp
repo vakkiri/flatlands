@@ -11,6 +11,11 @@
 
 #define RESTART 0xff
 
+FLStaticRectShader::FLStaticRectShader() : FLPolygonShader() {
+	create_program("instanced_rect_shader");
+	bind();
+}
+
 bool FLStaticRectShader::create_program( std::string program_name ) {
 	if ( !FLPolygonShader::create_program( program_name ) )
 		return false;
@@ -18,6 +23,11 @@ bool FLStaticRectShader::create_program( std::string program_name ) {
 	glGenBuffers( 1, &rect_vbo );
 	glGenBuffers( 1, &rect_ibo );
 	glGenVertexArrays( 1, &rect_vao );
+
+	if ( glGetError() != GL_NO_ERROR ) {
+		log_error("Could not create StaticRectShader");
+		return false;
+	}
 
 	return true;
 }
