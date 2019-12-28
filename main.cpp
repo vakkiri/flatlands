@@ -14,6 +14,10 @@
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
 	FLTilemap tilemap(renderer, 512, 512);
+	tilemap.add_tile(16, 16, 16, 16);
+	tilemap.add_tile(40, 60, 16, 16);
+	tilemap.add_tile(60, 160, 16, 16);
+	tilemap.add_tile(500, 616, 16, 16);
 	tilemap.update_shader();
 	bool quit = false;
 

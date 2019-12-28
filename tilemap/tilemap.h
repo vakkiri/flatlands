@@ -20,6 +20,7 @@ class FLTilemap : FLRenderable {
 
 		void render();
 		void update_shader();
+		void add_tile( unsigned int x, unsigned int y, unsigned int w, unsigned int h );
 	protected:
 		std::vector<tile*> tiles;
 		unsigned int w;

@@ -18,14 +18,6 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h) : FLRenderable
 	shader->update_projection();
 	shader->set_camera( glm::mat4(1.0) );
 	shader->update_camera();
-
-	tile *t = new tile;
-	t->bounds.x = 0;
-	t->bounds.y = 0;
-	t->bounds.w = 16;
-	t->bounds.h = 16;
-
-	tiles.push_back(t);
 }
 
 FLTilemap::~FLTilemap() {
@@ -46,4 +38,13 @@ void FLTilemap::update_shader() {
 	((FLStaticRectShader*) shader)->set_geometry( tile_rects );
 }
 
+void FLTilemap::add_tile(unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	tile *t = new tile;
+	t->bounds.x = x;
+	t->bounds.y = y;
+	t->bounds.w = w;
+	t->bounds.h = h;
+
+	tiles.push_back(t);
+}
 

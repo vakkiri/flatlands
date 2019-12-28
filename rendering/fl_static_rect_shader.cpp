@@ -4,8 +4,6 @@
  *
  */
 
-#include <iostream>
-
 #include "../logging/logging.h"
 #include "fl_static_rect_shader.h"
 
@@ -42,7 +40,6 @@ void FLStaticRectShader::set_geometry(std::vector<rect> &rects) {
 	unsigned int *ibuf = new unsigned int[num_indices];
 
 	for (int i = 0; i < rects.size(); i++) {
-		std::cout << i << std::endl;
 		vbuf[(i*8)] = rects[i].x;
 		vbuf[(i*8)+1] = rects[i].y;
 		vbuf[(i*8)+2] = rects[i].x + rects[i].w;
