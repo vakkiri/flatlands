@@ -23,8 +23,7 @@ class FLShader {
 
 		void set_camera( glm::mat4 matrix );
 		void set_projection( glm::mat4 matrix );
-		void update_camera();
-		void update_projection();
+		void update_pc_matrix();
 		bool bind();
 		void unbind();
 
@@ -37,8 +36,7 @@ class FLShader {
 
 		glm::mat4 projection_matrix;
 		glm::mat4 camera_matrix;
-		GLint projection_matrix_location;
-		GLint camera_matrix_location;
+		GLint pc_matrix_location;
 };
 
 #endif

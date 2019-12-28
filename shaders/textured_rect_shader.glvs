@@ -3,10 +3,11 @@
 uniform mat4 pcMatrix;
 
 in vec2 vertexPos;
-out vec4 fColor;
+in vec2 itexCoord;
+out vec2 texCoord;
 
 void main() {
-	fColor = vec4(0.0, 0.5, 1.0, 1.0);
+	texCoord = itexCoord;
 	gl_Position = pcMatrix * vec4( vertexPos.x, vertexPos.y, 0.0, 1.0 );
 }
 

@@ -115,17 +115,13 @@ bool FLShader::create_program(std::string program_name) {
 	glDeleteShader( vertex_shader );
 	glDeleteShader( fragment_shader );
 
-	camera_matrix_location = glGetUniformLocation( program_id, "cameraMatrix");
-	projection_matrix_location = glGetUniformLocation( program_id, "projectionMatrix");
+	pc_matrix_location = glGetUniformLocation( program_id, "pcMatrix");
 
-	if ( camera_matrix_location == -1 ) {
-		log_error( "Could not load shader camera uniform" );
+	if ( pc_matrix_location == -1 ) {
+		log_error( "Could not load shader pc matrix uniform" );
 		return false;
 	}
-	if ( projection_matrix_location == -1 ) {
-		log_error( "Could not load shader projection uniform" );
-		return false;
-	}
+
 	return true;
 }
 
@@ -141,10 +137,8 @@ void FLShader::set_projection( glm::mat4 matrix ) {
 	projection_matrix = matrix;
 }
 
-void FLShader::update_camera() {
-	glUniformMatrix4fv( camera_matrix_location, 1, GL_FALSE, glm::value_ptr( camera_matrix ));
+void FLShader::update_pc_matrix() {
+	glm::mat4 pc_matrix = camera_matrix * projection_matrix;
+	glUniformMatrix4fv( pc_matrix_location, 1, GL_FALSE, glm::value_ptr( pc_matrix ));
 }
 
-void FLShader::update_projection() {
-	glUniformMatrix4fv( projection_matrix_location, 1, GL_FALSE, glm::value_ptr( projection_matrix ));
-}

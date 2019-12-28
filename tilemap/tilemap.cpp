@@ -15,9 +15,8 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h) : FLRenderable
 
 	shader = new FLStaticRectShader();
 	shader->set_projection(r.get_projection_matrix());
-	shader->update_projection();
 	shader->set_camera( glm::mat4(1.0) );
-	shader->update_camera();
+	shader->update_pc_matrix();
 }
 
 FLTilemap::~FLTilemap() {

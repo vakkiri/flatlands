@@ -1,8 +1,0 @@
-#version 140
-in vec4 multiColor;
-out vec4 gl_FragColor;
-
-void main() {
-	gl_FragColor = multiColor;
-}
-
