@@ -16,9 +16,12 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int c
 	this->h = h;
 	this->cell_size = cell_size;
 
+	glm::mat4 camera(1.0);
+	camera[0][0] = 2.0;
+	camera[1][1] = 2.0;
 	shader = new FLTexturedRectShader( "textured_rect_shader" );
 	shader->set_projection(r.get_projection_matrix());
-	shader->set_camera( glm::mat4(1.0) );
+	shader->set_camera( camera );
 	shader->update_pc_matrix();
 }
 

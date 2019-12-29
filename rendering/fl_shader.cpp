@@ -138,7 +138,7 @@ void FLShader::set_projection( glm::mat4 matrix ) {
 }
 
 void FLShader::update_pc_matrix() {
-	glm::mat4 pc_matrix = camera_matrix * projection_matrix;
+	glm::mat4 pc_matrix = projection_matrix * camera_matrix;
 	glUniformMatrix4fv( pc_matrix_location, 1, GL_FALSE, glm::value_ptr( pc_matrix ));
 }
 
