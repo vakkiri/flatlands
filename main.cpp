@@ -14,11 +14,11 @@
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
-	FLTilemap tilemap(renderer, 512, 512);
-	tilemap.add_tile(16, 16, 16, 16);
-	tilemap.add_tile(40, 60, 16, 16);
-	tilemap.add_tile(60, 160, 16, 16);
-	tilemap.add_tile(500, 616, 16, 16);
+	FLTilemap tilemap(renderer, 512, 512, 16);
+	tilemap.add_tile(16, 16, 16, 16, 0);
+	tilemap.add_tile(48, 16, 16, 16, 0);
+	tilemap.add_tile(48, 32, 16, 16, 3);
+	tilemap.set_texture( "tiles" );
 	tilemap.update_shader();
 	bool quit = false;
 
@@ -52,6 +52,7 @@ int main( int argc, char* args[] ) {
 	}
 
 	renderer.close();
+	resources.close();
 	log_progress("Closing shift");
 	return 0;
 }

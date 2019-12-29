@@ -11,6 +11,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "../rendering/texture.h"
 
 class FLResources {
 	public:
@@ -20,13 +21,14 @@ class FLResources {
 		}
 
 		bool init();
+		void close();
 
 		void load_images( std::string csv_path );
 		void load_image( std::string path, std::string name );
-		unsigned int get_image( std::string image_name );
+		texture* get_image( std::string image_name );
 
 	protected:
-		std::unordered_map< std::string, unsigned int > image_dict;
+		std::unordered_map< std::string, texture* > image_dict;
 
 	private:
 		// Disallow copying/construction

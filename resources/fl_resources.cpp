@@ -24,6 +24,11 @@ bool FLResources::init() {
 	return true;
 }
 
+void FLResources::close() {
+	for (auto& it : image_dict)
+		delete it.second;
+}
+
 void FLResources::init_il() {
 	ilInit();
 	iluInit();
@@ -90,13 +95,17 @@ void FLResources::load_image( std::string path, std::string name ) {
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glBindTexture( GL_TEXTURE_2D, 0 );
 
-		image_dict[name] = gl_id;
+		texture *tex = new texture;
+		tex->w = (float) ilGetInteger( IL_IMAGE_WIDTH );
+		tex->h = (float) ilGetInteger( IL_IMAGE_HEIGHT );
+		tex->id = gl_id;
+		image_dict[name] = tex;
 	}
 
 	ilDeleteImages( 1, &img_id );
 }
 
-unsigned int FLResources::get_image( std::string image_name ) {
+texture* FLResources::get_image( std::string image_name ) {
 	return image_dict[image_name];
 }
 
