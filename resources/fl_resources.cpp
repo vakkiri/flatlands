@@ -89,6 +89,8 @@ void FLResources::load_image( std::string path, std::string name ) {
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		glBindTexture( GL_TEXTURE_2D, 0 );
+
+		image_dict[name] = gl_id;
 	}
 
 	ilDeleteImages( 1, &img_id );
