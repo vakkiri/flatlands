@@ -9,6 +9,7 @@
 #include "logging/logging.h"
 #include "rendering/rendering.h"
 #include "common/common.h"
+#include "resources/fl_resources.h"
 #include "tilemap/tilemap.h"
 
 void main_loop() {
@@ -37,13 +38,17 @@ void main_loop() {
 
 int main( int argc, char* args[] ) {
 	Renderer& renderer = Renderer::getInstance();
+	FLResources& resources = FLResources::getInstance();
 	log_progress("Starting shift");
 
 	if ( renderer.init() ) {
-		main_loop();
+		if ( resources.init() )
+			main_loop();
+		else
+			log_error( "Could not initialize resources." );
 	}
 	else {
-		log_error("Could not initialize rendering engine.");
+		log_error( "Could not initialize rendering engine." );
 	}
 
 	renderer.close();

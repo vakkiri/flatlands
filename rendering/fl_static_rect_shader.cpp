@@ -10,7 +10,10 @@
 #define RESTART 0xff
 
 FLStaticRectShader::FLStaticRectShader() : FLPolygonShader() {
-	create_program("instanced_rect_shader");
+}
+
+FLStaticRectShader::FLStaticRectShader( std::string program_name ) : FLPolygonShader() {
+	create_program( program_name );
 	bind();
 }
 
@@ -67,7 +70,6 @@ void FLStaticRectShader::set_geometry(std::vector<rect> &rects) {
 
 	if ( glGetError() != GL_NO_ERROR )
 		log_error("Error buffering ibo");
-
 
 	glBindVertexArray( rect_vao );
 	glPrimitiveRestartIndex( RESTART );

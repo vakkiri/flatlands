@@ -2,9 +2,9 @@ OBJS = *.cpp */*.cpp
 
 CC = g++
 
-COMPILER_FLAGS = -std=c++13 -Wall
+COMPILER_FLAGS = -std=c++13 -Wall -g
 
-LINKER_FLAGS = -lSDL2 -lGL -DGL_GLEXT_PROTOTYPES
+LINKER_FLAGS = -lSDL2 -lGL -DGL_GLEXT_PROTOTYPES -lIL -lILU
 
 OBJ_NAME = flatlands
 

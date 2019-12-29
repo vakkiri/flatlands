@@ -14,10 +14,11 @@
 class FLStaticRectShader : public FLPolygonShader {
 	public:
 		FLStaticRectShader();
+		FLStaticRectShader( std::string program_name );
 		virtual bool create_program( std::string program_name );
 		virtual void draw_rects();
 
-		void set_geometry(std::vector<rect> &rects);
+		virtual void set_geometry(std::vector<rect> &rects);
 	protected:
 		GLuint rect_vbo;
 		GLuint rect_ibo;

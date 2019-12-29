@@ -8,6 +8,8 @@ This is a 2D tile-based engine, primarily geared towards platforming.
 
 The following libraries are used:
 
-SDL2
+SDL2 ( libsdl2-dev )
+SDL2-OpenGL ( libsdl2-dev )
 OpenGL 3.x
 OpenGL Mathematics (libglm-dev)
+DevIL (libdevil-dev)

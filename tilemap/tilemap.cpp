@@ -7,13 +7,15 @@
 #include "tile.h"
 
 #include "../rendering/fl_static_rect_shader.h"
+#include "../rendering/fl_textured_rect_shader.h"
 #include "../rendering/rendering.h"
 
 FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h) : FLRenderable(r) {
 	this->w = w;
 	this->h = h;
 
-	shader = new FLStaticRectShader();
+	new FLTexturedRectShader( "textured_rect_shader" );
+	shader = new FLStaticRectShader( "static_rect_shader" );
 	shader->set_projection(r.get_projection_matrix());
 	shader->set_camera( glm::mat4(1.0) );
 	shader->update_pc_matrix();
