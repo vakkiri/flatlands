@@ -13,6 +13,6 @@ OBJ_NAME = flatlands
 all: $(OBJS)
 	$(CC) $(OBJS) $(LINKER_FLAGS) -o $(OBJ_NAME)
 
-debuf: $(OBJS)
+debug: $(OBJS)
 	$(CC) $(OBJS) $(LINKER_FLAGS) $(DEBUG) -o $(OBJ_NAME)
 
