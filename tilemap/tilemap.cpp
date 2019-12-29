@@ -6,6 +6,7 @@
 #include "tilemap.h"
 #include "tile.h"
 
+#include "../logging/logging.h"
 #include "../rendering/fl_static_rect_shader.h"
 #include "../rendering/fl_textured_rect_shader.h"
 #include "../rendering/rendering.h"
@@ -22,6 +23,7 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int c
 }
 
 FLTilemap::~FLTilemap() {
+	log_progress("Deleting tilemap");
 	for (tile *t : tiles)
 		delete t;
 }

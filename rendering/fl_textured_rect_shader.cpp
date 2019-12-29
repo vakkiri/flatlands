@@ -132,9 +132,9 @@ void FLTexturedRectShader::set_geometry( std::vector<tile*>& tiles ) {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, rect_ibo );
 	glBindVertexArray( 0 );
 
-	delete vbuf;
-	delete tbuf;
-	delete ibuf;
+	delete [] vbuf;
+	delete [] tbuf;
+	delete [] ibuf;
 }
 
 void FLTexturedRectShader::set_tex_coord_pointer( GLsizei stride, const GLvoid* data ) {
