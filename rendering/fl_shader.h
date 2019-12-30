@@ -21,6 +21,8 @@ class FLShader {
 
 		virtual bool create_program(std::string program_name);
 
+		virtual void render(GLuint vao, unsigned int num_indices) = 0;
+
 		void set_camera( glm::mat4 matrix );
 		void set_projection( glm::mat4 matrix );
 		void update_pc_matrix();

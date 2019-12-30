@@ -8,7 +8,7 @@
 
 #include "../logging/logging.h"
 #include "../common/basic_types.h"
-#include "rendering.h"
+#include "renderer.h"
 
 #define PRIMITIVE_RESTART 65535
 
@@ -27,6 +27,12 @@ bool Renderer::init_shaders() {
 		std::cout << "Error: " << error;
 		return false;
 	}
+
+	textured_rect_shader.create_program( "textured_rect_shader" );
+	textured_rect_shader.bind();
+	textured_rect_shader.set_projection( projection_matrix );
+	textured_rect_shader.set_camera( glm::mat4(1.0) );
+	textured_rect_shader.update_pc_matrix();
 
 	return true;
 }

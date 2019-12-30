@@ -4,14 +4,16 @@
  * 	Rendering utilities/functions.
  */
 
-#ifndef RENDERING_H_
-#define RENDERING_H_
+#ifndef RENDERER_H_
+#define RENDERER_H_
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+
+#include "fl_textured_rect_shader.h"
 
 class FLRenderable;
 
@@ -34,6 +36,9 @@ class Renderer {
 		SDL_GLContext context;
 		std::vector<FLRenderable*> renderables;
 
+		// Shaders
+		FLTexturedRectShader textured_rect_shader;
+
 		// Private methods
 		bool init_sdl();	
 		bool init_window();	
@@ -51,6 +56,8 @@ class Renderer {
 		void render_and_swap();
 		void close();
 
+		FLTexturedRectShader& get_textured_rect_shader();
+
 		static Renderer& getInstance() {
 			static Renderer instance;
 			return instance;
@@ -58,7 +65,5 @@ class Renderer {
 
 		bool init();
 };
-
-bool init_rendering();
 
 #endif

@@ -7,7 +7,7 @@
 #include <SDL2/SDL.h>
 
 #include "logging/logging.h"
-#include "rendering/rendering.h"
+#include "rendering/renderer.h"
 #include "common/common.h"
 #include "resources/fl_resources.h"
 #include "tilemap/tilemap.h"
@@ -19,7 +19,7 @@ void main_loop() {
 	tilemap.add_tile(48, 16, 16, 16, 0);
 	tilemap.add_tile(48, 32, 16, 16, 3);
 	tilemap.set_texture( "tiles" );
-	tilemap.update_shader();
+	tilemap.update_surface();
 	bool quit = false;
 
 	SDL_Event e;

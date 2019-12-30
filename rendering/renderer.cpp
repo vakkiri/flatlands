@@ -10,7 +10,7 @@
 
 #include "../common/basic_types.h"
 #include "../logging/logging.h"
-#include "rendering.h"
+#include "renderer.h"
 #include "renderable.h"
 
 
@@ -21,7 +21,6 @@ void Renderer::render() {
 
 	for ( FLRenderable *r : renderables )
 		r->render();
-
 }
 
 void Renderer::render_and_swap() {
@@ -46,3 +45,8 @@ void Renderer::clear_null_renderables() {
 void Renderer::add_renderable(FLRenderable* r) {
 	renderables.push_back(r);
 }
+
+FLTexturedRectShader& Renderer::get_textured_rect_shader() {
+	return textured_rect_shader;
+}
+

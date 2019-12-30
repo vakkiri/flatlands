@@ -7,7 +7,7 @@
 
 #include "../logging/logging.h"
 #include "fl_shader.h"
-#include "rendering.h"
+#include "renderer.h"
 
 void Renderer::close() {
 	log_progress("Closing rendering libraries");

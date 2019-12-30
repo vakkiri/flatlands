@@ -12,7 +12,7 @@
 #include <string>
 #include "../rendering/renderable.h"
 
-struct tile;
+class FLWorldObject;
 struct texture;
 
 class FLTilemap : FLRenderable {
@@ -21,15 +21,15 @@ class FLTilemap : FLRenderable {
 		virtual ~FLTilemap();
 
 		void render();
-		void update_shader();
+		void update_surface();
 		void set_texture( texture *tex );
 		void set_texture( std::string name );
-		void add_tile( unsigned int x, unsigned int y, unsigned int w, unsigned int h, int index );
+		void add_tile( float x, float y, float w, float h, float index );
 	protected:
-		std::vector<tile*> tiles;
+		std::vector<FLWorldObject*> tiles;
 		unsigned int w;
 		unsigned int h;
-		unsigned int cell_size;
+		float cell_size;
 };
 
 #endif

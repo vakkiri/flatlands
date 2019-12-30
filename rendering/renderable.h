@@ -9,16 +9,16 @@
 #define RENDERABLE_H_
 
 class Renderer;
-class FLShader;
+class FLRenderedSurface;
 
 class FLRenderable {
 	public:
 		FLRenderable(Renderer &r);
-		virtual ~FLRenderable() {};
+		virtual ~FLRenderable();
 
 		virtual void render() = 0;
 	protected:
-		FLShader *shader;
+		FLRenderedSurface *surface;
 		bool visible;
 };
 

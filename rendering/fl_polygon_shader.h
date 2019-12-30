@@ -1,7 +1,7 @@
 /*
  * 	fl_rect_shader.h
  *
- * 	A basic shader for rectangles.
+ * 	A basis for vertex position-specified geometry shaders.
  *
  */
 
@@ -19,7 +19,6 @@ class FLPolygonShader : public FLShader {
 		void set_vertex_pointer( GLsizei stride, const GLvoid* data );
 		void enable_vertex_pointer();
 		void disable_vertex_pointer();
-
 	protected:
 		GLint vertex_pos_location;
 };

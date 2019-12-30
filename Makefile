@@ -2,7 +2,7 @@ OBJS = *.cpp */*.cpp
 
 CC = g++
 
-COMPILER_FLAGS = -std=c++13 -Wall -g
+COMPILER_FLAGS = -std=c++13 -Wall
 
 DEBUG = -g -pg
 
