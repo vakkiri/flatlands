@@ -5,7 +5,7 @@
 
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
-#include "../world/world_object.h"
+#include "textured_object.h"
 #include "fl_textured_rect_shader.h"
 #include "rendered_surface.h"
 
@@ -38,7 +38,7 @@ void FLTexturedSurface::set_tex( std::string name ) {
 	tex = FLResources::getInstance().get_image( name );
 }
 
-void FLTexturedSurface::update_buffers( std::vector<FLWorldObject*>& objects ) {
+void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects ) {
 	log_progress( "Updating surface buffers" );
 
 	unsigned int vert_size = 4;	// location x, location y, tex x, tex y

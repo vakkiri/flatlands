@@ -4,7 +4,7 @@
  */
 
 #include "tilemap.h"
-#include "../world/world_object.h"
+#include "tile.h"
 
 #include "../logging/logging.h"
 #include "../rendering/rendered_surface.h"
@@ -20,8 +20,8 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int c
 
 FLTilemap::~FLTilemap() {
 	log_progress("Deleting tilemap");
-	for (FLWorldObject *t : tiles)
-		delete t;
+	for (FLTexturedObject *t : tiles)
+		delete (FLTile*) t;
 }
 
 void FLTilemap::render() {
@@ -33,7 +33,7 @@ void FLTilemap::update_surface() {
 }
 
 void FLTilemap::add_tile(float x, float y, float w, float h, float index) {
-	FLWorldObject *t = new FLWorldObject(x, y, w, h);
+	FLTile *t = new FLTile(x, y, w, h);
 	t->set_st( index * cell_size, 0 );
 
 	tiles.push_back(t);

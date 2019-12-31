@@ -15,23 +15,16 @@ class FLWorldObject {
 		FLWorldObject(){};
 		FLWorldObject(float x, float y, float w, float h);
 
-		float x();
-		float y();
-		float w();
-		float h();
-		float s();
-		float t();
+		virtual float x();
+		virtual float y();
+		virtual float w();
+		virtual float h();
 		virtual float bounds_x();
 		virtual float bounds_y();
 		virtual float bounds_w();
 		virtual float bounds_h();
-
-		void set_st( float s, float t );
 	private:
 		rect position;
-		float _s;
-		float _t;
-
 };
 
 #endif

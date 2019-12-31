@@ -14,14 +14,14 @@
 #include <vector>
 
 struct texture;
-class FLWorldObject;
+class FLTexturedObject;
 class FLTexturedRectShader;
 
 class FLRenderedSurface {
 	public:
 		FLRenderedSurface();
 		virtual void render() = 0;
-		virtual void update_buffers( std::vector<FLWorldObject*>& objects ) = 0;
+		virtual void update_buffers( std::vector<FLTexturedObject*>& objects ) = 0;
 
 	protected:
 		GLuint vbo;
@@ -35,7 +35,7 @@ class FLTexturedSurface : public FLRenderedSurface {
 	public:
 		FLTexturedSurface( FLTexturedRectShader& shader );
 		virtual void render();
-		virtual void update_buffers( std::vector<FLWorldObject*>& objects );
+		virtual void update_buffers( std::vector<FLTexturedObject*>& objects );
 		void set_tex( texture *tex );
 		void set_tex( std::string name );
 	protected:

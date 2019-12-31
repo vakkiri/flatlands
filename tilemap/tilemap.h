@@ -12,10 +12,10 @@
 #include <string>
 #include "../rendering/renderable.h"
 
-class FLWorldObject;
+class FLTexturedObject;
 struct texture;
 
-class FLTilemap : FLRenderable {
+class FLTilemap : public FLRenderable {
 	public:
 		FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size);
 		virtual ~FLTilemap();
@@ -26,7 +26,7 @@ class FLTilemap : FLRenderable {
 		void set_texture( std::string name );
 		void add_tile( float x, float y, float w, float h, float index );
 	protected:
-		std::vector<FLWorldObject*> tiles;
+		std::vector<FLTexturedObject*> tiles;
 		unsigned int w;
 		unsigned int h;
 		float cell_size;
