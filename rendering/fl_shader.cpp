@@ -24,6 +24,7 @@ FLShader::~FLShader() {
 
 bool FLShader::bind() {
 	GLenum error;
+	
 	glUseProgram( program_id );
 
 	error = glGetError();

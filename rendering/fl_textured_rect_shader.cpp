@@ -31,7 +31,12 @@ bool FLTexturedRectShader::create_program( std::string program_name ) {
 		return false;
 	}
 
+	bind();
+
 	set_tex_unit(0);
+
+	if ( glGetError() != GL_NO_ERROR )
+		log_error( "Error setting texture unit" );
 
 	return true;
 }
