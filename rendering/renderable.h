@@ -18,7 +18,6 @@ class FLRenderable {
 
 		virtual void render() = 0;
 	protected:
-		FLRenderedSurface *surface;
 		bool visible;
 };
 

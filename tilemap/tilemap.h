@@ -10,17 +10,17 @@
 
 #include <vector>
 #include <string>
-#include "../rendering/renderable.h"
 
 class FLTexturedObject;
+class FLTexturedSurface;
+class Renderer;
 struct texture;
 
-class FLTilemap : public FLRenderable {
+class FLTilemap {
 	public:
 		FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size);
 		virtual ~FLTilemap();
 
-		void render();
 		void update_surface();
 		void set_texture( texture *tex );
 		void set_texture( std::string name );
@@ -30,6 +30,7 @@ class FLTilemap : public FLRenderable {
 		unsigned int w;
 		unsigned int h;
 		float cell_size;
+		FLTexturedSurface *surface;
 };
 
 #endif

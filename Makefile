@@ -1,4 +1,4 @@
-OBJS = *.cpp */*.cpp
+OBJS = *.cpp */*.cpp */*/*.cpp
 
 CC = g++
 

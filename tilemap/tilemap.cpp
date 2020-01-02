@@ -10,22 +10,19 @@
 #include "../rendering/rendered_surface.h"
 #include "../rendering/renderer.h"
 
-FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size) : FLRenderable(r) {
+FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size) {
 	this->w = w;
 	this->h = h;
 	this->cell_size = cell_size;
 
-	surface = new FLTexturedSurface( r.get_textured_rect_shader() );
+	surface = new FLTexturedSurface( r );
 }
 
 FLTilemap::~FLTilemap() {
 	log_progress("Deleting tilemap");
+	delete surface;
 	for (FLTexturedObject *t : tiles)
 		delete (FLTile*) t;
-}
-
-void FLTilemap::render() {
-	surface->render();
 }
 
 void FLTilemap::update_surface() {
@@ -40,8 +37,7 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index) {
 }
 
 void FLTilemap::set_texture( texture *tex ) {
-	// TODO: refactor class hierarchy/structure to avoid having to cast this
-	((FLTexturedSurface*) surface)->set_tex( tex );
+	surface->set_tex( tex );
 }
 
 void FLTilemap::set_texture( std::string name ) {

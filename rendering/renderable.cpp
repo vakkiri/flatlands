@@ -10,12 +10,8 @@
 FLRenderable::FLRenderable(Renderer &r) {
 	r.add_renderable(this);
 	visible = true;
-	surface = nullptr;
 }
 
-FLRenderable::~FLRenderable() {
-	if ( surface != nullptr )
-		delete surface;
-}
+FLRenderable::~FLRenderable() {}
 
 

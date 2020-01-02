@@ -23,7 +23,7 @@ class FLWorldObject {
 		virtual float bounds_y();
 		virtual float bounds_w();
 		virtual float bounds_h();
-	private:
+	protected:
 		rect position;
 };
 

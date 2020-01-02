@@ -10,16 +10,27 @@
 #include "rendering/renderer.h"
 #include "common/common.h"
 #include "resources/fl_resources.h"
+
 #include "tilemap/tilemap.h"
+#include "world/player/player.h"
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
+
+	// Test objects...
 	FLTilemap tilemap(renderer, 512, 512, 16);
 	tilemap.add_tile(16, 16, 16, 16, 0);
 	tilemap.add_tile(48, 16, 16, 16, 0);
 	tilemap.add_tile(48, 32, 16, 16, 3);
 	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();
+
+	FLPlayer player(renderer.get_world_surface());
+	player.set_texture( FLResources::getInstance().get_image("neko_idle") );
+	player.update_surface();
+
+	// End of test objects
+
 	bool quit = false;
 
 	SDL_Event e;

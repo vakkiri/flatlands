@@ -9,6 +9,7 @@
 #include "../logging/logging.h"
 #include "../common/basic_types.h"
 #include "renderer.h"
+#include "rendered_surface.h"
 
 #define PRIMITIVE_RESTART 65535
 
@@ -100,7 +101,7 @@ bool Renderer::init() {
 	log_progress("Initializing rendering engine");
 	screen_width = SCREEN_WIDTH;
 	screen_height = SCREEN_WIDTH;
-
+	
 	if (!init_sdl()) {
 		log_error("Could not initialize SDL");
 		return false;
@@ -118,6 +119,8 @@ bool Renderer::init() {
 		return false;
 	}
 
+	// TODO: This is ugly, refactor so we don't have to dereference "this"
+	world_surface = new FLTexturedSurface(*this);
 	return true;
 }
 

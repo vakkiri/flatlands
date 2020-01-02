@@ -12,6 +12,7 @@
 #include "../logging/logging.h"
 #include "renderer.h"
 #include "renderable.h"
+#include "rendered_surface.h"
 
 
 void Renderer::render() {
@@ -50,3 +51,6 @@ FLTexturedRectShader& Renderer::get_textured_rect_shader() {
 	return textured_rect_shader;
 }
 
+FLTexturedSurface* Renderer::get_world_surface() {
+	return world_surface;
+}

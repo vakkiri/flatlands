@@ -5,28 +5,37 @@
 
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
+#include "../rendering/renderer.h"
 #include "textured_object.h"
 #include "fl_textured_rect_shader.h"
 #include "rendered_surface.h"
 
 #define RESTART 0xFFFF
 
-FLRenderedSurface::FLRenderedSurface() {
+FLRenderedSurface::FLRenderedSurface(Renderer& r) : FLRenderable(r) {
 	// initialize buffers
+	vbo = 0;
+	ibo = 0;
+	vao = 0;
 	glGenBuffers( 1, &vbo );
 	glGenBuffers( 1, &ibo );
-	glGenBuffers( 1, &vao );
+	glGenVertexArrays( 1, &vao );
 
+	if ( vbo == 0 )
+		log_error( "Could not generate VBO" );
+	if ( ibo == 0 )
+		log_error( "Could not generate IBO" );
+	if ( vao == 0 )
+		log_error( "Could not generate VAO" );
 	if ( glGetError() != GL_NO_ERROR )
 		log_error( "Could not initialize surface buffers" );
-
 
 	// initially we have no geometry
 	num_verts = 0;
 	num_indices = 0;
 }
 
-FLTexturedSurface::FLTexturedSurface( FLTexturedRectShader& s ) : shader(s), FLRenderedSurface() {
+FLTexturedSurface::FLTexturedSurface( Renderer& r ) : shader(r.get_textured_rect_shader()), FLRenderedSurface(r) {
 	tex = nullptr;
 }
 
@@ -101,6 +110,94 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 		log_error( "Error buffering ibo" );
 
 	glBindVertexArray( vao );
+
+	if ( glGetError() != GL_NO_ERROR )
+		log_error( "Error while binding VAO" );
+
+	glPrimitiveRestartIndex( RESTART );
+
+
+	shader.enable_vertex_pointer();
+	shader.enable_tex_coord_pointer();
+
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		shader.set_vertex_pointer( 4 * sizeof(float), NULL );
+		shader.set_tex_coord_pointer( 4 * sizeof(float), (const void *) (2 * sizeof(float)) );
+
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
+		glBindVertexArray( 0 );
+
+
+	delete [] vbuf;
+	delete [] ibuf;
+
+
+}
+
+void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
+	log_progress( "Updating surface buffers" );
+
+	unsigned int vert_size = 4;		// location x, location y, tex x, tex y
+	num_verts = 4;
+	num_indices = 5;			// 4 verts + RESTART
+
+	float *vbuf = new float[num_verts * vert_size];	// position verts + tex verts
+	unsigned int *ibuf = new unsigned int[num_indices];
+
+	float tleft;
+	float tright;
+	float ttop;
+	float tbot;
+
+	tleft = ( object->s() / tex->w );
+	tright = tleft + ( object->w() / tex->w );
+	ttop = ( object->t() / tex->h );
+	tbot = ttop + ( object->h() / tex->h );
+
+	// vertex position
+	vbuf[0] = object->x();
+	vbuf[1] = object->y();
+	vbuf[4] = object->x() + object->w();
+	vbuf[5] = object->y();
+	vbuf[8] = object->x() + object->w();
+	vbuf[9] = object->y() + object->h();
+	vbuf[12] = object->x();
+	vbuf[13] = object->y() + object->h();
+
+	// vertex texture position
+	vbuf[2] = tleft;
+	vbuf[3] = ttop;
+	vbuf[6] = tright;
+	vbuf[7] = ttop;
+	vbuf[10] = tright;
+	vbuf[11] = tbot;
+	vbuf[14] = tleft;
+	vbuf[15] = tbot;
+
+	// indicies
+	ibuf[0] = 0;
+	ibuf[1] = 1;
+	ibuf[2] = 2;
+	ibuf[3] = 3;
+	ibuf[4] = RESTART;
+
+	glBindBuffer( GL_ARRAY_BUFFER, vbo );
+	glBufferData( GL_ARRAY_BUFFER, num_verts * vert_size * sizeof(float), vbuf, GL_STATIC_DRAW );
+
+	if ( glGetError() != GL_NO_ERROR )
+		log_error( "Error buffering vbo for single object" );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(unsigned int), ibuf, GL_STATIC_DRAW );
+
+	if ( glGetError() != GL_NO_ERROR )
+		log_error( "Error buffering ibo for single object" );
+
+	glBindVertexArray( vao );
+
+	if ( glGetError() != GL_NO_ERROR )
+		log_error( "Error while binding VAO" );
+
 	glPrimitiveRestartIndex( RESTART );
 
 	shader.enable_vertex_pointer();

@@ -9,17 +9,20 @@
 #ifndef RENDERED_SURFACE_H_
 #define RENDERED_SURFACE_H_
 
+#include "../rendering/renderable.h"
+
 #include <SDL2/SDL_opengl.h>
 #include <string>
 #include <vector>
 
 struct texture;
+class Renderer;
 class FLTexturedObject;
 class FLTexturedRectShader;
 
-class FLRenderedSurface {
+class FLRenderedSurface : public FLRenderable {
 	public:
-		FLRenderedSurface();
+		FLRenderedSurface(Renderer& r);
 		virtual void render() = 0;
 		virtual void update_buffers( std::vector<FLTexturedObject*>& objects ) = 0;
 
@@ -33,9 +36,11 @@ class FLRenderedSurface {
 
 class FLTexturedSurface : public FLRenderedSurface {
 	public:
-		FLTexturedSurface( FLTexturedRectShader& shader );
+		FLTexturedSurface( Renderer &r );
 		virtual void render();
 		virtual void update_buffers( std::vector<FLTexturedObject*>& objects );
+		virtual void update_buffers( FLTexturedObject* object );
+
 		void set_tex( texture *tex );
 		void set_tex( std::string name );
 	protected:

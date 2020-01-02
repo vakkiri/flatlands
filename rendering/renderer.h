@@ -16,6 +16,7 @@
 #include "fl_textured_rect_shader.h"
 
 class FLRenderable;
+class FLTexturedSurface;
 
 class Renderer {
 	private:
@@ -39,6 +40,9 @@ class Renderer {
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
 
+		// Surfaces
+		FLTexturedSurface *world_surface;
+
 		// Private methods
 		bool init_sdl();	
 		bool init_window();	
@@ -57,6 +61,7 @@ class Renderer {
 		void close();
 
 		FLTexturedRectShader& get_textured_rect_shader();
+		FLTexturedSurface *get_world_surface();
 
 		static Renderer& getInstance() {
 			static Renderer instance;
