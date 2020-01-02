@@ -48,8 +48,6 @@ void FLTexturedSurface::set_tex( std::string name ) {
 }
 
 void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects ) {
-	log_progress( "Updating surface buffers" );
-
 	unsigned int vert_size = 4;	// location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;
 	num_indices = objects.size() * 5;	// 4 verts + RESTART
@@ -135,8 +133,6 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 }
 
 void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
-	log_progress( "Updating surface buffers" );
-
 	unsigned int vert_size = 4;		// location x, location y, tex x, tex y
 	num_verts = 4;
 	num_indices = 5;			// 4 verts + RESTART

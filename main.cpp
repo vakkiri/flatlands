@@ -1,8 +1,9 @@
 /*
-	main.cpp
-
-	Start the game! Minimal code should be here.
-*/
+ * 	main.cpp
+ *
+ * 	Initialization and main game loop.
+ *
+ */
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -25,7 +26,7 @@ void main_loop() {
 	FLTilemap tilemap(renderer, 512, 512, 16);
 
 	for ( int i = 0; i < 50; i++ )
-		tilemap.add_tile(i * 16, 16, 16, 16, 0);
+		tilemap.add_tile(i * 16, 256, 16, 16, 0, true);
 
 	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();
@@ -33,7 +34,6 @@ void main_loop() {
 	FLPlayer player(renderer.get_world_surface());
 	player.set_texture( FLResources::getInstance().get_image("neko_idle") );
 	player.update_surface();
-
 	// End of test objects
 
 	bool quit = false;
@@ -53,8 +53,16 @@ void main_loop() {
 			//handle input
 		}
 
+		// test code -------------------------
 		player.update_animation();
 		player.update_surface();
+		player.update_physics();
+		player.accelerate(point(0, 0.1));
+
+		if ( tilemap.solid_at(player.x(), player.y() + player.h()) )
+			player.stop_vertical();
+
+		// end of test code -----------------
 
 		renderer.render_and_swap();
 

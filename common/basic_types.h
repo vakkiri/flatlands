@@ -19,5 +19,45 @@ struct rect {
 	float h;
 };
 
+struct point {
+	float x;
+	float y;
+
+	point( float x=0, float y=0 ) : x(x), y(y) {}
+
+	point& operator = ( const point& other ) { 
+		x = other.x;
+		y = other.y;
+
+		return *this;
+	}
+
+	point& operator += ( const point& other ) { 
+		x += other.x;
+		y += other.y;
+
+		return *this;
+	}
+
+	point& operator -= ( const point& other ) { 
+		x -= other.x;
+		y -= other.y;
+
+		return *this;
+	}
+
+	bool operator == ( const point& other ) const {
+		return (x == other.x && y == other.y);
+	}
+
+	point operator + ( const point& other ) const {
+		return point( x + other.x, y + other.y );
+	}
+
+	point operator - ( const point& other ) const {
+		return point( x - other.x, y - other.y );
+	}
+};
+
 #endif
 

@@ -10,21 +10,18 @@
 #define PLAYER_H_
 
 #include "../../rendering/animated_object.h"
+#include "../physics_object.h"
 
 class FLTexturedSurface;
 struct texture;
 
-class FLPlayer : public FLAnimatedObject {
+class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
 		FLPlayer(FLTexturedSurface* surface);
 
 		void set_texture( texture *tex );
 		void update_surface();
 
-		float x() { return FLWorldObject::x(); }
-		float y() { return FLWorldObject::y(); }
-		float w() { return FLWorldObject::w(); }
-		float h() { return FLWorldObject::h(); }
 	private:
 		FLTexturedSurface* surface;
 };

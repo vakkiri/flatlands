@@ -16,6 +16,8 @@ FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int c
 	this->cell_size = cell_size;
 
 	surface = new FLTexturedSurface( r );
+
+	reset_collision_map();
 }
 
 FLTilemap::~FLTilemap() {
@@ -29,11 +31,14 @@ void FLTilemap::update_surface() {
 	surface->update_buffers( tiles );
 }
 
-void FLTilemap::add_tile(float x, float y, float w, float h, float index) {
+void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool solid ) {
 	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
 	t->set_st( index * cell_size, 0 );
 
 	tiles.push_back(t);
+
+	if ( solid )
+		collision_map[int(y / cell_size)][int(x / cell_size)] = true;
 }
 
 void FLTilemap::set_texture( texture *tex ) {
@@ -44,3 +49,10 @@ void FLTilemap::set_texture( std::string name ) {
 	((FLTexturedSurface*) surface)->set_tex( name );
 }
 
+void FLTilemap::reset_collision_map() {
+	collision_map = std::vector<std::vector<bool>>( int(h / cell_size), std::vector<bool>( int(w / cell_size), false ) );
+}
+
+bool FLTilemap::solid_at( float x, float y ) {
+	return collision_map[int(y / cell_size)][int(x / cell_size)];
+}
