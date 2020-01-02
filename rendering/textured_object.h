@@ -9,13 +9,12 @@
 #ifndef TEXTURED_OBJECT_H_
 #define TEXTURED_OBJECT_H_
 
-class FLTexturedObject {
+#include "../world/world_object.h"
+
+class FLTexturedObject : virtual public FLWorldObject {
 	public:
 		FLTexturedObject();
-		virtual float x() = 0;
-		virtual float y() = 0;
-		virtual float w() = 0;
-		virtual float h() = 0;
+		FLTexturedObject( float x, float y, float w, float h );
 		virtual float s();
 		virtual float t();
 

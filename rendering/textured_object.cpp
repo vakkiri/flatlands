@@ -5,10 +5,12 @@
 
 #include "textured_object.h"
 
-FLTexturedObject::FLTexturedObject() {
+FLTexturedObject::FLTexturedObject() : FLTexturedObject( 0, 0, 0, 0 ) {}
+
+FLTexturedObject::FLTexturedObject( float x, float y, float w, float h ) : FLWorldObject( x, y, w, h ) {
 	_s = 0;
 	_t = 0;
-}
+};
 
 void FLTexturedObject::set_st( float s, float t ) {
 	_s = s;

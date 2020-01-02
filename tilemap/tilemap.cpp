@@ -4,11 +4,11 @@
  */
 
 #include "tilemap.h"
-#include "tile.h"
 
 #include "../logging/logging.h"
 #include "../rendering/rendered_surface.h"
 #include "../rendering/renderer.h"
+#include "../rendering/textured_object.h"
 
 FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size) {
 	this->w = w;
@@ -22,7 +22,7 @@ FLTilemap::~FLTilemap() {
 	log_progress("Deleting tilemap");
 	delete surface;
 	for (FLTexturedObject *t : tiles)
-		delete (FLTile*) t;
+		delete t;
 }
 
 void FLTilemap::update_surface() {
@@ -30,7 +30,7 @@ void FLTilemap::update_surface() {
 }
 
 void FLTilemap::add_tile(float x, float y, float w, float h, float index) {
-	FLTile *t = new FLTile(x, y, w, h);
+	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
 	t->set_st( index * cell_size, 0 );
 
 	tiles.push_back(t);

@@ -9,13 +9,12 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "../../world/world_object.h"
-#include "../../rendering/textured_object.h"
+#include "../../rendering/animated_object.h"
 
 class FLTexturedSurface;
 struct texture;
 
-class FLPlayer : public FLWorldObject, FLTexturedObject {
+class FLPlayer : public FLAnimatedObject {
 	public:
 		FLPlayer(FLTexturedSurface* surface);
 

@@ -7,7 +7,7 @@
 #include "../../rendering/rendered_surface.h"
 #include "../../logging/logging.h"
 
-FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLWorldObject(), FLTexturedObject() {
+FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 4, 15, 16 ) {
 	this->surface = surface;
 	position.x = 32;
 	position.y = 64;

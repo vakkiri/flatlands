@@ -5,6 +5,7 @@
 */
 
 #include <SDL2/SDL.h>
+#include <iostream>
 
 #include "logging/logging.h"
 #include "rendering/renderer.h"
@@ -14,14 +15,18 @@
 #include "tilemap/tilemap.h"
 #include "world/player/player.h"
 
+#define TARGET_FPS 60
+#define MS_PER_FRAME (1000 / TARGET_FPS)
+
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
 
 	// Test objects...
 	FLTilemap tilemap(renderer, 512, 512, 16);
-	tilemap.add_tile(16, 16, 16, 16, 0);
-	tilemap.add_tile(48, 16, 16, 16, 0);
-	tilemap.add_tile(48, 32, 16, 16, 3);
+
+	for ( int i = 0; i < 50; i++ )
+		tilemap.add_tile(i * 16, 16, 16, 16, 0);
+
 	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();
 
@@ -36,14 +41,24 @@ void main_loop() {
 	SDL_Event e;
 	SDL_StartTextInput();
 
+	unsigned int start_time = 0;
+	unsigned int end_time = 0;
+
 	while ( !quit ) {
+		start_time = SDL_GetTicks();
+		end_time = start_time + MS_PER_FRAME;
+
 		while( SDL_PollEvent( &e ) != 0 ) {
 			quit = e.type == SDL_QUIT;
-
 			//handle input
 		}
 
+		player.update_animation();
+		player.update_surface();
+
 		renderer.render_and_swap();
+
+		while ( SDL_GetTicks() < end_time );
 	}
 }
 
