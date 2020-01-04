@@ -38,6 +38,7 @@ class FLResources {
 
 		bool init_images();
 		void init_il();
+		void init_physics();
 };
 
 #endif

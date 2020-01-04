@@ -15,6 +15,7 @@
 
 #include "tilemap/tilemap.h"
 #include "world/player/player.h"
+#include "world/world_environment.h"
 
 #define TARGET_FPS 60
 #define MS_PER_FRAME (1000 / TARGET_FPS)
@@ -24,6 +25,7 @@ void main_loop() {
 
 	// Test objects...
 	FLTilemap tilemap(renderer, 512, 512, 16);
+	FLWorldEnvironment::getInstance().set_tilemap(&tilemap);
 
 	for ( int i = 0; i < 50; i++ )
 		tilemap.add_tile(i * 16, 256, 16, 16, 0, true);
@@ -57,10 +59,6 @@ void main_loop() {
 		player.update_animation();
 		player.update_surface();
 		player.update_physics();
-		player.accelerate(point(0, 0.1));
-
-		if ( tilemap.solid_at(player.x(), player.y() + player.h()) )
-			player.stop_vertical();
 
 		// end of test code -----------------
 

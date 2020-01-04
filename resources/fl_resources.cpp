@@ -9,12 +9,15 @@
 #include <SDL2/SDL_opengl.h>
 
 #include "../logging/logging.h"
+#include "../world/physics_settings.h"
 #include "fl_resources.h"
 
 #define IMAGE_RESOURCE_PATH "test-assets/image-resources.csv"
 
 bool FLResources::init() {
 	log_progress( "Initializing assets" );
+
+	init_physics();
 
 	init_il();
 
@@ -27,6 +30,36 @@ bool FLResources::init() {
 void FLResources::close() {
 	for (auto& it : image_dict)
 		delete it.second;
+}
+
+void FLResources::init_physics() {
+	log_progress( "Loading physics csv" );
+	std::string csv_path = "settings/physics.csv";
+
+	FLPhysics& physics = FLPhysics::getInstance();
+
+	std::ifstream csv_file;
+	std::string line;
+	std::string name;
+	float value;
+	std::string path;
+	csv_file.open(csv_path);
+
+	if ( !csv_file.is_open() )
+		log_warning( "Could not open image .csv file" );
+	else {
+		while (!csv_file.eof()) {
+			getline(csv_file, line);
+			if (line.size() > 0) {
+				int pos = line.find(",");
+				name = line.substr(0, pos);
+				value = std::stof(line.substr(pos+1, line.size() - pos));
+				physics.set_attribute( name, value );
+			}
+		}
+	}
+
+	csv_file.close();
 }
 
 void FLResources::init_il() {

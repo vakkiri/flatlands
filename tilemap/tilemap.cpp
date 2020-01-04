@@ -54,5 +54,11 @@ void FLTilemap::reset_collision_map() {
 }
 
 bool FLTilemap::solid_at( float x, float y ) {
-	return collision_map[int(y / cell_size)][int(x / cell_size)];
+	int _y = int(y / cell_size);
+	int _x = int(x / cell_size);
+
+	if (_x < 0 || _y < 0 || _x >= (w/cell_size) || _y >= (h/cell_size))
+		return false;
+
+	return collision_map[_y][_x];
 }

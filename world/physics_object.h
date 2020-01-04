@@ -10,6 +10,9 @@
 
 #include "world_object.h"
 
+class FLPhysics;
+class FLWorldEnvironment;
+
 class FLPhysicsObject : virtual public FLWorldObject {
 	public:
 		FLPhysicsObject();
@@ -25,6 +28,7 @@ class FLPhysicsObject : virtual public FLWorldObject {
 		bool collides_with( FLPhysicsObject& other );
 		bool collides_with_tile();
 
+		virtual void update_position();
 		virtual void update_physics();
 
 		void set_vel(point vel);
@@ -35,6 +39,9 @@ class FLPhysicsObject : virtual public FLWorldObject {
 		void stop_vertical();
 
 	private:
+		FLPhysics& physics;
+		FLWorldEnvironment& environment;
+
 		point vel;
 		point accel;
 		rect bounds_margin;
