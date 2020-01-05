@@ -37,7 +37,13 @@ class FLPhysicsObject : virtual public FLWorldObject {
 
 		void stop_horizontal();
 		void stop_vertical();
+		
+		bool on_ground();
+	protected:
+		unsigned int on_ground_timer;
 
+		virtual void apply_gravity();
+		virtual void apply_friction();
 	private:
 		FLPhysics& physics;
 		FLWorldEnvironment& environment;

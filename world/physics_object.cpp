@@ -3,11 +3,14 @@
  *
  */
 
+#include <algorithm>
+
 #include "physics_object.h"
 #include "physics_settings.h"
 #include "world_environment.h"
 
 #define PHYSICS_EPSILON 0.1
+#define ON_GROUND_GRACE_FRAMES 5
 
 FLPhysicsObject::FLPhysicsObject() : FLPhysicsObject( 0, 0, 0, 0 ) {};
 
@@ -16,6 +19,8 @@ FLPhysicsObject::FLPhysicsObject( float x, float y, float w, float h ) : FLWorld
 	bounds_margin.y = 0;
 	bounds_margin.w = 0;
 	bounds_margin.h = 0;
+
+	on_ground_timer = 0;
 };
 
 void FLPhysicsObject::set_bounds_margin( rect& new_bounds ) {
@@ -51,6 +56,7 @@ void FLPhysicsObject::update_position() {
 			while (environment.solid_at(bounds_x(), bounds_y() + bounds_h())) {
 				position.y -= 8;
 			}
+			on_ground_timer = ON_GROUND_GRACE_FRAMES;
 			stop_vertical();
 		}
 	}
@@ -101,8 +107,26 @@ void FLPhysicsObject::update_position() {
 	move( vel );
 }
 
-void FLPhysicsObject::update_physics() {
+void FLPhysicsObject::apply_gravity() {
 	accel.y += physics.gravity();
+}
+
+void FLPhysicsObject::apply_friction() {
+	if ( on_ground() ) {
+		if (vel.x > 0)
+			vel.x = std::max(vel.x - physics.friction(), 0.f);
+		else if (vel.x < 0)
+			vel.x = std::min(vel.x + physics.friction(), 0.f);
+	}
+}
+
+void FLPhysicsObject::update_physics() {
+	if ( on_ground_timer > 0 )
+		on_ground_timer--;
+
+	apply_gravity();
+	apply_friction();
+
 	vel += accel;
 
 	update_position();
@@ -130,3 +154,8 @@ void FLPhysicsObject::move( point amt ) {
 	position.x += amt.x;
 	position.y += amt.y;
 }
+
+bool FLPhysicsObject::on_ground() {
+	return on_ground_timer > 0;
+}
+

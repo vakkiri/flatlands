@@ -21,7 +21,14 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		void set_texture( texture *tex );
 		void update_surface();
+
+		// movement methods
 		void jump();
+		void move_left();
+		void move_right();
+
+	protected:
+		virtual void bind_actions();
 
 	private:
 		FLTexturedSurface* surface;
