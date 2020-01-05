@@ -44,12 +44,13 @@ class FLPhysicsObject : virtual public FLWorldObject {
 
 		virtual void apply_gravity();
 		virtual void apply_friction();
+
+		point vel;
+		point accel;
 	private:
 		FLPhysics& physics;
 		FLWorldEnvironment& environment;
 
-		point vel;
-		point accel;
 		rect bounds_margin;
 
 };

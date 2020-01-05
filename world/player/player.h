@@ -27,9 +27,11 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		void move_left();
 		void move_right();
 
+		virtual void update_physics();
+
 	protected:
 		virtual void bind_actions();
-
+		virtual void bound_velocity();
 	private:
 		FLTexturedSurface* surface;
 };

@@ -9,7 +9,11 @@
 #include "../../rendering/rendered_surface.h"
 #include "../../logging/logging.h"
 
-#define WALK_ACCEL (0.5)
+#define INITIAL_WALK_ACCEL (1.3)
+#define WALK_ACCEL (0.55)
+#define JUMP_ACCEL (4.5)
+#define X_TERMINAL_VELOCITY (3.9)
+#define Y_TERMINAL_VELOCITY (10.0)
 
 FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 4, 15, 16 ) {
 	this->surface = surface;
@@ -44,15 +48,41 @@ void FLPlayer::set_texture( texture *tex ) {
 
 void FLPlayer::jump() {
 	if ( on_ground() )
-		accelerate(point(0, -4.0));
+		accelerate(point(0, -JUMP_ACCEL));
 }
 
 void FLPlayer::move_right() {
-	accelerate(point(WALK_ACCEL, 0));
+	// accelerate more if we do not have much momentum, to break past
+	// the initial resistance of friction
+	if ( vel.x > 0 && vel.x < 1 )
+		accelerate(point(INITIAL_WALK_ACCEL, 0));
+	else
+		accelerate(point(WALK_ACCEL, 0));
 }
 
 void FLPlayer::move_left() {
-	accelerate(point(-WALK_ACCEL, 0));
+	// accelerate more if we do not have much momentum, to break past
+	// the initial resistance of friction
+	if ( vel.x < 0 && vel.x > -1 )
+		accelerate(point(-INITIAL_WALK_ACCEL, 0));
+	else
+		accelerate(point(-WALK_ACCEL, 0));
 }
 
+void FLPlayer::bound_velocity() {
+	if ( vel.x > X_TERMINAL_VELOCITY )
+		vel.x = X_TERMINAL_VELOCITY;
+	else if ( vel.x < -X_TERMINAL_VELOCITY )
+		vel.x = -X_TERMINAL_VELOCITY;
+
+	if ( vel.y > Y_TERMINAL_VELOCITY )
+		vel.y = Y_TERMINAL_VELOCITY;
+	else if ( vel.y < -Y_TERMINAL_VELOCITY )
+		vel.y = -Y_TERMINAL_VELOCITY;
+}
+
+void FLPlayer::update_physics() {
+	FLPhysicsObject::update_physics();
+	bound_velocity();
+}
 
