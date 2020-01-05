@@ -24,9 +24,11 @@ class FLPhysics {
 
 		float gravity() { return _gravity; }
 		float friction() { return _friction; }
+		float air_resist() { return _air_resist; }
 	protected:
 		float _gravity;
 		float _friction;
+		float _air_resist;
 		std::unordered_map<std::string, float*> attr_dict;
 
 	private:

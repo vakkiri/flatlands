@@ -26,11 +26,16 @@ void main_loop() {
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
 
 	// Test objects...
-	FLTilemap tilemap(renderer, 512, 512, 16);
+	FLTilemap tilemap(renderer, 1024, 1024, 1);
 	FLWorldEnvironment::getInstance().set_tilemap(&tilemap);
 
 	for ( int i = 0; i < 50; i++ )
 		tilemap.add_tile(i * 16, 256, 16, 16, 0, true);
+
+	tilemap.add_tile(128, 256-32, 16, 16, 0, true);
+	tilemap.add_tile(128+16, 256-32, 16, 16, 0, true);
+	tilemap.add_tile(128+16, 256-16, 16, 16, 0, true);
+	tilemap.add_tile(128+16, 256-48, 16, 16, 0, true);
 
 	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();

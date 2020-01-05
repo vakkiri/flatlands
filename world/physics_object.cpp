@@ -47,7 +47,9 @@ void FLPhysicsObject::update_position() {
 	// y direction:
 	// moving down:
 	if ( vel.y > 0 ) {
-		if (environment.solid_at(bounds_x(), next.y + bounds_h())) {
+		// check bottom left + bottom right
+		if (environment.solid_at(bounds_x(), next.y + bounds_h()) ||
+		    environment.solid_at(bounds_x() + bounds_w(), next.y + bounds_h())) {
 			// move feet to tile top
 			int tile_pos = int(next.y + bounds_h());
 			tile_pos -= (tile_pos % 8);
@@ -63,10 +65,12 @@ void FLPhysicsObject::update_position() {
 
 	// moving up:
 	else if ( vel.y < 0 ) {
-		if (environment.solid_at(bounds_x(), next.y)) {
+		// check top left and top right
+		if (environment.solid_at(bounds_x(), next.y) ||
+		    environment.solid_at(bounds_x() + bounds_w(), next.y)) {
 			// move head to tile bottom
 			int tile_pos = int(next.y);
-			tile_pos += (tile_pos % 8);
+			tile_pos += (8 - (tile_pos % 8));
 			position.y = tile_pos + PHYSICS_EPSILON;
 				
 			while (environment.solid_at(bounds_x(), bounds_y())) {
@@ -79,7 +83,9 @@ void FLPhysicsObject::update_position() {
 	// x direction:
 	// moving right:
 	if ( vel.x > 0 ) {
-		if (environment.solid_at(next.x + bounds_w(), bounds_y())) {
+		// check top right and bottom right
+		if (environment.solid_at(next.x + bounds_w(), bounds_y()) ||
+		    environment.solid_at(next.x + bounds_w(), bounds_y() + bounds_h())) {
 			int tile_pos = int(next.x + bounds_w());
 			tile_pos += (tile_pos % 8);
 			position.x = tile_pos - bounds_h() - PHYSICS_EPSILON;
@@ -91,10 +97,12 @@ void FLPhysicsObject::update_position() {
 		}
 	}
 	// moving left:
-	if ( vel.x > 0 ) {
-		if (environment.solid_at(next.x, bounds_y())) {
-			int tile_pos = int(next.y + bounds_h());
-			tile_pos += (tile_pos % 8);
+	else if ( vel.x < 0 ) {
+		// check top left and bottom left
+		if (environment.solid_at(next.x, bounds_y()) ||
+		    environment.solid_at(next.x, bounds_y() + bounds_h())) {
+			int tile_pos = int(next.x);
+			tile_pos += (8 - (tile_pos % 8));
 			position.x = tile_pos + PHYSICS_EPSILON;
 
 			while (environment.solid_at(bounds_x(), bounds_y())) {
@@ -112,12 +120,17 @@ void FLPhysicsObject::apply_gravity() {
 }
 
 void FLPhysicsObject::apply_friction() {
-	if ( on_ground() ) {
-		if (vel.x > 0)
-			vel.x = std::max(vel.x - physics.friction(), 0.f);
-		else if (vel.x < 0)
-			vel.x = std::min(vel.x + physics.friction(), 0.f);
-	}
+	float amt;
+
+	if ( on_ground() )
+		amt = physics.friction();
+	else
+		amt = physics.air_resist();
+
+	if (vel.x > 0)
+		vel.x = std::max(vel.x - amt, 0.f);
+	else if (vel.x < 0)
+		vel.x = std::min(vel.x + amt, 0.f);
 }
 
 void FLPhysicsObject::update_physics() {

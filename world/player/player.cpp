@@ -9,7 +9,7 @@
 #include "../../rendering/rendered_surface.h"
 #include "../../logging/logging.h"
 
-#define WALK_ACCEL (0.1)
+#define WALK_ACCEL (0.5)
 
 FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 4, 15, 16 ) {
 	this->surface = surface;

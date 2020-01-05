@@ -37,8 +37,19 @@ void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool 
 
 	tiles.push_back(t);
 
-	if ( solid )
-		collision_map[int(y / cell_size)][int(x / cell_size)] = true;
+	if ( solid ) {
+		int x_cells = int(w / cell_size);
+		int y_cells = int(h / cell_size);
+		int x_cell;
+		int y_cell;
+		for (int i = 0; i < y_cells; ++i) {
+			y_cell = int(y / cell_size) + i;
+			for (int j = 0; j < x_cells; ++j) {
+				x_cell = int(x / cell_size) + j;
+				collision_map[y_cell][x_cell] = true; 
+			}
+		}
+	}
 }
 
 void FLTilemap::set_texture( texture *tex ) {

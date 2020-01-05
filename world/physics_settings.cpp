@@ -11,9 +11,11 @@
 FLPhysics::FLPhysics() : 
 	_gravity(0.01), 
 	_friction(0.01), 
+	_air_resist(0.01), 
 	attr_dict{
 		{"gravity", &_gravity},
-		{"friction", &_friction}
+		{"friction", &_friction},
+		{"air_resist", &_air_resist}
 	}{}
 
 void FLPhysics::set_attribute( std::string name, float val ) {
