@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
+#include "input/input_handler.h"
 #include "logging/logging.h"
 #include "rendering/renderer.h"
 #include "common/common.h"
@@ -22,6 +23,7 @@
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
+	FLInputHandler& input_handler = FLInputHandler::getInstance();
 
 	// Test objects...
 	FLTilemap tilemap(renderer, 512, 512, 16);
@@ -39,9 +41,7 @@ void main_loop() {
 	// End of test objects
 
 	bool quit = false;
-
-	SDL_Event e;
-	SDL_StartTextInput();
+	input_handler.init();
 
 	unsigned int start_time = 0;
 	unsigned int end_time = 0;
@@ -50,12 +50,10 @@ void main_loop() {
 		start_time = SDL_GetTicks();
 		end_time = start_time + MS_PER_FRAME;
 
-		while( SDL_PollEvent( &e ) != 0 ) {
-			quit = e.type == SDL_QUIT;
-			//handle input
-		}
+		quit = input_handler.input_loop();
 
 		// test code -------------------------
+
 		player.update_animation();
 		player.update_surface();
 		player.update_physics();
