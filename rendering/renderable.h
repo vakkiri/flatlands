@@ -13,7 +13,7 @@ class FLRenderedSurface;
 
 class FLRenderable {
 	public:
-		FLRenderable(Renderer &r);
+		FLRenderable();
 		virtual ~FLRenderable();
 
 		virtual void render() = 0;

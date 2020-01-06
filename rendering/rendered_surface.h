@@ -16,13 +16,12 @@
 #include <vector>
 
 struct texture;
-class Renderer;
 class FLTexturedObject;
 class FLTexturedRectShader;
 
 class FLRenderedSurface : public FLRenderable {
 	public:
-		FLRenderedSurface(Renderer& r);
+		FLRenderedSurface();
 		virtual void render() = 0;
 		virtual void update_buffers( std::vector<FLTexturedObject*>& objects ) = 0;
 
@@ -36,7 +35,7 @@ class FLRenderedSurface : public FLRenderable {
 
 class FLTexturedSurface : public FLRenderedSurface {
 	public:
-		FLTexturedSurface( Renderer &r );
+		FLTexturedSurface();
 		virtual void render();
 		virtual void update_buffers( std::vector<FLTexturedObject*>& objects );
 		virtual void update_buffers( FLTexturedObject* object );

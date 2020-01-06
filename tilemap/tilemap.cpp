@@ -10,12 +10,12 @@
 #include "../rendering/renderer.h"
 #include "../rendering/textured_object.h"
 
-FLTilemap::FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size) {
+FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
 	this->w = w;
 	this->h = h;
 	this->cell_size = cell_size;
 
-	surface = new FLTexturedSurface( r );
+	surface = Renderer::getInstance().get_tilemap_surface();
 
 	reset_collision_map();
 }

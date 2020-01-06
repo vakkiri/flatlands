@@ -12,7 +12,7 @@
 
 #define RESTART 0xFFFF
 
-FLRenderedSurface::FLRenderedSurface(Renderer& r) : FLRenderable(r) {
+FLRenderedSurface::FLRenderedSurface() : FLRenderable() {
 	// initialize buffers
 	vbo = 0;
 	ibo = 0;
@@ -35,7 +35,7 @@ FLRenderedSurface::FLRenderedSurface(Renderer& r) : FLRenderable(r) {
 	num_indices = 0;
 }
 
-FLTexturedSurface::FLTexturedSurface( Renderer& r ) : shader(r.get_textured_rect_shader()), FLRenderedSurface(r) {
+FLTexturedSurface::FLTexturedSurface() : shader(Renderer::getInstance().get_textured_rect_shader()), FLRenderedSurface() {
 	tex = nullptr;
 }
 

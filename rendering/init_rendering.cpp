@@ -119,8 +119,8 @@ bool Renderer::init() {
 		return false;
 	}
 
-	// TODO: This is ugly, refactor so we don't have to dereference "this"
-	world_surface = new FLTexturedSurface(*this);
+	world_surface = new FLTexturedSurface();
+	tilemap_surface = new FLTexturedSurface();
 	return true;
 }
 

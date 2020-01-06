@@ -54,3 +54,7 @@ FLTexturedRectShader& Renderer::get_textured_rect_shader() {
 FLTexturedSurface* Renderer::get_world_surface() {
 	return world_surface;
 }
+
+FLTexturedSurface* Renderer::get_tilemap_surface() {
+	return tilemap_surface;
+}

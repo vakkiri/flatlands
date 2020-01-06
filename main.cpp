@@ -26,7 +26,7 @@ void main_loop() {
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
 
 	// Test objects...
-	FLTilemap tilemap(renderer, 1024, 1024, 1);
+	FLTilemap tilemap(1024, 1024, 1);
 	FLWorldEnvironment::getInstance().set_tilemap(&tilemap);
 
 	for ( int i = 0; i < 50; i++ )

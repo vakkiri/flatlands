@@ -13,12 +13,11 @@
 
 class FLTexturedObject;
 class FLTexturedSurface;
-class Renderer;
 struct texture;
 
 class FLTilemap {
 	public:
-		FLTilemap(Renderer& r, unsigned int w, unsigned int h, unsigned int cell_size);
+		FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size);
 		virtual ~FLTilemap();
 
 		void update_surface();

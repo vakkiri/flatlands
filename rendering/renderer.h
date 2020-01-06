@@ -42,6 +42,7 @@ class Renderer {
 
 		// Surfaces
 		FLTexturedSurface *world_surface;
+		FLTexturedSurface *tilemap_surface;
 
 		// Private methods
 		bool init_sdl();	
@@ -62,6 +63,7 @@ class Renderer {
 
 		FLTexturedRectShader& get_textured_rect_shader();
 		FLTexturedSurface *get_world_surface();
+		FLTexturedSurface *get_tilemap_surface();
 
 		static Renderer& getInstance() {
 			static Renderer instance;

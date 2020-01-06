@@ -7,8 +7,8 @@
 #include "renderable.h"
 #include "renderer.h"
 
-FLRenderable::FLRenderable(Renderer &r) {
-	r.add_renderable(this);
+FLRenderable::FLRenderable() {
+	Renderer::getInstance().add_renderable(this);
 	visible = true;
 }
 
