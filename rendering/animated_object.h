@@ -11,7 +11,7 @@
 
 #include "textured_object.h"
 
-class FLAnimatedObject : public FLTexturedObject {
+class FLAnimatedObject : virtual public FLTexturedObject {
 	public:
 		FLAnimatedObject();
 		FLAnimatedObject(unsigned int num_steps, unsigned int frames_per_step, float step);
@@ -22,13 +22,16 @@ class FLAnimatedObject : public FLTexturedObject {
 		void stop_animation();
 
 		virtual float s();
+		virtual float t();
 
 	protected:
-		float step;	// how much to move _s by each frame
+		float s_step;	// how much to move _s by each frame
+		float t_step;	// how much to move _t by when animation changes
 		unsigned int cur_step;
 		unsigned int num_steps;
 		unsigned int frames_per_step;
 		unsigned int elapsed_frames;
+		unsigned int cur_animation;
 		bool repeats;
 		bool active;
 };

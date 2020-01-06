@@ -20,9 +20,12 @@ class FLTexturedObject : virtual public FLWorldObject {
 
 		void set_st( float s, float y );
 
+		void set_reverse( bool reverse );
+		bool reversed();
 	protected:
 		float _s;
 		float _t;
+		bool reverse;
 };
 
 #endif

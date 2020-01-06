@@ -9,13 +9,13 @@
 #include "../../rendering/rendered_surface.h"
 #include "../../logging/logging.h"
 
-#define INITIAL_WALK_ACCEL (1.3)
-#define WALK_ACCEL (0.55)
+#define INITIAL_WALK_ACCEL (1.5)
+#define WALK_ACCEL (0.5)
 #define JUMP_ACCEL (4.5)
-#define X_TERMINAL_VELOCITY (3.9)
+#define X_TERMINAL_VELOCITY (4.2)
 #define Y_TERMINAL_VELOCITY (10.0)
 
-FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 4, 15, 16 ) {
+FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 3, 10, 16 ) {
 	this->surface = surface;
 	position.x = 32;
 	position.y = 64;
@@ -49,6 +49,7 @@ void FLPlayer::set_texture( texture *tex ) {
 void FLPlayer::jump() {
 	if ( on_ground() )
 		accelerate(point(0, -JUMP_ACCEL));
+		cur_animation = 2;
 }
 
 void FLPlayer::move_right() {
@@ -58,6 +59,10 @@ void FLPlayer::move_right() {
 		accelerate(point(INITIAL_WALK_ACCEL, 0));
 	else
 		accelerate(point(WALK_ACCEL, 0));
+
+	// TODO: this should be based on an enumerated state
+	cur_animation = 1;
+	set_reverse(false);
 }
 
 void FLPlayer::move_left() {
@@ -67,6 +72,10 @@ void FLPlayer::move_left() {
 		accelerate(point(-INITIAL_WALK_ACCEL, 0));
 	else
 		accelerate(point(-WALK_ACCEL, 0));
+
+	// TODO: this should be based on an enumerated state
+	cur_animation = 1;
+	set_reverse(true);
 }
 
 void FLPlayer::bound_velocity() {
@@ -84,5 +93,10 @@ void FLPlayer::bound_velocity() {
 void FLPlayer::update_physics() {
 	FLPhysicsObject::update_physics();
 	bound_velocity();
+
+	if ( !on_ground() )
+		cur_animation = 2;
+	else
+		cur_animation = 0;
 }
 

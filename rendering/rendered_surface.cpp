@@ -145,10 +145,18 @@ void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
 	float ttop;
 	float tbot;
 
-	tleft = ( object->s() / tex->w );
-	tright = tleft + ( object->w() / tex->w );
-	ttop = ( object->t() / tex->h );
-	tbot = ttop + ( object->h() / tex->h );
+	if ( !object->reversed() ) {
+		tleft = ( object->s() / tex->w );
+		tright = tleft + ( object->w() / tex->w );
+		ttop = ( object->t() / tex->h );
+		tbot = ttop + ( object->h() / tex->h );
+	}
+	else {
+		tright = ( object->s() / tex->w );
+		tleft = tright + ( object->w() / tex->w );
+		ttop = ( object->t() / tex->h );
+		tbot = ttop + ( object->h() / tex->h );
+	}
 
 	// vertex position
 	vbuf[0] = object->x();

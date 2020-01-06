@@ -17,7 +17,11 @@ FLAnimatedObject::FLAnimatedObject() : FLTexturedObject() {
 FLAnimatedObject::FLAnimatedObject( unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject() {
 	this->num_steps = num_steps;
 	this->frames_per_step = frames_per_step;
-	this->step = step;
+	this->s_step = step;
+	this->t_step = step;
+	cur_animation = 0;
+	cur_step = 0;
+	// TODO: should take separate parameters for s and t steps
 }
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats ) : FLAnimatedObject( num_steps, frames_per_step, step ) {
@@ -35,12 +39,13 @@ void FLAnimatedObject::update_animation() {
 			if ( cur_step++ >= num_steps ) {
 				cur_step = 0;
 
-				if ( !repeats )
+			if ( !repeats )
 					active = false;
 			}
 		}
 	}
 }
 
-float FLAnimatedObject::s() { return _s + ( step * cur_step ); }
+float FLAnimatedObject::s() { return _s + ( s_step * cur_step ); }
+float FLAnimatedObject::t() { return _t + ( t_step * cur_animation ); }
 
