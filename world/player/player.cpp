@@ -15,7 +15,7 @@
 #define X_TERMINAL_VELOCITY (4.2)
 #define Y_TERMINAL_VELOCITY (6.0)
 
-FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 3, 10, 16 ) {
+FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 4, 3, 10, 16 ) {
 	this->surface = surface;
 	position.x = 32;
 	position.y = 64;
@@ -23,6 +23,9 @@ FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 3, 10, 16 ) {
 	position.h = 16;
 
 	bind_actions();
+	// TODO: Game specific animation settings should be loaded from
+	// an external file.
+	set_start_repeat(10, 0);
 }
 
 void FLPlayer::bind_actions() {
@@ -49,7 +52,8 @@ void FLPlayer::set_texture( texture *tex ) {
 void FLPlayer::jump() {
 	if ( on_ground() )
 		accelerate(point(0, -JUMP_ACCEL));
-		cur_animation = 2;
+		reset_animation();
+		set_animation( 2 );
 }
 
 void FLPlayer::move_right() {
@@ -61,8 +65,7 @@ void FLPlayer::move_right() {
 		accelerate(point(WALK_ACCEL, 0));
 
 	// TODO: this should be based on an enumerated state
-	// TODO: should call a method to set the current animation
-	cur_animation = 1;
+	set_animation(1);
 	set_reverse(false);
 }
 
@@ -75,7 +78,7 @@ void FLPlayer::move_left() {
 		accelerate(point(-WALK_ACCEL, 0));
 
 	// TODO: this should be based on an enumerated state
-	cur_animation = 1;
+	set_animation(1);
 	set_reverse(true);
 }
 
@@ -96,8 +99,8 @@ void FLPlayer::update_physics() {
 	bound_velocity();
 
 	if ( !on_ground() )
-		cur_animation = 2;
+		set_animation(2);
 	else
-		cur_animation = 0;
+		set_animation(0);
 }
 

@@ -44,7 +44,7 @@ bool Renderer::init_gl() {
 	// Set viewport
 	glViewport( 0.f, 0.f, (float) screen_width, (float) screen_height );
 
-	glClearColor( 0.1f, 0.f, 0.05f, 1.0f );
+	glClearColor( 0.8f, 0.75f, 0.775f, 1.0f );
 	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_BLEND );
 	glDisable( GL_DEPTH_TEST );

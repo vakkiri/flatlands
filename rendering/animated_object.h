@@ -9,17 +9,21 @@
 #ifndef ANIMATED_OBJECT_H_
 #define ANIMATED_OBJECT_H_
 
+#include <vector>
 #include "textured_object.h"
 
 class FLAnimatedObject : virtual public FLTexturedObject {
 	public:
-		FLAnimatedObject();
-		FLAnimatedObject(unsigned int num_steps, unsigned int frames_per_step, float step);
-		FLAnimatedObject(unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats);
+		FLAnimatedObject(unsigned int num_animations);
+		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step);
+		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats);
 
 		virtual void update_animation();
 		void start_animation();
+		void reset_animation();
+		void set_animation( unsigned int animation );
 		void stop_animation();
+		void set_start_repeat( unsigned int repeat, unsigned int animation );
 
 		virtual float s();
 		virtual float t();
@@ -31,7 +35,10 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		unsigned int num_steps;
 		unsigned int frames_per_step;
 		unsigned int elapsed_frames;
+		unsigned int elapsed_start_steps;
 		unsigned int cur_animation;
+		unsigned int num_animations;
+		std::vector<unsigned int> start_repeat;	//how many times to repeat the first frame of the animation
 		bool repeats;
 		bool active;
 };
