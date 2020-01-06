@@ -87,8 +87,8 @@ void FLPhysicsObject::update_position() {
 		if (environment.solid_at(next.x + bounds_w(), bounds_y()) ||
 		    environment.solid_at(next.x + bounds_w(), bounds_y() + bounds_h())) {
 			int tile_pos = int(next.x + bounds_w());
-			tile_pos += (tile_pos % 8);
-			position.x = tile_pos - bounds_h() - PHYSICS_EPSILON;
+			tile_pos -= (tile_pos % 8);
+			position.x = tile_pos - bounds_w() - PHYSICS_EPSILON;
 
 			while (environment.solid_at(bounds_x() + bounds_w(), bounds_y())) {
 				position.x -= 8;

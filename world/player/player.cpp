@@ -9,11 +9,11 @@
 #include "../../rendering/rendered_surface.h"
 #include "../../logging/logging.h"
 
-#define INITIAL_WALK_ACCEL (1.5)
+#define INITIAL_WALK_ACCEL (1.8)
 #define WALK_ACCEL (0.5)
 #define JUMP_ACCEL (4.5)
 #define X_TERMINAL_VELOCITY (4.2)
-#define Y_TERMINAL_VELOCITY (10.0)
+#define Y_TERMINAL_VELOCITY (6.0)
 
 FLPlayer::FLPlayer(FLTexturedSurface* surface) : FLAnimatedObject( 3, 10, 16 ) {
 	this->surface = surface;
@@ -61,6 +61,7 @@ void FLPlayer::move_right() {
 		accelerate(point(WALK_ACCEL, 0));
 
 	// TODO: this should be based on an enumerated state
+	// TODO: should call a method to set the current animation
 	cur_animation = 1;
 	set_reverse(false);
 }
