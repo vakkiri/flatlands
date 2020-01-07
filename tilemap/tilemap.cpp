@@ -81,3 +81,10 @@ void FLTilemap::reset() {
 	}
 }
 
+void FLTilemap::reset( unsigned int new_w, unsigned int new_h ) {
+	w = new_w;
+	h = new_h;
+
+	reset();
+}
+

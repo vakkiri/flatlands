@@ -9,6 +9,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include "../../resources/fl_resources.h"
 #include "../../rendering/animated_object.h"
 #include "../physics_object.h"
 
@@ -17,7 +18,7 @@ struct texture;
 
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
-		FLPlayer(FLTexturedSurface* surface);
+		FLPlayer();
 
 		void set_texture( texture *tex );
 		void update_surface();

@@ -10,6 +10,9 @@
 
 #include "../logging/logging.h"
 #include "../world/physics_settings.h"
+#include "../world/world_environment.h"
+#include "../world/player/player.h"
+#include "../tilemap/tilemap.h"
 #include "fl_resources.h"
 
 #define IMAGE_RESOURCE_PATH "test-assets/image-resources.csv"
@@ -146,12 +149,15 @@ texture* FLResources::get_image( std::string image_name ) {
 void FLResources::load_level( int id ) {
 	std::string filepath = BASE_RESOURCE_PATH + std::to_string(id) + ".lvl";
 	std::ifstream file ( filepath, std::ios::in|std::ios::binary|std::ios::ate );
+	FLTilemap* tilemap = FLWorldEnvironment::getInstance().tilemap();
+	FLPlayer* player = FLWorldEnvironment::getInstance().player();
 
 	if ( !file.is_open() ) {
 		log_error("Could not open map file");
 	}
 	else {
 		log_progress("Loading map");
+		tilemap->reset();
 
 		// TODO: create new map format
 		// This code is largely just a carryover from the format of an
@@ -177,15 +183,30 @@ void FLResources::load_level( int id ) {
 				// input[3]: map width
 				// input[4]: map height
 
+				tilemap->reset( input[3], input[4] );
 				input += 5;
 			}
 			else if ( current_type == 1 ) {
 				// input[1]: player x
 				// input[2]: player y
+				player->set_x( input[1] );
+				player->set_y( input[2] );
 				input += 3;
 			}
 			else if ( current_type == 2 ) {
-				// ADD TILES HERE!
+				// input[1]: x
+				// input[2]: y
+				// input[3]: id
+				// input[4]: solid?
+				// input[5]: layer
+				tilemap->add_tile(
+							(float)input[1],
+							(float)input[2],
+							16.f,
+							16.f,
+							(float)input[3]+1,
+							(bool)input[4]
+						);
 				input += 6;
 			}
 			else if ( current_type == 3 ) {

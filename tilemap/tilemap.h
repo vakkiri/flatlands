@@ -23,6 +23,7 @@ class FLTilemap {
 		void load_map( int id );
 		void update_surface();
 		void reset();
+		void reset( unsigned int new_w, unsigned int new_h );
 		void reset_collision_map();
 		void set_texture( texture *tex );
 		void set_texture( std::string name );

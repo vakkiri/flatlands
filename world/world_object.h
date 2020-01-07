@@ -15,6 +15,8 @@ class FLWorldObject {
 		FLWorldObject(){};
 		FLWorldObject(float x, float y, float w, float h);
 
+		virtual void set_x( float x );
+		virtual void set_y( float y );
 		virtual float x();
 		virtual float y();
 		virtual float w();

@@ -10,6 +10,7 @@
 #define FL_WORLD_ENVIRONMENT_H_
 
 class FLTilemap;
+class FLPlayer;
 
 class FLWorldEnvironment {
 	public:
@@ -18,12 +19,19 @@ class FLWorldEnvironment {
 			return instance;
 		}
 
+		virtual void update();
+
+		void set_player(FLPlayer* player);
+		FLPlayer* player();
+
 		FLTilemap* tilemap();
 		void set_tilemap(FLTilemap* tilemap);
+		void reset_tilemap();
+
 		bool solid_at(float x, float y);
 	protected:
 		FLTilemap* _tilemap;
-
+		FLPlayer* _player;
 	private:
 		// Disallow copying/construction
 		FLWorldEnvironment(){};

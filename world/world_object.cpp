@@ -12,6 +12,9 @@ FLWorldObject::FLWorldObject( float x, float y, float w, float h ) {
 	position.h = h;
 }
 
+void FLWorldObject::set_x( float x ) { position.x = x; }
+void FLWorldObject::set_y( float y ) { position.y = y; }
+
 float FLWorldObject::x() { return position.x; }
 float FLWorldObject::y() { return position.y; }
 float FLWorldObject::w() { return position.w; }

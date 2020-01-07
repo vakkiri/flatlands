@@ -23,27 +23,18 @@
 
 void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
+	FLWorldEnvironment& world = FLWorldEnvironment::getInstance();
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
 
 	// Test objects...
-	FLTilemap tilemap(1024, 1024, 1);
+	FLTilemap tilemap(1024, 1024, 16);
+	world.set_tilemap(&tilemap);
+	world.set_player(new FLPlayer);
+
 	FLResources::getInstance().load_level(0);
-	FLWorldEnvironment::getInstance().set_tilemap(&tilemap);
-
-	for ( int i = 0; i < 50; i++ )
-		tilemap.add_tile(i * 16, 256, 16, 16, 0, true);
-
-	tilemap.add_tile(128, 256-32, 16, 16, 0, true);
-	tilemap.add_tile(128+16, 256-32, 16, 16, 0, true);
-	tilemap.add_tile(128+16, 256-16, 16, 16, 0, true);
-	tilemap.add_tile(128+16, 256-48, 16, 16, 0, true);
-
 	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();
 
-	FLPlayer player(renderer.get_world_surface());
-	player.set_texture( FLResources::getInstance().get_image("neko_idle") );
-	player.update_surface();
 	// End of test objects
 
 	bool quit = false;
@@ -58,13 +49,7 @@ void main_loop() {
 
 		quit = input_handler.input_loop();
 
-		// test code -------------------------
-
-		player.update_animation();
-		player.update_surface();
-		player.update_physics();
-
-		// end of test code -----------------
+		world.update();
 
 		renderer.render_and_swap();
 
