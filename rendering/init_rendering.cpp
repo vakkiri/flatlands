@@ -29,9 +29,11 @@ bool Renderer::init_shaders() {
 		return false;
 	}
 
+	world_camera = glm::mat4(1.0);
+
 	textured_rect_shader.create_program( "textured_rect_shader" );
 	textured_rect_shader.set_projection( projection_matrix );
-	textured_rect_shader.set_camera( glm::mat4(1.0) );
+	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
 	return true;

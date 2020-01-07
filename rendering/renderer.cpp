@@ -20,8 +20,18 @@ void Renderer::render() {
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
+	// TODO: separate renderables based on used camera
+	// ie. world renderables, ui renderables...
+	
+	// draw world
+	textured_rect_shader.set_camera( world_camera );
+	textured_rect_shader.update_pc_matrix();
+
 	for ( FLRenderable *r : renderables )
 		r->render();
+
+	// draw ui
+	// (not implemented yet)
 }
 
 void Renderer::render_and_swap() {
@@ -45,6 +55,18 @@ void Renderer::clear_null_renderables() {
 
 void Renderer::add_renderable(FLRenderable* r) {
 	renderables.push_back(r);
+}
+
+void Renderer::translate_world_camera( glm::vec3 translation ) {
+	world_camera = glm::translate( world_camera, translation );
+}
+
+float Renderer::world_camera_x() { 
+	return world_camera[3][0] - (screen_width / 2);
+}
+
+float Renderer::world_camera_y() { 
+	return world_camera[3][1] - (screen_height / 2);
 }
 
 FLTexturedRectShader& Renderer::get_textured_rect_shader() {

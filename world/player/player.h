@@ -28,7 +28,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		void move_right();
 
 		virtual void update_physics();
-
+		virtual void update_camera();
 	protected:
 		virtual void bind_actions();
 		virtual void bound_velocity();

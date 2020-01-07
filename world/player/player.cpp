@@ -3,10 +3,13 @@
  *
  */
 
+#include <iostream>
+
 #include "player.h"
 
 #include "../../input/input_handler.h"
 #include "../../rendering/rendered_surface.h"
+#include "../../rendering/renderer.h"
 #include "../../logging/logging.h"
 
 #define INITIAL_WALK_ACCEL (1.8)
@@ -98,9 +101,26 @@ void FLPlayer::update_physics() {
 	FLPhysicsObject::update_physics();
 	bound_velocity();
 
+	// TODO: animation update should not be part of physics update
 	if ( !on_ground() )
 		set_animation(2);
 	else
 		set_animation(0);
+
+	// TODO: camera update should not be part of physics update
+	update_camera();
+}
+
+void FLPlayer::update_camera() {
+	Renderer& r = Renderer::getInstance();
+	float xamt = 0;
+	float yamt = 0;
+	float dx = r.world_camera_x() + x();
+	float dy = r.world_camera_y() + y();
+
+	xamt = (dx / 250) * -4.5;
+	yamt = (dy / 250) * -4.5;
+
+	r.translate_world_camera( glm::vec3( xamt, yamt, 0 ) );
 }
 

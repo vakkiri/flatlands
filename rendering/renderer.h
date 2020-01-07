@@ -54,9 +54,14 @@ class Renderer {
 		unsigned int screen_height;
 		unsigned int screen_width;
 		glm::mat4 projection_matrix;
+		glm::mat4 world_camera;
 	public:
 		// Public methods
 		glm::mat4 get_projection_matrix();
+		void translate_world_camera( glm::vec3 translation );
+		float world_camera_x();
+		float world_camera_y();
+
 		void add_renderable(FLRenderable* r);
 		void render_and_swap();
 		void close();
