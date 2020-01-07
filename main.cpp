@@ -27,6 +27,7 @@ void main_loop() {
 
 	// Test objects...
 	FLTilemap tilemap(1024, 1024, 1);
+	FLResources::getInstance().load_level(0);
 	FLWorldEnvironment::getInstance().set_tilemap(&tilemap);
 
 	for ( int i = 0; i < 50; i++ )

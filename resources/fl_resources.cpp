@@ -13,6 +13,7 @@
 #include "fl_resources.h"
 
 #define IMAGE_RESOURCE_PATH "test-assets/image-resources.csv"
+#define BASE_RESOURCE_PATH "test-assets/"
 
 bool FLResources::init() {
 	log_progress( "Initializing assets" );
@@ -140,5 +141,101 @@ void FLResources::load_image( std::string path, std::string name ) {
 
 texture* FLResources::get_image( std::string image_name ) {
 	return image_dict[image_name];
+}
+
+void FLResources::load_level( int id ) {
+	std::string filepath = BASE_RESOURCE_PATH + std::to_string(id) + ".lvl";
+	std::ifstream file ( filepath, std::ios::in|std::ios::binary|std::ios::ate );
+
+	if ( !file.is_open() ) {
+		log_error("Could not open map file");
+	}
+	else {
+		log_progress("Loading map");
+
+		// TODO: create new map format
+		// This code is largely just a carryover from the format of an
+		// old engine (shift).
+
+		int current_type;
+		bool done = false;
+		int *input;
+		int size = file.tellg();
+
+		input = new int[size];
+
+		file.seekg( 0, std::ios::beg );
+		file.read((char*)input, size * sizeof(int));
+		file.close();
+		
+		while (!done) {
+			current_type = *input;
+
+			if ( current_type == 0 ) {
+				// input[1]: background
+				// input[2]: tileset
+				// input[3]: map width
+				// input[4]: map height
+
+				input += 5;
+			}
+			else if ( current_type == 1 ) {
+				// input[1]: player x
+				// input[2]: player y
+				input += 3;
+			}
+			else if ( current_type == 2 ) {
+				// ADD TILES HERE!
+				input += 6;
+			}
+			else if ( current_type == 3 ) {
+				input += 6;
+			}
+			else if ( current_type == 4) {
+				input += 8;
+			}
+			else if ( current_type == 5) {
+				input += 5;
+			}
+			else if ( current_type == 6 ) {
+				input += 3;
+			}
+			else if ( current_type == 7 ) {
+				input += 4;
+			}
+			else if ( current_type == 8 ) {
+				input += 7;
+			}
+			else if ( current_type == 9 ) {
+				input += 3;
+			}
+			else if ( current_type == 10 ) {
+				input += 4;
+			}
+			else if ( current_type == 11 ) { 
+				input += 4;
+			}
+			else if ( current_type == 12 ) {
+				input += 3;
+			}
+			else if ( current_type == 13 ) {
+				input += 3;
+			}
+			else if ( current_type == 14 ) {
+				input += 4;
+			}
+			else if ( current_type == 15 ) {
+				input += 3;
+			}
+			else if ( current_type == 16 ) {
+				input += 4;
+			}
+			else {
+				done = true;
+			}
+		}
+
+	}
+
 }
 

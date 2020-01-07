@@ -23,6 +23,7 @@ class FLResources {
 		bool init();
 		void close();
 
+		void load_level( int id );
 		void load_images( std::string csv_path );
 		void load_image( std::string path, std::string name );
 		texture* get_image( std::string image_name );

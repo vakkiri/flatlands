@@ -22,9 +22,7 @@ FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
 
 FLTilemap::~FLTilemap() {
 	log_progress("Deleting tilemap");
-	delete surface;
-	for (FLTexturedObject *t : tiles)
-		delete t;
+	reset();
 }
 
 void FLTilemap::update_surface() {
@@ -73,3 +71,13 @@ bool FLTilemap::solid_at( float x, float y ) {
 
 	return collision_map[_y][_x];
 }
+
+void FLTilemap::reset() {
+	reset_collision_map();
+
+	while ( !tiles.empty() ) {
+		delete tiles.back();
+		tiles.pop_back();
+	}
+}
+

@@ -20,7 +20,9 @@ class FLTilemap {
 		FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size);
 		virtual ~FLTilemap();
 
+		void load_map( int id );
 		void update_surface();
+		void reset();
 		void reset_collision_map();
 		void set_texture( texture *tex );
 		void set_texture( std::string name );
