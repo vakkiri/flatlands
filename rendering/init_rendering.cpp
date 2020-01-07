@@ -13,8 +13,8 @@
 
 #define PRIMITIVE_RESTART 65535
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 
 bool Renderer::init_shaders() {
 	GLenum error;
@@ -69,6 +69,7 @@ bool Renderer::init_window() {
 	log_progress("Creating window");
 
 	window = SDL_CreateWindow( "shift", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+
 	if ( window == nullptr ) {
 		log_error( SDL_GetError() );
 		return false;
@@ -104,7 +105,7 @@ bool Renderer::init_sdl() {
 bool Renderer::init() {
 	log_progress("Initializing rendering engine");
 	screen_width = SCREEN_WIDTH;
-	screen_height = SCREEN_WIDTH;
+	screen_height = SCREEN_HEIGHT;
 	
 	if (!init_sdl()) {
 		log_error("Could not initialize SDL");
