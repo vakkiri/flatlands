@@ -13,7 +13,7 @@
 #include "../../logging/logging.h"
 
 #define INITIAL_WALK_ACCEL (1.8)
-#define WALK_ACCEL (0.55)
+#define WALK_ACCEL (0.56)
 #define JUMP_ACCEL (4.5)
 #define X_TERMINAL_VELOCITY (4.2)
 #define Y_TERMINAL_VELOCITY (6.0)

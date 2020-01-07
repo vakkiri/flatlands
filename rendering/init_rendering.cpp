@@ -49,7 +49,6 @@ bool Renderer::init_gl() {
 	glViewport( 0.f, 0.f, (float) screen_width, (float) screen_height );
 
 	glClearColor( 0.8f, 0.75f, 0.775f, 1.0f );
-	glEnable( GL_TEXTURE_2D );
 	glEnable( GL_BLEND );
 	glDisable( GL_DEPTH_TEST );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
