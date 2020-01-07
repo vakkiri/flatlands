@@ -30,6 +30,8 @@ bool Renderer::init_shaders() {
 	}
 
 	world_camera = glm::mat4(1.0);
+	world_camera[0][0] = 2.0;
+	world_camera[1][1] = 2.0;
 
 	textured_rect_shader.create_program( "textured_rect_shader" );
 	textured_rect_shader.set_projection( projection_matrix );
