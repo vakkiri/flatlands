@@ -10,7 +10,7 @@
 #include "world_environment.h"
 
 #define PHYSICS_EPSILON 0.1
-#define ON_GROUND_GRACE_FRAMES 5
+#define ON_GROUND_GRACE_FRAMES 3
 
 FLPhysicsObject::FLPhysicsObject() : FLPhysicsObject( 0, 0, 0, 0 ) {};
 

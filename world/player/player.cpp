@@ -15,10 +15,10 @@
 
 #define INITIAL_WALK_ACCEL (1.8)
 #define WALK_ACCEL (0.56)
-#define JUMP_ACCEL (0.95)
+#define JUMP_ACCEL (0.98)
 #define X_TERMINAL_VELOCITY (4.2)
-#define Y_TERMINAL_VELOCITY (6.0)
-#define JUMP_HOLD_GRAVITY_FACTOR (1.5)
+#define Y_TERMINAL_VELOCITY (4.5)
+#define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
 	this->surface = Renderer::getInstance().get_world_surface();
