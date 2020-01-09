@@ -16,6 +16,14 @@
 class FLTexturedSurface;
 struct texture;
 
+enum FLPlayerAbility {
+	FL_NO_ABILITY,
+	FL_DOUBLE_JUMP,
+	FL_GROUND_POUND,
+	FL_HOVER,
+	FL_NUM_ABILITIES
+};
+
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
 		FLPlayer();
@@ -25,6 +33,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		// movement methods
 		void jump();
+		virtual void use_ability();
 		void move_left();
 		void move_right();
 
@@ -39,8 +48,20 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void apply_gravity();
 		virtual void bind_actions();
 		virtual void bound_velocity();
+
+		virtual void double_jump();
+		virtual void ground_pound();
+		virtual void hover();
+
+		bool can_use_ability;
+		FLPlayerAbility cur_ability;
 		bool jump_held;
 		bool run_held;
+
+		unsigned int jump_frames;
+		unsigned int hover_frames;
+		unsigned int pound_frames;
+		
 	private:
 		FLTexturedSurface* surface;
 };

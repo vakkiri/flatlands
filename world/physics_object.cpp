@@ -10,7 +10,7 @@
 #include "world_environment.h"
 
 #define PHYSICS_EPSILON 0.1
-#define ON_GROUND_GRACE_FRAMES 3
+#define ON_GROUND_GRACE_FRAMES 2
 
 FLPhysicsObject::FLPhysicsObject() : FLPhysicsObject( 0, 0, 0, 0 ) {};
 
@@ -141,8 +141,6 @@ void FLPhysicsObject::update_physics() {
 	apply_friction();
 
 	vel += accel;
-
-	update_position();
 }
 
 void FLPhysicsObject::stop_horizontal() { 

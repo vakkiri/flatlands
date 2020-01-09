@@ -13,13 +13,22 @@
 #include "../../rendering/renderer.h"
 #include "../../logging/logging.h"
 
-#define INITIAL_WALK_ACCEL (1.8)
+#define INITIAL_WALK_ACCEL (2.0)
 #define WALK_ACCEL (0.54)
-#define RUN_ACCEL (0.56)
-#define JUMP_ACCEL (0.98)
+#define RUN_ACCEL (0.59)
+
+#define JUMP_ACCEL (0.7)
+#define JUMP_FRAME_ACCEL (0.04)
+#define NUM_JUMP_FRAMES (3)
+
+#define HOVER_FRAMES (40)
+#define DOUBLE_JUMP_ACCEL (0.8)
+#define GROUND_POUND_ACCEL (3.0)
+#define POUND_FRAMES (90)
+
 #define X_TERMINAL_VELOCITY (4.2)
-#define X_TERMINAL_WALK_VELOCITY (1.2)
-#define Y_TERMINAL_VELOCITY (4.5)
+#define X_TERMINAL_WALK_VELOCITY (1.6)
+#define Y_TERMINAL_VELOCITY (7.0)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
@@ -29,6 +38,10 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
 	position.y = 64;
 	position.w = 16;
 	position.h = 16;
+
+	jump_frames = 0;
+	cur_ability = FL_GROUND_POUND;
+	can_use_ability = false;
 
 	bind_actions();
 
@@ -70,17 +83,58 @@ void FLPlayer::set_texture( texture *tex ) {
 
 void FLPlayer::jump() {
 	if ( on_ground() ) {
+		can_use_ability = true;
+		hover_frames = 0;
 		accel.y = -JUMP_ACCEL;
 		reset_animation();
 		set_animation( 2 );
 		on_ground_timer = 0;
+		jump_frames = NUM_JUMP_FRAMES;
 	}
+	else if ( can_use_ability ) {
+		use_ability();
+		can_use_ability = false;
+	}
+}
+
+void FLPlayer::use_ability() {
+	switch ( cur_ability ) {
+		case FL_DOUBLE_JUMP:
+			double_jump();
+			break;
+		case FL_GROUND_POUND:
+			ground_pound();
+			break;
+		case FL_HOVER:
+			hover();
+		default:
+			break;
+	}
+}
+
+void FLPlayer::double_jump() {
+	vel.y = 0;
+	accel.y = -DOUBLE_JUMP_ACCEL;
+	reset_animation();
+	set_animation( 2 );
+}
+
+void FLPlayer::ground_pound() {
+	vel.x = 0;
+	accel.x = 0;
+	vel.y = 0;
+	accel.y = GROUND_POUND_ACCEL;
+	pound_frames = POUND_FRAMES;
+}
+
+void FLPlayer::hover() {
+	hover_frames = HOVER_FRAMES;
 }
 
 void FLPlayer::move_right() {
 	// accelerate more if we do not have much momentum, to break past
 	// the initial resistance of friction
-	if ( vel.x > 0 && vel.x < 1 )
+	if ( vel.x > 0 && vel.x < 1.5 )
 		accelerate(point(INITIAL_WALK_ACCEL, 0));
 	else if ( run_held )
 		accelerate(point(RUN_ACCEL, 0));
@@ -97,7 +151,7 @@ void FLPlayer::move_right() {
 void FLPlayer::move_left() {
 	// accelerate more if we do not have much momentum, to break past
 	// the initial resistance of friction
-	if ( vel.x < 0 && vel.x > -1 )
+	if ( vel.x < 0 && vel.x > -1.5 )
 		accelerate(point(-INITIAL_WALK_ACCEL, 0));
 	else if ( run_held )
 		accelerate(point(-RUN_ACCEL, 0));
@@ -111,30 +165,55 @@ void FLPlayer::move_left() {
 	set_reverse(true);
 }
 
-void FLPlayer::bound_velocity() {
-	if ( run_held ) {
-		if ( vel.x > X_TERMINAL_VELOCITY )
-			vel.x = X_TERMINAL_VELOCITY;
-		else if ( vel.x < -X_TERMINAL_VELOCITY )
-			vel.x = -X_TERMINAL_VELOCITY;
+void FLPlayer::bound_velocity() { 
+	if ( pound_frames > 0 ) {
+		pound_frames--;
+		vel.x = 0;
+		accel.x = 0;
 	}
 	else {
-		if ( vel.x > X_TERMINAL_WALK_VELOCITY )
-			vel.x = X_TERMINAL_WALK_VELOCITY;
-		else if ( vel.x < -X_TERMINAL_WALK_VELOCITY )
-			vel.x = -X_TERMINAL_WALK_VELOCITY;
+		if ( run_held ) {
+			if ( vel.x > X_TERMINAL_VELOCITY )
+				vel.x = X_TERMINAL_VELOCITY;
+			else if ( vel.x < -X_TERMINAL_VELOCITY )
+				vel.x = -X_TERMINAL_VELOCITY;
+		}
+		else {
+			if ( vel.x > X_TERMINAL_WALK_VELOCITY )
+				vel.x = X_TERMINAL_WALK_VELOCITY;
+			else if ( vel.x < -X_TERMINAL_WALK_VELOCITY )
+				vel.x = -X_TERMINAL_WALK_VELOCITY;
+		}
 	}
 
-	if ( vel.y > Y_TERMINAL_VELOCITY )
-		vel.y = Y_TERMINAL_VELOCITY;
-	else if ( vel.y < -Y_TERMINAL_VELOCITY )
-		vel.y = -Y_TERMINAL_VELOCITY;
+	if ( hover_frames > 0 ) {
+		hover_frames--;
+		vel.y = 0;
+	}
+	else {
+		if ( vel.y > Y_TERMINAL_VELOCITY )
+			vel.y = Y_TERMINAL_VELOCITY;
+		else if ( vel.y < -Y_TERMINAL_VELOCITY )
+			vel.y = -Y_TERMINAL_VELOCITY;
+	}
 }
 
 void FLPlayer::update_physics() {
 	FLPhysicsObject::update_physics();
+
+	// reduce effect of gravity immediately after jumping
+	if ( jump_frames > 0 ) {
+		accel.y -= JUMP_FRAME_ACCEL;
+		jump_frames--;
+	}
+
+	if ( on_ground() ) {
+		pound_frames = 0;
+	}
+
 	bound_velocity();
 
+	update_position();
 	// TODO: animation update should not be part of physics update
 	if ( !on_ground() )
 		set_animation(2);
@@ -159,7 +238,7 @@ void FLPlayer::update_camera() {
 	r.translate_world_camera( glm::vec3( xamt, yamt, 0 ) );
 }
 
-void FLPlayer::apply_gravity() {
+void FLPlayer::apply_gravity() { 
 	if ( !jump_held )
 		accel.y += physics.gravity() * JUMP_HOLD_GRAVITY_FACTOR;
 	else
@@ -168,7 +247,10 @@ void FLPlayer::apply_gravity() {
 
 void FLPlayer::hold_jump() { jump_held = true; }
 
-void FLPlayer::release_jump() { jump_held = false; }
+void FLPlayer::release_jump() { 
+	jump_held = false; 
+	hover_frames = 0;
+}
 
 void FLPlayer::hold_run() { run_held = true; }
 
