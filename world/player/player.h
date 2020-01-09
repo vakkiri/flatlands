@@ -33,11 +33,14 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		virtual void hold_jump();
 		virtual void release_jump();
+		virtual void hold_run();
+		virtual void release_run();
 	protected:
 		virtual void apply_gravity();
 		virtual void bind_actions();
 		virtual void bound_velocity();
 		bool jump_held;
+		bool run_held;
 	private:
 		FLTexturedSurface* surface;
 };

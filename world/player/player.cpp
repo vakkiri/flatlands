@@ -14,9 +14,11 @@
 #include "../../logging/logging.h"
 
 #define INITIAL_WALK_ACCEL (1.8)
-#define WALK_ACCEL (0.56)
+#define WALK_ACCEL (0.54)
+#define RUN_ACCEL (0.56)
 #define JUMP_ACCEL (0.98)
 #define X_TERMINAL_VELOCITY (4.2)
+#define X_TERMINAL_WALK_VELOCITY (1.2)
 #define Y_TERMINAL_VELOCITY (4.5)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
@@ -42,10 +44,14 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> jump = std::bind(&FLPlayer::jump, this);
 	std::function<void(void)> hold_jump = std::bind(&FLPlayer::hold_jump, this);
 	std::function<void(void)> release_jump = std::bind(&FLPlayer::release_jump, this);
+	std::function<void(void)> hold_run = std::bind(&FLPlayer::hold_run, this);
+	std::function<void(void)> release_run = std::bind(&FLPlayer::release_run, this);
 	std::function<void(void)> walk_left = std::bind(&FLPlayer::move_left, this);
 	std::function<void(void)> walk_right = std::bind(&FLPlayer::move_right, this);
 
 	// map binded actions to input handler
+	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_HELD, hold_run);
+	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_RELEASED, release_run);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_PRESSED, jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
@@ -76,6 +82,8 @@ void FLPlayer::move_right() {
 	// the initial resistance of friction
 	if ( vel.x > 0 && vel.x < 1 )
 		accelerate(point(INITIAL_WALK_ACCEL, 0));
+	else if ( run_held )
+		accelerate(point(RUN_ACCEL, 0));
 	else
 		accelerate(point(WALK_ACCEL, 0));
 
@@ -91,6 +99,8 @@ void FLPlayer::move_left() {
 	// the initial resistance of friction
 	if ( vel.x < 0 && vel.x > -1 )
 		accelerate(point(-INITIAL_WALK_ACCEL, 0));
+	else if ( run_held )
+		accelerate(point(-RUN_ACCEL, 0));
 	else
 		accelerate(point(-WALK_ACCEL, 0));
 
@@ -102,10 +112,18 @@ void FLPlayer::move_left() {
 }
 
 void FLPlayer::bound_velocity() {
-	if ( vel.x > X_TERMINAL_VELOCITY )
-		vel.x = X_TERMINAL_VELOCITY;
-	else if ( vel.x < -X_TERMINAL_VELOCITY )
-		vel.x = -X_TERMINAL_VELOCITY;
+	if ( run_held ) {
+		if ( vel.x > X_TERMINAL_VELOCITY )
+			vel.x = X_TERMINAL_VELOCITY;
+		else if ( vel.x < -X_TERMINAL_VELOCITY )
+			vel.x = -X_TERMINAL_VELOCITY;
+	}
+	else {
+		if ( vel.x > X_TERMINAL_WALK_VELOCITY )
+			vel.x = X_TERMINAL_WALK_VELOCITY;
+		else if ( vel.x < -X_TERMINAL_WALK_VELOCITY )
+			vel.x = -X_TERMINAL_WALK_VELOCITY;
+	}
 
 	if ( vel.y > Y_TERMINAL_VELOCITY )
 		vel.y = Y_TERMINAL_VELOCITY;
@@ -151,4 +169,8 @@ void FLPlayer::apply_gravity() {
 void FLPlayer::hold_jump() { jump_held = true; }
 
 void FLPlayer::release_jump() { jump_held = false; }
+
+void FLPlayer::hold_run() { run_held = true; }
+
+void FLPlayer::release_run() { run_held = false; }
 
