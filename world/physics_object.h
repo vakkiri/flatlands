@@ -47,9 +47,9 @@ class FLPhysicsObject : virtual public FLWorldObject {
 
 		point vel;
 		point accel;
-	private:
 		FLPhysics& physics;
 		FLWorldEnvironment& environment;
+	private:
 
 		rect bounds_margin;
 
