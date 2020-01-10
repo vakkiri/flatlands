@@ -17,6 +17,7 @@
 
 class FLRenderable;
 class FLTexturedSurface;
+class FLWorldSurface;
 
 class Renderer {
 	private:
@@ -41,7 +42,7 @@ class Renderer {
 		FLTexturedRectShader textured_rect_shader;
 
 		// Surfaces
-		FLTexturedSurface *world_surface;
+		FLWorldSurface *world_surface;
 		FLTexturedSurface *tilemap_surface;
 
 		// Private methods
@@ -67,7 +68,7 @@ class Renderer {
 		void close();
 
 		FLTexturedRectShader& get_textured_rect_shader();
-		FLTexturedSurface *get_world_surface();
+		FLWorldSurface *get_world_surface();
 		FLTexturedSurface *get_tilemap_surface();
 
 		static Renderer& getInstance() {

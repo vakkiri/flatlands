@@ -10,6 +10,7 @@
 #include "../common/basic_types.h"
 #include "renderer.h"
 #include "rendered_surface.h"
+#include "world_surface.h"
 
 #define PRIMITIVE_RESTART 65535
 
@@ -123,7 +124,7 @@ bool Renderer::init() {
 		return false;
 	}
 
-	world_surface = new FLTexturedSurface();
+	world_surface = new FLWorldSurface();
 	tilemap_surface = new FLTexturedSurface();
 	return true;
 }

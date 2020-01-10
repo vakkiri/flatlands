@@ -15,9 +15,9 @@ void FLWorldEnvironment::reset_tilemap() {
 }
 
 void FLWorldEnvironment::update() {
+	_player->update_physics();
 	_player->update_animation();
 	_player->update_surface();
-	_player->update_physics();
 }
 
 void FLWorldEnvironment::set_player( FLPlayer* player ) {

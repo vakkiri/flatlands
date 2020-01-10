@@ -58,9 +58,15 @@ void FLInputHandler::update_key_states() {
 	for ( auto kv : key_map ) {
 		bool held = keyboard_state[kv.first];
 
-		if ( !held )
-			key_states[kv.second] = FL_KEY_RELEASED;
-		else if ( key_states[kv.second] == FL_KEY_RELEASED )
+		if ( !held ) {
+			if ( key_states[kv.second] == FL_KEY_PRESSED ||
+			     key_states[kv.second] == FL_KEY_HELD )
+				key_states[kv.second] = FL_KEY_RELEASED;
+			else
+				key_states[kv.second] = FL_KEY_NONE;
+		}
+		else if ( key_states[kv.second] == FL_KEY_RELEASED ||
+			  key_states[kv.second] == FL_KEY_NONE )
 			key_states[kv.second] = FL_KEY_PRESSED;
 		else if ( key_states[kv.second] == FL_KEY_PRESSED )
 			key_states[kv.second] = FL_KEY_HELD;

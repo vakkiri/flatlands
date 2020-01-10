@@ -13,6 +13,7 @@
 #include "renderer.h"
 #include "renderable.h"
 #include "rendered_surface.h"
+#include "world_surface.h"
 
 
 void Renderer::render() {
@@ -20,6 +21,7 @@ void Renderer::render() {
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
+	world_surface->update_buffers();
 	// TODO: separate renderables based on used camera
 	// ie. world renderables, ui renderables...
 	
@@ -73,7 +75,7 @@ FLTexturedRectShader& Renderer::get_textured_rect_shader() {
 	return textured_rect_shader;
 }
 
-FLTexturedSurface* Renderer::get_world_surface() {
+FLWorldSurface* Renderer::get_world_surface() {
 	return world_surface;
 }
 

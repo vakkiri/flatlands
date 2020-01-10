@@ -29,9 +29,10 @@ enum FLKey {
 };
 
 enum FLKeyState {
-	FL_KEY_RELEASED,	// true on any frame a key is "up"
+	FL_KEY_RELEASED,	// true on first frame a key is "up"
 	FL_KEY_PRESSED,	// true on the first frame a key is "down"
 	FL_KEY_HELD,	// true every frame a key is "down"
+	FL_KEY_NONE,	// true on any frame the key is up
 	FL_NUM_KEY_STATES
 };
 

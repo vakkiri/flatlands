@@ -13,7 +13,7 @@
 #include "../../rendering/animated_object.h"
 #include "../physics_object.h"
 
-class FLTexturedSurface;
+class FLWorldSurface;
 struct texture;
 
 enum FLPlayerAbility {
@@ -24,18 +24,26 @@ enum FLPlayerAbility {
 	FL_NUM_ABILITIES
 };
 
+enum FLPlayerState {
+	FL_PLAYER_IDLE,
+	FL_PLAYER_WALK,
+	FL_PLAYER_JUMP
+};
+
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
 		FLPlayer();
 
 		void set_texture( texture *tex );
-		void update_surface();
+		virtual void update_surface();
+		virtual void update_animation();
 
 		// movement methods
 		void jump();
 		virtual void use_ability();
 		void move_left();
 		void move_right();
+		virtual void release_walk();
 
 		virtual void update_physics();
 		virtual void update_camera();
@@ -61,9 +69,10 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		unsigned int jump_frames;
 		unsigned int hover_frames;
 		unsigned int pound_frames;
-		
+	
+		FLPlayerState state;
 	private:
-		FLTexturedSurface* surface;
+		FLWorldSurface* surface;
 };
 
 #endif

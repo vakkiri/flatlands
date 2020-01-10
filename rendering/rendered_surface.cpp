@@ -62,10 +62,18 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 	float tbot;
 
 	for ( int i = 0; i < objects.size(); i++ ) {
-		tleft = ( objects[i]->s() / tex->w );
-		tright = tleft + ( objects[i]->w() / tex->w );
-		ttop = ( objects[i]->t() / tex->h );
-		tbot = ttop + ( objects[i]->h() / tex->h );
+		if ( !objects[i]->reversed() ) {
+			tleft = ( objects[i]->s() / tex->w );
+			tright = tleft + ( objects[i]->w() / tex->w );
+			ttop = ( objects[i]->t() / tex->h );
+			tbot = ttop + ( objects[i]->h() / tex->h );
+		}
+		else {
+			tright = ( objects[i]->s() / tex->w );
+			tleft = tright + ( objects[i]->w() / tex->w );
+			ttop = ( objects[i]->t() / tex->h );
+			tbot = ttop + ( objects[i]->h() / tex->h );
+		}
 
 		// vertex position
 		vbuf[(i*step)] = objects[i]->x();
