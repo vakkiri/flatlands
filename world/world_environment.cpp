@@ -59,3 +59,13 @@ FLCollidingObject* FLWorldEnvironment::get_colliding_object( FLWorldObject* obje
 	return nullptr;
 }
 
+std::vector<FLCollidingObject*> FLWorldEnvironment::get_colliding_objects( FLWorldObject* object ) {
+	std::vector<FLCollidingObject*> objects;
+
+	for ( FLCollidingObject* other : colliding_objects ) {
+		if ( rect_collision( object, other ) )
+			objects.push_back( other );
+	}
+
+	return objects;
+}

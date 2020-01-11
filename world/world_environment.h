@@ -38,6 +38,7 @@ class FLWorldEnvironment {
 		void add_colliding_object( FLCollidingObject* object );
 		void remove_colliding_object( FLCollidingObject* object );
 		FLCollidingObject* get_colliding_object( FLWorldObject* object );
+		std::vector<FLCollidingObject*> get_colliding_objects( FLWorldObject* object );
 
 	protected:
 		FLTilemap* _tilemap;
