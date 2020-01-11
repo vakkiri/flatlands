@@ -15,6 +15,9 @@ class FLTexturedObject : virtual public FLWorldObject {
 	public:
 		FLTexturedObject();
 		FLTexturedObject( float x, float y, float w, float h );
+
+		virtual ~FLTexturedObject() {};
+
 		virtual float s();
 		virtual float t();
 

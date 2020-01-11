@@ -18,6 +18,8 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step);
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats);
 
+		virtual ~FLAnimatedObject() {}
+
 		virtual void update_animation();
 		void start_animation();
 		void reset_animation();
@@ -44,6 +46,7 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		std::vector<unsigned int> start_repeat;	//how many times to repeat the first frame of the animation
 		bool repeats;
 		bool active;
+		bool animation_finished;
 };
 
 #endif

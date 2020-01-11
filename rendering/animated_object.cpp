@@ -9,6 +9,7 @@
 FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObject() {
 	active = true;
 	repeats = true;
+	animation_finished = false;
 	elapsed_frames = 0;
 	elapsed_start_steps = 0;
 	cur_step = 0;
@@ -49,8 +50,10 @@ void FLAnimatedObject::update_animation() {
 				++cur_step;
 
 			if ( cur_step > num_steps ) {
-				if ( !repeats )
+				if ( !repeats ) {
 					active = false;
+					animation_finished = true;
+				}
 				else
 					cur_step = 0;
 			}

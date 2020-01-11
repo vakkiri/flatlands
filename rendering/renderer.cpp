@@ -5,6 +5,7 @@
  *
  */
 
+#include <algorithm>
 #include <fstream>
 #include <glm/ext.hpp>
 
@@ -91,12 +92,26 @@ void Renderer::add_animated_object( FLAnimatedObject* object ) {
 }
 
 void Renderer::remove_animated_object( FLAnimatedObject* object ) {
-	// Not implemented
+	for ( int i = 0; i < animated_objects.size(); ++i ) {
+		if ( animated_objects[i] == object )
+			animated_objects[i] = nullptr;
+	}
+}
+
+void Renderer::remove_null_objects() {
+	animated_objects.erase( 
+			std::remove_if( 
+				animated_objects.begin(), 
+				animated_objects.end(), 
+				[](FLAnimatedObject* obj) { return obj == nullptr; }), 
+			animated_objects.end() );
 }
 
 void Renderer::update_animations() {
-	for ( FLAnimatedObject* object : animated_objects )
-		object->update_animation();
+	for ( int i = 0; i < animated_objects.size(); ++i )
+		animated_objects[i]->update_animation();
+
+	remove_null_objects();
 }
 
 

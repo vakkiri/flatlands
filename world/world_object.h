@@ -14,6 +14,7 @@ class FLWorldObject {
 	public:
 		FLWorldObject(){};
 		FLWorldObject(float x, float y, float w, float h);
+		virtual ~FLWorldObject(){}
 
 		virtual void set_x( float x );
 		virtual void set_y( float y );

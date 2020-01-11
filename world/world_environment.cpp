@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include <algorithm>
 
 #include "../tilemap/tilemap.h"

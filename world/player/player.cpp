@@ -40,12 +40,16 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
 	position.y = 64;
 	position.w = 16;
 	position.h = 16;
-
+	
 	jump_frames = 0;
 	hover_frames = 0;
+	pound_frames = 0;
+
 	cur_ability = FL_GROUND_POUND;
 	can_use_ability = false;
+
 	jump_held = false;
+	run_held = false;
 
 	bind_actions();
 

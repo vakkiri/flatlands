@@ -60,6 +60,7 @@ class Renderer {
 		glm::mat4 world_camera;
 
 		void update_animations();
+		void remove_null_objects();
 	public:
 		// Public methods
 		glm::mat4 get_projection_matrix();
