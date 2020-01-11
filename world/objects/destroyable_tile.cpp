@@ -12,8 +12,8 @@
 #include "../player/player.h"
 
 #define NUM_ANIMATIONS 1
-#define NUM_STEPS 4
-#define FRAMES_PER_STEP 20
+#define NUM_STEPS 2
+#define FRAMES_PER_STEP 5
 #define STEP 16
 #define REPEATS false
 
@@ -49,6 +49,7 @@ void FLDestroyableTile::collide_with( FLPlayer *player ) {
 		FLWorldEnvironment::getInstance().tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, false );
 		FLWorldEnvironment::getInstance().remove_colliding_object( this );
 		start_animation();
+		player->stop_vertical();
 		player->accelerate( point( 0, -BOUNCE_AMOUNT ) );
 	}
 }
