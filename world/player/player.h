@@ -51,6 +51,9 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void hold_run();
 		virtual void release_run();
 
+		void set_reset_position( float x, float y );
+		virtual void reset();
+
 		bool pounding();
 	protected:
 		virtual void apply_gravity();
@@ -69,8 +72,11 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		unsigned int jump_frames;
 		unsigned int hover_frames;
 		unsigned int pound_frames;
-	
+		unsigned int falling_frames;
+
 		FLPlayerState state;
+
+		point reset_position;
 };
 
 #endif

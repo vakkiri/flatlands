@@ -195,6 +195,7 @@ void FLResources::load_level( int id ) {
 				// input[2]: player y
 				player->set_x( input[1] );
 				player->set_y( input[2] );
+				player->set_reset_position( input[1], input[2] );
 				input += 3;
 			}
 			else if ( current_type == 2 ) {

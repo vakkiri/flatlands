@@ -15,6 +15,7 @@
 #include "../../rendering/renderer.h"
 #include "../../logging/logging.h"
 
+#define MAX_FALL (90)
 #define INITIAL_WALK_ACCEL (2.0)
 #define WALK_ACCEL (0.54)
 #define RUN_ACCEL (0.59)
@@ -33,7 +34,7 @@
 #define Y_TERMINAL_VELOCITY (7.0)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
-FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
+FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 7, 16 ) {
 	Renderer::getInstance().get_world_surface()->add_object(this);
 
 	position.x = 32;
@@ -44,6 +45,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
 	jump_frames = 0;
 	hover_frames = 0;
 	pound_frames = 0;
+	falling_frames = 0;
 
 	cur_ability = FL_GROUND_POUND;
 	can_use_ability = false;
@@ -210,9 +212,13 @@ void FLPlayer::update_physics() {
 
 		pound_frames = 0;
 		jump_frames = 0;
+		falling_frames = 0;
 	}
 	else {
 		state = FL_PLAYER_JUMP;
+
+		if ( ++falling_frames  > MAX_FALL )
+			reset();
 	}
 
 	bound_velocity();
@@ -280,4 +286,15 @@ void FLPlayer::hold_run() { run_held = true; }
 void FLPlayer::release_run() { run_held = false; }
 
 void FLPlayer::release_walk() { state = FL_PLAYER_IDLE; }
+
+void FLPlayer::set_reset_position( float x, float y ) {
+	reset_position.x = x;
+	reset_position.y = y;
+}
+
+void FLPlayer::reset() {
+	position.x = reset_position.x;
+	position.y = reset_position.y;
+	falling_frames = 0;
+}
 
