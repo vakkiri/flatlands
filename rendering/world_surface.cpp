@@ -8,7 +8,6 @@ FLWorldSurface::FLWorldSurface() : FLTexturedSurface() {}
 
 void FLWorldSurface::update_buffers() {
 	FLTexturedSurface::update_buffers( objects_to_render );
-	objects_to_render.clear();
 }
 
 void FLWorldSurface::add_object( FLTexturedObject* object ) {

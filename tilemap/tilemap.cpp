@@ -29,6 +29,21 @@ void FLTilemap::update_surface() {
 	surface->update_buffers( tiles );
 }
 
+void FLTilemap::set_solid_at( float x, float y, float w, float h, bool solid ) {
+	int x_cells = int(w / cell_size);
+	int y_cells = int(h / cell_size);
+	int x_cell;
+	int y_cell;
+
+	for (int i = 0; i < y_cells; ++i) {
+		y_cell = int(y / cell_size) + i;
+		for (int j = 0; j < x_cells; ++j) {
+			x_cell = int(x / cell_size) + j;
+			collision_map[y_cell][x_cell] = solid; 
+		}
+	}
+}
+
 void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool solid ) {
 	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
 	t->set_st( index * cell_size, 0 );
@@ -36,26 +51,8 @@ void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool 
 	tiles.push_back(t);
 
 	if ( solid ) {
-		int x_cells = int(w / cell_size);
-		int y_cells = int(h / cell_size);
-		int x_cell;
-		int y_cell;
-		for (int i = 0; i < y_cells; ++i) {
-			y_cell = int(y / cell_size) + i;
-			for (int j = 0; j < x_cells; ++j) {
-				x_cell = int(x / cell_size) + j;
-				collision_map[y_cell][x_cell] = true; 
-			}
-		}
+		set_solid_at( x, y, w, h, true );
 	}
-}
-
-void FLTilemap::set_texture( texture *tex ) {
-	surface->set_tex( tex );
-}
-
-void FLTilemap::set_texture( std::string name ) {
-	((FLTexturedSurface*) surface)->set_tex( name );
 }
 
 void FLTilemap::reset_collision_map() {

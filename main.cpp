@@ -25,14 +25,14 @@ void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
 	FLWorldEnvironment& world = FLWorldEnvironment::getInstance();
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
-
+	
+	renderer.init_surface_textures();
 	// Test objects...
 	FLTilemap tilemap(1024, 1024, 16);
 	world.set_tilemap(&tilemap);
 	world.set_player(new FLPlayer);
 
 	FLResources::getInstance().load_level(0);
-	tilemap.set_texture( "tiles" );
 	tilemap.update_surface();
 
 	// End of test objects

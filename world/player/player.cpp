@@ -32,7 +32,7 @@
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
-	this->surface = Renderer::getInstance().get_world_surface();
+	Renderer::getInstance().get_world_surface()->add_object(this);
 
 	position.x = 32;
 	position.y = 64;
@@ -41,14 +41,12 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 10, 16 ) {
 
 	jump_frames = 0;
 	hover_frames = 0;
-	cur_ability = FL_DOUBLE_JUMP;
+	cur_ability = FL_GROUND_POUND;
 	can_use_ability = false;
 	jump_held = false;
 
 	bind_actions();
 
-	set_texture( FLResources::getInstance().get_image("neko_idle") );
-	surface->add_object(this);
 	set_start_repeat(10, 0);
 }
 
@@ -74,14 +72,6 @@ void FLPlayer::bind_actions() {
 	FLInputHandler::getInstance().add_action(FL_KEY_RIGHT, FL_KEY_RELEASED, release_walk);
 	FLInputHandler::getInstance().add_action(FL_KEY_LEFT, FL_KEY_RELEASED, release_walk);
 
-}
-
-void FLPlayer::update_surface() {
-	surface->add_object(this);
-}
-
-void FLPlayer::set_texture( texture *tex ) {
-	surface->set_tex( tex );
 }
 
 void FLPlayer::jump() {
@@ -117,7 +107,6 @@ void FLPlayer::use_ability() {
 
 void FLPlayer::double_jump() {
 	vel.y = 0;
-
 	accel.y = -DOUBLE_JUMP_ACCEL;
 
 	reset_animation();
@@ -206,6 +195,9 @@ void FLPlayer::update_physics() {
 	}
 
 	if ( on_ground() ) {
+		if ( state == FL_PLAYER_JUMP )
+			state = FL_PLAYER_IDLE;
+
 		pound_frames = 0;
 		jump_frames = 0;
 	}
@@ -217,8 +209,6 @@ void FLPlayer::update_physics() {
 
 	update_position();
 
-	// TODO: camera update should not be part of physics update
-	update_camera();
 }
 
 void FLPlayer::update_camera() {
@@ -251,6 +241,7 @@ void FLPlayer::update_animation() {
 	}
 
 	FLAnimatedObject::update_animation();
+	update_camera();
 }
 
 void FLPlayer::apply_gravity() { 

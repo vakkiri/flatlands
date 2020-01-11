@@ -6,8 +6,9 @@
 #include <iostream>
 #include <glm/ext.hpp>
 
-#include "../logging/logging.h"
 #include "../common/basic_types.h"
+#include "../logging/logging.h"
+#include "../resources/fl_resources.h"
 #include "renderer.h"
 #include "rendered_surface.h"
 #include "world_surface.h"
@@ -124,9 +125,17 @@ bool Renderer::init() {
 		return false;
 	}
 
+	log_progress( "Settings surface textures" );
+
 	world_surface = new FLWorldSurface();
 	tilemap_surface = new FLTexturedSurface();
+
 	return true;
+}
+
+void Renderer::init_surface_textures() {
+	world_surface->set_tex( FLResources::getInstance().get_image("world") );
+	tilemap_surface->set_tex( FLResources::getInstance().get_image("tiles") );
 }
 
 glm::mat4 Renderer::get_projection_matrix() {

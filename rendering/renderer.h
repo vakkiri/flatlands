@@ -77,6 +77,7 @@ class Renderer {
 		}
 
 		bool init();
+		void init_surface_textures();
 };
 
 #endif

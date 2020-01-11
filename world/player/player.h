@@ -34,8 +34,6 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
 		FLPlayer();
 
-		void set_texture( texture *tex );
-		virtual void update_surface();
 		virtual void update_animation();
 
 		// movement methods
@@ -71,8 +69,6 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		unsigned int pound_frames;
 	
 		FLPlayerState state;
-	private:
-		FLWorldSurface* surface;
 };
 
 #endif

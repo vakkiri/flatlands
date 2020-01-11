@@ -9,8 +9,11 @@
 #ifndef FL_WORLD_ENVIRONMENT_H_
 #define FL_WORLD_ENVIRONMENT_H_
 
+#include <vector>
+
 class FLTilemap;
 class FLPlayer;
+class FLWorldObject;
 
 class FLWorldEnvironment {
 	public:
@@ -29,9 +32,12 @@ class FLWorldEnvironment {
 		void reset_tilemap();
 
 		bool solid_at(float x, float y);
+
+		void add_object( FLWorldObject* object );
 	protected:
 		FLTilemap* _tilemap;
 		FLPlayer* _player;
+		std::vector<FLWorldObject*> world_objects;
 	private:
 		// Disallow copying/construction
 		FLWorldEnvironment(){};

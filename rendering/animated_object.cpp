@@ -25,6 +25,7 @@ FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int nu
 	cur_animation = 0;
 
 	// TODO: should take separate parameters for s and t steps
+	// will implement as soon as needed...
 }
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats ) : 

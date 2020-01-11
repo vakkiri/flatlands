@@ -31,13 +31,16 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 	protected:
 		float s_step;	// how much to move _s by each frame
 		float t_step;	// how much to move _t by when animation changes
+
 		unsigned int cur_step;
 		unsigned int num_steps;
 		unsigned int frames_per_step;
 		unsigned int elapsed_frames;
 		unsigned int elapsed_start_steps;
+
 		unsigned int cur_animation;
 		unsigned int num_animations;
+
 		std::vector<unsigned int> start_repeat;	//how many times to repeat the first frame of the animation
 		bool repeats;
 		bool active;

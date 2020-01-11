@@ -17,7 +17,6 @@ void FLWorldEnvironment::reset_tilemap() {
 void FLWorldEnvironment::update() {
 	_player->update_physics();
 	_player->update_animation();
-	_player->update_surface();
 }
 
 void FLWorldEnvironment::set_player( FLPlayer* player ) {
@@ -34,5 +33,9 @@ void FLWorldEnvironment::set_tilemap(FLTilemap* tilemap) {
 
 bool FLWorldEnvironment::solid_at( float x, float y ) {
 	return _tilemap->solid_at( x, y );
+}
+
+void FLWorldEnvironment::add_object( FLWorldObject* object ) {
+	world_objects.push_back( object );
 }
 

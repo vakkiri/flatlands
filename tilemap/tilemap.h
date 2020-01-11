@@ -25,10 +25,9 @@ class FLTilemap {
 		void reset();
 		void reset( unsigned int new_w, unsigned int new_h );
 		void reset_collision_map();
-		void set_texture( texture *tex );
-		void set_texture( std::string name );
 		void add_tile( float x, float y, float w, float h, float index, bool solid);
 		bool solid_at( float x, float y );
+		void set_solid_at( float x, float y, float w, float h, bool solid );
 	protected:
 		std::vector<FLTexturedObject*> tiles;
 		std::vector<std::vector<bool>> collision_map;
