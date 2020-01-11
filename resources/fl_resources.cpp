@@ -214,7 +214,7 @@ void FLResources::load_level( int id ) {
 								(bool)input[4]
 							);
 				else
-					environment.add_object( new FLDestroyableTile( (float)input[1], (float)input[2] ) );
+					new FLDestroyableTile( (float)input[1], (float)input[2] );
 				input += 6;
 			}
 			else if ( current_type == 3 ) {

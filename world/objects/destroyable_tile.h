@@ -9,10 +9,14 @@
 #define DESTROYABLE_TILE_H_
 
 #include "../../rendering/animated_object.h"
+#include "../colliding_object.h"
 
-class FLDestroyableTile : public FLAnimatedObject {
+class FLDestroyableTile : virtual public FLAnimatedObject, virtual public FLCollidingObject {
 	public:
 		FLDestroyableTile( float x, float y );
+		virtual void collide_with( FLPlayer *player );
+		virtual float bounds_h();
+		virtual float bounds_y();
 };
 
 #endif

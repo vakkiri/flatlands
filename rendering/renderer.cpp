@@ -10,6 +10,7 @@
 
 #include "../common/basic_types.h"
 #include "../logging/logging.h"
+#include "animated_object.h"
 #include "renderer.h"
 #include "renderable.h"
 #include "rendered_surface.h"
@@ -21,7 +22,9 @@ void Renderer::render() {
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
+	update_animations();
 	world_surface->update_buffers();
+
 	// TODO: separate renderables based on used camera
 	// ie. world renderables, ui renderables...
 	
@@ -82,3 +85,18 @@ FLWorldSurface* Renderer::get_world_surface() {
 FLTexturedSurface* Renderer::get_tilemap_surface() {
 	return tilemap_surface;
 }
+
+void Renderer::add_animated_object( FLAnimatedObject* object ) {
+	animated_objects.push_back( object );
+}
+
+void Renderer::remove_animated_object( FLAnimatedObject* object ) {
+	// Not implemented
+}
+
+void Renderer::update_animations() {
+	for ( FLAnimatedObject* object : animated_objects )
+		object->update_animation();
+}
+
+

@@ -15,6 +15,7 @@
 
 #include "fl_textured_rect_shader.h"
 
+class FLAnimatedObject;
 class FLRenderable;
 class FLTexturedSurface;
 class FLWorldSurface;
@@ -37,6 +38,7 @@ class Renderer {
 		SDL_Window* window;
 		SDL_GLContext context;
 		std::vector<FLRenderable*> renderables;
+		std::vector<FLAnimatedObject*> animated_objects;
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
@@ -56,6 +58,8 @@ class Renderer {
 		unsigned int screen_width;
 		glm::mat4 projection_matrix;
 		glm::mat4 world_camera;
+
+		void update_animations();
 	public:
 		// Public methods
 		glm::mat4 get_projection_matrix();
@@ -63,7 +67,9 @@ class Renderer {
 		float world_camera_x();
 		float world_camera_y();
 
-		void add_renderable(FLRenderable* r);
+		void add_renderable( FLRenderable* r );
+		void add_animated_object( FLAnimatedObject* object );
+		void remove_animated_object( FLAnimatedObject* object );
 		void render_and_swap();
 		void close();
 

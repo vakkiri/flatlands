@@ -50,6 +50,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void release_jump();
 		virtual void hold_run();
 		virtual void release_run();
+
+		bool pounding();
 	protected:
 		virtual void apply_gravity();
 		virtual void bind_actions();

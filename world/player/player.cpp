@@ -7,7 +7,9 @@
 
 #include "player.h"
 
+#include "../colliding_object.h"
 #include "../physics_settings.h"
+#include "../world_environment.h"
 #include "../../input/input_handler.h"
 #include "../../rendering/world_surface.h"
 #include "../../rendering/renderer.h"
@@ -124,6 +126,10 @@ void FLPlayer::hover() {
 	hover_frames = HOVER_FRAMES;
 }
 
+bool FLPlayer::pounding() {
+	return pound_frames > 0;
+}
+
 void FLPlayer::move_right() {
 	// accelerate more if we do not have much momentum, to break past
 	// the initial resistance of friction
@@ -209,6 +215,10 @@ void FLPlayer::update_physics() {
 
 	update_position();
 
+	FLCollidingObject* collision = FLWorldEnvironment::getInstance().get_colliding_object( this );
+
+	if ( collision )
+		collision->collide_with( this );
 }
 
 void FLPlayer::update_camera() {

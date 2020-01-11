@@ -3,8 +3,7 @@
  *
  */
 
-#include <iostream>
-
+#include "renderer.h"
 #include "animated_object.h"
 
 FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObject() {
@@ -15,6 +14,8 @@ FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObje
 	cur_step = 0;
 	this->num_animations = num_animations;
 	start_repeat = std::vector<unsigned int>(num_animations, 0);
+
+	Renderer::getInstance().add_animated_object( this );
 }
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject( num_animations ) {
@@ -48,10 +49,10 @@ void FLAnimatedObject::update_animation() {
 				++cur_step;
 
 			if ( cur_step > num_steps ) {
-				cur_step = 0;
-
 				if ( !repeats )
 					active = false;
+				else
+					cur_step = 0;
 			}
 		}
 	}

@@ -14,6 +14,7 @@
 class FLTilemap;
 class FLPlayer;
 class FLWorldObject;
+class FLCollidingObject;
 
 class FLWorldEnvironment {
 	public:
@@ -34,10 +35,15 @@ class FLWorldEnvironment {
 		bool solid_at(float x, float y);
 
 		void add_object( FLWorldObject* object );
+		void add_colliding_object( FLCollidingObject* object );
+		void remove_colliding_object( FLCollidingObject* object );
+		FLCollidingObject* get_colliding_object( FLWorldObject* object );
+
 	protected:
 		FLTilemap* _tilemap;
 		FLPlayer* _player;
 		std::vector<FLWorldObject*> world_objects;
+		std::vector<FLCollidingObject*> colliding_objects;
 	private:
 		// Disallow copying/construction
 		FLWorldEnvironment(){};
