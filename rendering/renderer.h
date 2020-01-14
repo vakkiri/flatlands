@@ -72,10 +72,13 @@ class Renderer {
 		void add_renderable( FLRenderable* r );
 		void add_to_world( FLTexturedObject* obj );
 		void remove_from_world( FLTexturedObject* obj );
+		void clear_world();
 		void add_animated_object( FLAnimatedObject* object );
 		void remove_animated_object( FLAnimatedObject* object );
 		void render_and_swap();
+
 		void close();
+		void clear();
 
 		FLTexturedRectShader& get_textured_rect_shader();
 		FLWorldSurface *get_world_surface();

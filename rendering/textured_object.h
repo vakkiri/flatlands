@@ -9,9 +9,9 @@
 #ifndef TEXTURED_OBJECT_H_
 #define TEXTURED_OBJECT_H_
 
-#include "../world/world_object.h"
+#include "../common/game_object.h"
 
-class FLTexturedObject : virtual public FLWorldObject {
+class FLTexturedObject : virtual public FLGameObject {
 	public:
 		FLTexturedObject();
 		FLTexturedObject( float x, float y, float w, float h );

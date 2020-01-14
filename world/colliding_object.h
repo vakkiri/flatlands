@@ -15,6 +15,7 @@ class FLPlayer;
 
 class FLCollidingObject : virtual public FLWorldObject {
 	public:
+		virtual ~FLCollidingObject(){}
 		virtual void collide_with( FLPlayer *player ) = 0;
 };
 

@@ -18,6 +18,7 @@ class FLWorldSurface : public FLTexturedSurface {
 		virtual void update_buffers();
 		virtual void add_object( FLTexturedObject* object );
 		virtual void remove_object( FLTexturedObject* object );
+		virtual void clear();
 	protected:
 		std::vector< FLTexturedObject* > objects_to_render;
 };

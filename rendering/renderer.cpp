@@ -122,3 +122,15 @@ void Renderer::remove_from_world( FLTexturedObject* obj ) {
 	world_surface->remove_object( obj );
 }
 
+void Renderer::clear() {
+	clear_world();
+	// TODO: clearly we need to separate animated objects which are
+	// "inside" the world (ie level-specific) from "outside" the world
+	// if we are going to be clearing them like this.
+	animated_objects.clear();
+}
+
+void Renderer::clear_world() {
+	world_surface->clear();
+}
+

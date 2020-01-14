@@ -36,7 +36,7 @@
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
-	Renderer::getInstance().get_world_surface()->add_object(this);
+	Renderer::getInstance().add_to_world(this);
 
 	position.x = 32;
 	position.y = 64;

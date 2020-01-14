@@ -25,7 +25,7 @@
 #define BOUNCE_AMOUNT 3.2
 
 FLDestroyableTile::FLDestroyableTile( float x, float y ) : 
-	FLWorldObject( x, y, SIZE, SIZE ), 
+	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject( 
 			NUM_ANIMATIONS,
 			NUM_STEPS,
@@ -39,7 +39,6 @@ FLDestroyableTile::FLDestroyableTile( float x, float y ) :
 
 	Renderer::getInstance().add_to_world( this );
 	environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
-	environment.add_object( this );
 	environment.add_colliding_object( this );
 };
 

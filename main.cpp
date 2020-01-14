@@ -32,9 +32,7 @@ void main_loop() {
 	world.set_tilemap(&tilemap);
 	world.set_player(new FLPlayer);
 
-	FLResources::getInstance().load_level(0);
-	tilemap.update_surface();
-
+	world.load_next_level();
 	// End of test objects
 
 	bool quit = false;

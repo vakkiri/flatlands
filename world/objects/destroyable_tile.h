@@ -11,7 +11,7 @@
 #include "../../rendering/animated_object.h"
 #include "../colliding_object.h"
 
-class FLDestroyableTile : virtual public FLAnimatedObject, virtual public FLCollidingObject {
+class FLDestroyableTile : virtual public FLCollidingObject, virtual public FLAnimatedObject {
 	public:
 		FLDestroyableTile( float x, float y );
 		virtual ~FLDestroyableTile();

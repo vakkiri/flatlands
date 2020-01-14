@@ -22,7 +22,7 @@
 #define H 48
 
 FLWarpGate::FLWarpGate( float x, float y ) :
-	FLWorldObject( x, y, W, H ),
+	FLGameObject( x, y, W, H ),
 	FLAnimatedObject(
 			NUM_ANIMATIONS,
 			NUM_STEPS,
@@ -43,7 +43,7 @@ FLWarpGate::~FLWarpGate() {
 }
 
 void FLWarpGate::collide_with( FLPlayer *player ) {
-	std::cout << "WEEE!\n";
+	FLWorldEnvironment::getInstance().load_next_level();
 }
 
 

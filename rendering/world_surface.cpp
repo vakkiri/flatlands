@@ -3,6 +3,7 @@
  */
 
 #include <algorithm>
+#include "../logging/logging.h"
 #include "world_surface.h"
 
 FLWorldSurface::FLWorldSurface() : FLTexturedSurface() {}
@@ -20,5 +21,13 @@ void FLWorldSurface::remove_object( FLTexturedObject* object ) {
 
 	if ( position != objects_to_render.end() )
 		objects_to_render.erase( position );
+}
+
+void FLWorldSurface::clear() {
+	for ( auto obj : objects_to_render ) {
+		if ( obj != nullptr )
+			log_warning( "Non-null object during world surface clear" );
+	}
+	objects_to_render.clear();
 }
 

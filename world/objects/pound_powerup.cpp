@@ -20,7 +20,7 @@
 #define SIZE 16
 
 FLPoundPowerup::FLPoundPowerup( float x, float y ) :
-	FLWorldObject( x, y, SIZE, SIZE ),
+	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject(
 			NUM_ANIMATIONS,
 			NUM_STEPS,

@@ -9,5 +9,6 @@
 #define COMMON_H_
 
 #include "basic_types.h"
+#include "game_object.h"
 
 #endif
