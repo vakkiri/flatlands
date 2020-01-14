@@ -19,6 +19,7 @@ class FLAnimatedObject;
 class FLRenderable;
 class FLTexturedSurface;
 class FLWorldSurface;
+class FLTexturedObject;
 
 class Renderer {
 	private:
@@ -69,6 +70,8 @@ class Renderer {
 		float world_camera_y();
 
 		void add_renderable( FLRenderable* r );
+		void add_to_world( FLTexturedObject* obj );
+		void remove_from_world( FLTexturedObject* obj );
 		void add_animated_object( FLAnimatedObject* object );
 		void remove_animated_object( FLAnimatedObject* object );
 		void render_and_swap();

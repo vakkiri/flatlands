@@ -114,4 +114,11 @@ void Renderer::update_animations() {
 	remove_null_objects();
 }
 
+void Renderer::add_to_world( FLTexturedObject* obj ) {
+	world_surface->add_object( obj );
+}
+
+void Renderer::remove_from_world( FLTexturedObject* obj ) {
+	world_surface->remove_object( obj );
+}
 

@@ -20,21 +20,22 @@
 #define WALK_ACCEL (0.54)
 #define RUN_ACCEL (0.59)
 
-#define JUMP_ACCEL (0.75)
-#define JUMP_FRAME_ACCEL (0.13)
-#define NUM_JUMP_FRAMES (3)
+#define JUMP_ACCEL (0.71)
+#define INITIAL_JUMP_VEL (-1.5)
+#define JUMP_FRAME_ACCEL (0.05)
+#define NUM_JUMP_FRAMES (5)
 
 #define HOVER_FRAMES (40)
 #define DOUBLE_JUMP_ACCEL (0.9)
 #define GROUND_POUND_ACCEL (5.0)
 #define POUND_FRAMES (90)
 
-#define X_TERMINAL_VELOCITY (4.2)
+#define X_TERMINAL_VELOCITY (4.6)
 #define X_TERMINAL_WALK_VELOCITY (1.6)
 #define Y_TERMINAL_VELOCITY (7.0)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.0)
 
-FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 7, 16 ) {
+FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 	Renderer::getInstance().get_world_surface()->add_object(this);
 
 	position.x = 32;
@@ -47,7 +48,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 7, 16 ) {
 	pound_frames = 0;
 	falling_frames = 0;
 
-	cur_ability = FL_GROUND_POUND;
+	cur_ability = FL_NO_ABILITY;
 	can_use_ability = false;
 
 	jump_held = false;
@@ -56,6 +57,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 4, 3, 7, 16 ) {
 	bind_actions();
 
 	set_start_repeat(10, 0);
+	// set_bounds_margin( rect{ 1, 1, -2, -2 } );
 }
 
 void FLPlayer::bind_actions() {
@@ -86,6 +88,7 @@ void FLPlayer::jump() {
 	if ( on_ground() ) {
 		can_use_ability = true;
 		hover_frames = 0;
+		vel.y = INITIAL_JUMP_VEL;
 		accel.y = -JUMP_ACCEL;
 		reset_animation();
 		on_ground_timer = 0;
@@ -207,12 +210,15 @@ void FLPlayer::update_physics() {
 	}
 
 	if ( on_ground() ) {
-		if ( state == FL_PLAYER_JUMP )
+		if ( state != FL_PLAYER_WALK )
 			state = FL_PLAYER_IDLE;
 
 		pound_frames = 0;
 		jump_frames = 0;
 		falling_frames = 0;
+	}
+	else if ( pounding() ) {
+		state = FL_PLAYER_POUND;
 	}
 	else {
 		state = FL_PLAYER_JUMP;
@@ -256,6 +262,9 @@ void FLPlayer::update_animation() {
 		case FL_PLAYER_JUMP:
 			set_animation( 2 );
 			break;
+		case FL_PLAYER_POUND:
+			set_animation( 3 );
+			break;
 		default:
 			break;
 	}
@@ -296,5 +305,9 @@ void FLPlayer::reset() {
 	position.x = reset_position.x;
 	position.y = reset_position.y;
 	falling_frames = 0;
+}
+
+void FLPlayer::set_ability( FLPlayerAbility ability ) {
+	cur_ability = ability;
 }
 

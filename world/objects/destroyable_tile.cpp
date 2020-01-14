@@ -3,11 +3,9 @@
  *
  */
 
-#include <iostream>
 #include "destroyable_tile.h"
 
 #include "../../rendering/renderer.h"
-#include "../../rendering/world_surface.h"
 #include "../../tilemap/tilemap.h"
 #include "../world_environment.h"
 #include "../player/player.h"
@@ -35,24 +33,23 @@ FLDestroyableTile::FLDestroyableTile( float x, float y ) :
 			STEP,
 			REPEATS
 	       	) {
-		FLWorldEnvironment& environment = FLWorldEnvironment::getInstance();
-		stop_animation();	// only start animation when broken
-		set_st( S, T );
+	FLWorldEnvironment& environment = FLWorldEnvironment::getInstance();
+	stop_animation();	// only start animation when broken
+	set_st( S, T );
 
-		Renderer::getInstance().get_world_surface()->add_object(this);
-		environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
-		environment.add_object( this );
-		environment.add_colliding_object( this );
+	Renderer::getInstance().add_to_world( this );
+	environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
+	environment.add_object( this );
+	environment.add_colliding_object( this );
 };
 
 FLDestroyableTile::~FLDestroyableTile() {
 	Renderer::getInstance().remove_animated_object( this );
-	Renderer::getInstance().get_world_surface()->remove_object( this );
+	Renderer::getInstance().remove_from_world( this );
 }
 
 void FLDestroyableTile::collide_with( FLPlayer *player ) {
 	if ( player->pounding() ) {
-		std::cout << "POUNDED TILE\n";
 		FLWorldEnvironment::getInstance().tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, false );
 		FLWorldEnvironment::getInstance().remove_colliding_object( this );
 		start_animation();
@@ -72,8 +69,6 @@ float FLDestroyableTile::bounds_y() {
 void FLDestroyableTile::update_animation() {
 	FLAnimatedObject::update_animation();
 
-	if ( animation_finished ) {
-		std::cout << "FINISHED ANIMATION\n";
+	if ( animation_finished )
 		delete this;
-	}
 }

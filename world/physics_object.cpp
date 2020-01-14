@@ -9,7 +9,7 @@
 #include "physics_settings.h"
 #include "world_environment.h"
 
-#define PHYSICS_EPSILON 0.1
+#define PHYSICS_EPSILON 0.01
 #define ON_GROUND_GRACE_FRAMES 2
 
 FLPhysicsObject::FLPhysicsObject() : FLPhysicsObject( 0, 0, 0, 0 ) {};
@@ -23,7 +23,7 @@ FLPhysicsObject::FLPhysicsObject( float x, float y, float w, float h ) : FLWorld
 	on_ground_timer = 0;
 };
 
-void FLPhysicsObject::set_bounds_margin( rect& new_bounds ) {
+void FLPhysicsObject::set_bounds_margin( rect new_bounds ) {
 	bounds_margin.x = new_bounds.x;
 	bounds_margin.y = new_bounds.y;
 	bounds_margin.w = new_bounds.w;
@@ -49,15 +49,12 @@ void FLPhysicsObject::update_position() {
 	if ( vel.y > 0 ) {
 		// check bottom left + bottom right
 		if (environment.solid_at(bounds_x(), next.y + bounds_h()) ||
-		    environment.solid_at(bounds_x() + bounds_w(), next.y + bounds_h())) {
+		    environment.solid_at(x() + bounds_w(), next.y + bounds_h())) {
 			// move feet to tile top
 			int tile_pos = int(next.y + bounds_h());
 			tile_pos -= (tile_pos % 8);
-			position.y = tile_pos - bounds_h() - PHYSICS_EPSILON;
+			position.y = tile_pos - bounds_h() - bounds_margin.y - PHYSICS_EPSILON;
 
-			while (environment.solid_at(bounds_x(), bounds_y() + bounds_h())) {
-				position.y -= 8;
-			}
 			on_ground_timer = ON_GROUND_GRACE_FRAMES;
 			stop_vertical();
 		}
@@ -67,15 +64,12 @@ void FLPhysicsObject::update_position() {
 	else if ( vel.y < 0 ) {
 		// check top left and top right
 		if (environment.solid_at(bounds_x(), next.y) ||
-		    environment.solid_at(bounds_x() + bounds_w(), next.y)) {
+		    environment.solid_at(x() + bounds_w(), next.y)) {
 			// move head to tile bottom
 			int tile_pos = int(next.y);
-			tile_pos += (8 - (tile_pos % 8));
-			position.y = tile_pos + PHYSICS_EPSILON;
+			int diff = 8 - (tile_pos % 8);
+			position.y = tile_pos + diff + PHYSICS_EPSILON;
 				
-			while (environment.solid_at(bounds_x(), bounds_y())) {
-				position.y += 8;
-			}
 			stop_vertical();
 		}
 	}
@@ -87,12 +81,9 @@ void FLPhysicsObject::update_position() {
 		if (environment.solid_at(next.x + bounds_w(), bounds_y()) ||
 		    environment.solid_at(next.x + bounds_w(), bounds_y() + bounds_h())) {
 			int tile_pos = int(next.x + bounds_w());
-			tile_pos -= (tile_pos % 8);
-			position.x = tile_pos - bounds_w() - PHYSICS_EPSILON;
+			int diff = tile_pos % 8;
+			position.x = tile_pos - diff - bounds_w() - PHYSICS_EPSILON;
 
-			while (environment.solid_at(bounds_x() + bounds_w(), bounds_y())) {
-				position.x -= 8;
-			}
 			stop_horizontal();
 		}
 	}
@@ -102,12 +93,9 @@ void FLPhysicsObject::update_position() {
 		if (environment.solid_at(next.x, bounds_y()) ||
 		    environment.solid_at(next.x, bounds_y() + bounds_h())) {
 			int tile_pos = int(next.x);
-			tile_pos += (8 - (tile_pos % 8));
-			position.x = tile_pos + PHYSICS_EPSILON;
+			int diff = 8 - (tile_pos % 8);
+			position.x = tile_pos + diff + PHYSICS_EPSILON;
 
-			while (environment.solid_at(bounds_x(), bounds_y())) {
-				position.x += 8;
-			}
 			stop_horizontal();
 		}
 	}

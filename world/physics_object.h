@@ -23,7 +23,7 @@ class FLPhysicsObject : virtual public FLWorldObject {
 		float bounds_w();
 		float bounds_h();
 
-		void set_bounds_margin( rect& new_bounds );
+		void set_bounds_margin( rect new_bounds );
 
 		bool collides_with( FLPhysicsObject& other );
 		bool collides_with_tile();

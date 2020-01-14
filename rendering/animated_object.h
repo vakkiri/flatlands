@@ -21,6 +21,7 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		virtual ~FLAnimatedObject() {}
 
 		virtual void update_animation();
+		void set_repeats( bool repeats );
 		void start_animation();
 		void reset_animation();
 		void set_animation( unsigned int animation );

@@ -80,3 +80,7 @@ void FLAnimatedObject::set_start_repeat( unsigned int repeat, unsigned int anima
 float FLAnimatedObject::s() { return _s + ( s_step * cur_step ); }
 float FLAnimatedObject::t() { return _t + ( t_step * cur_animation ); }
 
+void FLAnimatedObject::set_repeats( bool repeats ) {
+	this->repeats = repeats;
+}
+

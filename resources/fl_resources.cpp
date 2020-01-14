@@ -12,7 +12,7 @@
 #include "../world/physics_settings.h"
 #include "../world/world_environment.h"
 #include "../world/player/player.h"
-#include "../world/objects/destroyable_tile.h"
+#include "../world/objects/objects.h"
 
 #include "../tilemap/tilemap.h"
 #include "fl_resources.h"
@@ -240,6 +240,17 @@ void FLResources::load_level( int id ) {
 				input += 3;
 			}
 			else if ( current_type == 10 ) {
+				// input[1]: x
+				// input[2]: y
+				// input[3]: type
+				switch ( input[3] ) {
+					case 0:
+						new FLPoundPowerup( (float)input[1], (float)input[2] );
+						break;
+					default:
+						log_warning( "Unknown item type" );
+						break;
+				}
 				input += 4;
 			}
 			else if ( current_type == 11 ) { 

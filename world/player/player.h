@@ -27,7 +27,8 @@ enum FLPlayerAbility {
 enum FLPlayerState {
 	FL_PLAYER_IDLE,
 	FL_PLAYER_WALK,
-	FL_PLAYER_JUMP
+	FL_PLAYER_JUMP,
+	FL_PLAYER_POUND
 };
 
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
@@ -39,6 +40,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		// movement methods
 		void jump();
 		virtual void use_ability();
+		virtual void set_ability( FLPlayerAbility ability );
 		void move_left();
 		void move_right();
 		virtual void release_walk();
@@ -55,6 +57,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void reset();
 
 		bool pounding();
+
 	protected:
 		virtual void apply_gravity();
 		virtual void bind_actions();
