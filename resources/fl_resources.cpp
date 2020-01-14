@@ -204,18 +204,14 @@ void FLResources::load_level( int id ) {
 				// input[3]: id
 				// input[4]: solid?
 				// input[5]: layer
-				// TODO: remove this and use other obj type
-				if (input[3] != 23)
-					tilemap->add_tile(
-								(float)input[1],
-								(float)input[2],
-								16.f,
-								16.f,
-								(float)input[3]+1,
-								(bool)input[4]
-							);
-				else
-					new FLDestroyableTile( (float)input[1], (float)input[2] );
+				tilemap->add_tile(
+							(float)input[1],
+							(float)input[2],
+							16.f,
+							16.f,
+							(float)input[3]+1,
+							(bool)input[4]
+						);
 				input += 6;
 			}
 			else if ( current_type == 3 ) {
@@ -246,6 +242,12 @@ void FLResources::load_level( int id ) {
 				switch ( input[3] ) {
 					case 0:
 						new FLPoundPowerup( (float)input[1], (float)input[2] );
+						break;
+					case 1:
+						new FLDestroyableTile( (float)input[1], (float)input[2] );
+						break;
+					case 2:
+						new FLWarpGate( (float)input[1], (float)input[2] );
 						break;
 					default:
 						log_warning( "Unknown item type" );

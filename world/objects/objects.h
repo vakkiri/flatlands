@@ -10,6 +10,7 @@
 
 #include "destroyable_tile.h"
 #include "pound_powerup.h"
+#include "warp_gate.h"
 
 #endif
 
