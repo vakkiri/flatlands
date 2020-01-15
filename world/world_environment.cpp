@@ -44,7 +44,7 @@ void FLWorldEnvironment::reset_environment() {
 
 void FLWorldEnvironment::load_next_level() {
 	reset = true;
-	level = 0;
+	level += 1;
 }
 
 void FLWorldEnvironment::reset_tilemap() {

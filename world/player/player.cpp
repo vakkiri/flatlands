@@ -302,9 +302,9 @@ void FLPlayer::set_reset_position( float x, float y ) {
 }
 
 void FLPlayer::reset() {
-	position.x = reset_position.x;
-	position.y = reset_position.y;
 	falling_frames = 0;
+
+	FLWorldEnvironment::getInstance().mark_reset();
 }
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {
