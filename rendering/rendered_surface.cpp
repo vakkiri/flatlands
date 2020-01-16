@@ -3,7 +3,6 @@
  *
  */
 
-#include <math.h>
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
 #include "../rendering/renderer.h"
@@ -77,15 +76,14 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 		}
 
 		// vertex position
-		// floor is taken to avoid screen tearing/1px-off errors
-		vbuf[(i*step)] = floor(objects[i]->x());
-		vbuf[(i*step)+1] = floor(objects[i]->y());
-		vbuf[(i*step)+4] = floor(objects[i]->x() + objects[i]->w());
-		vbuf[(i*step)+5] = floor(objects[i]->y());
-		vbuf[(i*step)+8] = floor(objects[i]->x() + objects[i]->w());
-		vbuf[(i*step)+9] = floor(objects[i]->y() + objects[i]->h());
-		vbuf[(i*step)+12] = floor(objects[i]->x());
-		vbuf[(i*step)+13] = floor(objects[i]->y() + objects[i]->h());
+		vbuf[(i*step)] = objects[i]->x();
+		vbuf[(i*step)+1] = objects[i]->y();
+		vbuf[(i*step)+4] = objects[i]->x() + objects[i]->w();
+		vbuf[(i*step)+5] = objects[i]->y();
+		vbuf[(i*step)+8] = objects[i]->x() + objects[i]->w();
+		vbuf[(i*step)+9] = objects[i]->y() + objects[i]->h();
+		vbuf[(i*step)+12] = objects[i]->x();
+		vbuf[(i*step)+13] = objects[i]->y() + objects[i]->h();
 
 		// vertex texture position
 		vbuf[(i*step)+2] = tleft;

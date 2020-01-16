@@ -26,14 +26,18 @@ void Renderer::render() {
 	update_animations();
 	world_surface->update_buffers();
 
-	// TODO: separate renderables based on used camera
-	// ie. world renderables, ui renderables...
-	
+	// draw background
+	textured_rect_shader.set_camera( background_camera );
+	textured_rect_shader.update_pc_matrix();
+
+	for ( FLRenderable *r : background_renderables )
+		r->render();
+
 	// draw world
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
-	for ( FLRenderable *r : renderables )
+	for ( FLRenderable *r : world_renderables )
 		r->render();
 
 	// draw ui
@@ -48,19 +52,15 @@ void Renderer::render_and_swap() {
 void Renderer::clear_null_renderables() {
 	std::vector<int> nulls;
 
-	for ( int i = 0; i < renderables.size(); i++ ) {
-		if ( renderables[i] == nullptr )
+	for ( int i = 0; i < world_renderables.size(); i++ ) {
+		if ( world_renderables[i] == nullptr )
 			nulls.push_back(i);
 	}
 
 	for ( int i : nulls ) {
-		renderables[i] = renderables.back();
-		renderables.pop_back();
+		world_renderables[i] = world_renderables.back();
+		world_renderables.pop_back();
 	}
-}
-
-void Renderer::add_renderable(FLRenderable* r) {
-	renderables.push_back(r);
 }
 
 void Renderer::translate_world_camera( glm::vec3 translation ) {

@@ -38,7 +38,9 @@ class Renderer {
 		// Member variables
 		SDL_Window* window;
 		SDL_GLContext context;
-		std::vector<FLRenderable*> renderables;
+		std::vector<FLRenderable*> world_renderables;
+		std::vector<FLRenderable*> background_renderables;
+		std::vector<FLRenderable*> ui_renderables;
 		std::vector<FLAnimatedObject*> animated_objects;
 
 		// Shaders
@@ -47,6 +49,7 @@ class Renderer {
 		// Surfaces
 		FLWorldSurface *world_surface;
 		FLTexturedSurface *tilemap_surface;
+		FLTexturedSurface *background_surface;
 
 		// Private methods
 		bool init_sdl();	
@@ -59,6 +62,7 @@ class Renderer {
 		unsigned int screen_width;
 		glm::mat4 projection_matrix;
 		glm::mat4 world_camera;
+		glm::mat4 background_camera;
 
 		void update_animations();
 		void remove_null_objects();
@@ -69,7 +73,6 @@ class Renderer {
 		float world_camera_x();
 		float world_camera_y();
 
-		void add_renderable( FLRenderable* r );
 		void add_to_world( FLTexturedObject* obj );
 		void remove_from_world( FLTexturedObject* obj );
 		void clear_world();

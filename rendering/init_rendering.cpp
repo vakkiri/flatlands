@@ -11,12 +11,13 @@
 #include "../resources/fl_resources.h"
 #include "renderer.h"
 #include "rendered_surface.h"
+#include "textured_object.h"
 #include "world_surface.h"
 
 #define PRIMITIVE_RESTART 65535
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 768
+#define SCREEN_HEIGHT 512
 
 bool Renderer::init_shaders() {
 	GLenum error;
@@ -32,6 +33,7 @@ bool Renderer::init_shaders() {
 	}
 
 	world_camera = glm::mat4(1.0);
+	background_camera = glm::mat4(1.0);
 	world_camera[0][0] = 2.0;
 	world_camera[1][1] = 2.0;
 
@@ -129,6 +131,11 @@ bool Renderer::init() {
 
 	world_surface = new FLWorldSurface();
 	tilemap_surface = new FLTexturedSurface();
+	background_surface = new FLTexturedSurface();
+
+	world_renderables.push_back(tilemap_surface);
+	world_renderables.push_back(world_surface);
+	background_renderables.push_back(background_surface);
 
 	return true;
 }
@@ -136,6 +143,11 @@ bool Renderer::init() {
 void Renderer::init_surface_textures() {
 	world_surface->set_tex( FLResources::getInstance().get_image("world") );
 	tilemap_surface->set_tex( FLResources::getInstance().get_image("tiles") );
+	background_surface->set_tex( FLResources::getInstance().get_image("background") );
+	
+	FLTexturedObject* background_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+	background_surface->update_buffers( background_shape );
+	delete background_shape;
 }
 
 glm::mat4 Renderer::get_projection_matrix() {

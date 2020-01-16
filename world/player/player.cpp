@@ -241,11 +241,19 @@ void FLPlayer::update_camera() {
 	Renderer& r = Renderer::getInstance();
 	float xamt = 0;
 	float yamt = 0;
-	float dx = (r.world_camera_x() / 2) + x();
+	float xoffset;
+	if ( reverse )
+		xoffset = 32;
+	else
+		xoffset = 64;
+
+	float yoffset = 0;
+
+	float dx = (r.world_camera_x() / 2) + x() + xoffset;
 	float dy = (r.world_camera_y() / 2) + y();
 
 	// TODO: replace hardcoded values with screen width/height * camera scale
-	xamt = (dx / 50) * -5.0;
+	xamt = (dx / 50) * -X_TERMINAL_VELOCITY;
 	yamt = (dy / 50) * -5.0;
 
 	r.translate_world_camera( glm::vec3( xamt, yamt, 0 ) );

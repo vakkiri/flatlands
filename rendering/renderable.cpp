@@ -8,7 +8,6 @@
 #include "renderer.h"
 
 FLRenderable::FLRenderable() {
-	Renderer::getInstance().add_renderable(this);
 	visible = true;
 }
 
