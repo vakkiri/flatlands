@@ -23,6 +23,9 @@ void Renderer::render() {
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
+	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+
+	// draw to our frame buffer
 	update_animations();
 	world_surface->update_buffers();
 
@@ -42,6 +45,13 @@ void Renderer::render() {
 
 	// draw ui
 	// (not implemented yet)
+
+	// render framebuffer to screen	
+	textured_rect_shader.set_camera( framebuffer_camera );
+	textured_rect_shader.update_pc_matrix();
+
+	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	framebuffer_surface->render();
 }
 
 void Renderer::render_and_swap() {

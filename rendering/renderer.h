@@ -20,6 +20,7 @@ class FLRenderable;
 class FLTexturedSurface;
 class FLWorldSurface;
 class FLTexturedObject;
+struct texture;
 
 class Renderer {
 	private:
@@ -50,6 +51,7 @@ class Renderer {
 		FLWorldSurface *world_surface;
 		FLTexturedSurface *tilemap_surface;
 		FLTexturedSurface *background_surface;
+		FLTexturedSurface *framebuffer_surface;
 
 		// Private methods
 		bool init_sdl();	
@@ -60,8 +62,13 @@ class Renderer {
 	protected:
 		unsigned int screen_height;
 		unsigned int screen_width;
+		GLuint framebuffer;
+		GLuint main_rendered_texture;
+		texture* framebuffer_texture;
+
 		glm::mat4 projection_matrix;
 		glm::mat4 world_camera;
+		glm::mat4 framebuffer_camera;
 		glm::mat4 background_camera;
 
 		void update_animations();

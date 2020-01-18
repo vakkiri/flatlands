@@ -11,6 +11,7 @@
 #include "../resources/fl_resources.h"
 #include "renderer.h"
 #include "rendered_surface.h"
+#include "texture.h"
 #include "textured_object.h"
 #include "world_surface.h"
 
@@ -33,6 +34,11 @@ bool Renderer::init_shaders() {
 	}
 
 	world_camera = glm::mat4(1.0);
+	framebuffer_camera = glm::mat4(1.0);
+	// we have to flip the framebuffer camera since everything is 
+	// rendered upside down
+	framebuffer_camera[1][1] = -1.0;
+	framebuffer_camera[3][1] = (float) screen_height;
 	background_camera = glm::mat4(1.0);
 	world_camera[0][0] = 2.0;
 	world_camera[1][1] = 2.0;
@@ -65,6 +71,36 @@ bool Renderer::init_gl() {
 		return false;
 	}
 
+	// generate and bind framebuffer 
+	glGenFramebuffers( 1, &framebuffer );
+	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+
+	if ( (error = glGetError()) != GL_NO_ERROR ) {
+		log_error("Could not bind frame buffer");
+		std::cout << "Error: " << error;
+		return false;
+	}
+
+	// generate the textures to render to
+	glGenTextures( 1, &main_rendered_texture );
+	glBindTexture( GL_TEXTURE_2D, main_rendered_texture );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
+
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+
+	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers( 1, DrawBuffers );
+
+	if ( glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE ) {
+		log_error("Could not initialize frame buffer");
+		std::cout << "Error: " << error;
+		return false;
+	}
+
+	
 	return true;
 }
 
@@ -132,6 +168,7 @@ bool Renderer::init() {
 	world_surface = new FLWorldSurface();
 	tilemap_surface = new FLTexturedSurface();
 	background_surface = new FLTexturedSurface();
+	framebuffer_surface = new FLTexturedSurface();
 
 	world_renderables.push_back(tilemap_surface);
 	world_renderables.push_back(world_surface);
@@ -143,11 +180,23 @@ bool Renderer::init() {
 void Renderer::init_surface_textures() {
 	world_surface->set_tex( FLResources::getInstance().get_image("world") );
 	tilemap_surface->set_tex( FLResources::getInstance().get_image("tiles") );
+
+	// background shape and texture
 	background_surface->set_tex( FLResources::getInstance().get_image("background") );
-	
+
 	FLTexturedObject* background_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
 	background_surface->update_buffers( background_shape );
 	delete background_shape;
+
+	// framebuffer shape and texture
+	framebuffer_texture = new texture { (float) screen_width, (float) screen_height, main_rendered_texture };
+
+	framebuffer_surface->set_tex( framebuffer_texture );
+
+	FLTexturedObject* framebuffer_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+	framebuffer_surface->update_buffers( framebuffer_shape );
+	delete framebuffer_shape;
+
 }
 
 glm::mat4 Renderer::get_projection_matrix() {

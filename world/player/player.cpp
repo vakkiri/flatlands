@@ -16,12 +16,12 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL (90)
-#define INITIAL_WALK_ACCEL (2.0)
-#define WALK_ACCEL (0.54)
-#define RUN_ACCEL (0.59)
+#define INITIAL_WALK_ACCEL (1.75)
+#define WALK_ACCEL (0.53)
+#define RUN_ACCEL (0.57)
 
-#define JUMP_ACCEL (0.71)
-#define INITIAL_JUMP_VEL (-1.5)
+#define JUMP_ACCEL (0.52)
+#define INITIAL_JUMP_VEL (-1.3)
 #define JUMP_FRAME_ACCEL (0.05)
 #define NUM_JUMP_FRAMES (5)
 
@@ -30,10 +30,10 @@
 #define GROUND_POUND_ACCEL (5.0)
 #define POUND_FRAMES (90)
 
-#define X_TERMINAL_VELOCITY (4.6)
-#define X_TERMINAL_WALK_VELOCITY (1.6)
-#define Y_TERMINAL_VELOCITY (7.0)
-#define JUMP_HOLD_GRAVITY_FACTOR (2.0)
+#define X_TERMINAL_VELOCITY (4.2)
+#define X_TERMINAL_WALK_VELOCITY (3.4)
+#define Y_TERMINAL_VELOCITY (6.25)
+#define JUMP_HOLD_GRAVITY_FACTOR (2.25)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 	Renderer::getInstance().add_to_world(this);
@@ -92,6 +92,7 @@ void FLPlayer::jump() {
 		accel.y = -JUMP_ACCEL;
 		reset_animation();
 		on_ground_timer = 0;
+		falling_frames = 0;
 		jump_frames = NUM_JUMP_FRAMES;
 	}
 	else if ( can_use_ability ) {
@@ -223,7 +224,7 @@ void FLPlayer::update_physics() {
 	else {
 		state = FL_PLAYER_JUMP;
 
-		if ( ++falling_frames  > MAX_FALL )
+		if ( ++falling_frames > MAX_FALL )
 			reset();
 	}
 
@@ -247,10 +248,10 @@ void FLPlayer::update_camera() {
 	else
 		xoffset = 64;
 
-	float yoffset = 0;
+	float yoffset = -16;
 
 	float dx = (r.world_camera_x() / 2) + x() + xoffset;
-	float dy = (r.world_camera_y() / 2) + y();
+	float dy = (r.world_camera_y() / 2) + y() + yoffset;
 
 	// TODO: replace hardcoded values with screen width/height * camera scale
 	xamt = (dx / 50) * -X_TERMINAL_VELOCITY;
