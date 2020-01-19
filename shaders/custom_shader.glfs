@@ -10,28 +10,27 @@ void main() {
 	vec2 pixel = vec2(p1.x * 768, p1.y * 512);
 
 	float max_dist = 16.0f / 512.f; // move by at most 4 vertical pixels
-	float num_waves = 8.f;
+	float num_waves = 32.f;
 	float dist = max_dist;
-	float phase = cos(p1.x * num_waves * 2.f);
-	float speed = 2.f;
 
-	p1.y += dist * sin(time * speed) * phase;
+	float xphase = sin(time) * cos(texCoord.x * num_waves * 2.f);
+	float yphase = cos(time) * sin(texCoord.y * num_waves * 2.f);
 
-	vec4 c1 = texture( texUnit, p1 );
-	vec4 c2 = texture( texUnit, texCoord );
+	float f1 = 5.f;
+	float f2 = 7.f;
+	float f3 = 13.f;
+	float f4 = 23.f;
+	f1 = sin(time * f1);
+	f2 = sin(time * f2);
+	f3 = sin(time * f3);
+	f4 = sin(time * f4);
+	float f = f1 * f2 * f3 * f4;	
 
+	p1.y += dist * (yphase + xphase);
 
-	if (mod(pixel.y, 2.0) < 1.0)
-		c1.r = 0;
+	vec2 coord = p1;
+	gl_FragColor = texture( texUnit, coord );
 
-	float x = texCoord.x - 0.5;
-	float y = texCoord.y - 0.5;
-	x = x * x;
-	y = y * y;
-	float ratio = (x + y) / 2.f;
-	ratio = ratio * 20.f;
-	if (ratio > 1.0)
-		ratio = 1.0;
-	gl_FragColor = (ratio * c2) + ((1.f - ratio) * c1);
+	// gl_FragColor.r = xphase + yphase;
 }
 
