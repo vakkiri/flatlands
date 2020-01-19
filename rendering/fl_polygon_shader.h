@@ -10,7 +10,7 @@
 
 #include "fl_shader.h"
 
-class FLPolygonShader : public FLShader {
+class FLPolygonShader : public virtual FLShader {
 	public:
 		FLPolygonShader() : FLShader(){};
 

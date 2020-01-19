@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "fl_textured_rect_shader.h"
+#include "fl_framebuffer_shader.h"
 
 class FLAnimatedObject;
 class FLRenderable;
@@ -46,7 +47,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
-		FLTexturedRectShader custom_shader;
+		FLFramebufferShader custom_shader;
 
 		// Surfaces
 		FLWorldSurface *world_surface;

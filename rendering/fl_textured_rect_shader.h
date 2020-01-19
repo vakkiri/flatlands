@@ -14,12 +14,12 @@
 struct tile;
 struct texture;
 
-class FLTexturedRectShader : public FLPolygonShader {
+class FLTexturedRectShader : public virtual FLPolygonShader {
 	public:
 		FLTexturedRectShader();
 
 		virtual bool create_program( std::string program_name );
-		virtual void render( GLuint vao, unsigned int num_idices );
+		virtual void render( GLuint vao, unsigned int num_indices );
 
 		void set_tex_unit( GLuint unit );
 		void set_tex_coord_pointer( GLsizei stride, const GLvoid* data );
