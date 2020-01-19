@@ -42,9 +42,10 @@ class FLTexturedSurface : public FLRenderedSurface {
 
 		void set_tex( texture *tex );
 		void set_tex( std::string name );
+		void set_shader( FLTexturedRectShader* shader );
 	protected:
 		texture *tex;
-		FLTexturedRectShader& shader;
+		FLTexturedRectShader* shader;
 };
 
 #endif

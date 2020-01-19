@@ -24,6 +24,7 @@ class FLTexturedRectShader : public FLPolygonShader {
 		void set_tex_unit( GLuint unit );
 		void set_tex_coord_pointer( GLsizei stride, const GLvoid* data );
 		void enable_tex_coord_pointer();
+		GLint get_id();
 	protected:
 		GLint intex_coord_location;
 		GLint tex_unit_location;

@@ -46,6 +46,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
+		FLTexturedRectShader custom_shader;
 
 		// Surfaces
 		FLWorldSurface *world_surface;

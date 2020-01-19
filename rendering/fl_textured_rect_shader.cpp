@@ -58,3 +58,8 @@ void FLTexturedRectShader::render( GLuint vao, unsigned int num_indices ) {
 	glDrawElements( GL_TRIANGLE_FAN, num_indices, GL_UNSIGNED_INT, NULL );
 	glBindVertexArray( 0 );
 }
+
+GLint FLTexturedRectShader::get_id() {
+	return program_id;
+}
+

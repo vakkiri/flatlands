@@ -3,6 +3,8 @@
  *
  */
 
+#include <iostream>
+
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
 #include "../rendering/renderer.h"
@@ -35,7 +37,7 @@ FLRenderedSurface::FLRenderedSurface() : FLRenderable() {
 	num_indices = 0;
 }
 
-FLTexturedSurface::FLTexturedSurface() : shader(Renderer::getInstance().get_textured_rect_shader()), FLRenderedSurface() {
+FLTexturedSurface::FLTexturedSurface() : FLRenderedSurface() {
 	tex = nullptr;
 }
 
@@ -123,12 +125,12 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 	glPrimitiveRestartIndex( RESTART );
 
 
-	shader.enable_vertex_pointer();
-	shader.enable_tex_coord_pointer();
+	shader->enable_vertex_pointer();
+	shader->enable_tex_coord_pointer();
 
 		glBindBuffer( GL_ARRAY_BUFFER, vbo );
-		shader.set_vertex_pointer( 4 * sizeof(float), NULL );
-		shader.set_tex_coord_pointer( 4 * sizeof(float), (const void *) (2 * sizeof(float)) );
+		shader->set_vertex_pointer( 4 * sizeof(float), NULL );
+		shader->set_tex_coord_pointer( 4 * sizeof(float), (const void *) (2 * sizeof(float)) );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
 		glBindVertexArray( 0 );
@@ -212,12 +214,12 @@ void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
 
 	glPrimitiveRestartIndex( RESTART );
 
-	shader.enable_vertex_pointer();
-	shader.enable_tex_coord_pointer();
+	shader->enable_vertex_pointer();
+	shader->enable_tex_coord_pointer();
 
 		glBindBuffer( GL_ARRAY_BUFFER, vbo );
-		shader.set_vertex_pointer( 4 * sizeof(float), NULL );
-		shader.set_tex_coord_pointer( 4 * sizeof(float), (const void *) (2 * sizeof(float)) );
+		shader->set_vertex_pointer( 4 * sizeof(float), NULL );
+		shader->set_tex_coord_pointer( 4 * sizeof(float), (const void *) (2 * sizeof(float)) );
 
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
 		glBindVertexArray( 0 );
@@ -228,5 +230,10 @@ void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
 
 void FLTexturedSurface::render() {
 	glBindTexture( GL_TEXTURE_2D, tex->id );
-	shader.render( vao, num_indices );
+	shader->render( vao, num_indices );
 }
+
+void FLTexturedSurface::set_shader( FLTexturedRectShader* shader ) {
+	this->shader = shader;
+}
+

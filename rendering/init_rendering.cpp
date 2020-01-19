@@ -48,6 +48,11 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
+	custom_shader.create_program( "custom_shader" );
+	custom_shader.set_projection( projection_matrix );
+	custom_shader.set_camera( framebuffer_camera );
+	custom_shader.update_pc_matrix();
+
 	return true;
 }
 
@@ -91,16 +96,12 @@ bool Renderer::init_gl() {
 
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
 
-	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-	glDrawBuffers( 1, DrawBuffers );
-
 	if ( glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE ) {
 		log_error("Could not initialize frame buffer");
 		std::cout << "Error: " << error;
 		return false;
 	}
 
-	
 	return true;
 }
 
@@ -170,6 +171,11 @@ bool Renderer::init() {
 	background_surface = new FLTexturedSurface();
 	framebuffer_surface = new FLTexturedSurface();
 
+	world_surface->set_shader( &textured_rect_shader );
+	tilemap_surface->set_shader( &textured_rect_shader );
+	background_surface->set_shader( &textured_rect_shader );
+	framebuffer_surface->set_shader( &custom_shader );
+	
 	world_renderables.push_back(tilemap_surface);
 	world_renderables.push_back(world_surface);
 	background_renderables.push_back(background_surface);

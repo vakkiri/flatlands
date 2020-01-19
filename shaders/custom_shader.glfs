@@ -1,0 +1,28 @@
+#version 420
+uniform sampler2D texUnit;
+
+in vec2 texCoord;
+layout(location = 0) out vec4 gl_FragColor;
+
+void main() {
+	vec2 p1 = texCoord;
+	vec2 p2 = texCoord;
+	vec2 p3 = texCoord;
+	vec2 p4 = texCoord;
+
+	p1.x -= 1.f / 768.f;
+	p2.x -= 2.f / 768.f;
+	p3.x += 1.f / 768.f;
+	p4.x += 2.f / 768.f;
+
+	vec4 c1 = texture( texUnit, p1 );
+	vec4 c2 = texture( texUnit, p2 );
+	vec4 c3 = texture( texUnit, p3 );
+	vec4 c4 = texture( texUnit, p4 );
+
+	c1.r = 0.f;
+	c2.g = 0.f;
+	c3.b = 0.f;
+	gl_FragColor = (c1 + c2 + c3 + c4) / 4.f;
+}
+

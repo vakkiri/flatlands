@@ -6,6 +6,7 @@
  */
 
 #include <glm/ext.hpp>
+#include <iostream>
 #include <fstream>
 
 #include "../logging/logging.h"
@@ -24,12 +25,13 @@ FLShader::~FLShader() {
 
 bool FLShader::bind() {
 	GLenum error;
-	
+
 	glUseProgram( program_id );
 
 	error = glGetError();
 	if ( error != GL_NO_ERROR ) {
 		log_error( "Error binding shader." );
+		std::cout << error;
 		return false;
 	}
 
@@ -54,6 +56,7 @@ GLuint FLShader::load_shader(const GLchar* source[], GLenum shader_type) {
 	}
 
 	glAttachShader( program_id, shader );
+
 
 	return shader;
 }

@@ -5,6 +5,7 @@
  *
  */
 
+#include <iostream>
 #include <algorithm>
 #include <fstream>
 #include <glm/ext.hpp>
@@ -24,6 +25,7 @@ void Renderer::render() {
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+	textured_rect_shader.bind();
 
 	// draw to our frame buffer
 	update_animations();
@@ -43,15 +45,15 @@ void Renderer::render() {
 	for ( FLRenderable *r : world_renderables )
 		r->render();
 
-	// draw ui
-	// (not implemented yet)
-
 	// render framebuffer to screen	
-	textured_rect_shader.set_camera( framebuffer_camera );
-	textured_rect_shader.update_pc_matrix();
-
+	custom_shader.bind();
+	custom_shader.set_camera( framebuffer_camera );
+	custom_shader.update_pc_matrix();
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 	framebuffer_surface->render();
+
+	// draw ui
+	// (not implemented yet)
 }
 
 void Renderer::render_and_swap() {
