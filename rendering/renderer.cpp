@@ -49,6 +49,11 @@ void Renderer::render() {
 	custom_shader.bind();
 	custom_shader.set_camera( framebuffer_camera );
 	custom_shader.update_pc_matrix();
+	// custom_shader.set_dx(1910.f - world_camera[3][0]);
+	// custom_shader.set_dy(610.f - world_camera[3][1]);
+	custom_shader.set_dx( (1910.f * 2.f)+ (world_camera[3][0]));
+	custom_shader.set_dy( (730.f + 256.f) + (world_camera[3][1]));
+
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 	framebuffer_surface->render();
 

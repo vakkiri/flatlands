@@ -6,31 +6,14 @@ in vec2 texCoord;
 layout(location = 0) out vec4 gl_FragColor;
 
 void main() {
-	vec2 p1 = texCoord;
-	vec2 pixel = vec2(p1.x * 768, p1.y * 512);
+	float phase = sin(time);
+	vec2 pos2 = vec2(texCoord.x - (8.f / 768.f) * phase, texCoord.y);
 
-	float max_dist = 16.0f / 512.f; // move by at most 4 vertical pixels
-	float num_waves = 32.f;
-	float dist = max_dist;
+	gl_FragColor = texture( texUnit, texCoord );
+	vec4 color2 = texture( texUnit, pos2 );
 
-	float xphase = sin(time) * cos(texCoord.x * num_waves * 2.f);
-	float yphase = cos(time) * sin(texCoord.y * num_waves * 2.f);
+	color2.r = color2.b * phase;
 
-	float f1 = 5.f;
-	float f2 = 7.f;
-	float f3 = 13.f;
-	float f4 = 23.f;
-	f1 = sin(time * f1);
-	f2 = sin(time * f2);
-	f3 = sin(time * f3);
-	f4 = sin(time * f4);
-	float f = f1 * f2 * f3 * f4;	
-
-	p1.y += dist * (yphase + xphase);
-
-	vec2 coord = p1;
-	gl_FragColor = texture( texUnit, coord );
-
-	// gl_FragColor.r = xphase + yphase;
+	gl_FragColor = (0.90 * gl_FragColor) + (0.1 * color2);
 }
 

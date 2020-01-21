@@ -1,0 +1,39 @@
+#version 420
+uniform sampler2D texUnit;
+uniform float time;
+
+in vec2 texCoord;
+layout(location = 0) out vec4 gl_FragColor;
+
+void main() {
+	vec2 p1 = texCoord;
+	vec2 pixel = vec2(p1.x * 768, p1.y * 512);
+
+	float max_dist = 64.0f / 512.f; // move by at most 4 vertical pixels
+	float num_waves = 32.f;
+	float dist = max_dist;
+
+	float xphase = sin(time) * cos(texCoord.x * num_waves * 2.f);
+	float yphase = cos(time) * sin(texCoord.y * num_waves * 2.f);
+
+	float xamt = (texCoord.x - 0.5) * 2;
+	float yamt = (texCoord.y - 0.5) * 2;
+	if ( xamt < 0 )
+		xamt *= -1;
+	if ( yamt < 0 )
+		yamt *= -1;
+
+	float amt = max(xamt, yamt);
+	amt = amt * 2;
+	amt = amt * amt;
+	if (amt < 0.f)
+		amt = 0.f;
+	if (amt > 1.f)
+		amt = 1.f;
+
+	p1.y += (1 - amt) * dist * (yphase + xphase);
+
+	vec2 coord = p1;
+	gl_FragColor = texture( texUnit, coord );
+}
+

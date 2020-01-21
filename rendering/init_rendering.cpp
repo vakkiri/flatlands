@@ -48,10 +48,11 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
-	custom_shader.create_program( "custom_shader" );
+	custom_shader.create_program( "local-drip-shader" );
 	custom_shader.set_projection( projection_matrix );
 	custom_shader.set_camera( framebuffer_camera );
 	custom_shader.update_pc_matrix();
+	custom_shader.set_radius( 256.f );
 
 	return true;
 }
