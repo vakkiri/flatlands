@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "destroyable_tile.h"
 
 #include "../../rendering/renderer.h"
@@ -22,7 +23,9 @@
 #define T 64
 #define SIZE 16
 
-#define BOUNCE_AMOUNT 8.25
+#define BOUNCE_AMOUNT 7.75
+#define PUSH_AMOUNT 3.25
+
 
 FLDestroyableTile::FLDestroyableTile( float x, float y ) : 
 	FLGameObject( x, y, SIZE, SIZE ),
@@ -52,8 +55,13 @@ void FLDestroyableTile::collide_with( FLPlayer *player ) {
 		FLWorldEnvironment::getInstance().tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, false );
 		FLWorldEnvironment::getInstance().remove_colliding_object( this );
 		start_animation();
+
 		player->stop_vertical();
-		player->accelerate( point( 0, -BOUNCE_AMOUNT ) );
+		player->stop_horizontal();
+		if ( player->facing_right() )
+			player->accelerate( point( PUSH_AMOUNT, -BOUNCE_AMOUNT ) );
+		else
+			player->accelerate( point( -PUSH_AMOUNT, -BOUNCE_AMOUNT ) );
 		player->enable_ability();
 	}
 }

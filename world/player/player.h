@@ -62,6 +62,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void reset();
 
 		bool pounding();
+		bool facing_right();
 
 	protected:
 		virtual void apply_gravity();

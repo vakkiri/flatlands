@@ -18,11 +18,11 @@ void main() {
 	float xphase = sin(time) * cos(texCoord.x * num_waves * 2.f);
 	float yphase = cos(time) * sin(texCoord.y * num_waves * 2.f);
 
-	float fdx = (texCoord.x * 768.f) - dx;
+	float fdx = (texCoord.x * 768.f) - dx - 144.f;
 	if ( fdx < 0 )
 		fdx *= -1;
 
-	float fdy = (texCoord.y * 512.f) + dy;
+	float fdy = (texCoord.y * 512.f) + dy - (464.f);
 	if ( fdy < 0 )
 		fdy *= -1;
 

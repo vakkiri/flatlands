@@ -6,6 +6,7 @@
 #include "angel.h"
 
 #include "../rendering/renderer.h"
+#include "../world/world_environment.h"
 
 #define NUM_ANIMATIONS 1
 #define FRAMES_PER_STEP 1
@@ -30,11 +31,13 @@ NVAngel::NVAngel( float x, float y ) :
 	set_st( S, T );
 
 	Renderer::getInstance().add_to_world( this );
+	FLWorldEnvironment::getInstance().add_angel( this );
 }
 
 NVAngel::~NVAngel() {
 	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
+	FLWorldEnvironment::getInstance().remove_angel( this );
 }
 
 

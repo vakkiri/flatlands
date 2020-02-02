@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "../custom/angel.h"
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
 #include "../utils/collision_utils.h"
@@ -26,8 +27,8 @@ void FLWorldEnvironment::reset_environment() {
 	}
 
 	world_objects.clear();
-
 	colliding_objects.clear();
+	angels.clear();
 
 	Renderer::getInstance().clear();
 
@@ -95,6 +96,14 @@ void FLWorldEnvironment::remove_colliding_object( FLCollidingObject *object ) {
 	colliding_objects.erase( std::remove( colliding_objects.begin(), colliding_objects.end(), object ), colliding_objects.end() );
 }
 
+void FLWorldEnvironment::remove_angel( NVAngel *angel ) {
+	angels.erase( std::remove( angels.begin(), angels.end(), angel ), angels.end() );
+}
+
+std::vector<NVAngel*>* FLWorldEnvironment::get_angels() {
+	return &angels;
+}
+
 void FLWorldEnvironment::add_interactable_object( FLInteractableObject *object ) {
 	interactable_objects.push_back( object );
 }
@@ -136,3 +145,6 @@ void FLWorldEnvironment::mark_reset() {
 	reset = true;
 }
 
+void FLWorldEnvironment::add_angel( NVAngel* angel ) {
+	angels.push_back( angel );
+}

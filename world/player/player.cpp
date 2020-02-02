@@ -21,19 +21,19 @@
 #define WALK_ACCEL (0.53)
 #define RUN_ACCEL (0.57)
 
-#define JUMP_ACCEL (0.52)
+#define JUMP_ACCEL (0.48)
 #define INITIAL_JUMP_VEL (-1.3)
 #define JUMP_FRAME_ACCEL (0.05)
 #define NUM_JUMP_FRAMES (5)
 
 #define HOVER_FRAMES (40)
 #define DOUBLE_JUMP_ACCEL (0.9)
-#define GROUND_POUND_ACCEL (4.0)
-#define POUND_FRAMES (110)
+#define GROUND_POUND_ACCEL (3.0)
+#define POUND_FRAMES (60)
 
-#define X_TERMINAL_VELOCITY (4.2)
+#define X_TERMINAL_VELOCITY (4.6)
 #define X_TERMINAL_WALK_VELOCITY (3.4)
-#define Y_TERMINAL_VELOCITY (8.25)
+#define Y_TERMINAL_VELOCITY (7.75)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.25)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
@@ -99,7 +99,7 @@ void FLPlayer::jump() {
 		jump_frames = NUM_JUMP_FRAMES;
 
 		// Create a visual smoke effect
-		new FLEffect( x(), y(), 64, 16, 5, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y(), 64, 16, 5, 32, 16 );
 	}
 	else if ( can_use_ability ) {
 		use_ability();
@@ -176,10 +176,8 @@ void FLPlayer::move_left() {
 }
 
 void FLPlayer::bound_velocity() { 
-	if ( pound_frames > 0 ) {
+	if ( pound_frames > 0 )
 		pound_frames--;
-		accel.x = 0;
-	}
 	else {
 		if ( run_held ) {
 			if ( vel.x > X_TERMINAL_VELOCITY )
@@ -340,5 +338,9 @@ void FLPlayer::interact() {
 
 void FLPlayer::enable_ability() {
 	can_use_ability = true;
+}
+
+bool FLPlayer::facing_right() {
+	return (!reverse);
 }
 

@@ -11,6 +11,8 @@
 #include <glm/ext.hpp>
 
 #include "../common/basic_types.h"
+#include "../custom/angel.h"
+#include "../world/world_environment.h"
 #include "../logging/logging.h"
 #include "animated_object.h"
 #include "renderer.h"
@@ -49,15 +51,25 @@ void Renderer::render() {
 	custom_shader.bind();
 	custom_shader.set_camera( framebuffer_camera );
 	custom_shader.update_pc_matrix();
+
+	// Shader effects for angels
 	// custom_shader.set_dx(1910.f - world_camera[3][0]);
 	// custom_shader.set_dy(610.f - world_camera[3][1]);
-	custom_shader.set_dx( (1910.f * 2.f)+ (world_camera[3][0]));
-	custom_shader.set_dy( (730.f + 256.f) + (world_camera[3][1]));
+	std::vector<NVAngel*>* angels = FLWorldEnvironment::getInstance().get_angels();	
+
+	if (!angels->empty()) {
+		custom_shader.set_dx( (angels->at(0)->x() * 2.f) + (world_camera[3][0]));
+		custom_shader.set_dy( (angels->at(0)->y() * 2.f) + (world_camera[3][1]));
+	}
+	else {
+		custom_shader.set_dx( 10000000.f);
+		custom_shader.set_dy( 10000000.f );
+	}
 
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 	framebuffer_surface->render();
 
-	// draw ui
+	// UI
 	// (not implemented yet)
 }
 
