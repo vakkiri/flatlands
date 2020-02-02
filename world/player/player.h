@@ -37,10 +37,12 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		virtual void update_animation();
 
-		// movement methods
+		//actions
+		void interact();
 		void jump();
 		virtual void use_ability();
 		virtual void set_ability( FLPlayerAbility ability );
+		// movement methods
 		void move_left();
 		void move_right();
 		virtual void release_walk();

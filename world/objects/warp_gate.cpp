@@ -11,7 +11,7 @@
 #include "../../rendering/renderer.h"
 
 #define NUM_ANIMATIONS 1
-#define NUM_STEPS 3
+#define NUM_STEPS 1
 #define FRAMES_PER_STEP 10
 #define STEP 32
 #define REPEATS true

@@ -10,10 +10,9 @@ layout(location = 0) out vec4 gl_FragColor;
 
 void main() {
 	vec2 p1 = texCoord;
-	vec2 pixel = vec2(p1.x * 768, p1.y * 512);
 
-	float max_dist = 64.0f / 512.f; // move by at most 4 vertical pixels
-	float num_waves = 32.f;
+	float max_dist = 16.f / 512.f; // move by at most 4 vertical pixels
+	float num_waves = 17.f;
 	float dist = max_dist;
 
 	float xphase = sin(time) * cos(texCoord.x * num_waves * 2.f);
@@ -30,12 +29,16 @@ void main() {
 	float fd = ((fdx * fdx) + (fdy * fdy));
 	float amt = 0;
 
-	if (fd < effectRadius)
-		amt = 1.0 - (fd / effectRadius);
+	if (fd > 0)
+		amt = effectRadius / fd;
 
-	p1.y += amt * dist * (yphase + xphase);
+	p1.y += sin(time) * amt * dist * (yphase + xphase);
 
 	vec2 coord = p1;
 	gl_FragColor = texture( texUnit, coord );
+
+	if (mod((texCoord.y * 512.f), 2.0) < 1.0)
+		gl_FragColor.g = (1 - amt) * gl_FragColor.g;
+
 }
 

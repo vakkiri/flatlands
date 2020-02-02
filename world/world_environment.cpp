@@ -10,6 +10,7 @@
 #include "../tilemap/tilemap.h"
 #include "../utils/collision_utils.h"
 #include "colliding_object.h"
+#include "interactable_object.h"
 #include "player/player.h"
 #include "world_environment.h"
 
@@ -94,6 +95,14 @@ void FLWorldEnvironment::remove_colliding_object( FLCollidingObject *object ) {
 	colliding_objects.erase( std::remove( colliding_objects.begin(), colliding_objects.end(), object ), colliding_objects.end() );
 }
 
+void FLWorldEnvironment::add_interactable_object( FLInteractableObject *object ) {
+	interactable_objects.push_back( object );
+}
+
+void FLWorldEnvironment::remove_interactable_object( FLInteractableObject *object ) {
+	interactable_objects.erase( std::remove( interactable_objects.begin(), interactable_objects.end(), object ), interactable_objects.end() );
+}
+
 FLCollidingObject* FLWorldEnvironment::get_colliding_object( FLWorldObject* object ) {
 	for ( FLCollidingObject* other : colliding_objects ) {
 		if ( rect_collision( object, other ) )
@@ -101,6 +110,15 @@ FLCollidingObject* FLWorldEnvironment::get_colliding_object( FLWorldObject* obje
 	}
 
 	return nullptr;
+}
+
+void FLWorldEnvironment::interact( FLWorldObject* object ) {
+	for ( FLInteractableObject* other : interactable_objects ) {
+		if ( rect_collision( object, other ) ) {
+			other->interact_with();
+			break;
+		}
+	}
 }
 
 std::vector<FLCollidingObject*> FLWorldEnvironment::get_colliding_objects( FLWorldObject* object ) {

@@ -15,6 +15,7 @@ class FLTilemap;
 class FLPlayer;
 class FLWorldObject;
 class FLCollidingObject;
+class FLInteractableObject;
 
 class FLWorldEnvironment {
 	public:
@@ -39,7 +40,10 @@ class FLWorldEnvironment {
 		void remove_object( FLWorldObject* object );
 		void add_colliding_object( FLCollidingObject* object );
 		void remove_colliding_object( FLCollidingObject* object );
+		void add_interactable_object( FLInteractableObject* object );
+		void remove_interactable_object( FLInteractableObject* object );
 		FLCollidingObject* get_colliding_object( FLWorldObject* object );
+		void interact( FLWorldObject* object );
 		std::vector<FLCollidingObject*> get_colliding_objects( FLWorldObject* object );
 		virtual void load_next_level();
 
@@ -48,6 +52,7 @@ class FLWorldEnvironment {
 		FLPlayer* _player;
 		std::vector<FLWorldObject*> world_objects;
 		std::vector<FLCollidingObject*> colliding_objects;
+		std::vector<FLInteractableObject*> interactable_objects;
 		virtual void reset_environment();
 
 		int level;

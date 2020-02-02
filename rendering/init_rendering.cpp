@@ -52,7 +52,7 @@ bool Renderer::init_shaders() {
 	custom_shader.set_projection( projection_matrix );
 	custom_shader.set_camera( framebuffer_camera );
 	custom_shader.update_pc_matrix();
-	custom_shader.set_radius( 256.f );
+	custom_shader.set_radius( 512.f );
 
 	return true;
 }

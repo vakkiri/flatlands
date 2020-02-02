@@ -63,6 +63,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 void FLPlayer::bind_actions() {
 	// bind actions with player object
 	std::function<void(void)> jump = std::bind(&FLPlayer::jump, this);
+	std::function<void(void)> interact = std::bind(&FLPlayer::interact, this);
 	std::function<void(void)> hold_jump = std::bind(&FLPlayer::hold_jump, this);
 	std::function<void(void)> release_jump = std::bind(&FLPlayer::release_jump, this);
 	std::function<void(void)> hold_run = std::bind(&FLPlayer::hold_run, this);
@@ -75,6 +76,7 @@ void FLPlayer::bind_actions() {
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_HELD, hold_run);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_RELEASED, release_run);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_PRESSED, jump);
+	FLInputHandler::getInstance().add_action(FL_KEY_ACTION3, FL_KEY_PRESSED, interact);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_LEFT, FL_KEY_HELD, walk_left);
@@ -248,7 +250,7 @@ void FLPlayer::update_camera() {
 	else
 		xoffset = 64;
 
-	float yoffset = -16;
+	float yoffset = -64;
 
 	float dx = (r.world_camera_x() / 2) + x() + xoffset;
 	float dy = (r.world_camera_y() / 2) + y() + yoffset;
@@ -318,5 +320,9 @@ void FLPlayer::reset() {
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {
 	cur_ability = ability;
+}
+
+void FLPlayer::interact() {
+	FLWorldEnvironment::getInstance().interact( this );
 }
 

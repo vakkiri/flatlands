@@ -13,6 +13,8 @@
 #include "../world/world_environment.h"
 #include "../world/player/player.h"
 #include "../world/objects/objects.h"
+#include "../world/npcs/npcs.h"
+#include "../custom/angel.h"
 
 #include "../tilemap/tilemap.h"
 #include "fl_resources.h"
@@ -236,6 +238,7 @@ void FLResources::load_level( int id ) {
 				input += 3;
 			}
 			else if ( current_type == 10 ) {
+				// items, or general objects
 				// input[1]: x
 				// input[2]: y
 				// input[3]: type
@@ -248,6 +251,12 @@ void FLResources::load_level( int id ) {
 						break;
 					case 2:
 						new FLWarpGate( (float)input[1], (float)input[2] );
+						break;
+					case 3:
+						new NVAngel( (float)input[1], (float)input[2] );
+						break;
+					case 4:
+						new FLNpc( (float)input[1], (float)input[2], 0, 160, 37, 18 );
 						break;
 					default:
 						log_warning( "Unknown item type" );
