@@ -8,6 +8,7 @@
 #include "player.h"
 
 #include "../colliding_object.h"
+#include "../effect.h"
 #include "../physics_settings.h"
 #include "../world_environment.h"
 #include "../../input/input_handler.h"
@@ -27,12 +28,12 @@
 
 #define HOVER_FRAMES (40)
 #define DOUBLE_JUMP_ACCEL (0.9)
-#define GROUND_POUND_ACCEL (5.0)
-#define POUND_FRAMES (90)
+#define GROUND_POUND_ACCEL (4.0)
+#define POUND_FRAMES (110)
 
 #define X_TERMINAL_VELOCITY (4.2)
 #define X_TERMINAL_WALK_VELOCITY (3.4)
-#define Y_TERMINAL_VELOCITY (6.25)
+#define Y_TERMINAL_VELOCITY (8.25)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.25)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
@@ -48,7 +49,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 	pound_frames = 0;
 	falling_frames = 0;
 
-	cur_ability = FL_NO_ABILITY;
+	cur_ability = FL_GROUND_POUND;
 	can_use_ability = false;
 
 	jump_held = false;
@@ -76,7 +77,7 @@ void FLPlayer::bind_actions() {
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_HELD, hold_run);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_RELEASED, release_run);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_PRESSED, jump);
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION3, FL_KEY_PRESSED, interact);
+	FLInputHandler::getInstance().add_action(FL_KEY_DOWN, FL_KEY_PRESSED, interact);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
 	FLInputHandler::getInstance().add_action(FL_KEY_LEFT, FL_KEY_HELD, walk_left);
@@ -96,6 +97,9 @@ void FLPlayer::jump() {
 		on_ground_timer = 0;
 		falling_frames = 0;
 		jump_frames = NUM_JUMP_FRAMES;
+
+		// Create a visual smoke effect
+		new FLEffect( x(), y(), 64, 16, 5, 32, 16 );
 	}
 	else if ( can_use_ability ) {
 		use_ability();
@@ -127,11 +131,12 @@ void FLPlayer::double_jump() {
 }
 
 void FLPlayer::ground_pound() {
-	vel.x = 0;
-	accel.x = 0;
 	vel.y = 0;
 	accel.y = GROUND_POUND_ACCEL;
 	pound_frames = POUND_FRAMES;
+
+	// create pound effect
+	new FLEffect( x(), y(), 64, 0, 6, 16, 16 );
 }
 
 void FLPlayer::hover() {
@@ -173,7 +178,6 @@ void FLPlayer::move_left() {
 void FLPlayer::bound_velocity() { 
 	if ( pound_frames > 0 ) {
 		pound_frames--;
-		vel.x = 0;
 		accel.x = 0;
 	}
 	else {
@@ -216,12 +220,20 @@ void FLPlayer::update_physics() {
 		if ( state != FL_PLAYER_WALK )
 			state = FL_PLAYER_IDLE;
 
+		if ( pounding() ) {
+			new FLEffect( x() - 12, y(), 64, 0, 6, 16, 16 );
+			new FLEffect( x() - 20, y() + 8, 64, 0, 6, 16, 16 );
+			new FLEffect( x() + 20, y() + 6, 64, 0, 6, 16, 16 );
+		}
+
 		pound_frames = 0;
 		jump_frames = 0;
 		falling_frames = 0;
 	}
 	else if ( pounding() ) {
 		state = FL_PLAYER_POUND;
+		if ( pound_frames % 5 == 0 )
+			new FLEffect( x(), y(), 64, 0, 6, 16, 16 );
 	}
 	else {
 		state = FL_PLAYER_JUMP;
@@ -324,5 +336,9 @@ void FLPlayer::set_ability( FLPlayerAbility ability ) {
 
 void FLPlayer::interact() {
 	FLWorldEnvironment::getInstance().interact( this );
+}
+
+void FLPlayer::enable_ability() {
+	can_use_ability = true;
 }
 

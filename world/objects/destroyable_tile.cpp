@@ -22,7 +22,7 @@
 #define T 64
 #define SIZE 16
 
-#define BOUNCE_AMOUNT 3.2
+#define BOUNCE_AMOUNT 8.25
 
 FLDestroyableTile::FLDestroyableTile( float x, float y ) : 
 	FLGameObject( x, y, SIZE, SIZE ),
@@ -54,6 +54,7 @@ void FLDestroyableTile::collide_with( FLPlayer *player ) {
 		start_animation();
 		player->stop_vertical();
 		player->accelerate( point( 0, -BOUNCE_AMOUNT ) );
+		player->enable_ability();
 	}
 }
 
