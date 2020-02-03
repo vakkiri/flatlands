@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include "../custom/angel.h"
+#include "objects/toggle_tile.h"
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
 #include "../utils/collision_utils.h"
@@ -26,9 +27,13 @@ void FLWorldEnvironment::reset_environment() {
 			delete object;
 	}
 
+	// clear special collections
+	clear_toggle_tiles();
+	angels.clear();
+
+	// clear standard collections
 	world_objects.clear();
 	colliding_objects.clear();
-	angels.clear();
 
 	Renderer::getInstance().clear();
 

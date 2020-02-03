@@ -48,9 +48,6 @@ FLToggleTile::FLToggleTile( float x, float y, bool on ) :
 FLToggleTile::~FLToggleTile() {
 	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
-
-	// remove from toggle_tiles vector
-	toggle_tiles.erase( std::remove( toggle_tiles.begin(), toggle_tiles.end(), this ), toggle_tiles.end() );
 }
 
 void FLToggleTile::toggle() {
@@ -67,5 +64,14 @@ void FLToggleTile::update_animation() {
 
 std::vector<FLToggleTile*>& get_toggle_tiles() {
 	return toggle_tiles;
+}
+
+void clear_toggle_tiles() {
+	for ( auto tile : toggle_tiles ) {
+		if ( tile != nullptr )
+			delete tile;
+	}
+
+	toggle_tiles.clear();
 }
 

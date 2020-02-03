@@ -23,6 +23,7 @@ class FLToggleTile : virtual public FLAnimatedObject {
 };
 
 std::vector<FLToggleTile*>& get_toggle_tiles();
+void clear_toggle_tiles();
 
 #endif
 
