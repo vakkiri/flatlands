@@ -1,10 +1,11 @@
 /*
- * 	destroyable_tile.cpp
+ * 	toggler.cpp
  *
  */
 
 #include <iostream>
-#include "destroyable_tile.h"
+#include "toggler.h"
+#include "toggle_tile.h"
 
 #include "../../rendering/renderer.h"
 #include "../../tilemap/tilemap.h"
@@ -16,18 +17,18 @@
 #define FRAMES_PER_STEP 5
 #define STEP 16
 #define REPEATS false
-
 #define BOUNDS_PADDING 6.f
 
-#define S 0
-#define T 64
+#define S 32
+#define T 288
 #define SIZE 16
 
 #define BOUNCE_AMOUNT 7.75
-#define PUSH_AMOUNT 3.25
+#define PUSH_AMOUNT 0.5
 
+#define COOLDOWN 30
 
-FLDestroyableTile::FLDestroyableTile( float x, float y ) : 
+FLToggler::FLToggler( float x, float y ) : 
 	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject( 
 			NUM_ANIMATIONS,
@@ -43,40 +44,43 @@ FLDestroyableTile::FLDestroyableTile( float x, float y ) :
 	Renderer::getInstance().add_to_world( this );
 	environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
 	environment.add_colliding_object( this );
+
+	cooldown = 0;
 };
 
-FLDestroyableTile::~FLDestroyableTile() {
+FLToggler::~FLToggler() {
 	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLDestroyableTile::collide_with( FLPlayer *player ) {
-	if ( player->pounding() ) {
-		FLWorldEnvironment::getInstance().tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, false );
-		FLWorldEnvironment::getInstance().remove_colliding_object( this );
-		start_animation();
+void FLToggler::collide_with( FLPlayer *player ) {
+	if ( player->pounding() && cooldown == 0) {
+		std::vector<FLToggleTile*> tiles = get_toggle_tiles();
 
-		player->stop_vertical();
-		player->stop_horizontal();
+		for (FLToggleTile* tile : tiles)
+			tile->toggle();
+
 		if ( player->facing_right() )
 			player->accelerate( point( PUSH_AMOUNT, -BOUNCE_AMOUNT ) );
 		else
 			player->accelerate( point( -PUSH_AMOUNT, -BOUNCE_AMOUNT ) );
 		player->enable_ability();
+
+		cooldown = COOLDOWN;
 	}
 }
 
-float FLDestroyableTile::bounds_h() {
+float FLToggler::bounds_h() {
 	return SIZE + BOUNDS_PADDING;
 }
 
-float FLDestroyableTile::bounds_y() {
+float FLToggler::bounds_y() {
 	return y() - (BOUNDS_PADDING / 2.f);
 }
 
-void FLDestroyableTile::update_animation() {
+void FLToggler::update_animation() {
 	FLAnimatedObject::update_animation();
 
-	if ( animation_finished )
-		delete this;
+	if (cooldown > 0)
+		cooldown -= 1;
 }

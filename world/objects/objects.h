@@ -11,6 +11,8 @@
 #include "destroyable_tile.h"
 #include "pound_powerup.h"
 #include "warp_gate.h"
+#include "toggle_tile.h"
+#include "toggler.h"
 
 #endif
 
