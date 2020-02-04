@@ -47,6 +47,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
+		FLTexturedRectShader background_shader;
 		FLFramebufferShader custom_shader;
 
 		// Surfaces
@@ -65,8 +66,10 @@ class Renderer {
 		unsigned int screen_height;
 		unsigned int screen_width;
 		GLuint framebuffer;
+		GLuint alt_rendered_texture;
 		GLuint main_rendered_texture;
 		texture* framebuffer_texture;
+		texture* alt_framebuffer_texture;
 
 		glm::mat4 projection_matrix;
 		glm::mat4 world_camera;

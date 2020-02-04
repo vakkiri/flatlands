@@ -48,6 +48,11 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
+	background_shader.create_program( "background_shader" );
+	background_shader.set_projection( projection_matrix );
+	background_shader.set_camera( world_camera );
+	background_shader.update_pc_matrix();
+
 	custom_shader.create_program( "local-drip-shader" );
 	custom_shader.set_projection( projection_matrix );
 	custom_shader.set_camera( framebuffer_camera );
@@ -77,7 +82,7 @@ bool Renderer::init_gl() {
 		return false;
 	}
 
-	// generate and bind framebuffer 
+	// generate and bind framebuffer
 	glGenFramebuffers( 1, &framebuffer );
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
 
@@ -95,7 +100,16 @@ bool Renderer::init_gl() {
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 
+	glGenTextures( 1, &alt_rendered_texture );
+	glBindTexture( GL_TEXTURE_2D, alt_rendered_texture );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, screen_width, screen_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0 );
+
+
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+
 
 	if ( glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE ) {
 		log_error("Could not initialize frame buffer");
@@ -197,6 +211,7 @@ void Renderer::init_surface_textures() {
 
 	// framebuffer shape and texture
 	framebuffer_texture = new texture { (float) screen_width, (float) screen_height, main_rendered_texture };
+	alt_framebuffer_texture = new texture { (float) screen_width, (float) screen_height, alt_rendered_texture };
 
 	framebuffer_surface->set_tex( framebuffer_texture );
 

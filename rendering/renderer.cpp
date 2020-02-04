@@ -22,25 +22,45 @@
 
 
 void Renderer::render() {
+	// TODO: there are some calls in this method which can be moved
+	// into init as they aren't necessary every frame
+	// Also, a lot of this really should be abstracted into different
+	// methods that take a set of objects to render, and a shader to
+	// render them with.
 	clear_null_renderables();
 
-	glClear( GL_COLOR_BUFFER_BIT );
-
-	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
-	textured_rect_shader.bind();
-
-	// draw to our frame buffer
+	// update drawn world
 	update_animations();
 	world_surface->update_buffers();
 
-	// draw background
+	// prepare for rendering
+	glClear( GL_COLOR_BUFFER_BIT );
+
+	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+
+	// draw background to framebuffer ----------------------------------
+	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( background_camera );
 	textured_rect_shader.update_pc_matrix();
 
 	for ( FLRenderable *r : background_renderables )
 		r->render();
 
-	// draw world
+	// apply shader to background -------------------------
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, alt_rendered_texture, 0 );
+
+	background_shader.bind();
+	background_shader.set_camera( background_camera );
+	background_shader.update_pc_matrix();
+
+	framebuffer_surface->set_tex( framebuffer_texture );
+	framebuffer_surface->set_shader( &background_shader );
+	framebuffer_surface->render();
+	
+	// draw world -----------------------------------------
+	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
@@ -53,8 +73,6 @@ void Renderer::render() {
 	custom_shader.update_pc_matrix();
 
 	// Shader effects for angels
-	// custom_shader.set_dx(1910.f - world_camera[3][0]);
-	// custom_shader.set_dy(610.f - world_camera[3][1]);
 	std::vector<NVAngel*>* angels = FLWorldEnvironment::getInstance().get_angels();	
 
 	if (!angels->empty()) {
@@ -67,6 +85,8 @@ void Renderer::render() {
 	}
 
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	framebuffer_surface->set_tex( alt_framebuffer_texture );
+	framebuffer_surface->set_shader( &custom_shader );
 	framebuffer_surface->render();
 
 	// UI
