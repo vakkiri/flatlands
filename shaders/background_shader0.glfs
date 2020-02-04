@@ -1,0 +1,24 @@
+#version 420
+uniform sampler2D texUnit;
+uniform float time;
+
+in vec2 texCoord;
+layout(location = 0) out vec4 gl_FragColor;
+
+void main() {
+	float xpixel = (1.f/768.f);
+	float ypixel = (1.f/512.f);
+	float offx = cos(time) * 11.f * xpixel;
+	float offy = sin(time) * 7.f * ypixel;
+	vec2 coord = vec2(texCoord.x, -texCoord.y);
+	vec4 colorl = texture( texUnit, vec2(coord.x-offx, coord.y) );
+	vec4 colorr = texture( texUnit, vec2(coord.x+offx, coord.y) );
+	vec4 colort = texture( texUnit, vec2(coord.x, coord.y-offy) );
+	vec4 colorb = texture( texUnit, vec2(coord.x, coord.y+offy) );
+
+	
+	// blur
+	gl_FragColor = (0.25 * colort) + (0.25 * colorb) + (0.25 * colorl) + (0.25 * colorr);
+}
+
+

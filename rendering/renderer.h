@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "fl_textured_rect_shader.h"
+#include "fl_smoke_background_shader.h"
 #include "fl_framebuffer_shader.h"
 
 class FLAnimatedObject;
@@ -47,7 +48,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
-		FLTexturedRectShader background_shader;
+		FLSmokeBackgroundShader background_shader;
 		FLFramebufferShader custom_shader;
 
 		// Surfaces
@@ -84,6 +85,9 @@ class Renderer {
 		void translate_world_camera( glm::vec3 translation );
 		float world_camera_x();
 		float world_camera_y();
+
+		unsigned int get_screen_width();
+		unsigned int get_screen_height();
 
 		void add_to_world( FLTexturedObject* obj );
 		void remove_from_world( FLTexturedObject* obj );

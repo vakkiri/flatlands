@@ -48,7 +48,7 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
-	background_shader.create_program( "background_shader" );
+	background_shader.create_program( "background_shader0" );
 	background_shader.set_projection( projection_matrix );
 	background_shader.set_camera( world_camera );
 	background_shader.update_pc_matrix();

@@ -183,3 +183,11 @@ void Renderer::clear_world() {
 	world_surface->clear();
 }
 
+unsigned int Renderer::get_screen_width() {
+	return screen_width;
+}
+
+unsigned int Renderer::get_screen_height() {
+	return screen_height;
+}
+

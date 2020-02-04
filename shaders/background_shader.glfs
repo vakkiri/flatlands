@@ -7,6 +7,5 @@ layout(location = 0) out vec4 gl_FragColor;
 void main() {
 	vec2 coord = vec2(texCoord.x, -texCoord.y);
 	gl_FragColor = texture( texUnit, coord );
-	gl_FragColor.r = 1.0;
 }
 
