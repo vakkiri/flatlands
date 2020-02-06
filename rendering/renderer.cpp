@@ -51,6 +51,11 @@ void Renderer::render() {
 	// apply shader to background -------------------------
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, alt_rendered_texture, 0 );
 
+	// draw background *again* over new framebuffer, so that we have
+	// one copy to read from and one to write over
+	for ( FLRenderable *r : background_renderables )
+		r->render();
+
 	background_shader.bind();
 	background_shader.set_camera( background_camera );
 	background_shader.update_pc_matrix();
