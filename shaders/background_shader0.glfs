@@ -2,13 +2,25 @@
 uniform sampler2D texUnit;
 
 in vec2 texCoord;
+in float flife;
 layout(location = 0) out vec4 gl_FragColor;
 
 void main() {
-	vec2 flippedCoord = vec2( texCoord.x, 1 - texCoord.y );
-	gl_FragColor = texture( texUnit, flippedCoord );
-	gl_FragColor.r = 1.f;
-	gl_FragColor.a = 0.5;
+	vec2 flippedCoord = vec2( texCoord.x, 1.f-texCoord.y );
+	vec2 top = vec2(flippedCoord.x, flippedCoord.y - 4.f/512.f);
+	vec2 bot = vec2(flippedCoord.x, flippedCoord.y + 4.f/512.f);
+	vec2 left = vec2(flippedCoord.x - 4.f/768.f, flippedCoord.y);
+	vec2 right = vec2(flippedCoord.x + 4.f/768.f, flippedCoord.y);
+
+	vec4 tleft = texture( texUnit, left );
+	vec4 tright = texture( texUnit, right );
+	vec4 ttop = texture( texUnit, top );
+	vec4 tbot = texture( texUnit, bot );
+
+	vec4 orig = texture( texUnit, flippedCoord );
+	gl_FragColor = (tleft + tright + ttop + tbot) / 4.f;
+	gl_FragColor.r = flife / 30.f;
+	gl_FragColor.g = 1.f - flife / 30.f;
 }
 
 

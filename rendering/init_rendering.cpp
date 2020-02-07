@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "textured_object.h"
 #include "world_surface.h"
+#include "fl_distortion_surface.h"
 
 #define PRIMITIVE_RESTART 65535
 
@@ -50,7 +51,7 @@ bool Renderer::init_shaders() {
 
 	background_shader.create_program( "background_shader0" );
 	background_shader.set_projection( projection_matrix );
-	background_shader.set_camera( world_camera );
+	background_shader.set_camera( background_camera );
 	background_shader.update_pc_matrix();
 
 	custom_shader.create_program( "local-drip-shader" );
@@ -183,11 +184,13 @@ bool Renderer::init() {
 
 	world_surface = new FLWorldSurface();
 	tilemap_surface = new FLTexturedSurface();
+	background_distortion_surface = new FLDistortionSurface();
 	background_surface = new FLTexturedSurface();
 	framebuffer_surface = new FLTexturedSurface();
 
 	world_surface->set_shader( &textured_rect_shader );
 	tilemap_surface->set_shader( &textured_rect_shader );
+	background_distortion_surface->set_shader( &background_shader );
 	background_surface->set_shader( &textured_rect_shader );
 	framebuffer_surface->set_shader( &custom_shader );
 	
@@ -209,14 +212,19 @@ void Renderer::init_surface_textures() {
 	background_surface->update_buffers( background_shape );
 	delete background_shape;
 
-	// framebuffer shape and texture
+	// set texture of framebuffer based surfaces
+
 	framebuffer_texture = new texture { (float) screen_width, (float) screen_height, main_rendered_texture };
 	alt_framebuffer_texture = new texture { (float) screen_width, (float) screen_height, alt_rendered_texture };
 
 	framebuffer_surface->set_tex( framebuffer_texture );
+	background_distortion_surface->set_tex( framebuffer_texture );
 
+	// set shape of framebuffer based surfaces
 	FLTexturedObject* framebuffer_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT );
+
 	framebuffer_surface->update_buffers( framebuffer_shape );
+
 	delete framebuffer_shape;
 
 }

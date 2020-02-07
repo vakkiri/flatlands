@@ -7,8 +7,6 @@
 #include "fl_textured_rect_shader.h"
 #include "texture.h"
 
-#define RESTART 0xFFFF
-
 FLTexturedRectShader::FLTexturedRectShader() : FLPolygonShader() {};
 
 bool FLTexturedRectShader::create_program( std::string program_name ) {

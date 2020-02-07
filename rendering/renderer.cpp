@@ -19,6 +19,7 @@
 #include "renderable.h"
 #include "rendered_surface.h"
 #include "world_surface.h"
+#include "fl_distortion_surface.h"
 
 
 void Renderer::render() {
@@ -57,12 +58,8 @@ void Renderer::render() {
 		r->render();
 
 	background_shader.bind();
-	background_shader.set_camera( background_camera );
-	background_shader.update_pc_matrix();
 
-	framebuffer_surface->set_tex( framebuffer_texture );
-	framebuffer_surface->set_shader( &background_shader );
-	framebuffer_surface->render();
+	background_distortion_surface->render();
 	
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();

@@ -11,6 +11,8 @@
 struct fl_particle {
 	float x;
 	float y;
+	float vx;
+	float vy;
 	unsigned int life;
 };
 

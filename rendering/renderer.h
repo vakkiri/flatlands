@@ -20,6 +20,7 @@
 class FLAnimatedObject;
 class FLRenderable;
 class FLTexturedSurface;
+class FLDistortionSurface;
 class FLWorldSurface;
 class FLTexturedObject;
 struct texture;
@@ -55,6 +56,7 @@ class Renderer {
 		FLWorldSurface *world_surface;
 		FLTexturedSurface *tilemap_surface;
 		FLTexturedSurface *background_surface;
+		FLDistortionSurface *background_distortion_surface;
 		FLTexturedSurface *framebuffer_surface;
 
 		// Private methods

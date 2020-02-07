@@ -77,6 +77,7 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 			tbot = ttop + ( objects[i]->h() / tex->h );
 		}
 
+
 		// vertex position
 		vbuf[(i*step)] = objects[i]->x();
 		vbuf[(i*step)+1] = objects[i]->y();
@@ -123,7 +124,6 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 		log_error( "Error while binding VAO" );
 
 	glPrimitiveRestartIndex( RESTART );
-
 
 	shader->enable_vertex_pointer();
 	shader->enable_tex_coord_pointer();
