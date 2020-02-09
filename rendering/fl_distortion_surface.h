@@ -30,11 +30,8 @@ class FLDistortionSurface : public FLTexturedSurface {
 	protected:
 		std::vector<fl_particle*> particle_field;
 		std::vector<fl_particle*> alt_particle_field;
+		std::vector<std::vector<int>> particle_counts;
 		unsigned int next_loc;
-		float *vbuf;		// buffer of all verts
-		unsigned int *ibuf;	// buffer of all indices
-
-
 };
 
 #endif

@@ -74,16 +74,16 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> release_walk = std::bind(&FLPlayer::release_walk, this);
 
 	// map binded actions to input handler
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_HELD, hold_run);
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION1, FL_KEY_RELEASED, release_run);
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_PRESSED, jump);
-	FLInputHandler::getInstance().add_action(FL_KEY_DOWN, FL_KEY_PRESSED, interact);
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
-	FLInputHandler::getInstance().add_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
-	FLInputHandler::getInstance().add_action(FL_KEY_LEFT, FL_KEY_HELD, walk_left);
-	FLInputHandler::getInstance().add_action(FL_KEY_RIGHT, FL_KEY_HELD, walk_right);
-	FLInputHandler::getInstance().add_action(FL_KEY_RIGHT, FL_KEY_RELEASED, release_walk);
-	FLInputHandler::getInstance().add_action(FL_KEY_LEFT, FL_KEY_RELEASED, release_walk);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION1, FL_KEY_HELD, hold_run);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION1, FL_KEY_RELEASED, release_run);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION2, FL_KEY_PRESSED, jump);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_DOWN, FL_KEY_PRESSED, interact);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_LEFT, FL_KEY_HELD, walk_left);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_HELD, walk_right);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_RELEASED, release_walk);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_LEFT, FL_KEY_RELEASED, release_walk);
 
 }
 

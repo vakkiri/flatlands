@@ -4,6 +4,7 @@
  */
 
 #include "input_handler.h"
+#include "../game/fl_gamestate.h"
 
 void FLInputHandler::init() {
 	SDL_StartTextInput();
@@ -49,8 +50,14 @@ void FLInputHandler::handle_keyboard_state() {
 		state = key_states[key];
 		action = std::make_pair(key, state);
 
-		for ( std::function<void(void)> f : action_map[action] )
-			f();
+		if ( get_game_state() == FL_GAME_RUNNING ) {
+			for ( std::function<void(void)> f : game_action_map[action] )
+				f();
+		}
+		else if ( get_game_state() == FL_GAME_UI ) {
+			for ( std::function<void(void)> f : ui_action_map[action] )
+				f();
+		}
 	}
 
 }
@@ -75,8 +82,12 @@ void FLInputHandler::update_key_states() {
 	}
 }
 
-void FLInputHandler::add_action( FLKey key, FLKeyState state, std::function<void()> func ) {
+void FLInputHandler::add_game_action( FLKey key, FLKeyState state, std::function<void()> func ) {
 	std::pair<FLKey, FLKeyState> action = std::make_pair(key, state);
-	action_map[action].push_back(func);
+	game_action_map[action].push_back(func);
 }
 
+void FLInputHandler::add_ui_action( FLKey key, FLKeyState state, std::function<void()> func ) {
+	std::pair<FLKey, FLKeyState> action = std::make_pair(key, state);
+	ui_action_map[action].push_back(func);
+}

@@ -18,9 +18,8 @@
 #include "texture.h"
 #include "textured_object.h"
 
-#define NUM_PARTICLES 5096
-#define PARTICLE_SIZE 4
-#define PARTICLE_LIFE 60
+#define NUM_PARTICLES (512 * 10)
+#define PARTICLE_LIFE 600
 #define VERT_SIZE 5
 
 #define RESTART 0xFFFF
@@ -28,16 +27,11 @@
 FLDistortionSurface::FLDistortionSurface() : FLTexturedSurface() {
 	num_verts = NUM_PARTICLES * 4;		// square particles -> 4 verts
 	num_indices = NUM_PARTICLES * 5; 	// 4 + RESTART
-	vbuf = new float[num_verts * VERT_SIZE];	
-	ibuf = new unsigned int[num_indices];
-
 	init_particle_field();
 }
 
 FLDistortionSurface::~FLDistortionSurface() {
 	clear_particle_field();
-	delete [] vbuf;
-	delete [] ibuf;
 }
 
 void FLDistortionSurface::clear_particle_field() {
@@ -61,8 +55,23 @@ void FLDistortionSurface::add_particle( float x, float y ) {
 }
 
 void FLDistortionSurface::add_particle( float x, float y, float vx, float vy ) {
-	particle_field[next_loc]->x = x;
-	particle_field[next_loc]->y = y;
+	unsigned int verts = 3;
+
+	particle_field[next_loc]->xs.clear();
+	particle_field[next_loc]->ys.clear();
+
+	// v1
+	particle_field[next_loc]->xs.push_back(x);
+	particle_field[next_loc]->ys.push_back(y);
+
+	// v2
+	particle_field[next_loc]->xs.push_back(x + 6.f + (rand() % 8));
+	particle_field[next_loc]->ys.push_back(y + (rand() % 8) - 4.f);
+
+	// v3
+	particle_field[next_loc]->xs.push_back(x + (rand() % 8));
+	particle_field[next_loc]->ys.push_back(y + 6.f + (rand() % 8));
+
 	particle_field[next_loc]->life = PARTICLE_LIFE;
 	particle_field[next_loc]->vx = vx;
 	particle_field[next_loc]->vy = vy;
@@ -77,118 +86,94 @@ void FLDistortionSurface::init_particle_field() {
 	clear_particle_field();
 
 	for ( int i = 0; i < NUM_PARTICLES; ++i ) {
-		particle_field.push_back( new fl_particle{ 0.f, 0.f, 0.f, 0.f, 0 } );
-		alt_particle_field.push_back( new fl_particle{ 0.f, 0.f, 0.f, 0.f, 0 } );
-	}
-
-	add_particle( (float)(rand() % 768), (float)(rand() % 512) );
-
-	// initialize indices
-	for ( int i = 0; i < NUM_PARTICLES; ++i ) {
-		ibuf[i*5] = i*4;
-		ibuf[(i*5)+1] = (i*4) + 1;
-		ibuf[(i*5)+2] = (i*4) + 2;
-		ibuf[(i*5)+3] = (i*4) + 3;
-		ibuf[(i*5)+4] = RESTART;
-	}
-
-	for ( int i = 0; i < NUM_PARTICLES; ++i ) {
-		ibuf[(i*5)] = i * 4;
-		ibuf[(i*5)+1] = (i * 4) + 1;
-		ibuf[(i*5)+2] = (i * 4) + 2;
-		ibuf[(i*5)+3] = (i * 4) + 3;
-		ibuf[(i*5)+4] = RESTART;
+		particle_field.push_back( new fl_particle{ std::vector<float>(), std::vector<float>(), 0.f, 0.f, 0 } );
+		alt_particle_field.push_back( new fl_particle{ std::vector<float>(), std::vector<float>(), 0.f, 0.f, 0 } );
 	}
 
 }
 
 void FLDistortionSurface::update_particle_field() {
-	for ( int i = 0; i < NUM_PARTICLES; ++i ) {
-		alt_particle_field[i]->x = particle_field[i]->x;
-		alt_particle_field[i]->y = particle_field[i]->y;
-		alt_particle_field[i]->life = particle_field[i]->life - 1;
 
-		if ( alt_particle_field[i]->life == 0 ) {
-			float newvx1 = alt_particle_field[i]->vx - 0.1;
-			float newvx2 = alt_particle_field[i]->vx + 0.1;
-			float newvy1 = alt_particle_field[i]->vy - 0.1;
-			float newvy2 = alt_particle_field[i]->vy + 0.1;
+	for ( int i = 0; i < NUM_PARTICLES; ++i ) { 
+		alt_particle_field[i]->xs = particle_field[i]->xs;
+		alt_particle_field[i]->ys = particle_field[i]->ys;
+		alt_particle_field[i]->vx = particle_field[i]->vx;
+		alt_particle_field[i]->vy = particle_field[i]->vy;
+		alt_particle_field[i]->life = particle_field[i]->life;
+		
+		if ( alt_particle_field[i]->life > 0) {
+			alt_particle_field[i]->life -= 1;
 
-			add_particle(alt_particle_field[i]->x, alt_particle_field[i]->y, newvx1, newvy1 );
-			add_particle(alt_particle_field[i]->x, alt_particle_field[i]->y, newvx2, newvy2 );
-			alt_particle_field[i]->life = PARTICLE_LIFE;
+			for ( int j = 1; j < alt_particle_field[i]->xs.size(); ++j ) {
+				alt_particle_field[i]->xs[j] += alt_particle_field[i]->vx;
+				alt_particle_field[i]->ys[j] += alt_particle_field[i]->vy;
+			}
+
+			if (alt_particle_field[i]->ys[1] < alt_particle_field[i]->ys[2]) {
+				alt_particle_field[i]->ys[1] -= 0.1;
+				alt_particle_field[i]->ys[2] += 0.1;
+			}
+			else { 
+				alt_particle_field[i]->ys[1] += 0.1;
+				alt_particle_field[i]->ys[2] -= 0.1;
+			}
+			if (alt_particle_field[i]->xs[1] < alt_particle_field[i]->xs[2]) {
+				alt_particle_field[i]->xs[1] -= 0.1;
+				alt_particle_field[i]->xs[2] += 0.1;
+			}
+			else { 
+				alt_particle_field[i]->xs[1] += 0.1;
+				alt_particle_field[i]->xs[2] -= 0.1;
+			}
 		}
 
-		alt_particle_field[i]->y += alt_particle_field[i]->vy;
-		alt_particle_field[i]->x += alt_particle_field[i]->vx;
-
-		if (alt_particle_field[i]->y >= 512.f || alt_particle_field[i]->y <= 0)
-			alt_particle_field[i]->vy *= -1;
-		if (alt_particle_field[i]->x >= 768.f || alt_particle_field[i]->x <= 0)
-			alt_particle_field[i]->vx *= -1;
 	}
-
+	
+	// set new updated field as current field
 	std::swap( alt_particle_field, particle_field );
+
+	// add 1 particle per frame
+	float x = 768/2;
+	float y = 512/2;
+	float vx = (((float)(rand() % 77)) / 77.f) * -4.f + 2.f;
+	float vy = (((float)(rand() % 77)) / 77.f) * -4.f + 2.f;
+	add_particle(x, y, vx, vy);
+
 }
 
 void FLDistortionSurface::update_buffers() {
-	unsigned int step = VERT_SIZE * 4;	// vert size * 4 per quad
 
-	float tleft;
-	float tright;
-	float ttop;
-	float tbot;
+	unsigned int index = 0;
+	std::vector<float> vbuf;
+	std::vector<unsigned int> ibuf;
 
-	for ( int i = 0; i < particle_field.size(); i++ ) {
-		tleft = particle_field[i]->x / tex->w;
-		tright = tleft + (float(PARTICLE_SIZE) / tex->w);
-		ttop = particle_field[i]->y / tex->h;
-		tbot = ttop + (float(PARTICLE_SIZE) / tex->h);
+	for ( fl_particle* p : particle_field ) {
+		if (p->life > 0) {
+			for (int vert = 0; vert < p->xs.size(); ++vert) {
+				float tx = p->xs[vert] / tex->w;
+				float ty = p->ys[vert] / tex->h;
 
-		// top left
-		vbuf[i * step] = particle_field[i]->x;
-		vbuf[(i * step)+1] = particle_field[i]->y;
+				vbuf.push_back(p->xs[vert]);
+				vbuf.push_back(p->ys[vert]);
+				vbuf.push_back(tx);
+				vbuf.push_back(ty);
+				vbuf.push_back(p->life);
+				ibuf.push_back(index++);
+			}
 
-		// top right
-		vbuf[(i * step)+5] = particle_field[i]->x + PARTICLE_SIZE;
-		vbuf[(i * step)+6] = particle_field[i]->y;
-
-		// bottom right
-		vbuf[(i * step)+10] = particle_field[i]->x + PARTICLE_SIZE;
-		vbuf[(i * step)+11] = particle_field[i]->y + PARTICLE_SIZE;
-
-		// bottom left
-		vbuf[(i * step)+15] = particle_field[i]->x;
-		vbuf[(i * step)+16] = particle_field[i]->y + PARTICLE_SIZE;
-
-		// tex coords
-		vbuf[(i * step) + 2] = tleft;
-		vbuf[(i * step) + 3] = ttop;
-		vbuf[(i * step) + 7] = tright;
-		vbuf[(i * step) + 8] = ttop;
-		vbuf[(i * step) + 12] = tright;
-		vbuf[(i * step) + 13] = tbot;
-		vbuf[(i * step) + 17] = tleft;
-		vbuf[(i * step) + 18] = tbot;
-
-		// life
-		vbuf[(i * step) + 4] = particle_field[i]->life;
-		vbuf[(i * step) + 9] = particle_field[i]->life;
-		vbuf[(i * step) + 14] = particle_field[i]->life;
-		vbuf[(i * step) + 19] = particle_field[i]->life;
-
-		// indices are set on intialization since they don't change
+			ibuf.push_back(RESTART);
+		}
 	}
 
 	glBindBuffer( GL_ARRAY_BUFFER, vbo );
-	glBufferData( GL_ARRAY_BUFFER, num_verts * VERT_SIZE * sizeof(float), vbuf, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, vbuf.size() * sizeof(float), &(vbuf[0]), GL_STATIC_DRAW );
 
 	if ( glGetError() != GL_NO_ERROR )
 		log_error( "Error buffering vbo" );
 
 	// bind the indices to ibo
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof( unsigned int ), ibuf, GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, ibuf.size() * sizeof( unsigned int ), &(ibuf[0]), GL_STATIC_DRAW );
 
 	if ( glGetError() != GL_NO_ERROR )
 		log_error( "Error bufferin ibo" );

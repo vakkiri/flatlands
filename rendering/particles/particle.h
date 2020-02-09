@@ -8,9 +8,11 @@
 #ifndef FL_PARTICLE_H_
 #define FL_PARTICLE_H_
 
+#include <vector>
+
 struct fl_particle {
-	float x;
-	float y;
+	std::vector<float> xs;
+	std::vector<float> ys;
 	float vx;
 	float vy;
 	unsigned int life;

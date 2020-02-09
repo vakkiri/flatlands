@@ -46,7 +46,8 @@ class FLInputHandler {
 		bool input_loop();
 		void init();
 
-		void add_action( FLKey key, FLKeyState state, std::function<void(void)> func );
+		void add_game_action( FLKey key, FLKeyState state, std::function<void(void)> func );
+		void add_ui_action( FLKey key, FLKeyState state, std::function<void(void)> func );
 	protected:
 		void handle_keyboard_state();
 		void update_key_states();
@@ -59,7 +60,8 @@ class FLInputHandler {
 
 		std::map<FLKey, FLKeyState> key_states;
 		// translate in-game key presses/states to functions
-		std::map<std::pair<FLKey, FLKeyState>, std::vector<std::function<void(void)>>> action_map;
+		std::map<std::pair<FLKey, FLKeyState>, std::vector<std::function<void(void)>>> game_action_map;
+		std::map<std::pair<FLKey, FLKeyState>, std::vector<std::function<void(void)>>> ui_action_map;
 
 	private:
 		// Disallow copying/construction
