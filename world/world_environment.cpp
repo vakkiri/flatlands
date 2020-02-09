@@ -7,14 +7,17 @@
 #include <algorithm>
 
 #include "../custom/angel.h"
-#include "objects/toggle_tile.h"
+#include "../game/fl_gamestate.h"
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
 #include "../utils/collision_utils.h"
+
 #include "colliding_object.h"
 #include "interactable_object.h"
-#include "player/player.h"
 #include "world_environment.h"
+
+#include "objects/toggle_tile.h"
+#include "player/player.h"
 
 FLTilemap* FLWorldEnvironment::tilemap() { return _tilemap; }
 
@@ -60,10 +63,12 @@ void FLWorldEnvironment::reset_tilemap() {
 }
 
 void FLWorldEnvironment::update() {
-	if (reset)
-		reset_environment();
+	if ( get_game_state() == FL_GAME_RUNNING ) {
+		if (reset)
+			reset_environment();
 
-	_player->update_physics();
+		_player->update_physics();
+	}
 }
 
 void FLWorldEnvironment::set_player( FLPlayer* player ) {

@@ -28,6 +28,8 @@
 
 #define COOLDOWN 30
 
+#define MAX_OFFSET 4
+
 FLToggler::FLToggler( float x, float y ) : 
 	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject( 
@@ -41,12 +43,13 @@ FLToggler::FLToggler( float x, float y ) :
 	stop_animation();	// only start animation when broken
 	set_st( S, T );
 
+	cooldown = 0;
+
 	Renderer::getInstance().add_to_world( this );
 	environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
 	environment.add_colliding_object( this );
 	environment.add_object( this );
 
-	cooldown = 0;
 };
 
 FLToggler::~FLToggler() {
@@ -85,3 +88,8 @@ void FLToggler::update_animation() {
 	if (cooldown > 0)
 		cooldown -= 1;
 }
+
+float FLToggler::y() {
+	return FLGameObject::y() + (MAX_OFFSET * cooldown/COOLDOWN);
+}
+

@@ -19,6 +19,13 @@ struct rect {
 	float h;
 };
 
+struct fl_color {
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
 struct point {
 	float x;
 	float y;

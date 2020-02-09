@@ -15,6 +15,7 @@ enum FLGameState {
 };
 
 FLGameState get_game_state();
+void set_game_state( FLGameState new_state );
 
 #endif
 

@@ -1,0 +1,14 @@
+#version 140
+
+uniform mat4 pcMatrix;
+
+in vec2 vertexPos;
+in vec4 vertexColor
+
+out vec4 fColor;
+
+void main() {
+	fColor = vertexColor;
+	gl_Position = pcMatrix * vec4( vertexPos.x, vertexPos.y, 0.0, 1.0 );
+}
+
