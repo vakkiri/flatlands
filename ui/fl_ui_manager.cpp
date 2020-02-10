@@ -26,8 +26,18 @@ FLUIManager::~FLUIManager() {
 
 void FLUIManager::init() {
 	std::function<void(void)> up = std::bind(&FLUIManager::handle_up, &(FLUIManager::getInstance()) );
+	std::function<void(void)> down = std::bind(&FLUIManager::handle_down, &(FLUIManager::getInstance()) );
+	std::function<void(void)> left = std::bind(&FLUIManager::handle_left, &(FLUIManager::getInstance()) );
+	std::function<void(void)> right = std::bind(&FLUIManager::handle_right, &(FLUIManager::getInstance()) );
+	std::function<void(void)> accept = std::bind(&FLUIManager::handle_accept, &(FLUIManager::getInstance()) );
+	std::function<void(void)> reject = std::bind(&FLUIManager::handle_reject, &(FLUIManager::getInstance()) );
 
 	FLInputHandler::getInstance().add_ui_action( FL_KEY_UP, FL_KEY_PRESSED, up );
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_DOWN, FL_KEY_PRESSED, down );
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_LEFT, FL_KEY_PRESSED, left );
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_RIGHT, FL_KEY_PRESSED, right );
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_ACTION1, FL_KEY_PRESSED, accept );
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_ACTION2, FL_KEY_PRESSED, reject );
 }
 
 void FLUIManager::handle_up() {
