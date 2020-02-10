@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "npcs.h"
+#include "../../game/fl_gamestate.h"
 #include "../../rendering/renderer.h"
 #include "../world_environment.h"
 
@@ -35,6 +36,6 @@ FLNpc::~FLNpc() {
 }
 
 void FLNpc::interact_with() {
-	std::cout << "INTERACTED WITH SOMEONE.\n";
+	set_game_state( FL_GAME_UI );
 }
 

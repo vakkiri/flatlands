@@ -3,12 +3,14 @@
  *
  */
 
+#include <iostream>
 #include <algorithm>
 
 #include "fl_ui_manager.h"
 #include "fl_ui_element.h"
 
 #include "../game/fl_gamestate.h"
+#include "../input/input_handler.h"
 
 FLUIManager::FLUIManager() {
 	active_element = nullptr;
@@ -20,6 +22,12 @@ FLUIManager::~FLUIManager() {
 			delete elements.back();
 		elements.pop_back();
 	}
+}
+
+void FLUIManager::init() {
+	std::function<void(void)> up = std::bind(&FLUIManager::handle_up, &(FLUIManager::getInstance()) );
+
+	FLInputHandler::getInstance().add_ui_action( FL_KEY_UP, FL_KEY_PRESSED, up );
 }
 
 void FLUIManager::handle_up() {

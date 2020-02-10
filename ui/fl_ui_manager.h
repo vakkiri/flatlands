@@ -14,9 +14,19 @@
 class FLUIElement;
 
 class FLUIManager {
-	public:
+	private:
 		FLUIManager();
+		FLUIManager(FLUIManager const&) = delete;
+		FLUIManager& operator=(FLUIManager const&) = delete;
+	public:
+		static FLUIManager& getInstance() {
+			static FLUIManager instance;
+			return instance;
+		}
+
 		~FLUIManager();
+
+		void init();
 
 		// rendering	
 		virtual void render();

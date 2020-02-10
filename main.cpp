@@ -8,13 +8,13 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
+#include "common/common.h"
 #include "input/input_handler.h"
 #include "logging/logging.h"
 #include "rendering/renderer.h"
-#include "common/common.h"
 #include "resources/fl_resources.h"
-
 #include "tilemap/tilemap.h"
+#include "ui/fl_ui_manager.h"
 #include "world/player/player.h"
 #include "world/world_environment.h"
 
@@ -25,8 +25,13 @@ void main_loop() {
 	Renderer& renderer = Renderer::getInstance();
 	FLWorldEnvironment& world = FLWorldEnvironment::getInstance();
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
-	
+	FLUIManager& ui_manager = FLUIManager::getInstance();
+
+	// initialization	
 	renderer.init_surface_textures();
+	input_handler.init();
+	ui_manager.init();	
+
 	// Test objects...
 	FLTilemap tilemap(1024, 1024, 16);
 	world.set_tilemap(&tilemap);
@@ -36,7 +41,6 @@ void main_loop() {
 	// End of test objects
 
 	bool quit = false;
-	input_handler.init();
 
 	unsigned int start_time = 0;
 	unsigned int end_time = 0;
