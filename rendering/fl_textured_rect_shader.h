@@ -11,9 +11,6 @@
 #include <string>
 #include "fl_polygon_shader.h"
 
-struct tile;
-struct texture;
-
 class FLTexturedRectShader : public virtual FLPolygonShader {
 	public:
 		FLTexturedRectShader();

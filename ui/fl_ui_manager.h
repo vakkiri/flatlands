@@ -12,6 +12,8 @@
 #include <vector>
 
 class FLUIElement;
+class FLColoredSurface;
+class FLTexturedSurface;
 
 class FLUIManager {
 	private:
@@ -47,6 +49,9 @@ class FLUIManager {
 	protected:
 		FLUIElement* active_element;
 		std::vector<FLUIElement*> elements;
+
+		FLColoredSurface* ui_surface;
+		FLTexturedSurface* text_surface;
 };
 
 #endif

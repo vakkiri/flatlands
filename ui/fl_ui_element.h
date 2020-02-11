@@ -26,13 +26,12 @@ class FLUIElement {
 		virtual void reject(){}
 
 		// rendering
-		virtual void render() = 0;
+		std::vector<fl_colored_vertex>& get_vertices();
+
 	protected:
 		// the element geometry
 		point offset;
-		std::vector<float> xs;
-		std::vector<float> ys;
-		std::vector<fl_color> colors;
+		std::vector<fl_colored_vertex> vertices;
 };
 
 #endif

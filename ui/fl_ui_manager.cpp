@@ -11,6 +11,9 @@
 
 #include "../game/fl_gamestate.h"
 #include "../input/input_handler.h"
+#include "../rendering/rendered_surface.h"
+#include "../rendering/renderer.h"
+#include "../rendering/fl_colored_poly_shader.h"
 
 FLUIManager::FLUIManager() {
 	active_element = nullptr;
@@ -22,9 +25,20 @@ FLUIManager::~FLUIManager() {
 			delete elements.back();
 		elements.pop_back();
 	}
+
+	delete ui_surface;
+	delete text_surface;
 }
 
 void FLUIManager::init() {
+	// init rendering surface
+	ui_surface = new FLColoredSurface();
+	text_surface = new FLTexturedSurface();
+
+	ui_surface->set_shader( Renderer::getInstance().get_colored_poly_shader() );
+	text_surface->set_shader( Renderer::getInstance().get_textured_rect_shader() );
+
+	// init keys
 	std::function<void(void)> up = std::bind(&FLUIManager::handle_up, &(FLUIManager::getInstance()) );
 	std::function<void(void)> down = std::bind(&FLUIManager::handle_down, &(FLUIManager::getInstance()) );
 	std::function<void(void)> left = std::bind(&FLUIManager::handle_left, &(FLUIManager::getInstance()) );
@@ -108,7 +122,13 @@ void FLUIManager::set_active_element( FLUIElement* element ) {
 }
 
 void FLUIManager::render() {
-	for (FLUIElement* element : elements)
-		element->render();
+	// render all graphical elements
+	ui_surface->clear_verts();
+	for (FLUIElement* element : elements) 
+		ui_surface->add_verts(element->get_vertices());
+	ui_surface->update_buffers();
+	ui_surface->render();
+
+	// render all text
 }
 

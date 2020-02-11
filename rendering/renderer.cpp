@@ -12,6 +12,7 @@
 
 #include "../common/basic_types.h"
 #include "../custom/angel.h"
+#include "../ui/fl_ui_manager.h"
 #include "../world/world_environment.h"
 #include "../logging/logging.h"
 #include "animated_object.h"
@@ -92,7 +93,7 @@ void Renderer::render() {
 	framebuffer_surface->render();
 
 	// UI
-	// (not implemented yet)
+	FLUIManager::getInstance().render();
 }
 
 void Renderer::render_and_swap() {
@@ -126,8 +127,12 @@ float Renderer::world_camera_y() {
 	return world_camera[3][1] - (screen_height / 2);
 }
 
-FLTexturedRectShader& Renderer::get_textured_rect_shader() {
-	return textured_rect_shader;
+FLTexturedRectShader* Renderer::get_textured_rect_shader() {
+	return &textured_rect_shader;
+}
+
+FLColoredPolyShader* Renderer::get_colored_poly_shader() {
+	return &colored_poly_shader;
 }
 
 FLWorldSurface* Renderer::get_world_surface() {

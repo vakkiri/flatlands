@@ -11,13 +11,18 @@
 #include <vector>
 #include <string>
 
+#include "fl_ui_element.h"
+
 class FLDialogueBox : public FLUIElement {
 	public:
+		FLDialogueBox();
 		FLDialogueBox(std::string text);
 
 		virtual void accept();
-		virtual void render();
-	private:
+	protected:
+		unsigned int width;
+		unsigned int height;
+		unsigned int border_size;
 		std::vector<std::string> messages;
 };
 

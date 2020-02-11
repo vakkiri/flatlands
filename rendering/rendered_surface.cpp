@@ -10,6 +10,7 @@
 #include "../rendering/renderer.h"
 #include "textured_object.h"
 #include "fl_textured_rect_shader.h"
+#include "fl_colored_poly_shader.h"
 #include "rendered_surface.h"
 
 #define RESTART 0xFFFF
@@ -37,8 +38,40 @@ FLRenderedSurface::FLRenderedSurface() : FLRenderable() {
 	num_indices = 0;
 }
 
+FLColoredSurface::FLColoredSurface() : FLRenderedSurface() {
+	shader = nullptr;
+}
+
+void FLColoredSurface::render() {
+	if ( shader != nullptr )
+		shader->render( vao, num_indices );
+	else
+		log_warning("Attempted to render with null shader");
+}
+
+void FLColoredSurface::clear_verts() {
+	verts.clear();
+}
+
+void FLColoredSurface::update_buffers() {
+	// to implement
+}
+
+void FLColoredSurface::add_vert(fl_colored_vertex vert) {
+	verts.push_back(vert);
+}
+
+void FLColoredSurface::add_verts(std::vector<fl_colored_vertex>& new_verts) {
+	verts.insert(verts.end(), new_verts.begin(), new_verts.end());
+}
+
+void FLColoredSurface::set_shader( FLColoredPolyShader* shader ) {
+	this->shader = shader;
+}
+
 FLTexturedSurface::FLTexturedSurface() : FLRenderedSurface() {
 	tex = nullptr;
+	shader = nullptr;
 }
 
 void FLTexturedSurface::set_tex( texture *tex ) {
@@ -229,11 +262,16 @@ void FLTexturedSurface::update_buffers( FLTexturedObject* object ) {
 }
 
 void FLTexturedSurface::render() {
-	glBindTexture( GL_TEXTURE_2D, tex->id );
-	shader->render( vao, num_indices );
+	if (shader != nullptr) {
+		glBindTexture( GL_TEXTURE_2D, tex->id );
+		shader->render( vao, num_indices );
+	}
+	else
+		log_warning("Attempted to render with null shader");
 }
 
 void FLTexturedSurface::set_shader( FLTexturedRectShader* shader ) {
 	this->shader = shader;
 }
+
 

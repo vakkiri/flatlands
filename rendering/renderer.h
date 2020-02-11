@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "fl_colored_poly_shader.h"
 #include "fl_textured_rect_shader.h"
 #include "fl_smoke_background_shader.h"
 #include "fl_framebuffer_shader.h"
@@ -49,6 +50,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
+		FLColoredPolyShader colored_poly_shader;
 		FLSmokeBackgroundShader background_shader;
 		FLFramebufferShader custom_shader;
 
@@ -101,7 +103,8 @@ class Renderer {
 		void close();
 		void clear();
 
-		FLTexturedRectShader& get_textured_rect_shader();
+		FLTexturedRectShader* get_textured_rect_shader();
+		FLColoredPolyShader* get_colored_poly_shader();
 		FLWorldSurface *get_world_surface();
 		FLTexturedSurface *get_tilemap_surface();
 

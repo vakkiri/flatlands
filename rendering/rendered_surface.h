@@ -1,5 +1,5 @@
 /*
- * 	rended_surface.h
+ * 	renderd_surface.h
  *
  * 	Base structures holding information for any polygon which will be
  * 	rendered by a shader.
@@ -9,7 +9,9 @@
 #ifndef RENDERED_SURFACE_H_
 #define RENDERED_SURFACE_H_
 
-#include "../rendering/renderable.h"
+#include "../common/basic_types.h"
+
+#include "renderable.h"
 
 #include <SDL2/SDL_opengl.h>
 #include <string>
@@ -17,13 +19,14 @@
 
 struct texture;
 class FLTexturedObject;
+
 class FLTexturedRectShader;
+class FLColoredPolyShader;
 
 class FLRenderedSurface : public FLRenderable {
 	public:
 		FLRenderedSurface();
 		virtual void render() = 0;
-		virtual void update_buffers( std::vector<FLTexturedObject*>& objects ) = 0;
 
 	protected:
 		GLuint vbo;
@@ -31,6 +34,20 @@ class FLRenderedSurface : public FLRenderable {
 		GLuint vao;
 		unsigned int num_indices;
 		unsigned int num_verts;
+};
+
+class FLColoredSurface : public FLRenderedSurface {
+	public:
+		FLColoredSurface();
+		virtual void render();
+		virtual void clear_verts();
+		virtual void update_buffers();
+		virtual void add_vert(fl_colored_vertex vert);
+		virtual void add_verts(std::vector<fl_colored_vertex>& new_verts);
+		void set_shader( FLColoredPolyShader* shader );
+	protected:
+		std::vector<fl_colored_vertex> verts;
+		FLColoredPolyShader* shader;
 };
 
 class FLTexturedSurface : public FLRenderedSurface {

@@ -12,20 +12,6 @@
 
 class FLPolygonShader;
 
-struct rect {
-	float x;
-	float y;
-	float w;
-	float h;
-};
-
-struct fl_color {
-	float r;
-	float g;
-	float b;
-	float a;
-};
-
 struct point {
 	float x;
 	float y;
@@ -64,6 +50,26 @@ struct point {
 	point operator - ( const point& other ) const {
 		return point( x - other.x, y - other.y );
 	}
+};
+
+
+struct rect {
+	float x;
+	float y;
+	float w;
+	float h;
+};
+
+struct fl_color {
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
+struct fl_colored_vertex {
+	point pos;
+	fl_color c;
 };
 
 #endif
