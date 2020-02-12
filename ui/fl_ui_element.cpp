@@ -3,6 +3,8 @@
  *
  */
 
+#include <iostream>
+
 #include "fl_ui_element.h"
 
 FLUIElement::FLUIElement() : FLUIElement(0, 0) {}

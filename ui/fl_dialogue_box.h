@@ -16,13 +16,18 @@
 class FLDialogueBox : public FLUIElement {
 	public:
 		FLDialogueBox();
-		FLDialogueBox(std::string text);
+		FLDialogueBox(std::string text, float x, float y);
 
 		virtual void accept();
 	protected:
+		// protected methods
+		virtual void init_vertices();
+
+		// member variables
 		unsigned int width;
 		unsigned int height;
 		unsigned int border_size;
+
 		std::vector<std::string> messages;
 };
 

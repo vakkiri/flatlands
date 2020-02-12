@@ -113,6 +113,12 @@ void FLUIManager::add_element( FLUIElement* element ) {
 }
 
 void FLUIManager::remove_element( FLUIElement* element ) {
+	// TODO: maintain list of active element history, and "move back" here
+	if ( active_element == element ) {
+		active_element = nullptr;
+		set_game_state(FL_GAME_RUNNING);
+	}
+
 	elements.erase(std::remove(elements.begin(), elements.end(), element), elements.end());
 }
 

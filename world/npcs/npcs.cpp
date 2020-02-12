@@ -6,6 +6,9 @@
 #include <iostream>
 
 #include "npcs.h"
+
+#include "../../ui/fl_ui_manager.h"
+#include "../../ui/fl_dialogue_box.h"
 #include "../../game/fl_gamestate.h"
 #include "../../rendering/renderer.h"
 #include "../world_environment.h"
@@ -37,5 +40,6 @@ FLNpc::~FLNpc() {
 
 void FLNpc::interact_with() {
 	set_game_state( FL_GAME_UI );
+	new FLDialogueBox( "", 256, 128);
 }
 

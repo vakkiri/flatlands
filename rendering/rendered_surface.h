@@ -40,13 +40,15 @@ class FLColoredSurface : public FLRenderedSurface {
 	public:
 		FLColoredSurface();
 		virtual void render();
+
 		virtual void clear_verts();
 		virtual void update_buffers();
-		virtual void add_vert(fl_colored_vertex vert);
 		virtual void add_verts(std::vector<fl_colored_vertex>& new_verts);
+
 		void set_shader( FLColoredPolyShader* shader );
 	protected:
 		std::vector<fl_colored_vertex> verts;
+		std::vector<unsigned int> indices;
 		FLColoredPolyShader* shader;
 };
 

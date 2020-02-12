@@ -43,8 +43,10 @@ FLColoredSurface::FLColoredSurface() : FLRenderedSurface() {
 }
 
 void FLColoredSurface::render() {
-	if ( shader != nullptr )
+	if ( shader != nullptr ) {
+		shader->bind();
 		shader->render( vao, num_indices );
+	}
 	else
 		log_warning("Attempted to render with null shader");
 }
@@ -54,14 +56,51 @@ void FLColoredSurface::clear_verts() {
 }
 
 void FLColoredSurface::update_buffers() {
-	// to implement
-}
+	if ( verts.size() > 0 ) {
+		num_indices = indices.size();
 
-void FLColoredSurface::add_vert(fl_colored_vertex vert) {
-	verts.push_back(vert);
+		glBindBuffer( GL_ARRAY_BUFFER, vbo );
+		glBufferData( GL_ARRAY_BUFFER, verts.size() * 6 * sizeof(float), &(verts[0]), GL_STATIC_DRAW );
+		if ( glGetError() != GL_NO_ERROR )
+			log_error( "Error buffering vbo" );
+
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
+		glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned int ), &(indices[0]), GL_STATIC_DRAW );
+
+		if ( glGetError() != GL_NO_ERROR )
+			log_error( "Error buffering ibo" );
+
+		glBindVertexArray( vao );
+
+		if ( glGetError() != GL_NO_ERROR )
+			log_error( "Error buffering vao" );
+
+		glPrimitiveRestartIndex( RESTART );
+
+		shader->enable_vertex_pointer();
+		shader->enable_color_pointer();
+		
+			glBindBuffer( GL_ARRAY_BUFFER, vbo );
+			shader->set_vertex_pointer( 6 * sizeof(float), NULL );
+			shader->set_color_pointer( 6 * sizeof(float), (const void*) (2 * sizeof(float)) );
+			glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
+			glBindVertexArray( 0 );
+	}
+	else {
+		num_indices = 0;
+	}
 }
 
 void FLColoredSurface::add_verts(std::vector<fl_colored_vertex>& new_verts) {
+	// The "value" of each index for the ibuf should be the position of its associated
+	// vertex in our vertex buffer. We use verts.size() to find this position instead
+	// of indices.size() because the index vector contains RESTART indices.
+	for (int i = 0; i < new_verts.size(); ++i)
+		indices.push_back(verts.size() + i);
+
+	// signify the end of a piece of geometry using the RESTART index
+	indices.push_back(RESTART);
+
 	verts.insert(verts.end(), new_verts.begin(), new_verts.end());
 }
 
