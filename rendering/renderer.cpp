@@ -12,6 +12,7 @@
 
 #include "../common/basic_types.h"
 #include "../custom/angel.h"
+#include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
 #include "../world/world_environment.h"
 #include "../logging/logging.h"
@@ -47,8 +48,8 @@ void Renderer::render() {
 	textured_rect_shader.set_camera( background_camera );
 	textured_rect_shader.update_pc_matrix();
 
-	for ( FLRenderable *r : background_renderables )
-		r->render();
+	background_surface->set_tex( FLResources::getInstance().get_image("background") );
+	background_surface->render();
 
 	// apply shader to background -------------------------
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, alt_rendered_texture, 0 );
@@ -61,7 +62,13 @@ void Renderer::render() {
 	background_shader.bind();
 
 	background_distortion_surface->render();
-	
+
+	// now blur the result 	
+	screen_blur_shader.bind();
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+	background_surface->set_tex( alt_framebuffer_texture );
+	background_surface->render();
+
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( world_camera );
@@ -88,7 +95,7 @@ void Renderer::render() {
 	}
 
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-	framebuffer_surface->set_tex( alt_framebuffer_texture );
+	framebuffer_surface->set_tex( framebuffer_texture );
 	framebuffer_surface->set_shader( &custom_shader );
 	framebuffer_surface->render();
 

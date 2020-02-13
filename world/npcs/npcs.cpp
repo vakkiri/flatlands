@@ -40,6 +40,10 @@ FLNpc::~FLNpc() {
 
 void FLNpc::interact_with() {
 	set_game_state( FL_GAME_UI );
-	new FLDialogueBox( "", 256, 128);
+	float cx = Renderer::getInstance().world_camera_x() / -2.f;
+	float cy = Renderer::getInstance().world_camera_y() / -2.f;
+	float _y = y() - cy + (512.f / 2.f);
+	float _x = x() - cx + (768.f / 2.f);
+	new FLDialogueBox( "", _x, _y );
 }
 

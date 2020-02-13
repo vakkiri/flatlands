@@ -9,7 +9,7 @@
 
 #define REPEATS false
 #define NUM_ANIMATIONS 1
-#define FRAMES_PER_STEP 2
+#define FRAMES_PER_STEP 1
 
 FLEffect::FLEffect( float x, float y, float s, float t, float num_frames, float w, float h ) :
 	FLGameObject( x, y, w, h ),

@@ -110,20 +110,20 @@ void FLDistortionSurface::update_particle_field() {
 			}
 
 			if (alt_particle_field[i]->ys[1] < alt_particle_field[i]->ys[2]) {
-				alt_particle_field[i]->ys[1] -= 0.1;
-				alt_particle_field[i]->ys[2] += 0.1;
+				alt_particle_field[i]->ys[1] -= 0.2;
+				alt_particle_field[i]->ys[2] += 0.2;
 			}
 			else { 
-				alt_particle_field[i]->ys[1] += 0.1;
-				alt_particle_field[i]->ys[2] -= 0.1;
+				alt_particle_field[i]->ys[1] += 0.2;
+				alt_particle_field[i]->ys[2] -= 0.2;
 			}
 			if (alt_particle_field[i]->xs[1] < alt_particle_field[i]->xs[2]) {
-				alt_particle_field[i]->xs[1] -= 0.1;
-				alt_particle_field[i]->xs[2] += 0.1;
+				alt_particle_field[i]->xs[1] -= 0.2;
+				alt_particle_field[i]->xs[2] += 0.2;
 			}
 			else { 
-				alt_particle_field[i]->xs[1] += 0.1;
-				alt_particle_field[i]->xs[2] -= 0.1;
+				alt_particle_field[i]->xs[1] += 0.2;
+				alt_particle_field[i]->xs[2] -= 0.2;
 			}
 		}
 
@@ -135,8 +135,8 @@ void FLDistortionSurface::update_particle_field() {
 	// add 1 particle per frame
 	float x = 768/2;
 	float y = 512/2;
-	float vx = (((float)(rand() % 77)) / 77.f) * -4.f + 2.f;
-	float vy = (((float)(rand() % 77)) / 77.f) * -4.f + 2.f;
+	float vx = (((float)(rand() % 78)) / 77.f) * -8.f + 4.f;
+	float vy = (((float)(rand() % 78)) / 77.f) * -8.f + 4.f;
 	add_particle(x, y, vx, vy);
 
 }

@@ -66,6 +66,8 @@ class FLWorldEnvironment {
 		bool reset;
 	private:
 		// Disallow copying/construction
+		// We start at level -1 as it will be incremented to
+		// 0 when the first level loads.
 		FLWorldEnvironment() : level(-1), reset(false) {};
 		FLWorldEnvironment(FLWorldEnvironment const&) = delete;
 		FLWorldEnvironment& operator=(FLWorldEnvironment const&) = delete;

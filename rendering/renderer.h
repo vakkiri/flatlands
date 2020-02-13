@@ -50,6 +50,7 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
+		FLTexturedRectShader screen_blur_shader;
 		FLColoredPolyShader colored_poly_shader;
 		FLSmokeBackgroundShader background_shader;
 		FLFramebufferShader custom_shader;

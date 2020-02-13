@@ -14,9 +14,9 @@ FLDialogueBox::FLDialogueBox(std::string text, float x, float y) : FLUIElement( 
 	// TODO: process text into single-box sized messages
 	messages.push_back(text);
 	// TODO: set appropriate text widths
-	width = 128;
-	height = 64;
-	border_size = 4;
+	width = 256;
+	height = 128;
+	border_size = 8;
 
 	init_vertices();
 
@@ -46,14 +46,14 @@ void FLDialogueBox::init_vertices() {
 	 *	  v0------------v7
 	 */
 
-	fl_color c0 = {0.9, 0.1, 0.3, 1.f};
-	fl_color c1 = {0.9, 0.1, 0.3, 1.f};
-	fl_color c2 = {0.9, 0.1, 0.3, 1.f};
-	fl_color c3 = {0.9, 0.1, 0.3, 1.f};
-	fl_color c4 = {0.9, 0.1, 0.9, 1.f};
-	fl_color c5 = {0.9, 0.1, 0.9, 1.f};
-	fl_color c6 = {0.3, 0.1, 0.9, 1.f};
-	fl_color c7 = {0.3, 0.1, 0.9, 1.f};
+	fl_color c0 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c1 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c2 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c3 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c4 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c5 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c6 = {0.9, 0.9, 0.9, 0.1};
+	fl_color c7 = {0.9, 0.9, 0.9, 0.1};
 
 	point p0 = { offset.x + border_size, offset.y + height};
 	point p1 = { offset.x, offset.y + height - border_size };

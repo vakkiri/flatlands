@@ -49,6 +49,12 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();
 
+	screen_blur_shader.create_program( "screen_blur" );
+	screen_blur_shader.set_projection( projection_matrix );
+	screen_blur_shader.set_camera( background_camera );
+	screen_blur_shader.update_pc_matrix();
+
+
 	colored_poly_shader.create_program( "colored_poly_shader" );
 	colored_poly_shader.set_projection( projection_matrix );
 	colored_poly_shader.set_camera( background_camera );
