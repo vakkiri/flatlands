@@ -44,6 +44,7 @@ class FLWorldEnvironment {
 		void remove_angel( NVAngel* angel );
 		void add_colliding_object( FLCollidingObject* object );
 		void remove_colliding_object( FLCollidingObject* object );
+		void add_dynamic_object( FLCollidingObject* object );
 		void add_interactable_object( FLInteractableObject* object );
 		void remove_interactable_object( FLInteractableObject* object );
 		FLCollidingObject* get_colliding_object( FLWorldObject* object );
@@ -57,6 +58,7 @@ class FLWorldEnvironment {
 		FLTilemap* _tilemap;
 		FLPlayer* _player;
 		std::vector<FLWorldObject*> world_objects;
+
 		std::vector<NVAngel*> angels;
 		std::vector<FLCollidingObject*> colliding_objects;
 		std::vector<FLInteractableObject*> interactable_objects;
@@ -68,7 +70,7 @@ class FLWorldEnvironment {
 		// Disallow copying/construction
 		// We start at level -1 as it will be incremented to
 		// 0 when the first level loads.
-		FLWorldEnvironment() : level(-1), reset(false) {};
+		FLWorldEnvironment() : level(0), reset(false) {};
 		FLWorldEnvironment(FLWorldEnvironment const&) = delete;
 		FLWorldEnvironment& operator=(FLWorldEnvironment const&) = delete;
 };

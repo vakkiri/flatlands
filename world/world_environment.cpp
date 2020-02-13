@@ -13,6 +13,7 @@
 #include "../utils/collision_utils.h"
 
 #include "colliding_object.h"
+#include "dynamic_object.h"
 #include "interactable_object.h"
 #include "world_environment.h"
 
@@ -36,6 +37,7 @@ void FLWorldEnvironment::reset_environment() {
 
 	// clear standard collections
 	world_objects.clear();
+	clear_dynamic_objects();
 	colliding_objects.clear();
 
 	Renderer::getInstance().clear();
@@ -67,6 +69,7 @@ void FLWorldEnvironment::update() {
 		if (reset)
 			reset_environment();
 
+		update_dynamic_objects();
 		_player->update_physics();
 	}
 }
@@ -144,7 +147,7 @@ std::vector<FLCollidingObject*> FLWorldEnvironment::get_colliding_objects( FLWor
 	std::vector<FLCollidingObject*> objects;
 
 	for ( FLCollidingObject* other : colliding_objects ) {
-		if ( rect_collision( object, other ) )
+		if ( other != nullptr && rect_collision( object, other ) )
 			objects.push_back( other );
 	}
 
