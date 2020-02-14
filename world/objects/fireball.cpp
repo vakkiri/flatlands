@@ -53,6 +53,7 @@ FLFireball::FLFireball( float x, float y ) :
 	offset = offset_phase;
 	phase = 0;
 	last_tick = 0;
+	cooldown = 300;
 }
 
 FLFireball::~FLFireball() {
@@ -77,7 +78,7 @@ void FLFireball::update() {
 
 	phase = speed * (float(tick + offset) / 1000.f);
 
-	if ( tick - last_tick > 600 ) {
+	if ( tick - last_tick > cooldown ) {
 		FLSmallball* new_ball = new FLSmallball( x() + 8, y() + 8 );
 		new_ball->set_velocity( cos(phase), sin(phase) );
 		last_tick = tick;
@@ -99,6 +100,11 @@ FLSmallball::FLSmallball( float x, float y ) :
 	Renderer::getInstance().add_to_world( this );
 	FLWorldEnvironment::getInstance().add_colliding_object( this );
 
+}
+
+FLSmallball::~FLSmallball() {
+	Renderer::getInstance().remove_animated_object( this );
+	Renderer::getInstance().remove_from_world( this );
 }
 
 void FLSmallball::collide_with( FLPlayer *player ) {

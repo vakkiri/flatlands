@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "dynamic_object.h"
 
 std::vector<FLDynamicObject*> dynamic_objects;
