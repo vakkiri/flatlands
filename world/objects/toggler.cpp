@@ -47,7 +47,6 @@ FLToggler::FLToggler( float x, float y ) :
 
 	Renderer::getInstance().add_to_world( this );
 	environment.tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, true );
-	environment.add_colliding_object( this );
 };
 
 FLToggler::~FLToggler() {

@@ -244,7 +244,7 @@ void FLPlayer::update_physics() {
 
 	update_position();
 
-	std::vector<FLCollidingObject*> collisions = FLWorldEnvironment::getInstance().get_colliding_objects( this );
+	std::vector<FLCollidingObject*> collisions = FLWorldEnvironment::getInstance().find_colliding_objects( this );
 
 	for ( FLCollidingObject* collision : collisions )
 		collision->collide_with( this );

@@ -33,7 +33,6 @@ FLWarpGate::FLWarpGate( float x, float y ) :
 	set_st( S, T );
 
 	Renderer::getInstance().add_to_world( this );
-	FLWorldEnvironment::getInstance().add_colliding_object( this );
 
 }
 

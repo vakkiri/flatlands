@@ -17,15 +17,13 @@ class FLDynamicObject : virtual public FLWorldObject {
 		FLDynamicObject();
 		virtual ~FLDynamicObject();
 		virtual void update() = 0;
-		void set_element_position( unsigned int position );
+		void set_dynamic_list_position( unsigned int position );
 		bool is_zombie();
 	protected:
 		bool zombie;	// if the objects' life is over
-	private:
-		unsigned int element_position;
+		unsigned int dynamic_list_position;
 };
 
-void add_dynamic_object( FLDynamicObject* object );
 void update_dynamic_objects();
 void clear_dynamic_objects();
 

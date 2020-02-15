@@ -31,7 +31,6 @@ FLPoundPowerup::FLPoundPowerup( float x, float y ) :
 	set_st( S, T );
 
 	Renderer::getInstance().add_to_world( this );
-	FLWorldEnvironment::getInstance().add_colliding_object( this );
 }
 
 FLPoundPowerup::~FLPoundPowerup() {
@@ -41,7 +40,6 @@ FLPoundPowerup::~FLPoundPowerup() {
 
 void FLPoundPowerup::collide_with( FLPlayer *player ) {
 	player->set_ability( FL_GROUND_POUND );
-	FLWorldEnvironment::getInstance().remove_colliding_object( this );
 	set_repeats( false );
 }
 

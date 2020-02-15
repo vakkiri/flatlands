@@ -43,7 +43,6 @@ FLFireball::FLFireball( float x, float y ) :
 	set_st( S, T );
  
 	Renderer::getInstance().add_to_world( this );
-	FLWorldEnvironment::getInstance().add_colliding_object( this );
 
 	movement_radius = 32.f;
 	speed = 2.f;
@@ -98,7 +97,6 @@ FLSmallball::FLSmallball( float x, float y ) :
 	set_st( SMALL_S, SMALL_T );
 
 	Renderer::getInstance().add_to_world( this );
-	FLWorldEnvironment::getInstance().add_colliding_object( this );
 	life = 30;
 }
 

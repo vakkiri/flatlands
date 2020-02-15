@@ -28,12 +28,12 @@ void FLWorldEnvironment::reset_environment() {
 	clear_world_objects();
 
 	// clear special collections
+	clear_colliding_objects();
 	clear_toggle_tiles();
 	angels.clear();
 
 	// clear standard collections
 	clear_dynamic_objects();
-	colliding_objects.clear();
 
 	Renderer::getInstance().clear();
 
@@ -84,14 +84,6 @@ bool FLWorldEnvironment::solid_at( float x, float y ) {
 	return _tilemap->solid_at( x, y );
 }
 
-void FLWorldEnvironment::add_colliding_object( FLCollidingObject *object ) {
-	colliding_objects.push_back( object );
-}
-
-void FLWorldEnvironment::remove_colliding_object( FLCollidingObject *object ) {
-	colliding_objects.erase( std::remove( colliding_objects.begin(), colliding_objects.end(), object ), colliding_objects.end() );
-}
-
 void FLWorldEnvironment::remove_angel( NVAngel *angel ) {
 	angels.erase( std::remove( angels.begin(), angels.end(), angel ), angels.end() );
 }
@@ -108,7 +100,9 @@ void FLWorldEnvironment::remove_interactable_object( FLInteractableObject *objec
 	interactable_objects.erase( std::remove( interactable_objects.begin(), interactable_objects.end(), object ), interactable_objects.end() );
 }
 
-FLCollidingObject* FLWorldEnvironment::get_colliding_object( FLWorldObject* object ) {
+FLCollidingObject* FLWorldEnvironment::find_colliding_object( FLWorldObject* object ) {
+	std::vector<FLCollidingObject*>& colliding_objects = get_colliding_objects();
+
 	for ( FLCollidingObject* other : colliding_objects ) {
 		if ( rect_collision( object, other ) )
 			return other;
@@ -126,8 +120,9 @@ void FLWorldEnvironment::interact( FLWorldObject* object ) {
 	}
 }
 
-std::vector<FLCollidingObject*> FLWorldEnvironment::get_colliding_objects( FLWorldObject* object ) {
+std::vector<FLCollidingObject*> FLWorldEnvironment::find_colliding_objects( FLWorldObject* object ) {
 	std::vector<FLCollidingObject*> objects;
+	std::vector<FLCollidingObject*>& colliding_objects = get_colliding_objects();
 
 	for ( FLCollidingObject* other : colliding_objects ) {
 		if ( other != nullptr && rect_collision( object, other ) )

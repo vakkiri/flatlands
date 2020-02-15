@@ -9,26 +9,22 @@
 std::vector<FLDynamicObject*> dynamic_objects;
 
 FLDynamicObject::FLDynamicObject() {
-	add_dynamic_object( this );
 	zombie = false;
+	dynamic_list_position = dynamic_objects.size();
+	dynamic_objects.push_back( this );
 }
 
 FLDynamicObject::~FLDynamicObject() {
 	// Set the corresponding entry in dynamic_objects to nullptr
-	dynamic_objects[element_position] = nullptr;
+	dynamic_objects[dynamic_list_position] = nullptr;
 }
 
 bool FLDynamicObject::is_zombie() {
 	return zombie;
 }
 
-void FLDynamicObject::set_element_position( unsigned int position ) {
-	this->element_position = position;
-}
-
-void add_dynamic_object( FLDynamicObject* object ) {
-	object->set_element_position( dynamic_objects.size() );
-	dynamic_objects.push_back( object );
+void FLDynamicObject::set_dynamic_list_position( unsigned int position ) {
+	this->dynamic_list_position = position;
 }
 
 void update_dynamic_objects() {
@@ -58,7 +54,7 @@ void update_dynamic_objects() {
 
 			if ( null_elements < dynamic_objects.size() ) {
 				dynamic_objects[i] = dynamic_objects[dynamic_objects.size() - 1 - null_elements];
-				dynamic_objects[i]->set_element_position(i);
+				dynamic_objects[i]->set_dynamic_list_position(i);
 				dynamic_objects[dynamic_objects.size() - 1 - null_elements] = nullptr;
 				null_elements++;
 			}
