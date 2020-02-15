@@ -34,7 +34,6 @@ FLPoundPowerup::FLPoundPowerup( float x, float y ) :
 }
 
 FLPoundPowerup::~FLPoundPowerup() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

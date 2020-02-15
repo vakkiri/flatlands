@@ -26,7 +26,6 @@ FLEffect::FLEffect( float x, float y, float s, float t, float num_frames, float 
 }
 
 FLEffect::~FLEffect() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

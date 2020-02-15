@@ -35,7 +35,6 @@ NVAngel::NVAngel( float x, float y ) :
 }
 
 NVAngel::~NVAngel() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 	FLWorldEnvironment::getInstance().remove_angel( this );
 }

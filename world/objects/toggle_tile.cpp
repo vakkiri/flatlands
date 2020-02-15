@@ -46,7 +46,6 @@ FLToggleTile::FLToggleTile( float x, float y, bool on ) :
 };
 
 FLToggleTile::~FLToggleTile() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

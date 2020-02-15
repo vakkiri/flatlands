@@ -37,7 +37,6 @@ FLWarpGate::FLWarpGate( float x, float y ) :
 }
 
 FLWarpGate::~FLWarpGate() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

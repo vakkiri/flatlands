@@ -46,7 +46,6 @@ class Renderer {
 		std::vector<FLRenderable*> world_renderables;
 		std::vector<FLRenderable*> background_renderables;
 		std::vector<FLRenderable*> ui_renderables;
-		std::vector<FLAnimatedObject*> animated_objects;
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
@@ -96,9 +95,6 @@ class Renderer {
 
 		void add_to_world( FLTexturedObject* obj );
 		void remove_from_world( FLTexturedObject* obj );
-		void clear_world();
-		void add_animated_object( FLAnimatedObject* object );
-		void remove_animated_object( FLAnimatedObject* object );
 		void render_and_swap();
 
 		void close();

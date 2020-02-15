@@ -6,7 +6,6 @@
  */
 
 #include <iostream>
-#include <algorithm>
 #include <fstream>
 #include <glm/ext.hpp>
 
@@ -150,31 +149,14 @@ FLTexturedSurface* Renderer::get_tilemap_surface() {
 	return tilemap_surface;
 }
 
-void Renderer::add_animated_object( FLAnimatedObject* object ) {
-	animated_objects.push_back( object );
-}
-
-void Renderer::remove_animated_object( FLAnimatedObject* object ) {
-	for ( int i = 0; i < animated_objects.size(); ++i ) {
-		if ( animated_objects[i] == object )
-			animated_objects[i] = nullptr;
-	}
-}
-
-void Renderer::remove_null_objects() {
-	animated_objects.erase( 
-			std::remove_if( 
-				animated_objects.begin(), 
-				animated_objects.end(), 
-				[](FLAnimatedObject* obj) { return obj == nullptr; }), 
-			animated_objects.end() );
-}
-
 void Renderer::update_animations() {
-	for ( int i = 0; i < animated_objects.size(); ++i )
-		animated_objects[i]->update_animation();
+	remove_null_animated_objects();
 
-	remove_null_objects();
+	std::vector<FLAnimatedObject*>& animated_objects = get_animated_objects();
+	for ( int i = 0; i < animated_objects.size(); ++i ) {
+		if ( animated_objects[i] != nullptr )
+			animated_objects[i]->update_animation();
+	}
 }
 
 void Renderer::add_to_world( FLTexturedObject* obj ) {
@@ -186,14 +168,6 @@ void Renderer::remove_from_world( FLTexturedObject* obj ) {
 }
 
 void Renderer::clear() {
-	clear_world();
-	// TODO: clearly we need to separate animated objects which are
-	// "inside" the world (ie level-specific) from "outside" the world
-	// if we are going to be clearing them like this.
-	animated_objects.clear();
-}
-
-void Renderer::clear_world() {
 	world_surface->clear();
 }
 

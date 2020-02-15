@@ -50,7 +50,6 @@ FLToggler::FLToggler( float x, float y ) :
 };
 
 FLToggler::~FLToggler() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

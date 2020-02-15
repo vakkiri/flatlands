@@ -56,7 +56,6 @@ FLFireball::FLFireball( float x, float y ) :
 }
 
 FLFireball::~FLFireball() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 
@@ -97,11 +96,10 @@ FLSmallball::FLSmallball( float x, float y ) :
 	set_st( SMALL_S, SMALL_T );
 
 	Renderer::getInstance().add_to_world( this );
-	life = 30;
+	life = 300;
 }
 
 FLSmallball::~FLSmallball() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 
@@ -114,7 +112,7 @@ void FLSmallball::update() {
 	position.y += velocity.y;
 
 	if ( --life <= 0 )
-		zombie = false;	// TODO: should be true once im ready
+		zombie = true;	// Should be true
 }
 
 void FLSmallball::set_velocity( float x, float y ) {

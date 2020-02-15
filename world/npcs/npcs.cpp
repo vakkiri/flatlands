@@ -33,7 +33,6 @@ FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) :
 }
 
 FLNpc::~FLNpc() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 	FLWorldEnvironment::getInstance().remove_interactable_object( this );
 }

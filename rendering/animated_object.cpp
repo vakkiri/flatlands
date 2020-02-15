@@ -3,8 +3,11 @@
  *
  */
 
+#include <algorithm>
 #include "renderer.h"
 #include "animated_object.h"
+
+std::vector<FLAnimatedObject*> animated_objects;
 
 FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObject() {
 	active = true;
@@ -16,7 +19,8 @@ FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObje
 	this->num_animations = num_animations;
 	start_repeat = std::vector<unsigned int>(num_animations, 0);
 
-	Renderer::getInstance().add_animated_object( this );
+	animated_object_list_position = animated_objects.size();
+	animated_objects.push_back( this );
 }
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject( num_animations ) {
@@ -25,14 +29,15 @@ FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int nu
 	this->s_step = step;
 	this->t_step = step;
 	cur_animation = 0;
-
-	// TODO: should take separate parameters for s and t steps
-	// will implement as soon as needed...
 }
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats ) : 
 	FLAnimatedObject( num_animations, num_steps, frames_per_step, step ) {
 	this->repeats = repeats;
+}
+
+FLAnimatedObject::~FLAnimatedObject() {
+	animated_objects[animated_object_list_position] = nullptr;
 }
 
 void FLAnimatedObject::update_animation() {
@@ -83,4 +88,29 @@ float FLAnimatedObject::t() { return _t + ( t_step * cur_animation ); }
 void FLAnimatedObject::set_repeats( bool repeats ) {
 	this->repeats = repeats;
 }
+
+void FLAnimatedObject::set_animated_object_list_position( unsigned int position ) {
+	animated_object_list_position = position;
+}
+
+std::vector<FLAnimatedObject*>& get_animated_objects() {
+	return animated_objects;
+}
+
+void remove_null_animated_objects() {
+	animated_objects.erase(
+			std::remove_if(
+				animated_objects.begin(),
+				animated_objects.end(),
+				[](FLAnimatedObject* obj) { return obj == nullptr; } ),
+			animated_objects.end() );
+
+	for ( int i = 0; i < animated_objects.size(); ++i )
+		animated_objects[i]->set_animated_object_list_position( i );
+}
+
+void clear_animated_objects() {
+	animated_objects.clear();
+}
+
 

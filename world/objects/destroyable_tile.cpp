@@ -45,7 +45,6 @@ FLDestroyableTile::FLDestroyableTile( float x, float y ) :
 };
 
 FLDestroyableTile::~FLDestroyableTile() {
-	Renderer::getInstance().remove_animated_object( this );
 	Renderer::getInstance().remove_from_world( this );
 }
 

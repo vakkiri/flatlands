@@ -18,7 +18,7 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step);
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats);
 
-		virtual ~FLAnimatedObject() {}
+		virtual ~FLAnimatedObject();
 
 		virtual void update_animation();
 		void set_repeats( bool repeats );
@@ -30,6 +30,8 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 
 		virtual float s();
 		virtual float t();
+
+		void set_animated_object_list_position( unsigned int position );
 
 	protected:
 		float s_step;	// how much to move _s by each frame
@@ -48,7 +50,13 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		bool repeats;
 		bool active;
 		bool animation_finished;
+
+		unsigned int animated_object_list_position;
 };
+
+std::vector<FLAnimatedObject*>& get_animated_objects();
+void remove_null_animated_objects();
+void clear_animated_objects();
 
 #endif
 
