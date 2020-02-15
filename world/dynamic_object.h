@@ -18,6 +18,9 @@ class FLDynamicObject : virtual public FLWorldObject {
 		virtual ~FLDynamicObject();
 		virtual void update() = 0;
 		void set_element_position( unsigned int position );
+		bool is_zombie();
+	protected:
+		bool zombie;	// if the objects' life is over
 	private:
 		unsigned int element_position;
 };

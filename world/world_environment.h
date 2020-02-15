@@ -38,13 +38,11 @@ class FLWorldEnvironment {
 		bool solid_at(float x, float y);
 
 		void mark_reset();
-		void add_object( FLWorldObject* object );
+
 		void add_angel( NVAngel* angel );
-		void remove_object( FLWorldObject* object );
 		void remove_angel( NVAngel* angel );
 		void add_colliding_object( FLCollidingObject* object );
 		void remove_colliding_object( FLCollidingObject* object );
-		void add_dynamic_object( FLCollidingObject* object );
 		void add_interactable_object( FLInteractableObject* object );
 		void remove_interactable_object( FLInteractableObject* object );
 		FLCollidingObject* get_colliding_object( FLWorldObject* object );
@@ -57,7 +55,6 @@ class FLWorldEnvironment {
 	protected:
 		FLTilemap* _tilemap;
 		FLPlayer* _player;
-		std::vector<FLWorldObject*> world_objects;
 
 		std::vector<NVAngel*> angels;
 		std::vector<FLCollidingObject*> colliding_objects;

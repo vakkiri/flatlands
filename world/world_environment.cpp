@@ -25,18 +25,13 @@ FLTilemap* FLWorldEnvironment::tilemap() { return _tilemap; }
 void FLWorldEnvironment::reset_environment() {
 	reset_tilemap();
 
-	// clear world objects
-	for ( auto object : world_objects ) {
-		if ( object != nullptr && object != _player )
-			delete object;
-	}
+	clear_world_objects();
 
 	// clear special collections
 	clear_toggle_tiles();
 	angels.clear();
 
 	// clear standard collections
-	world_objects.clear();
 	clear_dynamic_objects();
 	colliding_objects.clear();
 
@@ -47,7 +42,6 @@ void FLWorldEnvironment::reset_environment() {
 	_tilemap->update_surface();
 
 	// Place player back on scene
-	world_objects.push_back( _player );
 	Renderer::getInstance().add_to_world( _player );	
 	Renderer::getInstance().add_animated_object( _player );	
 
@@ -88,17 +82,6 @@ void FLWorldEnvironment::set_tilemap(FLTilemap* tilemap) {
 
 bool FLWorldEnvironment::solid_at( float x, float y ) {
 	return _tilemap->solid_at( x, y );
-}
-
-void FLWorldEnvironment::add_object( FLWorldObject* object ) {
-	world_objects.push_back( object );
-}
-
-void FLWorldEnvironment::remove_object( FLWorldObject* object ) {
-	for ( int i = 0; i < world_objects.size(); ++i ) {
-		if ( world_objects[i] == object )
-			world_objects[i] = nullptr;
-	}
 }
 
 void FLWorldEnvironment::add_colliding_object( FLCollidingObject *object ) {
@@ -161,3 +144,4 @@ void FLWorldEnvironment::mark_reset() {
 void FLWorldEnvironment::add_angel( NVAngel* angel ) {
 	angels.push_back( angel );
 }
+

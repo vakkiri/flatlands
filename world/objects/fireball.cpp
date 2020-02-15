@@ -53,7 +53,7 @@ FLFireball::FLFireball( float x, float y ) :
 	offset = offset_phase;
 	phase = 0;
 	last_tick = 0;
-	cooldown = 300;
+	cooldown = 400;
 }
 
 FLFireball::~FLFireball() {
@@ -99,7 +99,7 @@ FLSmallball::FLSmallball( float x, float y ) :
 
 	Renderer::getInstance().add_to_world( this );
 	FLWorldEnvironment::getInstance().add_colliding_object( this );
-
+	life = 30;
 }
 
 FLSmallball::~FLSmallball() {
@@ -114,6 +114,9 @@ void FLSmallball::collide_with( FLPlayer *player ) {
 void FLSmallball::update() {
 	position.x += velocity.x;
 	position.y += velocity.y;
+
+	if ( --life <= 0 )
+		zombie = false;	// TODO: should be true once im ready
 }
 
 void FLSmallball::set_velocity( float x, float y ) {

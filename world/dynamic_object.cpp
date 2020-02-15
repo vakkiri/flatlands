@@ -10,11 +10,16 @@ std::vector<FLDynamicObject*> dynamic_objects;
 
 FLDynamicObject::FLDynamicObject() {
 	add_dynamic_object( this );
+	zombie = false;
 }
 
 FLDynamicObject::~FLDynamicObject() {
 	// Set the corresponding entry in dynamic_objects to nullptr
 	dynamic_objects[element_position] = nullptr;
+}
+
+bool FLDynamicObject::is_zombie() {
+	return zombie;
 }
 
 void FLDynamicObject::set_element_position( unsigned int position ) {
@@ -28,6 +33,7 @@ void add_dynamic_object( FLDynamicObject* object ) {
 
 void update_dynamic_objects() {
 	unsigned int null_elements = 0;
+
 	// First, clear any null objects.
 	// To optimize for bullet hell scenarios, we allow for null elements in this list
 	// and clear them in one pass as we find them.
@@ -35,6 +41,11 @@ void update_dynamic_objects() {
 	// We subtract null elements from the size of the list to avoid iterating over
 	// already cleared elements.
 	for ( unsigned int i = 0; i < dynamic_objects.size() - null_elements; ++i ) {
+
+		// If the object is a zombie, delete and null it
+		if ( dynamic_objects[i] != nullptr && dynamic_objects[i]->is_zombie() )
+			delete dynamic_objects[i];
+
 		if ( dynamic_objects[i] != nullptr )
 			dynamic_objects[i]->update();
 		else {

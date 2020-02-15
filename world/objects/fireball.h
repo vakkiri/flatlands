@@ -40,6 +40,7 @@ class FLSmallball : virtual public FLCollidingObject, virtual public FLAnimatedO
 		void set_velocity( float x, float y );
 	protected:
 		point velocity;
+		unsigned int life;
 };
 
 #endif

@@ -20,6 +20,11 @@ class FLWorldObject : virtual public FLGameObject {
 		virtual float bounds_y();
 		virtual float bounds_w();
 		virtual float bounds_h();
+
+	protected:
+		unsigned int wo_list_position;
 };
+
+void clear_world_objects();
 
 #endif
