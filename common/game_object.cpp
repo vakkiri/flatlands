@@ -20,3 +20,15 @@ float FLGameObject::y() { return position.y; }
 float FLGameObject::w() { return position.w; }
 float FLGameObject::h() { return position.h; }
 
+void FLGameObject::move( float x, float y ) {
+	position.x += x;
+	position.y += x;
+}
+
+void FLGameObject::movex( float x ) {
+	position.x += x;
+}
+
+void FLGameObject::movey( float y ) {
+	position.y += y;
+}

@@ -269,6 +269,8 @@ void FLResources::load_level( int id ) {
 						break;
 					case 8: new FLFireball( (float)input[1], (float) input[2] );
 						break;
+					case 9: new FLPlatform( (float)input[1], (float) input[2] );
+						break;
 					default:
 						log_warning( "Unknown item type" );
 						break;

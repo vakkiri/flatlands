@@ -17,11 +17,11 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL (90)
-#define INITIAL_WALK_ACCEL (1.75)
-#define WALK_ACCEL (0.53)
-#define RUN_ACCEL (0.57)
+#define INITIAL_WALK_ACCEL (1.5)
+#define WALK_ACCEL (0.52)
+#define RUN_ACCEL (0.59)
 
-#define JUMP_ACCEL (0.48)
+#define JUMP_ACCEL (0.34)
 #define INITIAL_JUMP_VEL (-1.3)
 #define JUMP_FRAME_ACCEL (0.05)
 #define NUM_JUMP_FRAMES (5)
@@ -31,9 +31,9 @@
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
 
-#define X_TERMINAL_VELOCITY (4.6)
-#define X_TERMINAL_WALK_VELOCITY (3.4)
-#define Y_TERMINAL_VELOCITY (7.75)
+#define X_TERMINAL_VELOCITY (3.6)
+#define X_TERMINAL_WALK_VELOCITY (3.2)
+#define Y_TERMINAL_VELOCITY (7.2)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.25)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
@@ -150,7 +150,7 @@ bool FLPlayer::pounding() {
 void FLPlayer::move_right() {
 	// accelerate more if we do not have much momentum, to break past
 	// the initial resistance of friction
-	if ( vel.x > 0 && vel.x < 1.5 )
+	if ( vel.x > 0 && vel.x < 1.5 && run_held )
 		accelerate(point(INITIAL_WALK_ACCEL, 0));
 	else if ( run_held )
 		accelerate(point(RUN_ACCEL, 0));
@@ -164,7 +164,7 @@ void FLPlayer::move_right() {
 void FLPlayer::move_left() {
 	// accelerate more if we do not have much momentum, to break past
 	// the initial resistance of friction
-	if ( vel.x < 0 && vel.x > -1.5 )
+	if ( vel.x < 0 && vel.x > -1.5 && run_held )
 		accelerate(point(-INITIAL_WALK_ACCEL, 0));
 	else if ( run_held )
 		accelerate(point(-RUN_ACCEL, 0));

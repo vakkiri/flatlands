@@ -22,6 +22,10 @@ class FLGameObject {
 		virtual float y();
 		virtual float w();
 		virtual float h();
+
+		void movex( float x );
+		void movey( float x );
+		void move( float x, float y);
 	protected:
 		rect position;
 };
