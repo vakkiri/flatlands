@@ -215,18 +215,7 @@ void FLPlayer::update_physics() {
 	}
 
 	if ( on_ground() ) {
-		if ( state != FL_PLAYER_WALK )
-			state = FL_PLAYER_IDLE;
-
-		if ( pounding() ) {
-			new FLEffect( x() - 12, y(), 64, 0, 6, 16, 16 );
-			new FLEffect( x() - 20, y() + 8, 64, 0, 6, 16, 16 );
-			new FLEffect( x() + 20, y() + 6, 64, 0, 6, 16, 16 );
-		}
-
-		pound_frames = 0;
-		jump_frames = 0;
-		falling_frames = 0;
+		hit_ground();
 	}
 	else if ( pounding() ) {
 		state = FL_PLAYER_POUND;
@@ -316,6 +305,21 @@ void FLPlayer::hold_run() { run_held = true; }
 void FLPlayer::release_run() { run_held = false; }
 
 void FLPlayer::release_walk() { state = FL_PLAYER_IDLE; }
+
+void FLPlayer::hit_ground() {
+	if ( state != FL_PLAYER_WALK )
+		state = FL_PLAYER_IDLE;
+
+	if ( pounding() ) {
+		new FLEffect( x() - 12, y(), 64, 0, 6, 16, 16 );
+		new FLEffect( x() - 20, y() + 8, 64, 0, 6, 16, 16 );
+		new FLEffect( x() + 20, y() + 6, 64, 0, 6, 16, 16 );
+	}
+
+	pound_frames = 0;
+	jump_frames = 0;
+	falling_frames = 0;
+}
 
 void FLPlayer::set_reset_position( float x, float y ) {
 	reset_position.x = x;

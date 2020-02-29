@@ -58,6 +58,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void hold_run();
 		virtual void release_run();
 
+		virtual void hit_ground();
+
 		void set_reset_position( float x, float y );
 		virtual void reset();
 

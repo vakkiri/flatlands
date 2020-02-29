@@ -22,7 +22,7 @@ float FLGameObject::h() { return position.h; }
 
 void FLGameObject::move( float x, float y ) {
 	position.x += x;
-	position.y += x;
+	position.y += y;
 }
 
 void FLGameObject::movex( float x ) {

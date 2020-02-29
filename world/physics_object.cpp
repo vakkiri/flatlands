@@ -54,9 +54,7 @@ void FLPhysicsObject::update_position() {
 			int tile_pos = int(next.y + bounds_h());
 			tile_pos -= (tile_pos % 8);
 			position.y = tile_pos - bounds_h() - bounds_margin.y - PHYSICS_EPSILON;
-
-			on_ground_timer = ON_GROUND_GRACE_FRAMES;
-			stop_vertical();
+			set_on_ground();
 		}
 	}
 
@@ -156,5 +154,14 @@ void FLPhysicsObject::move( point amt ) {
 
 bool FLPhysicsObject::on_ground() {
 	return on_ground_timer > 0;
+}
+
+void FLPhysicsObject::set_on_ground() {
+	on_ground_timer = ON_GROUND_GRACE_FRAMES;
+	stop_vertical();
+}
+
+point& FLPhysicsObject::get_vel() {
+	return vel;
 }
 

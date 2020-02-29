@@ -39,6 +39,9 @@ class FLPhysicsObject : virtual public FLWorldObject {
 		void stop_vertical();
 		
 		bool on_ground();
+		void set_on_ground();
+
+		point& get_vel();
 	protected:
 		unsigned int on_ground_timer;
 

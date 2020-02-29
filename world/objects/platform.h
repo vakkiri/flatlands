@@ -23,6 +23,7 @@ class FLPlatform : virtual public FLCollidingObject, virtual public FLAnimatedOb
 	protected:
 		point left;
 		point right;
+		point vel;
 		bool moving_right;
 };
 
