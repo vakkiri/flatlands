@@ -17,11 +17,11 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL (90)
-#define INITIAL_WALK_ACCEL (1.5)
+#define INITIAL_WALK_ACCEL (0.7)
 #define WALK_ACCEL (0.52)
-#define RUN_ACCEL (0.59)
+#define RUN_ACCEL (0.54)
 
-#define JUMP_ACCEL (0.34)
+#define JUMP_ACCEL (0.29)
 #define INITIAL_JUMP_VEL (-1.3)
 #define JUMP_FRAME_ACCEL (0.05)
 #define NUM_JUMP_FRAMES (5)
@@ -31,9 +31,9 @@
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
 
-#define X_TERMINAL_VELOCITY (3.6)
+#define X_TERMINAL_VELOCITY (3.4)
 #define X_TERMINAL_WALK_VELOCITY (3.2)
-#define Y_TERMINAL_VELOCITY (7.2)
+#define Y_TERMINAL_VELOCITY (6.9)
 #define JUMP_HOLD_GRAVITY_FACTOR (2.25)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {

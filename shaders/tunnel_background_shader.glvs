@@ -11,6 +11,6 @@ out float flife;
 void main() {
 	texCoord = inTexCoord;
 	flife = life;
-	gl_Position = pcMatrix * vec4( vertexPos.x + 16.f * sin(flife/8.f), vertexPos.y, 0.0, 1.0 );
+	gl_Position = pcMatrix * vec4( vertexPos.x, vertexPos.y, 0.0, 1.0 );
 }
 

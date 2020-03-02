@@ -71,6 +71,17 @@ bool Renderer::init_shaders() {
 	custom_shader.update_pc_matrix();
 	custom_shader.set_radius( 512.f );
 
+	framebuffer_shader.create_program( "framebuffer-shader" );
+	framebuffer_shader.set_projection( projection_matrix );
+	framebuffer_shader.set_camera( framebuffer_camera );
+	framebuffer_shader.update_pc_matrix();
+
+	wave_shader.create_program( "wave-shader" );
+	wave_shader.set_projection( projection_matrix );
+	wave_shader.set_camera( framebuffer_camera );
+	wave_shader.update_pc_matrix();
+
+
 	return true;
 }
 
@@ -203,7 +214,7 @@ bool Renderer::init() {
 	tilemap_surface->set_shader( &textured_rect_shader );
 	background_distortion_surface->set_shader( &background_shader );
 	background_surface->set_shader( &textured_rect_shader );
-	framebuffer_surface->set_shader( &custom_shader );
+	framebuffer_surface->set_shader( &framebuffer_shader );
 	
 	world_renderables.push_back(tilemap_surface);
 	world_renderables.push_back(world_surface);

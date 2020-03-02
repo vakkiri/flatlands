@@ -1,0 +1,38 @@
+#version 420
+uniform sampler2D texUnit;
+uniform float time;
+
+in vec2 texCoord;
+layout(location = 0) out vec4 gl_FragColor;
+
+void main() {
+	vec2 coord = texCoord;
+	float dx = 2.f/768.f;
+	float dy = 2.f/512.f;
+	float y = texCoord.y * 512;
+
+	vec2 left = vec2(texCoord.x - dx, texCoord.y);
+	vec2 right = vec2(texCoord.x - dx, texCoord.y);
+	vec2 bot = vec2(texCoord.x, texCoord.y + dy);
+	vec2 top = vec2(texCoord.x, texCoord.y - dy);
+
+	vec4 leftc = texture( texUnit, left );
+	vec4 rightc = texture( texUnit, right );
+	vec4 botc = texture( texUnit, bot );
+	vec4 topc = texture( texUnit, top );
+
+	gl_FragColor = texture( texUnit, coord );
+
+	if ( mod(y, 2.f) < 1) {
+		gl_FragColor.r *= 0.3;
+		gl_FragColor.g *= 0.0;
+		gl_FragColor.b *= 0.3;
+	}
+
+	float avg = (gl_FragColor.r + gl_FragColor.g + gl_FragColor.b) / 3.f;
+
+	gl_FragColor *= 1.1;
+	gl_FragColor.a = 1.f;
+	gl_FragColor.g -= 0.3 * (1.f - avg);
+}
+

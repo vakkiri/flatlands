@@ -55,7 +55,8 @@ void FLDistortionSurface::add_particle( float x, float y ) {
 }
 
 void FLDistortionSurface::add_particle( float x, float y, float vx, float vy ) {
-	unsigned int verts = 3;
+	unsigned int verts = 4;
+	float w = 16.f;
 
 	particle_field[next_loc]->xs.clear();
 	particle_field[next_loc]->ys.clear();
@@ -65,12 +66,16 @@ void FLDistortionSurface::add_particle( float x, float y, float vx, float vy ) {
 	particle_field[next_loc]->ys.push_back(y);
 
 	// v2
-	particle_field[next_loc]->xs.push_back(x - 4.f + (rand() % 8));
-	particle_field[next_loc]->ys.push_back(y - 4.f + (rand() % 8));
+	particle_field[next_loc]->xs.push_back(x + w );
+	particle_field[next_loc]->ys.push_back(y);
 
 	// v3
-	particle_field[next_loc]->xs.push_back(x - 4.f + (rand() % 8));
-	particle_field[next_loc]->ys.push_back(y - 4.f + (rand() % 8));
+	particle_field[next_loc]->xs.push_back(x + w );
+	particle_field[next_loc]->ys.push_back(y + w );
+
+	// v4
+	particle_field[next_loc]->xs.push_back(x);
+	particle_field[next_loc]->ys.push_back(y + w );
 
 	particle_field[next_loc]->life = PARTICLE_LIFE;
 	particle_field[next_loc]->vx = vx;
@@ -104,26 +109,9 @@ void FLDistortionSurface::update_particle_field() {
 		if ( alt_particle_field[i]->life > 0) {
 			alt_particle_field[i]->life -= 1;
 
-			for ( int j = 1; j < alt_particle_field[i]->xs.size(); ++j ) {
+			for ( int j = 1; j < 3; ++j ) {
 				alt_particle_field[i]->xs[j] += alt_particle_field[i]->vx;
 				alt_particle_field[i]->ys[j] += alt_particle_field[i]->vy;
-			}
-
-			if (alt_particle_field[i]->ys[1] < alt_particle_field[i]->ys[2]) {
-				alt_particle_field[i]->ys[1] -= 0.2;
-				alt_particle_field[i]->ys[2] += 0.2;
-			}
-			else { 
-				alt_particle_field[i]->ys[1] += 0.2;
-				alt_particle_field[i]->ys[2] -= 0.2;
-			}
-			if (alt_particle_field[i]->xs[1] < alt_particle_field[i]->xs[2]) {
-				alt_particle_field[i]->xs[1] -= 0.2;
-				alt_particle_field[i]->xs[2] += 0.2;
-			}
-			else { 
-				alt_particle_field[i]->xs[1] += 0.2;
-				alt_particle_field[i]->xs[2] -= 0.2;
 			}
 		}
 
@@ -134,9 +122,9 @@ void FLDistortionSurface::update_particle_field() {
 
 	// add 1 particle per frame
 	float x = 768/2;
-	float y = 512/2;
-	float vx = (((float)(rand() % 78)) / 77.f) * -8.f + 4.f;
-	float vy = (((float)(rand() % 78)) / 77.f) * -8.f + 4.f;
+	float y = (float)(rand() % 512);
+	float vx = (((float)(rand() % 512)) / 512.f) * -8.f + 4.f;
+	float vy = 0;
 	add_particle(x, y, vx, vy);
 
 }

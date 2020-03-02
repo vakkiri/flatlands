@@ -17,6 +17,7 @@
 #include "fl_textured_rect_shader.h"
 #include "fl_smoke_background_shader.h"
 #include "fl_framebuffer_shader.h"
+#include "fl_angel_shader.h"
 
 class FLAnimatedObject;
 class FLRenderable;
@@ -52,7 +53,9 @@ class Renderer {
 		FLTexturedRectShader screen_blur_shader;
 		FLColoredPolyShader colored_poly_shader;
 		FLSmokeBackgroundShader background_shader;
-		FLFramebufferShader custom_shader;
+		FLFramebufferShader framebuffer_shader;
+		FLFramebufferShader wave_shader;
+		FLAngelShader custom_shader;
 
 		// Surfaces
 		FLWorldSurface *world_surface;

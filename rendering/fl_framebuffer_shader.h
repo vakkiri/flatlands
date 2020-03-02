@@ -16,15 +16,9 @@ class FLFramebufferShader : public virtual FLTexturedRectShader {
 		virtual bool create_program( std::string program_name );
 
 		void set_time( float time );
-		void set_dx( float dx );
-		void set_dy( float dy );
-		void set_radius( float radius );
 		void render( GLuint vao, unsigned int num_indices );
 	protected:
 		GLint time_location;		
-		GLint dx_location;		
-		GLint dy_location;		
-		GLint radius_location;		
 };
 
 

@@ -1,0 +1,21 @@
+#version 420
+uniform sampler2D texUnit;
+
+in vec2 texCoord;
+in float flife;
+layout(location = 0) out vec4 gl_FragColor;
+
+void main() {
+	vec2 flippedCoord = vec2( texCoord.x, 1.f-texCoord.y );
+
+	float dx = 1 * (flife/600.f);
+	float dy = sin(flife/77.f);
+	gl_FragColor = texture( texUnit, vec2(flippedCoord.x - dx, flippedCoord.y - dy) );
+
+	gl_FragColor.r *= flife/600.f;
+	gl_FragColor.g = 0.f;
+	gl_FragColor.b = 1.f;
+	gl_FragColor.a = 0.5;
+}
+
+

@@ -48,6 +48,7 @@ void Renderer::render() {
 	textured_rect_shader.update_pc_matrix();
 
 	background_surface->set_tex( FLResources::getInstance().get_image("background") );
+	background_surface->set_shader( &textured_rect_shader );
 	background_surface->render();
 
 	// apply shader to background -------------------------
@@ -62,9 +63,10 @@ void Renderer::render() {
 
 	background_distortion_surface->render();
 
-	// now blur the result 	
-	screen_blur_shader.bind();
+	// now apply effects to the result
+	wave_shader.bind();
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+	background_surface->set_shader( &wave_shader );
 	background_surface->set_tex( alt_framebuffer_texture );
 	background_surface->render();
 
@@ -77,11 +79,15 @@ void Renderer::render() {
 		r->render();
 
 	// render framebuffer to screen	
-	custom_shader.bind();
-	custom_shader.set_camera( framebuffer_camera );
-	custom_shader.update_pc_matrix();
+	framebuffer_shader.bind();
+
+	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	framebuffer_surface->set_tex( framebuffer_texture );
+	framebuffer_surface->render();
 
 	// Shader effects for angels
+	/*
+	custom_shader.bind();
 	std::vector<NVAngel*>* angels = FLWorldEnvironment::getInstance().get_angels();	
 
 	if (!angels->empty()) {
@@ -97,8 +103,10 @@ void Renderer::render() {
 	framebuffer_surface->set_tex( framebuffer_texture );
 	framebuffer_surface->set_shader( &custom_shader );
 	framebuffer_surface->render();
+	*/
 
 	// UI
+
 	FLUIManager::getInstance().render();
 }
 

@@ -23,7 +23,7 @@
 
 #define DX 128
 
-#define FRICTION_FACTOR (0.9)
+#define FRICTION_FACTOR (1.0)
 
 FLPlatform::FLPlatform( float x, float y ) :
 	FLGameObject( x, y, W, H ),
@@ -61,7 +61,6 @@ void FLPlatform::collide_with( FLPlayer *player ) {
 }
 
 void FLPlatform::update() {
-	// TODO: smoother physics for movement; ease in/out and pause at ends
 	move( vel.x, vel.y );
 
 	if ( y() > left.y)
