@@ -12,6 +12,7 @@
 #include "fireball.h"
 #include "platform.h"
 #include "pound_powerup.h"
+#include "rhombus.h"
 #include "toggle_tile.h"
 #include "toggler.h"
 #include "warp_gate.h"

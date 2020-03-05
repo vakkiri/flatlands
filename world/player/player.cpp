@@ -18,7 +18,7 @@
 
 #define MAX_FALL (90)
 #define INITIAL_WALK_ACCEL (0.7)
-#define WALK_ACCEL (0.52)
+#define WALK_ACCEL (0.51)
 #define RUN_ACCEL (0.54)
 
 #define JUMP_ACCEL (0.29)

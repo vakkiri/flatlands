@@ -23,10 +23,11 @@ void main() {
 
 	gl_FragColor = texture( texUnit, coord );
 
+	gl_FragColor *= 1.1;
 	if ( mod(y, 2.f) < 1) {
-		gl_FragColor.r *= 0.3;
+		gl_FragColor.r *= 0.1;
 		gl_FragColor.g *= 0.0;
-		gl_FragColor.b *= 0.3;
+		gl_FragColor.b *= 0.1;
 	}
 
 	float avg = (gl_FragColor.r + gl_FragColor.g + gl_FragColor.b) / 3.f;

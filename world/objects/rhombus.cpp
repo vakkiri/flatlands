@@ -1,5 +1,5 @@
 /*
- * 	fireball.cpp
+ * 	rhombus.cpp
  *
  */
 
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <time.h>
 
-#include "fireball.h"
+#include "rhombus.h"
 
 #include "../../rendering/renderer.h"
 
@@ -22,15 +22,15 @@
 #define REPEATS true
 
 #define S 64
-#define T 48
+#define T 64
 
 #define SMALL_S 208
-#define SMALL_T 48
+#define SMALL_T 64
 #define SMALL_SIZE 8
 
 #define SIZE 16
 
-FLFireball::FLFireball( float x, float y ) :
+FLRhombus::FLRhombus( float x, float y ) :
 	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject(
 			NUM_ANIMATIONS,
@@ -51,40 +51,37 @@ FLFireball::FLFireball( float x, float y ) :
 	offset_phase += 777;
 	offset = offset_phase;
 	phase = 0;
-	last_tick = 0;
-	cooldown = 400;
+
+	// It has three balls
+	new FLSmallrhombus( this );
+	new FLSmallrhombus( this );
+	new FLSmallrhombus( this );
 }
 
-FLFireball::~FLFireball() {
+FLRhombus::~FLRhombus() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLFireball::collide_with( FLPlayer *player ) {
+void FLRhombus::collide_with( FLPlayer *player ) {
 	player->reset();
 }
 
-float FLFireball::x() {
-	return FLGameObject::x() + ( movement_radius * cos(phase) );
+float FLRhombus::x() {
+	return FLGameObject::x();
 }
 
-float FLFireball::y() {
+float FLRhombus::y() {
 	return FLGameObject::y() + ( movement_radius * sin(phase) );
 }
 
-void FLFireball::update() {
+void FLRhombus::update() {
 	unsigned int tick = SDL_GetTicks();
 
 	phase = speed * (float(tick + offset) / 1000.f);
-
-	if ( tick - last_tick > cooldown ) {
-		FLSmallball* new_ball = new FLSmallball( x() + 8, y() + 8 );
-		new_ball->set_velocity( cos(phase), sin(phase) );
-		last_tick = tick;
-	}
 }
 
-FLSmallball::FLSmallball( float x, float y ) :
-	FLGameObject( x, y, SMALL_SIZE, SMALL_SIZE ),
+FLSmallrhombus::FLSmallrhombus( FLRhombus* parent ) :
+	FLGameObject( 0, 0, SMALL_SIZE, SMALL_SIZE ),
 	FLAnimatedObject(
 			NUM_ANIMATIONS,
 			4,
@@ -96,27 +93,35 @@ FLSmallball::FLSmallball( float x, float y ) :
 	set_st( SMALL_S, SMALL_T );
 
 	Renderer::getInstance().add_to_world( this );
-	life = 300;
+	this->parent = parent;
+
+
+	static unsigned int offset_phase = 777;
+	offset_phase += 666;
+	offset = offset_phase;
+	phase = 0;
+	speed = 3.f;
+
+	movement_radius = 32.f;
 }
 
-FLSmallball::~FLSmallball() {
+FLSmallrhombus::~FLSmallrhombus() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLSmallball::collide_with( FLPlayer *player ) {
+void FLSmallrhombus::collide_with( FLPlayer *player ) {
 	player->reset();
 }
 
-void FLSmallball::update() {
-	position.x += velocity.x;
-	position.y += velocity.y;
-
-	if ( --life <= 0 )
-		zombie = true;
+void FLSmallrhombus::update() {
+	unsigned int tick = SDL_GetTicks();
+	phase = speed * (float(tick + offset) / 1000.f);
 }
 
-void FLSmallball::set_velocity( float x, float y ) {
-	velocity.x = x;
-	velocity.y = y;
+float FLSmallrhombus::x() {
+	return parent->x() + 8.f + ( (movement_radius - (24.f * sin(phase/4.f))) * cos(phase) );
 }
 
+float FLSmallrhombus::y() {
+	return parent->y() + 8.f + ( (movement_radius - (24.f * sin(phase/4.f))) * sin(phase) );
+}

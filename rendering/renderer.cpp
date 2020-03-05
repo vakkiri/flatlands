@@ -23,12 +23,38 @@
 #include "fl_distortion_surface.h"
 
 
+void Renderer::flip_framebuffer() {
+	if ( current_rendered_texture == &alt_rendered_texture )
+		current_rendered_texture = &main_rendered_texture;
+	else
+		current_rendered_texture = &alt_rendered_texture;
+
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *current_rendered_texture, 0 );
+}
+
+texture* Renderer::screen_texture() {
+	// The texture returned will be the texture we are reading from, which
+	// must be the opposite of the texture we are writing to.
+	if ( current_rendered_texture == &alt_rendered_texture )
+		return framebuffer_texture;
+	else
+		return alt_framebuffer_texture;
+}
+
+void Renderer::render_to_screen() {
+	// Make sure we get any changes to the framebuffer
+	flip_framebuffer();
+
+	// Bind our shader and ensure we are drawing to the screen
+	framebuffer_shader.bind();
+	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	framebuffer_surface->set_tex( screen_texture() );
+
+	// Render the screen quad
+	framebuffer_surface->render();
+}
+
 void Renderer::render() {
-	// TODO: there are some calls in this method which can be moved
-	// into init as they aren't necessary every frame
-	// Also, a lot of this really should be abstracted into different
-	// methods that take a set of objects to render, and a shader to
-	// render them with.
 	clear_null_renderables();
 
 	// update drawn world
@@ -40,6 +66,7 @@ void Renderer::render() {
 
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
 
+	current_rendered_texture = &main_rendered_texture;
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
 
 	// draw background to framebuffer ----------------------------------
@@ -52,7 +79,7 @@ void Renderer::render() {
 	background_surface->render();
 
 	// apply shader to background -------------------------
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, alt_rendered_texture, 0 );
+	flip_framebuffer();
 
 	// draw background *again* over new framebuffer, so that we have
 	// one copy to read from and one to write over
@@ -65,9 +92,9 @@ void Renderer::render() {
 
 	// now apply effects to the result
 	wave_shader.bind();
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
+	flip_framebuffer();
 	background_surface->set_shader( &wave_shader );
-	background_surface->set_tex( alt_framebuffer_texture );
+	background_surface->set_tex( screen_texture() );
 	background_surface->render();
 
 	// draw world -----------------------------------------
@@ -79,11 +106,7 @@ void Renderer::render() {
 		r->render();
 
 	// render framebuffer to screen	
-	framebuffer_shader.bind();
-
-	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-	framebuffer_surface->set_tex( framebuffer_texture );
-	framebuffer_surface->render();
+	render_to_screen();
 
 	// Shader effects for angels
 	/*
@@ -106,7 +129,7 @@ void Renderer::render() {
 	*/
 
 	// UI
-
+	// maybe this should come before render_to_screen?
 	FLUIManager::getInstance().render();
 }
 

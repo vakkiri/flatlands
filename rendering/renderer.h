@@ -70,12 +70,18 @@ class Renderer {
 		bool init_gl();	
 		bool init_shaders();
 
+		void flip_framebuffer();
+		void render_to_screen();
+		texture* screen_texture();
 	protected:
 		unsigned int screen_height;
 		unsigned int screen_width;
 		GLuint framebuffer;
+
 		GLuint alt_rendered_texture;
 		GLuint main_rendered_texture;
+		GLuint* current_rendered_texture;
+
 		texture* framebuffer_texture;
 		texture* alt_framebuffer_texture;
 
