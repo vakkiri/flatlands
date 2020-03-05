@@ -70,6 +70,7 @@ class Renderer {
 		bool init_gl();	
 		bool init_shaders();
 
+		void prepare_to_render();
 		void flip_framebuffer();
 		void render_to_screen();
 		texture* screen_texture();

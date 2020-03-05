@@ -43,10 +43,8 @@ FLColoredSurface::FLColoredSurface() : FLRenderedSurface() {
 }
 
 void FLColoredSurface::render() {
-	if ( shader != nullptr ) {
-		shader->bind();
+	if ( shader != nullptr )
 		shader->render( vao, num_indices );
-	}
 	else
 		log_warning("Attempted to render with null shader");
 }

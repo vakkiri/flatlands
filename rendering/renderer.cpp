@@ -54,14 +54,9 @@ void Renderer::render_to_screen() {
 	framebuffer_surface->render();
 }
 
-void Renderer::render() {
+void Renderer::prepare_to_render() {
 	clear_null_renderables();
 
-	// update drawn world
-	update_animations();
-	world_surface->update_buffers();
-
-	// prepare for rendering
 	glClear( GL_COLOR_BUFFER_BIT );
 
 	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
@@ -69,7 +64,20 @@ void Renderer::render() {
 	current_rendered_texture = &main_rendered_texture;
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
 
-	// draw background to framebuffer ----------------------------------
+}
+
+void Renderer::render() {
+
+	prepare_to_render();
+
+	// TODO: animation updating should be a separate component from rendering
+	update_animations();
+
+	// TODO: updating surfaces should be separate from rendering or its own
+	// method
+	world_surface->update_buffers();
+
+	// draw background to framebuffer 
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( background_camera );
 	textured_rect_shader.update_pc_matrix();
@@ -78,21 +86,14 @@ void Renderer::render() {
 	background_surface->set_shader( &textured_rect_shader );
 	background_surface->render();
 
-	// apply shader to background -------------------------
+	// draw particle system over background
 	flip_framebuffer();
-
-	// draw background *again* over new framebuffer, so that we have
-	// one copy to read from and one to write over
-	for ( FLRenderable *r : background_renderables )
-		r->render();
-
 	background_shader.bind();
-
 	background_distortion_surface->render();
 
-	// now apply effects to the result
-	wave_shader.bind();
+	// now distort the framebuffer
 	flip_framebuffer();
+	wave_shader.bind();
 	background_surface->set_shader( &wave_shader );
 	background_surface->set_tex( screen_texture() );
 	background_surface->render();
@@ -107,26 +108,6 @@ void Renderer::render() {
 
 	// render framebuffer to screen	
 	render_to_screen();
-
-	// Shader effects for angels
-	/*
-	custom_shader.bind();
-	std::vector<NVAngel*>* angels = FLWorldEnvironment::getInstance().get_angels();	
-
-	if (!angels->empty()) {
-		custom_shader.set_dx( (angels->at(0)->x() * 2.f) + (world_camera[3][0]));
-		custom_shader.set_dy( (angels->at(0)->y() * 2.f) + (world_camera[3][1]));
-	}
-	else {
-		custom_shader.set_dx( 10000000.f);
-		custom_shader.set_dy( 10000000.f );
-	}
-
-	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-	framebuffer_surface->set_tex( framebuffer_texture );
-	framebuffer_surface->set_shader( &custom_shader );
-	framebuffer_surface->render();
-	*/
 
 	// UI
 	// maybe this should come before render_to_screen?
