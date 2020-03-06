@@ -106,6 +106,10 @@ void Renderer::render() {
 	for ( FLRenderable *r : world_renderables )
 		r->render();
 
+	// draw custom effects
+	// custom effects are those which are rendered with a custom shader
+	// instead of the standard textured_rect_shader
+
 	// render framebuffer to screen	
 	render_to_screen();
 

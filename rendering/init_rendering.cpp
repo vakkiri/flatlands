@@ -54,11 +54,12 @@ bool Renderer::init_shaders() {
 	screen_blur_shader.set_camera( background_camera );
 	screen_blur_shader.update_pc_matrix();
 
-
 	colored_poly_shader.create_program( "colored_poly_shader" );
 	colored_poly_shader.set_projection( projection_matrix );
 	colored_poly_shader.set_camera( background_camera );
 	colored_poly_shader.update_pc_matrix();
+
+	lightning_shader.create_program( "lightning-shader" );
 
 	background_shader.create_program( "background_shader0" );
 	background_shader.set_projection( projection_matrix );

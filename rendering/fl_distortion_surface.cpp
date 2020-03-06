@@ -164,7 +164,7 @@ void FLDistortionSurface::update_buffers() {
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, ibuf.size() * sizeof( unsigned int ), &(ibuf[0]), GL_STATIC_DRAW );
 
 	if ( glGetError() != GL_NO_ERROR )
-		log_error( "Error bufferin ibo" );
+		log_error( "Error buffering ibo" );
 
 	glBindVertexArray( vao );
 
