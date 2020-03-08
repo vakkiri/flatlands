@@ -46,7 +46,7 @@ void FLTilemap::set_solid_at( float x, float y, float w, float h, bool solid ) {
 
 void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool solid ) {
 	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
-	t->set_st( index * cell_size, 0 );
+	t->set_st( index * cell_size, 16 * tileset );
 
 	tiles.push_back(t);
 
@@ -83,5 +83,9 @@ void FLTilemap::reset( unsigned int new_w, unsigned int new_h ) {
 	h = new_h;
 
 	reset();
+}
+
+void FLTilemap::set_tileset( unsigned int tileset ) {
+	this->tileset = tileset;
 }
 

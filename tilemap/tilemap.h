@@ -28,11 +28,13 @@ class FLTilemap {
 		void add_tile( float x, float y, float w, float h, float index, bool solid);
 		bool solid_at( float x, float y );
 		void set_solid_at( float x, float y, float w, float h, bool solid );
+		void set_tileset( unsigned int tileset );
 	protected:
 		std::vector<FLTexturedObject*> tiles;
 		std::vector<std::vector<bool>> collision_map;
 		unsigned int w;
 		unsigned int h;
+		unsigned int tileset;
 		float cell_size;
 		FLTexturedSurface *surface;
 };

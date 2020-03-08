@@ -1,0 +1,16 @@
+#version 140
+
+uniform mat4 pcMatrix;
+
+in vec2 vertexPos;
+in vec2 inTexCoord;
+in float life;
+out vec2 texCoord;
+out float flife;
+
+void main() {
+	texCoord = inTexCoord;
+	flife = life;
+	gl_Position = pcMatrix * vec4( vertexPos.x + 16.f * sin(flife/8.f), vertexPos.y, 0.0, 1.0 );
+}
+

@@ -12,9 +12,9 @@ void main() {
 	float dy = sin(flife/77.f);
 	gl_FragColor = texture( texUnit, vec2(flippedCoord.x - dx, flippedCoord.y - dy) );
 
-	gl_FragColor.b *= flife/600.f;
-	gl_FragColor.r = 0.f;
-	gl_FragColor.g = 0.8 - (flife/600.f * 0.5);
+	gl_FragColor.r *= flife/600.f;
+	gl_FragColor.g = 0.f;
+	gl_FragColor.b = 1.f;
 	gl_FragColor.a = 0.5;
 }
 

@@ -190,6 +190,7 @@ void FLResources::load_level( int id ) {
 				// input[4]: map height
 
 				tilemap->reset( input[3], input[4] );
+				tilemap->set_tileset( input[2] );
 				input += 5;
 			}
 			else if ( current_type == 1 ) {
