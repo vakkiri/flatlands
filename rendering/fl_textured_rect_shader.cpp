@@ -52,9 +52,11 @@ void FLTexturedRectShader::enable_tex_coord_pointer() {
 }
 
 void FLTexturedRectShader::render( GLuint vao, unsigned int num_indices ) {
-	glBindVertexArray( vao );
-	glDrawElements( GL_TRIANGLE_FAN, num_indices, GL_UNSIGNED_INT, NULL );
-	glBindVertexArray( 0 );
+    if ( num_indices > 0 ) {
+        glBindVertexArray( vao );
+        glDrawElements( GL_TRIANGLE_FAN, num_indices, GL_UNSIGNED_INT, NULL );
+        glBindVertexArray( 0 );
+    }
 }
 
 GLint FLTexturedRectShader::get_id() {

@@ -1,4 +1,4 @@
-#version 420
+#version 330
 uniform sampler2D texUnit;
 uniform float time;
 uniform float effectRadius;
@@ -6,7 +6,6 @@ uniform float dx;		// x pixel distance from 0,0 on the framebuffer
 uniform float dy;		// y pixel distance from 0,0 on the framebuffer
 
 in vec2 texCoord;
-layout(location = 0) out vec4 gl_FragColor;
 
 void main() {
 	vec2 p1 = texCoord;

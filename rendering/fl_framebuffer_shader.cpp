@@ -28,7 +28,9 @@ bool FLFramebufferShader::create_program( std::string program_name ) {
 void FLFramebufferShader::set_time( float time ) { glUniform1f( time_location, time ); }
 
 void FLFramebufferShader::render( GLuint vao, unsigned int num_indices ) {
-	set_time((float)SDL_GetTicks() / 1000.f);
-	FLTexturedRectShader::render( vao, num_indices );
+    if ( num_indices > 0 ) {
+        set_time((float)SDL_GetTicks() / 1000.f);
+        FLTexturedRectShader::render( vao, num_indices );
+    }
 }
 

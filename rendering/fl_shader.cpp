@@ -52,6 +52,14 @@ GLuint FLShader::load_shader(const GLchar* source[], GLenum shader_type) {
 
 	if ( vShaderCompiled != GL_TRUE ) {
 		log_error("Unable to compile shader.");
+        int log_len = 0;
+        int max_len = 0;
+        glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &max_len );
+        char *log = new char[ max_len ];
+        glGetShaderInfoLog( shader, max_len, &log_len, log );
+        if ( log_len > 0 )
+            printf( "%s\n", log );
+        delete [] log;
 		return 0;
 	}
 
@@ -68,6 +76,7 @@ GLuint FLShader::load_shader(std::string path, GLenum shader_type) {
 
 	if ( infile ) {
 		shader_string.assign( std::istreambuf_iterator<char>( infile ), std::istreambuf_iterator<char>() );
+        //shader_string += '\0';
 		const GLchar* source = shader_string.c_str();
 		shader = load_shader((const GLchar**)&source, shader_type);
 	}

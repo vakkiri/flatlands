@@ -33,9 +33,11 @@ void FLParticleShader::enable_life_pointer() {
 }
 
 void FLParticleShader::render( GLuint vao, unsigned int num_indices ) {
-	glBindVertexArray( vao );
-	glDrawElements( GL_TRIANGLE_FAN, num_indices, GL_UNSIGNED_INT, NULL );
-	glBindVertexArray( 0 );
+    if ( num_indices > 0 ) {
+        glBindVertexArray( vao );
+        glDrawElements( GL_TRIANGLE_FAN, num_indices, GL_UNSIGNED_INT, NULL );
+        glBindVertexArray( 0 );
+    }
 }
 
 
