@@ -31,6 +31,9 @@
 
 #define SIZE 16
 
+#define FULL_COOLDOWN 300
+#define NUM_BALLS 3
+
 FLRhombus::FLRhombus( float x, float y ) :
 	FLGameObject( x, y, SIZE, SIZE ),
 	FLAnimatedObject(
@@ -53,10 +56,10 @@ FLRhombus::FLRhombus( float x, float y ) :
 	offset = offset_phase;
 	phase = 0;
 
-	// It has three balls
-	new FLSmallrhombus( this );
-	new FLSmallrhombus( this );
-	new FLSmallrhombus( this );
+	// Add the balls
+
+	for ( int i = 0; i < NUM_BALLS; ++i )	
+		children.push_back( new FLSmallrhombus(this) );
 
 	// Surface for attack effect
 	// We maintain one surface instead of creating one "per effect"
@@ -65,6 +68,7 @@ FLRhombus::FLRhombus( float x, float y ) :
 	
 	attack_surface = new FLLightningParticleSurface();
 	Renderer::getInstance().add_particle_surface( attack_surface );
+	attack_cooldown = 0;
 }
 
 FLRhombus::~FLRhombus() {
@@ -88,7 +92,18 @@ void FLRhombus::update() {
 	unsigned int tick = SDL_GetTicks();
 	phase = speed * (float(tick + offset) / 1000.f);
 
-	attack_surface->add_particle(x(), y());
+	attack_cooldown--;
+
+	if ( attack_cooldown < 0 ) {
+		// Add particles from orb to orb
+		for ( int i = 0; i < 7; ++i ) {
+			float vx = ((float(rand() % 1000) / 1000.f) - 0.5f) * 1.f;
+			float vy = (float(rand() % 1000) / 1000.f) * -1.f;
+			attack_surface->add_particle(x(), y(), vx, vy);
+		}
+		attack_cooldown = FULL_COOLDOWN;
+	}
+	
 }
 
 FLSmallrhombus::FLSmallrhombus( FLRhombus* parent ) :

@@ -15,7 +15,7 @@ struct fl_particle {
 	std::vector<float> ys;
 	float vx;
 	float vy;
-	unsigned int life;
+	int life;
 };
 
 #endif

@@ -13,6 +13,7 @@
 #include "../dynamic_object.h"
 
 class FLLightningParticleSurface;
+class FLSmallrhombus;
 
 class FLRhombus : virtual public FLCollidingObject, virtual public FLAnimatedObject, virtual public FLDynamicObject {
 	public:
@@ -27,7 +28,9 @@ class FLRhombus : virtual public FLCollidingObject, virtual public FLAnimatedObj
 		float speed;
 		float phase;
 		unsigned int offset;
+		int attack_cooldown;
 		FLLightningParticleSurface* attack_surface;
+		std::vector<FLSmallrhombus*> children;
 };
 
 
