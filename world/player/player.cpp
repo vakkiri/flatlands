@@ -21,10 +21,10 @@
 #define WALK_ACCEL (0.51)
 #define RUN_ACCEL (0.54)
 
-#define JUMP_ACCEL (0.29)
+#define JUMP_ACCEL (0.33)
 #define INITIAL_JUMP_VEL (-1.3)
-#define JUMP_FRAME_ACCEL (0.03)
-#define NUM_JUMP_FRAMES (10)
+#define JUMP_FRAME_ACCEL (0.06)
+#define NUM_JUMP_FRAMES (3)
 
 #define HOVER_FRAMES (40)
 #define DOUBLE_JUMP_ACCEL (0.9)
@@ -33,8 +33,9 @@
 
 #define X_TERMINAL_VELOCITY (3.4)
 #define X_TERMINAL_WALK_VELOCITY (3.2)
-#define Y_TERMINAL_VELOCITY (6.9)
-#define JUMP_HOLD_GRAVITY_FACTOR (2.5)
+#define Y_TERMINAL_VELOCITY (6.4)
+#define JUMP_RELEASE_GRAVITY_FACTOR (2.5)
+#define JUMP_HOLD_GRAVITY_FACTOR (0.75)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 	Renderer::getInstance().add_to_world(this);
@@ -284,10 +285,16 @@ void FLPlayer::update_animation() {
 }
 
 void FLPlayer::apply_gravity() { 
-	// The on_ground check is a slightly shoddy workaround to the fact that
-	// there is an ugly vibrating effect when walking on ground with a low
-	// value for gravity
-	if ( !jump_held || on_ground() )
+	/*
+	 *	Gravity tweaks:
+	 *
+	 *	- before the jump peak, less gravity is applied if holding jump
+	 *	- after the peak, extra gravity is applied if not holding jump
+	 *
+	 */
+	if ( !jump_held && accel.y > 0 )
+		accel.y += physics.gravity() * JUMP_RELEASE_GRAVITY_FACTOR;
+	else if ( jump_held && accel.y < 0 )
 		accel.y += physics.gravity() * JUMP_HOLD_GRAVITY_FACTOR;
 	else
 		accel.y += physics.gravity();

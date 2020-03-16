@@ -11,6 +11,7 @@
 #include "rhombus.h"
 
 #include "../../rendering/renderer.h"
+#include "../../rendering/fl_lightning_particle_surface.h"
 
 #include "../world_environment.h"
 #include "../player/player.h"
@@ -56,10 +57,19 @@ FLRhombus::FLRhombus( float x, float y ) :
 	new FLSmallrhombus( this );
 	new FLSmallrhombus( this );
 	new FLSmallrhombus( this );
+
+	// Surface for attack effect
+	// We maintain one surface instead of creating one "per effect"
+	// since the cost of generating particle systems is much higher
+	// than modifying an existing one.
+	
+	attack_surface = new FLLightningParticleSurface();
+	Renderer::getInstance().add_particle_surface( attack_surface );
 }
 
 FLRhombus::~FLRhombus() {
 	Renderer::getInstance().remove_from_world( this );
+	delete attack_surface;
 }
 
 void FLRhombus::collide_with( FLPlayer *player ) {
@@ -76,8 +86,9 @@ float FLRhombus::y() {
 
 void FLRhombus::update() {
 	unsigned int tick = SDL_GetTicks();
-
 	phase = speed * (float(tick + offset) / 1000.f);
+
+	attack_surface->add_particle(x(), y());
 }
 
 FLSmallrhombus::FLSmallrhombus( FLRhombus* parent ) :

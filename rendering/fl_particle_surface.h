@@ -9,14 +9,16 @@
 #define FL_PARTICLE_SURFACE_H
 
 #include "rendered_surface.h"
+#include "particles/particle.h"
 
-struct fl_particle;
+class FLParticleShader;
 
-class FLParticleSurface { 
+class FLParticleSurface : public FLRenderedSurface { 
 	public:
 		FLParticleSurface(unsigned int num_particles, unsigned int particle_life, float particle_size);
 
-		virtual void update_buffers() = 0;
+		virtual void update_buffers();
+		virtual void render();
 
 		virtual void init_particle_field();
 		virtual void update_particle_field() = 0;
@@ -29,6 +31,7 @@ class FLParticleSurface {
 		unsigned int num_particles;
 		unsigned int particle_life;
 		float particle_size;
+		FLParticleShader* shader;
 };
 
 #endif

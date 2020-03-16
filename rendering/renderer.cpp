@@ -21,6 +21,7 @@
 #include "rendered_surface.h"
 #include "world_surface.h"
 #include "fl_distortion_surface.h"
+#include "fl_particle_surface.h"
 
 
 void Renderer::flip_framebuffer() {
@@ -106,9 +107,17 @@ void Renderer::render() {
 	for ( FLRenderable *r : world_renderables )
 		r->render();
 
-	// draw custom effects
-	// custom effects are those which are rendered with a custom shader
-	// instead of the standard textured_rect_shader
+	// draw custom surfaces such as particle effects
+
+	// update projection/camera matrices for custom shaders
+	// TODO: any shader which uses a moving camera should automatically
+	// update once each render cycle in which it is used
+	lightning_shader.bind();
+	lightning_shader.set_camera( world_camera );
+	lightning_shader.update_pc_matrix();
+
+	for ( FLParticleSurface *s : particle_surfaces )
+		s->render();
 
 	// render framebuffer to screen	
 	render_to_screen();
@@ -153,6 +162,10 @@ FLTexturedRectShader* Renderer::get_textured_rect_shader() {
 	return &textured_rect_shader;
 }
 
+FLParticleShader* Renderer::get_lightning_shader() {
+	return &lightning_shader;
+}
+
 FLColoredPolyShader* Renderer::get_colored_poly_shader() {
 	return &colored_poly_shader;
 }
@@ -183,8 +196,13 @@ void Renderer::remove_from_world( FLTexturedObject* obj ) {
 	world_surface->remove_object( obj );
 }
 
+void Renderer::add_particle_surface( FLParticleSurface* s ) {
+	particle_surfaces.push_back( s );
+}
+
 void Renderer::clear() {
 	world_surface->clear();
+	particle_surfaces.clear();
 }
 
 unsigned int Renderer::get_screen_width() {

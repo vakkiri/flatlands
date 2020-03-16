@@ -12,6 +12,8 @@
 #include "../colliding_object.h"
 #include "../dynamic_object.h"
 
+class FLLightningParticleSurface;
+
 class FLRhombus : virtual public FLCollidingObject, virtual public FLAnimatedObject, virtual public FLDynamicObject {
 	public:
 		FLRhombus( float x, float y );
@@ -25,6 +27,7 @@ class FLRhombus : virtual public FLCollidingObject, virtual public FLAnimatedObj
 		float speed;
 		float phase;
 		unsigned int offset;
+		FLLightningParticleSurface* attack_surface;
 };
 
 
@@ -44,6 +47,7 @@ class FLSmallrhombus : virtual public FLCollidingObject, virtual public FLAnimat
 		float offset;
 		float speed;
 };
+
 
 #endif
 

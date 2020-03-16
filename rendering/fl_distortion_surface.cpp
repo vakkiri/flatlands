@@ -136,7 +136,7 @@ void FLDistortionSurface::update_buffers() {
 	std::vector<unsigned int> ibuf;
 
 	for ( fl_particle* p : particle_field ) {
-		if (p->life > 0) {
+		if ( p->life > 0 ) {
 			for (int vert = 0; vert < p->xs.size(); ++vert) {
 				float tx = p->xs[vert] / tex->w;
 				float ty = p->ys[vert] / tex->h;

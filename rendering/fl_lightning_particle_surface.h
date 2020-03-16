@@ -10,11 +10,9 @@
 
 #include "fl_particle_surface.h"
 
-class FLLightningParticleSurface {
+class FLLightningParticleSurface : public FLParticleSurface {
 	public:
 		FLLightningParticleSurface();
-
-		virtual void update_buffers();
 
 		virtual void update_particle_field();
 };

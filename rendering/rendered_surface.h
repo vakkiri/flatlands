@@ -1,5 +1,5 @@
 /*
- * 	renderd_surface.h
+ * 	rendered_surface.h
  *
  * 	Base structures holding information for any polygon which will be
  * 	rendered by a shader.

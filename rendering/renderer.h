@@ -26,6 +26,8 @@ class FLTexturedSurface;
 class FLDistortionSurface;
 class FLWorldSurface;
 class FLTexturedObject;
+class FLParticleSurface;
+
 struct texture;
 
 class Renderer {
@@ -65,6 +67,7 @@ class Renderer {
 		FLTexturedSurface *background_surface;
 		FLDistortionSurface *background_distortion_surface;
 		FLTexturedSurface *framebuffer_surface;
+		std::vector<FLParticleSurface*> particle_surfaces;
 
 		// Private methods
 		bool init_sdl();	
@@ -106,6 +109,7 @@ class Renderer {
 		unsigned int get_screen_height();
 
 		void add_to_world( FLTexturedObject* obj );
+		void add_particle_surface( FLParticleSurface* s );
 		void remove_from_world( FLTexturedObject* obj );
 		void render_and_swap();
 
@@ -113,6 +117,7 @@ class Renderer {
 		void clear();
 
 		FLTexturedRectShader* get_textured_rect_shader();
+		FLParticleShader* get_lightning_shader();
 		FLColoredPolyShader* get_colored_poly_shader();
 		FLWorldSurface *get_world_surface();
 		FLTexturedSurface *get_tilemap_surface();
