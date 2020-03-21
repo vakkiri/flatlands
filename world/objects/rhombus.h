@@ -29,6 +29,9 @@ class FLRhombus : virtual public FLCollidingObject, virtual public FLAnimatedObj
 		float phase;
 		unsigned int offset;
 		int attack_cooldown;
+		float attack_pos;
+		float attack_step;
+		int cur_ball;
 		FLLightningParticleSurface* attack_surface;
 		std::vector<FLSmallrhombus*> children;
 };
@@ -49,6 +52,7 @@ class FLSmallrhombus : virtual public FLCollidingObject, virtual public FLAnimat
 		float phase;
 		float offset;
 		float speed;
+		float last_tick;
 };
 
 

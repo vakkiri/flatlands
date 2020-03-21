@@ -4,6 +4,6 @@ in float fLife;
 
 void main() {
 	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-	gl_FragColor.a = fLife / 180.f;
+	gl_FragColor.a = fLife / 60.f;
 }
 

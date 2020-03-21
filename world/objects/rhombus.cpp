@@ -31,7 +31,7 @@
 
 #define SIZE 16
 
-#define FULL_COOLDOWN 300
+#define FULL_COOLDOWN 1
 #define NUM_BALLS 3
 
 FLRhombus::FLRhombus( float x, float y ) :
@@ -61,6 +61,8 @@ FLRhombus::FLRhombus( float x, float y ) :
 	for ( int i = 0; i < NUM_BALLS; ++i )	
 		children.push_back( new FLSmallrhombus(this) );
 
+	cur_ball = 0;
+
 	// Surface for attack effect
 	// We maintain one surface instead of creating one "per effect"
 	// since the cost of generating particle systems is much higher
@@ -68,7 +70,10 @@ FLRhombus::FLRhombus( float x, float y ) :
 	
 	attack_surface = new FLLightningParticleSurface();
 	Renderer::getInstance().add_particle_surface( attack_surface );
+
 	attack_cooldown = 0;
+	attack_pos = 0.f;
+	attack_step = 0.01f;
 }
 
 FLRhombus::~FLRhombus() {
@@ -81,27 +86,48 @@ void FLRhombus::collide_with( FLPlayer *player ) {
 }
 
 float FLRhombus::x() {
-	return FLGameObject::x();
+	return FLGameObject::x() + ( movement_radius * sin(phase) );
 }
 
 float FLRhombus::y() {
-	return FLGameObject::y() + ( movement_radius * sin(phase) );
+	return FLGameObject::y();
 }
 
 void FLRhombus::update() {
 	unsigned int tick = SDL_GetTicks();
 	phase = speed * (float(tick + offset) / 1000.f);
 
-	attack_cooldown--;
+	if ( attack_cooldown > 0 )
+		attack_cooldown--;
+	else if ( attack_pos < 1.f ) {
+		// Add particles from orb to direction opposite from another orb
+		int ball2 = cur_ball + 1;
+		if ( ball2 >= NUM_BALLS )
+			ball2 = 0;
 
-	if ( attack_cooldown < 0 ) {
-		// Add particles from orb to orb
-		for ( int i = 0; i < 7; ++i ) {
-			float vx = ((float(rand() % 1000) / 1000.f) - 0.5f) * 1.f;
-			float vy = (float(rand() % 1000) / 1000.f) * -1.f;
-			attack_surface->add_particle(x(), y(), vx, vy);
-		}
+		float x1 = children[cur_ball]->x() + 4;
+		float y1 = children[cur_ball]->y() + 4;
+		float x2 = children[ball2]->x() + 4;
+		float y2 = children[cur_ball]->y() + 128;
+		float dx = x2 - x1;
+		float dy = y2 - y1;
+
+		float attack_x = x1 + dx * attack_pos;
+		float attack_y = y1 + dy * attack_pos;
+
+		float vx = ((float(rand() % 1000) / 1000.f) - 0.5f) * 1.f;
+		float vy = (float(rand() % 1000) / 1000.f) * -1.f;
+
+		attack_surface->add_particle(attack_x, attack_y, vx, vy);
+
+		attack_pos += attack_step;
+
+	}
+	else {
+		attack_pos = 0.f;
 		attack_cooldown = FULL_COOLDOWN;
+		if ( ++cur_ball >= NUM_BALLS )
+			cur_ball = 0;
 	}
 	
 }
@@ -122,13 +148,14 @@ FLSmallrhombus::FLSmallrhombus( FLRhombus* parent ) :
 	this->parent = parent;
 
 
-	static unsigned int offset_phase = 777;
-	offset_phase += 666;
+	static float offset_phase = 1;
+	offset_phase += 1.6;
 	offset = offset_phase;
 	phase = 0;
-	speed = 3.f;
+	speed = 4.f;
 
-	movement_radius = 32.f;
+	movement_radius = 16.f;
+	last_tick = SDL_GetTicks();
 }
 
 FLSmallrhombus::~FLSmallrhombus() {
@@ -141,13 +168,14 @@ void FLSmallrhombus::collide_with( FLPlayer *player ) {
 
 void FLSmallrhombus::update() {
 	unsigned int tick = SDL_GetTicks();
-	phase = speed * (float(tick + offset) / 1000.f);
+	phase += (speed * float(tick - last_tick) / 1000.f);
+	last_tick = tick;
 }
 
 float FLSmallrhombus::x() {
-	return parent->x() + 8.f + ( (movement_radius - (24.f * sin(phase/4.f))) * cos(phase) );
+	return parent->x() + 4.f + ( movement_radius * cos(phase + offset) );
 }
 
 float FLSmallrhombus::y() {
-	return parent->y() + 8.f + ( (movement_radius - (24.f * sin(phase/4.f))) * sin(phase) );
+	return parent->y() + 4.f + ( movement_radius * sin(phase + offset) );
 }

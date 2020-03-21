@@ -11,7 +11,7 @@
 #include "renderer.h"
 
 #define NUM_PARTICLES 500
-#define PARTICLE_LIFE 180
+#define PARTICLE_LIFE 60
 #define PARTICLE_SIZE 2
 
 FLLightningParticleSurface::FLLightningParticleSurface() :

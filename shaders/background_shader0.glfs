@@ -8,11 +8,8 @@ void main() {
 	vec2 flippedCoord = vec2( texCoord.x, 1.f-texCoord.y );
 
 	gl_FragColor = texture( texUnit, vec2(flippedCoord.x, flippedCoord.y) );
-	gl_FragColor.b += 0.4 * (flife / 600.f);
-	gl_FragColor.g = 0.6 + sin(flife / 12.f) * 0.3f;
-	gl_FragColor.r = sin(flife / 12.f) * 0.2f;
-	gl_FragColor *= 0.8;
-	gl_FragColor.a = 0.6f;
+	gl_FragColor.b += 0.6 - 0.2 * cos(flife / 600.f);
+	gl_FragColor.g = 0.3 + sin(flife / 60.f) * 0.3f;
+	gl_FragColor.r = cos(flife / 57.f) * 0.8f;
 }
-
 

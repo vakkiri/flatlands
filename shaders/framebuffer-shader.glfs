@@ -42,18 +42,20 @@ void main() {
 	gl_FragColor = (gl_FragColor * 0.8) + (blurc2 * 0.2);
 
 	if ( mod(y, 2.f) < 1) {
-		gl_FragColor.r *= 0.0;
-		gl_FragColor.g *= 0.0;
-		gl_FragColor.b *= 0.0;
+		gl_FragColor.r *= 0.1;
+		gl_FragColor.g *= 0.1;
+		gl_FragColor.b *= 0.1;
 	}
 
 	float avg = (gl_FragColor.r + gl_FragColor.g + gl_FragColor.b) / 3.f;
-	if (avg < 0.4)
-		gl_FragColor *= 0.7;
+	if (avg < 0.3)
+		gl_FragColor *= 0.6;
 	else if (avg < 0.5)
-		gl_FragColor *= 0.8;
+		gl_FragColor *= 0.75;
+	else if (avg < 0.6)
+		gl_FragColor *= 1.0;
 	else if (avg < 0.7)
-		gl_FragColor *= 1.1;
+		gl_FragColor *= 1.2;
 	else
 		gl_FragColor *= 1.3;
 
