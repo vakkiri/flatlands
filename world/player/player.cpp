@@ -17,25 +17,24 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL (90)
-#define INITIAL_WALK_ACCEL (0.7)
-#define WALK_ACCEL (0.51)
-#define RUN_ACCEL (0.54)
+#define INITIAL_WALK_ACCEL (0.6)
+#define WALK_ACCEL (0.45)
+#define RUN_ACCEL (0.49)
 
-#define JUMP_ACCEL (0.33)
-#define INITIAL_JUMP_VEL (-1.3)
-#define JUMP_FRAME_ACCEL (0.06)
-#define NUM_JUMP_FRAMES (3)
+#define INITIAL_JUMP_VEL (-4.1)
+#define JUMP_FRAME_ACCEL (0.2)
+#define NUM_JUMP_FRAMES (30)
 
 #define HOVER_FRAMES (40)
 #define DOUBLE_JUMP_ACCEL (0.9)
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
 
-#define X_TERMINAL_VELOCITY (3.4)
-#define X_TERMINAL_WALK_VELOCITY (3.2)
+#define X_TERMINAL_VELOCITY (2.9)
+#define X_TERMINAL_WALK_VELOCITY (2.5)
 #define Y_TERMINAL_VELOCITY (6.4)
-#define JUMP_RELEASE_GRAVITY_FACTOR (2.5)
-#define JUMP_HOLD_GRAVITY_FACTOR (0.75)
+#define JUMP_RELEASE_GRAVITY_FACTOR (1.5)
+#define JUMP_HOLD_GRAVITY_FACTOR (0.8)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 3, 7, 16 ) {
 	Renderer::getInstance().add_to_world(this);
@@ -93,7 +92,6 @@ void FLPlayer::jump() {
 		can_use_ability = true;
 		hover_frames = 0;
 		vel.y = INITIAL_JUMP_VEL;
-		accel.y = -JUMP_ACCEL;
 		reset_animation();
 		on_ground_timer = 0;
 		falling_frames = 0;
@@ -125,15 +123,13 @@ void FLPlayer::use_ability() {
 }
 
 void FLPlayer::double_jump() {
-	vel.y = 0;
-	accel.y = -DOUBLE_JUMP_ACCEL;
+	vel.y = -DOUBLE_JUMP_ACCEL;
 
 	reset_animation();
 }
 
 void FLPlayer::ground_pound() {
-	vel.y = 0;
-	accel.y = GROUND_POUND_ACCEL;
+	vel.y = GROUND_POUND_ACCEL;
 	pound_frames = POUND_FRAMES;
 
 	// create pound effect
@@ -211,7 +207,7 @@ void FLPlayer::update_physics() {
 
 	// reduce effect of gravity immediately after jumping
 	if ( jump_frames > 0 ) {
-		accel.y -= JUMP_FRAME_ACCEL;
+		accel.y = -JUMP_FRAME_ACCEL;
 		jump_frames--;
 	}
 
@@ -292,12 +288,12 @@ void FLPlayer::apply_gravity() {
 	 *	- after the peak, extra gravity is applied if not holding jump
 	 *
 	 */
-	if ( !jump_held && accel.y > 0 )
-		accel.y += physics.gravity() * JUMP_RELEASE_GRAVITY_FACTOR;
-	else if ( jump_held && accel.y < 0 )
-		accel.y += physics.gravity() * JUMP_HOLD_GRAVITY_FACTOR;
+	if ( !jump_held && vel.y > 0 )
+		vel.y += physics.gravity() * JUMP_RELEASE_GRAVITY_FACTOR;
+	else if ( jump_held && vel.y < 0 )
+		vel.y += physics.gravity() * JUMP_HOLD_GRAVITY_FACTOR;
 	else
-		accel.y += physics.gravity();
+		vel.y += physics.gravity();
 }
 
 void FLPlayer::hold_jump() { jump_held = true; }

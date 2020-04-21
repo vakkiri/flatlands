@@ -11,5 +11,7 @@ void main() {
 	gl_FragColor.b += 0.6 - 0.2 * cos(flife / 600.f);
 	gl_FragColor.g = 0.3 + sin(flife / 60.f) * 0.3f;
 	gl_FragColor.r = cos(flife / 57.f) * 0.8f;
+	gl_FragColor *= 0.75;
+	gl_FragColor.a = 1.f;
 }
 
