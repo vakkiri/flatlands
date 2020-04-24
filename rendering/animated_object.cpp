@@ -23,13 +23,15 @@ FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObje
 	animated_objects.push_back( this );
 }
 
-FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject( num_animations ) {
+FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float sstep, float tstep ) : FLAnimatedObject( num_animations ) {
 	this->num_steps = num_steps;
 	this->frames_per_step = frames_per_step;
-	this->s_step = step;
-	this->t_step = step;
+	this->s_step = sstep;
+	this->t_step = tstep;
 	cur_animation = 0;
 }
+
+FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject( num_animations, num_steps, frames_per_step, step, step) {}
 
 FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats ) : 
 	FLAnimatedObject( num_animations, num_steps, frames_per_step, step ) {
@@ -45,16 +47,7 @@ void FLAnimatedObject::update_animation() {
 		if ( elapsed_frames++ >= frames_per_step ) {
 			elapsed_frames = 0;
 
-			if ( cur_step == 0 ) {
-				if ( ++elapsed_start_steps >= start_repeat[cur_animation] ) {
-					++cur_step;
-					elapsed_start_steps = 0;
-				}
-			}
-			else 
-				++cur_step;
-
-			if ( cur_step > num_steps ) {
+			if ( ++cur_step >= num_steps ) {
 				if ( !repeats ) {
 					active = false;
 					animation_finished = true;

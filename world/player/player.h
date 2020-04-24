@@ -18,17 +18,15 @@ struct texture;
 
 enum FLPlayerAbility {
 	FL_NO_ABILITY,
-	FL_DOUBLE_JUMP,
-	FL_GROUND_POUND,
-	FL_HOVER,
-	FL_NUM_ABILITIES
+	FL_DASH
 };
 
 enum FLPlayerState {
 	FL_PLAYER_IDLE,
 	FL_PLAYER_WALK,
 	FL_PLAYER_JUMP,
-	FL_PLAYER_POUND
+	FL_PLAYER_POUND,
+	FL_PLAYER_DASH
 };
 
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
@@ -64,6 +62,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void reset();
 
 		bool pounding();
+		bool dashing();
+		bool can_dash();
 		bool facing_right();
 
 	protected:
@@ -73,17 +73,19 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		virtual void double_jump();
 		virtual void ground_pound();
-		virtual void hover();
+		virtual void dash();
 
 		bool can_use_ability;
+		bool can_double_jump;
 		FLPlayerAbility cur_ability;
 		bool jump_held;
 		bool run_held;
 
 		unsigned int jump_frames;
-		unsigned int hover_frames;
+		unsigned int dash_frames;
 		unsigned int pound_frames;
 		unsigned int falling_frames;
+		bool dash_right;
 
 		FLPlayerState state;
 

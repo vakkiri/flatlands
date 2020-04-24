@@ -11,7 +11,6 @@
 #include "destroyable_tile.h"
 #include "fireball.h"
 #include "platform.h"
-#include "pound_powerup.h"
 #include "rhombus.h"
 #include "toggle_tile.h"
 #include "toggler.h"

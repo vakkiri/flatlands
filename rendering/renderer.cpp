@@ -87,18 +87,6 @@ void Renderer::render() {
 	background_surface->set_shader( &textured_rect_shader );
 	background_surface->render();
 
-	// draw particle system over background
-	flip_framebuffer();
-	background_shader.bind();
-	background_distortion_surface->render();
-
-	// now distort the framebuffer
-	flip_framebuffer();
-	wave_shader.bind();
-	background_surface->set_shader( &wave_shader );
-	background_surface->set_tex( screen_texture() );
-	background_surface->render();
-
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( world_camera );

@@ -245,7 +245,7 @@ void FLResources::load_level( int id ) {
 				// input[3]: type
 				switch ( input[3] ) {
 					case 0:
-						new FLPoundPowerup( (float)input[1], (float)input[2] );
+						// was pound powerup
 						break;
 					case 1:
 						new FLDestroyableTile( (float)input[1], (float)input[2] );

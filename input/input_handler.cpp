@@ -21,9 +21,9 @@ void FLInputHandler::init() {
 	key_map[SDL_SCANCODE_RIGHT] = FL_KEY_RIGHT;
 	key_map[SDL_SCANCODE_DOWN] = FL_KEY_DOWN;
 	key_map[SDL_SCANCODE_LEFT] = FL_KEY_LEFT;
-	key_map[SDL_SCANCODE_X] = FL_KEY_ACTION1;
-	key_map[SDL_SCANCODE_Z] = FL_KEY_ACTION2;
-	key_map[SDL_SCANCODE_F] = FL_KEY_ACTION3;
+	key_map[SDL_SCANCODE_A] = FL_KEY_ACTION1;
+	key_map[SDL_SCANCODE_S] = FL_KEY_ACTION2;
+	key_map[SDL_SCANCODE_D] = FL_KEY_ACTION3;
 }
 
 bool FLInputHandler::input_loop() {
