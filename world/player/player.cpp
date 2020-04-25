@@ -41,28 +41,41 @@
 #define JUMP_HOLD_GRAVITY_FACTOR 	(0.8)
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
-	Renderer::getInstance().add_to_world(this);
 
 	position.x = 32;
 	position.y = 64;
 	position.w = 16;
 	position.h = 32;
 	
-	jump_frames = 0;
-	dash_frames = 0;
-	pound_frames = 0;
-	falling_frames = 0;
+	jump_frames = 		0;
+	dash_frames = 		0;
+	pound_frames = 		0;
+	falling_frames = 	0;
 
-	cur_ability = FL_DASH;
-	can_use_ability = false;
-	can_double_jump = false;
+	cur_ability = 		FL_DASH;
+	cur_weapon = 		FL_FUSION;
 
-	jump_held = false;
-	run_held = false;
+	can_use_ability = 	false;
+	can_double_jump = 	false;
+	jump_held = 		false;
+	run_held = 		false;
+	attacking =		false;
 
 	bind_actions();
 
 	set_start_repeat(10, 0);
+
+	weapon = new FLAnimatedObject( 1, 4, 4, 16.f, 16.f );
+	weapon->set_repeats(false);
+	weapon->stop_animation();
+
+	Renderer::getInstance().add_to_world(this);
+	Renderer::getInstance().add_to_world(weapon);
+}
+
+FLPlayer::~FLPlayer() {
+	if (weapon != nullptr)
+		delete weapon;
 }
 
 void FLPlayer::bind_actions() {
@@ -77,6 +90,8 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> walk_right = std::bind(&FLPlayer::move_right, this);
 	std::function<void(void)> release_walk = std::bind(&FLPlayer::release_walk, this);
 	std::function<void(void)> use_ability = std::bind(&FLPlayer::use_ability, this);
+	std::function<void(void)> attack = std::bind(&FLPlayer::attack, this);
+	std::function<void(void)> stop_attack = std::bind(&FLPlayer::stop_attack, this);
 
 	// map binded actions to input handler
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION3, FL_KEY_HELD, hold_run);
@@ -90,7 +105,8 @@ void FLPlayer::bind_actions() {
 	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_RELEASED, release_walk);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_LEFT, FL_KEY_RELEASED, release_walk);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION1, FL_KEY_PRESSED, use_ability);
-
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION4, FL_KEY_HELD, attack);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION4, FL_KEY_RELEASED, stop_attack);
 }
 
 void FLPlayer::jump() {
@@ -121,6 +137,16 @@ void FLPlayer::use_ability() {
 		default:
 			break;
 	}
+}
+
+void FLPlayer::attack() {
+	if ( can_attack() ) {
+		attacking = true;
+	}
+}
+
+void FLPlayer::stop_attack() {
+	attacking = false;
 }
 
 void FLPlayer::double_jump() {
@@ -160,6 +186,12 @@ bool FLPlayer::dashing() {
 
 bool FLPlayer::can_dash() {
 	return (!dashing());
+}
+
+bool FLPlayer::can_attack() {
+	return (	cur_weapon != FL_NO_WEAPON &&
+			state != FL_PLAYER_DASH
+			);
 }
 
 void FLPlayer::move_right() {
@@ -296,6 +328,43 @@ void FLPlayer::update_camera() {
 }
 
 void FLPlayer::update_animation() {
+	/* set weapon position to our own */
+	if (!reverse) {
+		weapon->set_x( x() + 8.f);
+	}
+	else {
+		weapon->set_x( x() - 8.f);
+	}
+	weapon->set_y( y() + 16.f );
+	weapon->set_reverse( reverse );
+	/* the weapon switch comes first, since the later state switch may override weapon visibility */
+	switch ( cur_weapon ) {
+		case FL_NO_WEAPON:
+			weapon->set_visible( false );
+			break;
+		case FL_FUSION:
+			weapon->set_st(96, 0);
+			weapon->set_steps(16, 0);
+			weapon->set_w(16.f);
+			weapon->set_h(16.f);
+			weapon->set_repeats( true );
+			weapon->set_visible( true );
+			break;
+		default:
+			weapon->set_visible( false );
+			break;
+	}
+	if ( attacking ) {
+		weapon->start_animation();
+	}
+	else {
+		weapon->set_repeats(false);
+
+		if (weapon->finished()) {
+			weapon->reset_animation();
+			weapon->stop_animation();
+		}
+	}
 	switch ( state ) {
 		case FL_PLAYER_IDLE:
 			set_animation( 0 );
@@ -308,11 +377,15 @@ void FLPlayer::update_animation() {
 			break;
 		case FL_PLAYER_DASH:
 			set_animation( 3 );
+			weapon->set_visible(false);
+			attacking = false;
 			break;
 		default:
 			break;
 	}
+	
 
+	weapon->update_animation();
 	FLAnimatedObject::update_animation();
 	update_camera();
 }
@@ -388,5 +461,9 @@ void FLPlayer::enable_ability() {
 
 bool FLPlayer::facing_right() {
 	return (!reverse);
+}
+
+FLAnimatedObject* FLPlayer::get_weapon() {
+	return weapon;
 }
 

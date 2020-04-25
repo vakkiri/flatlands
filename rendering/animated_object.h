@@ -33,7 +33,9 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		virtual float t();
 
 		void set_animated_object_list_position( unsigned int position );
+		void set_steps( float sstep, float tstep );
 
+		virtual bool finished();
 	protected:
 		float s_step;	// how much to move _s by each frame
 		float t_step;	// how much to move _t by when animation changes

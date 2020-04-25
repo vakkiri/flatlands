@@ -18,6 +18,8 @@ class FLGameObject {
 
 		virtual void set_x( float x );
 		virtual void set_y( float y );
+		virtual void set_w( float w );
+		virtual void set_h( float h );
 		virtual float x();
 		virtual float y();
 		virtual float w();

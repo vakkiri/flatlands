@@ -181,11 +181,12 @@ bool Renderer::init_window() {
 bool Renderer::init_sdl() {
 	log_progress("Initializing SDL");
 
-	if ( SDL_Init( SDL_INIT_VIDEO ) < 0 ) {
+	// TODO: since this initializes more than graphics, we should have an init external to /rendering
+	if ( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 ) {
 		log_error( SDL_GetError() );
 		return false;
 	}
-	
+
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1);
 	SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );

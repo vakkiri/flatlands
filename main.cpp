@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
+#include "audio/fl_audio.h"
 #include "common/common.h"
 #include "input/input_handler.h"
 #include "logging/logging.h"
@@ -64,7 +65,7 @@ int main( int argc, char* args[] ) {
 	FLResources& resources = FLResources::getInstance();
 	log_progress("Starting shift");
 
-	if ( renderer.init() ) {
+	if ( renderer.init() && init_audio() ) {
 		if ( resources.init() )
 			main_loop();
 		else

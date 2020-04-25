@@ -4,6 +4,7 @@
  */
 
 #include <fstream>
+#include <iostream>
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <SDL2/SDL_opengl.h>
@@ -20,24 +21,28 @@
 #include "fl_resources.h"
 
 #define IMAGE_RESOURCE_PATH "test-assets/image-resources.csv"
+#define SFX_RESOURCE_PATH "test-assets/sfx-resources.csv"
 #define BASE_RESOURCE_PATH "test-assets/"
 
 bool FLResources::init() {
+	bool success = true;
 	log_progress( "Initializing assets" );
 
 	init_physics();
 
 	init_il();
 
-	if (!init_images())
-		return false;
-
-	return true;
+	if (!init_images() || !init_sfx())
+		success = false;
+	
+	return success;
 }
 
 void FLResources::close() {
 	for (auto& it : image_dict)
 		delete it.second;
+	for (auto& it : sfx_dict)
+		Mix_FreeChunk( it.second );
 }
 
 void FLResources::init_physics() {
@@ -78,13 +83,18 @@ void FLResources::init_il() {
 bool FLResources::init_images() {
 	log_progress( "Initializing images" );
 
-	load_images( IMAGE_RESOURCE_PATH );
-
-	return true;
+	return load_images( IMAGE_RESOURCE_PATH );
 }
 
-void FLResources::load_images( std::string csv_path ) {
+bool FLResources::init_sfx() {
+	log_progress( "Initializing sfx" );
+
+	return load_sfx( SFX_RESOURCE_PATH );
+}
+
+bool FLResources::load_images( std::string csv_path ) {
 	log_progress( "Loading image csv" );
+	bool success = true;
 
 	std::ifstream csv_file;
 	std::string line;
@@ -92,8 +102,10 @@ void FLResources::load_images( std::string csv_path ) {
 	std::string path;
 	csv_file.open(csv_path);
 
-	if ( !csv_file.is_open() )
-		log_warning( "Could not open image .csv file" );
+	if ( !csv_file.is_open() ) {
+		log_error( "Could not open image .csv file" );
+		success = false;
+	}
 	else {
 		while (!csv_file.eof()) {
 			getline(csv_file, line);
@@ -107,6 +119,8 @@ void FLResources::load_images( std::string csv_path ) {
 	}
 
 	csv_file.close();
+
+	return success;
 }
 
 void FLResources::load_image( std::string path, std::string name ) {
@@ -146,8 +160,50 @@ void FLResources::load_image( std::string path, std::string name ) {
 	ilDeleteImages( 1, &img_id );
 }
 
+bool FLResources::load_sfx( std::string csv_path ) {
+	log_progress( "Loading sfx csv" );
+	bool success = true;
+
+	std::ifstream csv_file;
+	std::string line;
+	std::string name;
+	std::string path;
+	csv_file.open(csv_path);
+
+	if ( !csv_file.is_open() ) {
+		log_error( "Could not open image .csv file" );
+		success = false;
+	}
+	else {
+		while (!csv_file.eof()) {
+			getline(csv_file, line);
+			if (line.size() > 0) {
+				int pos = line.find(",");
+				name = line.substr(0, pos);
+				path = line.substr(pos+1, line.size() - pos);
+				Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
+				if ( chunk != nullptr ) {
+					sfx_dict[name] = chunk;
+				}
+				else {
+					log_warning( "Missing audio file: " );
+					std::cout << path << std::endl;
+				}
+			}
+		}
+	}
+
+	csv_file.close();
+
+	return success;
+}
+
 texture* FLResources::get_image( std::string image_name ) {
 	return image_dict[image_name];
+}
+
+Mix_Chunk* FLResources::get_sound( std::string effect_name ) {
+	return sfx_dict[effect_name];
 }
 
 void FLResources::load_level( int id ) {

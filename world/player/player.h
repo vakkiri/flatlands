@@ -29,9 +29,15 @@ enum FLPlayerState {
 	FL_PLAYER_DASH
 };
 
+enum FLPlayerWeapon {
+	FL_NO_WEAPON,
+	FL_FUSION
+};
+
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	public:
 		FLPlayer();
+		virtual ~FLPlayer();
 
 		virtual void update_animation();
 
@@ -41,6 +47,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		void interact();
 		void jump();
 		virtual void use_ability();
+		virtual void attack();
+		virtual void stop_attack();
 		virtual void set_ability( FLPlayerAbility ability );
 
 		// movement methods
@@ -64,8 +72,10 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		bool pounding();
 		bool dashing();
 		bool can_dash();
+		bool can_attack();
 		bool facing_right();
 
+		FLAnimatedObject* get_weapon();
 	protected:
 		virtual void apply_gravity();
 		virtual void bind_actions();
@@ -75,19 +85,23 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void ground_pound();
 		virtual void dash();
 
+		FLPlayerAbility cur_ability;
+		FLPlayerWeapon	cur_weapon;
+		FLPlayerState state;
+
+		FLAnimatedObject* weapon;
+
 		bool can_use_ability;
 		bool can_double_jump;
-		FLPlayerAbility cur_ability;
 		bool jump_held;
 		bool run_held;
+		bool dash_right;
+		bool attacking;
 
 		unsigned int jump_frames;
 		unsigned int dash_frames;
 		unsigned int pound_frames;
 		unsigned int falling_frames;
-		bool dash_right;
-
-		FLPlayerState state;
 
 		point reset_position;
 };

@@ -96,14 +96,6 @@ void Renderer::render() {
 		r->render();
 
 	// draw custom surfaces such as particle effects
-
-	// update projection/camera matrices for custom shaders
-	// TODO: any shader which uses a moving camera should automatically
-	// update once each render cycle in which it is used
-	lightning_shader.bind();
-	lightning_shader.set_camera( world_camera );
-	lightning_shader.update_pc_matrix();
-
 	for ( FLParticleSurface *s : particle_surfaces )
 		s->render();
 

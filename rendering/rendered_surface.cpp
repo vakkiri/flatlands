@@ -134,7 +134,13 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 	float tbot;
 
 	for ( int i = 0; i < objects.size(); i++ ) {
-		if ( !objects[i]->reversed() ) {
+		if ( !objects[i]->is_visible() ) {
+			tleft = 0.f;
+			tright = 0.f;
+			ttop = 0.f;
+			tbot = 0.f;
+		}
+		else if ( !objects[i]->reversed() ) {
 			tleft = ( objects[i]->s() / tex->w );
 			tright = tleft + ( objects[i]->w() / tex->w );
 			ttop = ( objects[i]->t() / tex->h );

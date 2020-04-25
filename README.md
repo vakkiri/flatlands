@@ -10,6 +10,7 @@ The following libraries are used:
 
 SDL2 ( libsdl2-dev )
 SDL2-OpenGL ( libsdl2-dev )
+SDL2-Mixer
 OpenGL 3.x
 OpenGL Mathematics (libglm-dev)
 DevIL (libdevil-dev)

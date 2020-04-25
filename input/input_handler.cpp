@@ -17,13 +17,14 @@ void FLInputHandler::init() {
 
 	// populate some defaults
 	// TODO: read defaults from an external file
-	key_map[SDL_SCANCODE_UP] = FL_KEY_UP;
-	key_map[SDL_SCANCODE_RIGHT] = FL_KEY_RIGHT;
-	key_map[SDL_SCANCODE_DOWN] = FL_KEY_DOWN;
-	key_map[SDL_SCANCODE_LEFT] = FL_KEY_LEFT;
-	key_map[SDL_SCANCODE_A] = FL_KEY_ACTION1;
-	key_map[SDL_SCANCODE_S] = FL_KEY_ACTION2;
-	key_map[SDL_SCANCODE_D] = FL_KEY_ACTION3;
+	key_map[SDL_SCANCODE_UP] = 		FL_KEY_UP;
+	key_map[SDL_SCANCODE_RIGHT] = 		FL_KEY_RIGHT;
+	key_map[SDL_SCANCODE_DOWN] = 		FL_KEY_DOWN;
+	key_map[SDL_SCANCODE_LEFT] = 		FL_KEY_LEFT;
+	key_map[SDL_SCANCODE_A] = 		FL_KEY_ACTION1;
+	key_map[SDL_SCANCODE_S] = 		FL_KEY_ACTION2;
+	key_map[SDL_SCANCODE_D] = 		FL_KEY_ACTION3;
+	key_map[SDL_SCANCODE_SPACE] = 		FL_KEY_ACTION4;
 }
 
 bool FLInputHandler::input_loop() {

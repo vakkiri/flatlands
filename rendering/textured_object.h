@@ -25,11 +25,14 @@ class FLTexturedObject : virtual public FLGameObject {
 
 		void set_reverse( bool reverse );
 		bool reversed();
-
+		
+		void set_visible( bool visible );	
+		bool is_visible();
 	protected:
 		float _s;
 		float _t;
 		bool reverse;
+		bool visible;
 };
 
 #endif

@@ -43,6 +43,7 @@ void FLWorldEnvironment::reset_environment() {
 
 	// Place player back on scene
 	Renderer::getInstance().add_to_world( _player );	
+	Renderer::getInstance().add_to_world( _player->get_weapon() );
 
 	reset = false;
 }

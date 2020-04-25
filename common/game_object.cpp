@@ -14,6 +14,8 @@ FLGameObject::FLGameObject( float x, float y, float w, float h ) {
 
 void FLGameObject::set_x( float x ) { position.x = x; }
 void FLGameObject::set_y( float y ) { position.y = y; }
+void FLGameObject::set_w( float w ) { position.w = w; }
+void FLGameObject::set_h( float h ) { position.h = h; }
 
 float FLGameObject::x() { return position.x; }
 float FLGameObject::y() { return position.y; }

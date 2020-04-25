@@ -16,6 +16,7 @@ FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObje
 	elapsed_frames = 0;
 	elapsed_start_steps = 0;
 	cur_step = 0;
+	cur_animation = 0;
 	this->num_animations = num_animations;
 	start_repeat = std::vector<unsigned int>(num_animations, 0);
 
@@ -52,8 +53,9 @@ void FLAnimatedObject::update_animation() {
 					active = false;
 					animation_finished = true;
 				}
-				else
+				else {
 					cur_step = 0;
+				}
 			}
 		}
 	}
@@ -63,7 +65,10 @@ void FLAnimatedObject::set_animation( unsigned int animation ) {
 	cur_animation = animation;
 }
 
-void FLAnimatedObject::start_animation() { active = true; }
+void FLAnimatedObject::start_animation() { 
+	active = true; 
+	animation_finished = false;
+}
 
 void FLAnimatedObject::stop_animation() { active = false; }
 
@@ -86,6 +91,15 @@ void FLAnimatedObject::set_animated_object_list_position( unsigned int position 
 	animated_object_list_position = position;
 }
 
+void FLAnimatedObject::set_steps( float sstep, float tstep ) {
+	s_step = sstep;
+	t_step = tstep;
+}
+
+bool FLAnimatedObject::finished() {
+	return animation_finished;
+}
+
 std::vector<FLAnimatedObject*>& get_animated_objects() {
 	return animated_objects;
 }
@@ -105,5 +119,4 @@ void remove_null_animated_objects() {
 void clear_animated_objects() {
 	animated_objects.clear();
 }
-
 
