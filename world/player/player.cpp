@@ -11,6 +11,7 @@
 #include "../effect.h"
 #include "../physics_settings.h"
 #include "../world_environment.h"
+#include "../../audio/fl_audio.h"
 #include "../../input/input_handler.h"
 #include "../../rendering/world_surface.h"
 #include "../../rendering/renderer.h"
@@ -120,6 +121,9 @@ void FLPlayer::jump() {
 
 		// Create a visual smoke effect
 		//new FLEffect( x() - (w()/2.f), y(), 64, 16, 5, 32, 16 );
+		
+		// play sound effect
+		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
 		falling_frames = 0;
@@ -152,6 +156,7 @@ void FLPlayer::stop_attack() {
 void FLPlayer::double_jump() {
 	vel.y = -DOUBLE_JUMP_ACCEL;
 
+	play_sound( "player_jump" );
 	reset_animation();
 }
 
@@ -383,8 +388,11 @@ void FLPlayer::update_animation() {
 		default:
 			break;
 	}
-	
 
+	if ( state == FL_PLAYER_WALK && on_ground() ) {
+		start_sound("player_walk");
+	}
+	
 	weapon->update_animation();
 	FLAnimatedObject::update_animation();
 	update_camera();
@@ -419,6 +427,8 @@ void FLPlayer::release_run() { run_held = false; }
 void FLPlayer::release_walk() { 
 	if ( state != FL_PLAYER_DASH )
 		state = FL_PLAYER_IDLE; 
+
+	stop_sound("player_walk");
 }
 
 void FLPlayer::hit_ground() {

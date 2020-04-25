@@ -183,6 +183,7 @@ bool FLResources::load_sfx( std::string csv_path ) {
 				path = line.substr(pos+1, line.size() - pos);
 				Mix_Chunk* chunk = Mix_LoadWAV(path.c_str());
 				if ( chunk != nullptr ) {
+					Mix_VolumeChunk(chunk, 100);
 					sfx_dict[name] = chunk;
 				}
 				else {
