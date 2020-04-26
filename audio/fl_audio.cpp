@@ -20,7 +20,7 @@ bool init_audio() {
 		success = false;
 	}
 	else {
-		Mix_AllocateChannels(16);
+		Mix_AllocateChannels(128);
 	}
 
 	return success;

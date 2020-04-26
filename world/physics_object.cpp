@@ -66,7 +66,7 @@ void FLPhysicsObject::update_position() {
 			// move head to tile bottom
 			int tile_pos = int(next.y);
 			int diff = 8 - (tile_pos % 8);
-			position.y = tile_pos + diff + PHYSICS_EPSILON;
+			position.y = tile_pos + diff + PHYSICS_EPSILON - bounds_margin.y;
 				
 			stop_vertical();
 		}
@@ -76,25 +76,27 @@ void FLPhysicsObject::update_position() {
 	// moving right:
 	if ( vel.x > 0 ) {
 		// check top right and bottom right
-		if (environment.solid_at(next.x + bounds_w(), bounds_y()) ||
-		    environment.solid_at(next.x + bounds_w(), bounds_y() + bounds_h())) {
-			int tile_pos = int(next.x + bounds_w());
-			int diff = tile_pos % 8;
-			position.x = tile_pos - diff - bounds_w() - PHYSICS_EPSILON;
+		for ( int y = bounds_y(); y < bounds_y() + bounds_h(); y += 8 ) {
+			if ( environment.solid_at(next.x + bounds_w(), y) ) {
+				int tile_pos = int(next.x + bounds_w());
+				int diff = tile_pos % 8;
+				position.x = tile_pos - diff - bounds_w() - PHYSICS_EPSILON;
 
-			stop_horizontal();
+				stop_horizontal();
+			}
 		}
 	}
 	// moving left:
 	else if ( vel.x < 0 ) {
 		// check top left and bottom left
-		if (environment.solid_at(next.x, bounds_y()) ||
-		    environment.solid_at(next.x, bounds_y() + bounds_h())) {
-			int tile_pos = int(next.x);
-			int diff = 8 - (tile_pos % 8);
-			position.x = tile_pos + diff + PHYSICS_EPSILON;
+		for ( int y = bounds_y(); y < bounds_y() + bounds_h(); y += 8 ) {
+			if ( environment.solid_at(next.x, y) ) {
+				int tile_pos = int(next.x);
+				int diff = 8 - (tile_pos % 8);
+				position.x = tile_pos + diff + PHYSICS_EPSILON;
 
-			stop_horizontal();
+				stop_horizontal();
+			}
 		}
 	}
 

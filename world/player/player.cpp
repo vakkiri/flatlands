@@ -18,7 +18,7 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL 		(90)
-#define INITIAL_WALK_ACCEL 	(0.6)
+#define INITIAL_WALK_ACCEL 	(0.54)
 #define WALK_ACCEL 		(0.49)
 #define RUN_ACCEL 		(0.49)
 #define DASH_INITIAL_ACCEL 	(4.3)
@@ -29,15 +29,15 @@
 #define NUM_JUMP_FRAMES 	(30)
 
 #define DASH_FRAMES 		(25)
-#define DASH_FLOAT		(0.9)
+#define DASH_FLOAT		(0.95)
 #define DOUBLE_JUMP_ACCEL 	(3.6)
 #define GROUND_POUND_ACCEL 	(3.0)
 #define POUND_FRAMES 		(60)
 
 #define WALK_SPEED 			(2.5)
-#define RUN_SPEED 			(2.9)
+#define RUN_SPEED 			(2.5)
 #define X_TERMINAL_VELOCITY 		(5.2)
-#define Y_TERMINAL_VELOCITY 		(6.4)
+#define Y_TERMINAL_VELOCITY 		(6.1)
 #define JUMP_RELEASE_GRAVITY_FACTOR 	(1.5)
 #define JUMP_HOLD_GRAVITY_FACTOR 	(0.8)
 
@@ -72,6 +72,13 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
 	Renderer::getInstance().add_to_world(this);
 	Renderer::getInstance().add_to_world(weapon);
+
+	rect bounds;
+	bounds.x = 0;
+	bounds.y = 10;
+	bounds.w = 0;
+	bounds.h = -10;
+	set_bounds_margin(bounds);
 }
 
 FLPlayer::~FLPlayer() {
@@ -120,12 +127,13 @@ void FLPlayer::jump() {
 		jump_frames = NUM_JUMP_FRAMES;
 
 		// Create a visual smoke effect
-		//new FLEffect( x() - (w()/2.f), y(), 64, 16, 5, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 496, 5, 32, 16 );
 		
 		// play sound effect
 		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 5, 32, 16 );
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -170,6 +178,7 @@ void FLPlayer::ground_pound() {
 
 void FLPlayer::dash() {
 	if ( can_dash() ) {
+		play_sound( "player_dash" );
 		dash_right = facing_right();
 		if (dash_right)
 			vel.x += DASH_INITIAL_ACCEL;
@@ -203,7 +212,7 @@ void FLPlayer::move_right() {
 	if ( vel.x < WALK_SPEED || (run_held && vel.x < RUN_SPEED) ) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
-		if ( vel.x > 0 && vel.x < 1.5 && run_held )
+		if ( vel.x > 0 && vel.x < 1.5 )
 			accelerate(point(INITIAL_WALK_ACCEL, 0));
 		else if ( run_held )
 			accelerate(point(RUN_ACCEL, 0));
@@ -222,7 +231,7 @@ void FLPlayer::move_left() {
 	if ( vel.x > -WALK_SPEED || (run_held && vel.x > -RUN_SPEED) ) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
-		if ( vel.x < 0 && vel.x > -1.5 && run_held )
+		if ( vel.x < 0 && vel.x > -1.5 )
 			accelerate(point(-INITIAL_WALK_ACCEL, 0));
 		else if ( run_held )
 			accelerate(point(-RUN_ACCEL, 0));
@@ -352,17 +361,20 @@ void FLPlayer::update_animation() {
 			weapon->set_steps(16, 0);
 			weapon->set_w(16.f);
 			weapon->set_h(16.f);
-			weapon->set_repeats( true );
-			weapon->set_visible( true );
+			weapon->set_repeats(true);
+			weapon->set_visible(true);
 			break;
 		default:
-			weapon->set_visible( false );
+			weapon->set_visible(false);
 			break;
 	}
 	if ( attacking ) {
 		weapon->start_animation();
+		start_sound("fusion_shoot");
 	}
 	else {
+		stop_sound("fusion_shoot");
+		weapon->set_visible(false);
 		weapon->set_repeats(false);
 
 		if (weapon->finished()) {
