@@ -303,6 +303,7 @@ void FLResources::load_level( int id ) {
 				switch ( input[3] ) {
 					case 0:
 						// was pound powerup
+						new FLAmmo( (float)input[1], (float)input[2], FL_FUSION );
 						break;
 					case 1:
 						new FLDestroyableTile( (float)input[1], (float)input[2] );

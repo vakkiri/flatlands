@@ -82,6 +82,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		bool facing_right();
 
 		FLAnimatedObject* get_weapon();
+		virtual void drain_ammo();
+		virtual void add_ammo( int weapon, int amount );
 	protected:
 		virtual void apply_gravity();
 		virtual void bind_actions();
@@ -92,7 +94,6 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void dash();
 
 		virtual void init_weapon_stats();
-		virtual void drain_ammo();
 
 		FLPlayerAbility cur_ability;
 		FLPlayerWeapon	cur_weapon;

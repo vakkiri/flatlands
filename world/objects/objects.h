@@ -8,6 +8,7 @@
 #ifndef OBJECTS_H_
 #define OBJECTS_H_
 
+#include "ammo.h"
 #include "destroyable_tile.h"
 #include "fireball.h"
 #include "platform.h"

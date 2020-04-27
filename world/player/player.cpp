@@ -144,6 +144,10 @@ void FLPlayer::drain_ammo() {
 	}
 }
 
+void FLPlayer::add_ammo( int weapon, int amount ) {
+	weapon_stats[weapon].ammo += amount;
+}
+
 void FLPlayer::jump() {
 	if ( on_ground() ) {
 		can_double_jump = true;
