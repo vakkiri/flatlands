@@ -79,6 +79,8 @@ void Renderer::render() {
 	world_surface->update_buffers();
 
 	// draw background to framebuffer 
+	background_camera[3][0] = world_camera[3][0] * 0.2f;	// parallax x
+	background_camera[3][1] = world_camera[3][1] * 0.0f;	// parallax y
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( background_camera );
 	textured_rect_shader.update_pc_matrix();
@@ -88,6 +90,8 @@ void Renderer::render() {
 	background_surface->render();
 
 	// draw world -----------------------------------------
+	// Note: rebinding the same shader/camera is wasteful, but I'm waiting until release to change this
+	// incase intermediate shaders are added.
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera( world_camera );
 	textured_rect_shader.update_pc_matrix();

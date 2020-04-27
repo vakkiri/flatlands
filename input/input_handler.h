@@ -48,6 +48,7 @@ class FLInputHandler {
 
 		void add_game_action( FLKey key, FLKeyState state, std::function<void(void)> func );
 		void add_ui_action( FLKey key, FLKeyState state, std::function<void(void)> func );
+
 	protected:
 		void handle_keyboard_state();
 		void update_key_states();

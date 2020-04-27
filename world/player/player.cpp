@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include <stdlib.h>
 
 #include "player.h"
 
@@ -43,11 +44,23 @@
 
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
+	// Size and bounds
 	position.x = 32;
 	position.y = 64;
 	position.w = 16;
 	position.h = 32;
-	
+	rect bounds;
+	bounds.x = 2;
+	bounds.y = 10;
+	bounds.w = -4;
+	bounds.h = -10;
+
+	set_bounds_margin(bounds);
+
+	// Animation
+	set_start_repeat(10, 0);
+
+	// Movement and abilities
 	jump_frames = 		0;
 	dash_frames = 		0;
 	pound_frames = 		0;
@@ -62,28 +75,31 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	run_held = 		false;
 	attacking =		false;
 
-	bind_actions();
-
-	set_start_repeat(10, 0);
-
+	// Weapon
 	weapon = new FLAnimatedObject( 1, 4, 4, 16.f, 16.f );
 	weapon->set_repeats(false);
 	weapon->stop_animation();
+	init_weapon_stats();
 
+	// Add to renderer and input mapping
 	Renderer::getInstance().add_to_world(this);
 	Renderer::getInstance().add_to_world(weapon);
 
-	rect bounds;
-	bounds.x = 0;
-	bounds.y = 10;
-	bounds.w = 0;
-	bounds.h = -10;
-	set_bounds_margin(bounds);
+	bind_actions();
 }
 
 FLPlayer::~FLPlayer() {
 	if (weapon != nullptr)
 		delete weapon;
+}
+
+void FLPlayer::init_weapon_stats() {
+	for (int i = 0; i < FL_NUM_WEAPONS; ++i) {
+		memset(&(weapon_stats[i]), 0, sizeof(weapon_stats));
+	}
+
+	weapon_stats[FL_FUSION].ammo = 10;
+	weapon_stats[FL_FUSION].recoil = 2.f;
 }
 
 void FLPlayer::bind_actions() {
@@ -100,6 +116,7 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> use_ability = std::bind(&FLPlayer::use_ability, this);
 	std::function<void(void)> attack = std::bind(&FLPlayer::attack, this);
 	std::function<void(void)> stop_attack = std::bind(&FLPlayer::stop_attack, this);
+	std::function<void(void)> drain_ammo = std::bind(&FLPlayer::drain_ammo, this);
 
 	// map binded actions to input handler
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION3, FL_KEY_HELD, hold_run);
@@ -115,6 +132,16 @@ void FLPlayer::bind_actions() {
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION1, FL_KEY_PRESSED, use_ability);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION4, FL_KEY_HELD, attack);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION4, FL_KEY_RELEASED, stop_attack);
+
+	// Other callbacks
+	weapon->add_start_callback(drain_ammo);
+}
+
+void FLPlayer::drain_ammo() {
+	--weapon_stats[cur_weapon].ammo;
+	if ( weapon_stats[cur_weapon].ammo <= 0 ) {
+		stop_attack();
+	}
 }
 
 void FLPlayer::jump() {
@@ -127,13 +154,13 @@ void FLPlayer::jump() {
 		jump_frames = NUM_JUMP_FRAMES;
 
 		// Create a visual smoke effect
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 496, 5, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 496, 7, 32, 16 );
 		
 		// play sound effect
 		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 5, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 9, 32, 16 );
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -179,11 +206,15 @@ void FLPlayer::ground_pound() {
 void FLPlayer::dash() {
 	if ( can_dash() ) {
 		play_sound( "player_dash" );
+		FLEffect* effect = new FLEffect( x(), y(), 0, 448, 8, 16, 32 );
 		dash_right = facing_right();
-		if (dash_right)
+		if (dash_right) {
 			vel.x += DASH_INITIAL_ACCEL;
-		else
+			effect->set_reverse(true);
+		}
+		else {
 			vel.x -= DASH_INITIAL_ACCEL;
+		}
 
 		dash_frames = DASH_FRAMES;
 		reset_animation();
@@ -204,7 +235,8 @@ bool FLPlayer::can_dash() {
 
 bool FLPlayer::can_attack() {
 	return (	cur_weapon != FL_NO_WEAPON &&
-			state != FL_PLAYER_DASH
+			state != FL_PLAYER_DASH &&
+			weapon_stats[cur_weapon].ammo > 0
 			);
 }
 

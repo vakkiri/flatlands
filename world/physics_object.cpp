@@ -93,7 +93,7 @@ void FLPhysicsObject::update_position() {
 			if ( environment.solid_at(next.x, y) ) {
 				int tile_pos = int(next.x);
 				int diff = 8 - (tile_pos % 8);
-				position.x = tile_pos + diff + PHYSICS_EPSILON;
+				position.x = tile_pos + diff - bounds_margin.x + PHYSICS_EPSILON;
 
 				stop_horizontal();
 			}

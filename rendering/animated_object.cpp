@@ -45,6 +45,10 @@ FLAnimatedObject::~FLAnimatedObject() {
 
 void FLAnimatedObject::update_animation() {
 	if ( active ) {
+		if (elapsed_frames == 0 && cur_step == 0) {
+			run_start_callbacks();
+		}
+
 		if ( elapsed_frames++ >= frames_per_step ) {
 			elapsed_frames = 0;
 
@@ -98,6 +102,16 @@ void FLAnimatedObject::set_steps( float sstep, float tstep ) {
 
 bool FLAnimatedObject::finished() {
 	return animation_finished;
+}
+
+void FLAnimatedObject::add_start_callback(std::function<void()> func) {
+	anim_start_callbacks.push_back(func);
+}
+
+void FLAnimatedObject::run_start_callbacks() {
+	for (auto f : anim_start_callbacks) {
+		f();
+	}
 }
 
 std::vector<FLAnimatedObject*>& get_animated_objects() {

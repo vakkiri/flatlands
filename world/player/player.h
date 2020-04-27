@@ -31,7 +31,13 @@ enum FLPlayerState {
 
 enum FLPlayerWeapon {
 	FL_NO_WEAPON,
-	FL_FUSION
+	FL_FUSION,
+	FL_NUM_WEAPONS
+};
+
+struct FLWeaponStats {
+	int ammo;
+	float recoil;
 };
 
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
@@ -85,11 +91,15 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void ground_pound();
 		virtual void dash();
 
+		virtual void init_weapon_stats();
+		virtual void drain_ammo();
+
 		FLPlayerAbility cur_ability;
 		FLPlayerWeapon	cur_weapon;
 		FLPlayerState state;
 
 		FLAnimatedObject* weapon;
+		FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
 
 		bool can_use_ability;
 		bool can_double_jump;

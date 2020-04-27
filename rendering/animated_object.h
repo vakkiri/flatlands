@@ -10,6 +10,7 @@
 #define ANIMATED_OBJECT_H_
 
 #include <vector>
+#include <functional>
 #include "textured_object.h"
 
 class FLAnimatedObject : virtual public FLTexturedObject {
@@ -36,6 +37,9 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		void set_steps( float sstep, float tstep );
 
 		virtual bool finished();
+
+		void add_start_callback(std::function<void(void)> func);
+		
 	protected:
 		float s_step;	// how much to move _s by each frame
 		float t_step;	// how much to move _t by when animation changes
@@ -49,7 +53,11 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		unsigned int cur_animation;
 		unsigned int num_animations;
 
+		void run_start_callbacks();
+
 		std::vector<unsigned int> start_repeat;	//how many times to repeat the first frame of the animation
+		std::vector<std::function<void(void)>> anim_start_callbacks;
+
 		bool repeats;
 		bool active;
 		bool animation_finished;
