@@ -6,7 +6,7 @@ COMPILER_FLAGS = -std=c++20 -Wall
 
 DEBUG = -g -pg
 
-LINKER_FLAGS = -lSDL2 -lSDL2_mixer -lGL -DGL_GLEXT_PROTOTYPES -lIL -lILU
+LINKER_FLAGS = -lSDL2 -lSDL2_mixer -lSDL2_net -lGL -DGL_GLEXT_PROTOTYPES -lIL -lILU
 
 OBJ_NAME = flatlands
 

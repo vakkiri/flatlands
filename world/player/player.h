@@ -38,6 +38,7 @@ enum FLPlayerWeapon {
 struct FLWeaponStats {
 	int ammo;
 	float recoil;
+	int posessed;
 };
 
 class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {

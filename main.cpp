@@ -12,6 +12,7 @@
 #include "common/common.h"
 #include "input/input_handler.h"
 #include "logging/logging.h"
+#include "net/fl_net.h"
 #include "rendering/renderer.h"
 #include "resources/fl_resources.h"
 #include "tilemap/tilemap.h"
@@ -56,6 +57,9 @@ void main_loop() {
 
 		renderer.render_and_swap();
 
+		fl_update_server();
+		fl_update_client();
+
 		while ( SDL_GetTicks() < end_time );
 	}
 }
@@ -65,11 +69,15 @@ int main( int argc, char* args[] ) {
 	FLResources& resources = FLResources::getInstance();
 	log_progress("Starting shift");
 
-	if ( renderer.init() && init_audio() ) {
-		if ( resources.init() )
+	if ( renderer.init() && init_audio() && fl_init_net() ) {
+		if ( resources.init() ) {
+			fl_start_server();
+			fl_start_client();
 			main_loop();
-		else
+		}
+		else {
 			log_error( "Could not initialize resources." );
+		}
 	}
 	else {
 		log_error( "Could not initialize rendering engine." );

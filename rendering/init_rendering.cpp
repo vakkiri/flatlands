@@ -182,7 +182,7 @@ bool Renderer::init_sdl() {
 	log_progress("Initializing SDL");
 
 	// TODO: since this initializes more than graphics, we should have an init external to /rendering
-	if ( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 ) {
+	if ( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER | SDL_INIT_EVENTS ) < 0 ) {
 		log_error( SDL_GetError() );
 		return false;
 	}
