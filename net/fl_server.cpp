@@ -67,13 +67,11 @@ void FLServer::send() {
 	static int frame = 0;
 	++frame;
 
-	if ( frame % 10 == 0 ) {
-		if ( !udp_message_queue.empty() ) {
-			FLNetMessage* msg = udp_message_queue.front();
-			fl_send_udp( msg->data, msg->len, msg->dest, socket );
-			delete msg->data;
-			udp_message_queue.pop();
-		}
+	if ( !udp_message_queue.empty() ) {
+		FLNetMessage* msg = udp_message_queue.front();
+		fl_send_udp( msg->data, msg->len, msg->dest, socket );
+		delete msg->data;
+		udp_message_queue.pop();
 	}
 }
 
@@ -96,6 +94,8 @@ void FLServer::accept_heartbeat(IPaddress addr) {
 	if (slot >= 0 && slot < FL_MAX_CONN) {
 		// XXX again this isn't totally accurate since we won't process this immediately...
 		client_conns[slot].last_tick = SDL_GetTicks();
+		client_conns[slot].ping = client_conns[slot].last_tick - client_conns[slot].last_heartbeat;
+		std::cout << "client " << slot << " ping: " << client_conns[slot].ping << std::endl;
 	}
 }
 

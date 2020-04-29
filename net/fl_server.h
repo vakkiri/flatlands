@@ -20,6 +20,7 @@ enum FLClientState {
 struct FLClientConn {
 	bool accepted;
 	IPaddress ip;
+	int ping;
 	Uint32 last_tick;
 	Uint32 last_heartbeat;
 	FLClientState state;

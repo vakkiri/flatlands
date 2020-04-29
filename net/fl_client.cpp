@@ -80,13 +80,11 @@ void FLClient::send() {
 	static int frame = 0;
 	++frame;
 
-	if ( frame % 10 == 0 ) {
-		if ( !udp_message_queue.empty() ) {
-			FLNetMessage* msg = udp_message_queue.front();
-			fl_send_udp( msg->data, msg->len, msg->dest, socket );
-			delete msg->data;
-			udp_message_queue.pop();
-		}
+	if ( !udp_message_queue.empty() ) {
+		FLNetMessage* msg = udp_message_queue.front();
+		fl_send_udp( msg->data, msg->len, msg->dest, socket );
+		delete msg->data;
+		udp_message_queue.pop();
 	}
 }
 
