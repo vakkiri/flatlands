@@ -75,6 +75,9 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	run_held = 		false;
 	attacking =		false;
 
+	// Network
+	last_update_tick = SDL_GetTicks();
+
 	// Weapon
 	weapon = new FLAnimatedObject( 1, 4, 4, 16.f, 16.f );
 	weapon->set_repeats(false);
@@ -316,6 +319,9 @@ void FLPlayer::bound_velocity() {
 }
 
 void FLPlayer::update_physics() {
+	// XXX This rrrrrreeeeeeeeally needs to be moved ASAP to a general update function yeesh im bad
+	update_net();
+	
 	FLPhysicsObject::update_physics();
 
 	// reduce effect of gravity immediately after jumping
@@ -523,5 +529,16 @@ bool FLPlayer::facing_right() {
 
 FLAnimatedObject* FLPlayer::get_weapon() {
 	return weapon;
+}
+
+void FLPlayer::update_net() {
+	Uint32 tick = SDL_GetTicks();
+
+	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
+		last_update_tick = tick;
+		net_pos.x = x();
+		net_pos.y = y();
+		send_udp_to_server( FL_MSG_POS, &net_pos );
+	}
 }
 

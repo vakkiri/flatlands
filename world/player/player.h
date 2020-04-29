@@ -9,6 +9,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include "../../net/fl_net.h"
 #include "../../resources/fl_resources.h"
 #include "../../rendering/animated_object.h"
 #include "../physics_object.h"
@@ -86,6 +87,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void drain_ammo();
 		virtual void add_ammo( int weapon, int amount );
 	protected:
+		virtual void update_net();
+
 		virtual void apply_gravity();
 		virtual void bind_actions();
 		virtual void bound_velocity();
@@ -116,6 +119,10 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		unsigned int falling_frames;
 
 		point reset_position;
+
+		// Networking
+		Uint32 last_update_tick;
+		FLMsgPos net_pos;
 };
 
 #endif

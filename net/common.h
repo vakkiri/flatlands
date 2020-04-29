@@ -16,6 +16,11 @@ struct FLNetMessage {
 	IPaddress dest;
 };
 
+struct FLMsgPos {
+	float x;
+	float y;
+};
+
 void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket);
 
 #endif

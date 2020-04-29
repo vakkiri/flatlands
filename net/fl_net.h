@@ -18,4 +18,6 @@ void fl_start_client();
 void fl_update_server();
 void fl_update_client();
 
+void send_udp_to_server(int message_type, void* data);
+
 #endif

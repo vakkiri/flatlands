@@ -192,6 +192,13 @@ void FLServer::handle_packet() {
 		case FL_MSG_CONN:
 			accept_client_conn(packet->address);
 			break;
+		case FL_MSG_POS:
+			int16_t x;
+			int16_t y;
+			memcpy(&x, &(data[1]), sizeof(int16_t));
+			memcpy(&y, &(data[3]), sizeof(int16_t));
+			std::cout << "Client pos: " << x << ", " << y << std::endl;
+			break;
 		default:
 			std::cout << "Server: Unknown message received.\n";
 			break;

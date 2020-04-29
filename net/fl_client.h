@@ -32,8 +32,8 @@ class FLClient {
 		void start();
 		void update();
 
-	protected:
 		void queue_message( Uint8* data, int len );
+	protected:
 		void queue_heartbeat();
 
 		void connect_to_server( std::string server_hostname );
