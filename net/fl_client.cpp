@@ -46,6 +46,7 @@ void FLClient::connect_to_server( std::string server_hostname ) {
 	}
 
 	Uint8 data = 1;
+	std::cout << "Client: Server not connected, placed in limbo state.\n";
 	server_conn.state = FL_SERVER_LIMBO;
 	server_conn.last_tick = SDL_GetTicks();
 	fl_send_udp( &data, 1, server_conn.ip, socket );
