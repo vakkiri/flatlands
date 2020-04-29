@@ -26,7 +26,7 @@ void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket) {
 	packet->address.port = addr.port;
 	
 	if ( SDLNet_UDP_Send(socket, -1, packet) == 0 ) {
-		std::cout << "UDP send failed.\n";
+		std::cout << "UDP send failed: " << SDLNet_GetError() << std::endl;
 	}
 
 	SDLNet_FreePacket(packet);

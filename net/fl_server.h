@@ -8,6 +8,7 @@
 #ifndef FL_NET_SERVER_H_
 #define FL_NET_SERVER_H_
 
+#include <queue>
 #include "fl_net.h"
 
 enum FLClientState {
@@ -20,6 +21,7 @@ struct FLClientConn {
 	bool accepted;
 	IPaddress ip;
 	Uint32 last_tick;
+	Uint32 last_heartbeat;
 	FLClientState state;
 };
 
@@ -30,16 +32,23 @@ class FLServer {
 		void update();
 
 	protected:
+		void queue_message(int slot, Uint8* data, int len);
+
+		void queue_heartbeats();
+		void queue_heartbeat(int slot);
+
 		void check_conns();
 		void receive();
 		void send();
 		void handle_packet();
 		void accept_client_conn(IPaddress addr);
+		void accept_heartbeat(IPaddress addr);
 		void reconnect_client(int slot);
+
 
 		bool initialized;
 
-		//std::vector<UDPpack*> out_queue; idk, this should actually be FLMessage* or somethin
+		std::queue<FLNetMessage*> udp_message_queue;
 
 		UDPpacket* packet;	// used for all received packets
 

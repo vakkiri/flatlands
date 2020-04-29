@@ -10,6 +10,12 @@
 
 #include <SDL2/SDL_net.h>
 
+struct FLNetMessage {
+	Uint8* data;
+	int len;
+	IPaddress dest;
+};
+
 void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket);
 
 #endif

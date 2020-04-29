@@ -8,12 +8,16 @@
 #ifndef FL_NET_CLIENT_H_
 #define FL_NET_CLIENT_H_
 
+#include <queue>
+
 #include "fl_net.h"
 
 enum FLServerState {
 	FL_SERVER_ALIVE,
 	FL_SERVER_DEAD,
-	FL_SERVER_SELF
+	FL_SERVER_SELF,
+	FL_SERVER_LIMBO,
+	FL_SERVER_INVALID
 };
 
 struct FLServerConn {
@@ -29,6 +33,9 @@ class FLClient {
 		void update();
 
 	protected:
+		void queue_message( Uint8* data, int len );
+		void queue_heartbeat();
+
 		void connect_to_server( std::string server_hostname );
 		void check_conn();
 		void receive();
@@ -37,10 +44,11 @@ class FLClient {
 		
 		bool initialized;
 
+		std::queue<FLNetMessage*> udp_message_queue;
+
 		UDPpacket* packet;		// used for all received packets
 		FLServerConn server_conn;
 		UDPsocket socket;
-		IPaddress server_ip;
 		IPaddress my_ip;
 };
 

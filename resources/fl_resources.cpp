@@ -9,6 +9,7 @@
 #include <IL/ilu.h>
 #include <SDL2/SDL_opengl.h>
 
+#include "../net/fl_net.h"
 #include "../logging/logging.h"
 #include "../world/physics_settings.h"
 #include "../world/world_environment.h"
