@@ -11,6 +11,8 @@
 #include <queue>
 #include "fl_net.h"
 
+class FLNetPlayer;
+
 enum FLClientState {
 	FL_CLIENT_CONNECTED,
 	FL_CLIENT_DISCONNECTED,
@@ -24,6 +26,7 @@ struct FLClientConn {
 	Uint32 last_tick;
 	Uint32 last_heartbeat;
 	FLClientState state;
+	FLNetPlayer* player;
 };
 
 class FLServer {
@@ -42,10 +45,14 @@ class FLServer {
 		void receive();
 		void send();
 		void handle_packet();
-		void accept_client_conn(IPaddress addr);
 		void accept_heartbeat(IPaddress addr);
 		void reconnect_client(int slot);
 
+		int get_addr_slot(IPaddress addr);
+
+		// Message handling
+		void accept_client_conn(IPaddress addr);
+		void update_client_pos(IPaddress addr, int16_t x, int16_t y);
 
 		bool initialized;
 

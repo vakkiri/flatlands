@@ -57,9 +57,6 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
 	set_bounds_margin(bounds);
 
-	// Animation
-	set_start_repeat(10, 0);
-
 	// Movement and abilities
 	jump_frames = 		0;
 	dash_frames = 		0;

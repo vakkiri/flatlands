@@ -6,6 +6,7 @@
 #include <iostream>
 #include "fl_net.h"
 #include "fl_server.h"
+#include "../world/player/net_player.h"
 
 FLServer::FLServer() {
 	initialized = false;
@@ -85,18 +86,39 @@ void FLServer::receive() {
 }
 
 void FLServer::accept_heartbeat(IPaddress addr) {
-	int slot;
-	for (slot = 0; slot < FL_MAX_CONN; ++slot) {
-		if (client_conns[slot].ip.host == addr.host)
-			break;
-	}
+	int slot = get_addr_slot(addr);
+
 	// if we found the client
-	if (slot >= 0 && slot < FL_MAX_CONN) {
+	if ( slot >= 0 ) {
 		// XXX again this isn't totally accurate since we won't process this immediately...
 		client_conns[slot].last_tick = SDL_GetTicks();
 		client_conns[slot].ping = client_conns[slot].last_tick - client_conns[slot].last_heartbeat;
 		std::cout << "client " << slot << " ping: " << client_conns[slot].ping << std::endl;
 	}
+}
+
+int FLServer::get_addr_slot(IPaddress addr) {
+	int slot;
+
+	for ( slot = 0; slot < FL_MAX_CONN; ++slot ) {
+		if (client_conns[slot].ip.host == addr.host)
+			break;
+	}
+
+	if ( slot >= FL_MAX_CONN ) {
+		slot = -1;
+	}
+
+	return slot;
+}
+
+void FLServer::update_client_pos(IPaddress addr, int16_t x, int16_t y) {
+	int slot = get_addr_slot( addr );
+
+	if ( slot >= 0 ) {
+		client_conns[slot].player->set_target((float) x, (float) y);
+	}
+
 }
 
 void FLServer::accept_client_conn(IPaddress addr) {
@@ -126,6 +148,11 @@ void FLServer::accept_client_conn(IPaddress addr) {
 		conn->ip = addr;
 		conn->last_tick = SDL_GetTicks();
 		conn->state = FL_CLIENT_CONNECTED;
+		if ( conn->player != nullptr ) {
+			delete conn->player;
+		}
+		conn->player = new FLNetPlayer();
+
 
 		std::cout << "accepted a connection in slot " << avail_slot << std::endl;
 
@@ -197,7 +224,8 @@ void FLServer::handle_packet() {
 			int16_t y;
 			memcpy(&x, &(data[1]), sizeof(int16_t));
 			memcpy(&y, &(data[3]), sizeof(int16_t));
-			std::cout << "Client pos: " << x << ", " << y << std::endl;
+
+			update_client_pos(packet->address, x, y);
 			break;
 		default:
 			std::cout << "Server: Unknown message received.\n";
