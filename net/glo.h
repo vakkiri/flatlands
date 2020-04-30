@@ -17,7 +17,7 @@
 
 #define FL_TIMEOUT		5000		// timeout after this many ms without activity
 #define FL_HEARTBEAT_INTERVAL	2000		// how often we send a heartbeat
-#define FL_POS_SEND_INTERVAL	50		// how often in ms we update the player's position
+#define FL_POS_SEND_INTERVAL	40		// how often in ms we update the player's position
 
 
 #define FL_MIN_PACKET_LEN	1
