@@ -72,11 +72,13 @@ void FLServer::update_client_positions() {
 		// For every active client, send a message to all other clients with their last position
 		for ( int i = 0; i < FL_MAX_CONN; ++i ) {
 			if ( client_conns[i].state == FL_CLIENT_CONNECTED ) {
+				int16_t x = (int16_t) player_pos.x;
+				int16_t y = (int16_t) player_pos.y;
 				int len = 7;
 				Uint8* data = new Uint8[7];
 				data[0] = FL_MSG_POS;
-				memcpy(&(data[1]), &(player_pos.x), sizeof(int16_t));
-				memcpy(&(data[3]), &(player_pos.y), sizeof(int16_t));
+				memcpy(&(data[1]), &x, sizeof(int16_t));
+				memcpy(&(data[3]), &y, sizeof(int16_t));
 				data[5] = player_pos.animation;
 				// We use the current slot for a client's connection to us, the server, since
 				// the client doesn't need that slot for themself
