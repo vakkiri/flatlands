@@ -30,6 +30,7 @@ class FLAnimatedObject : virtual public FLTexturedObject {
 		void stop_animation();
 		void set_start_repeat( unsigned int repeat, unsigned int animation );
 
+		unsigned int get_animation();
 		virtual float s();
 		virtual float t();
 

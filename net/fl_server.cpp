@@ -71,7 +71,7 @@ void FLServer::send() {
 	if ( !udp_message_queue.empty() ) {
 		FLNetMessage* msg = udp_message_queue.front();
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
-		delete msg->data;
+		delete [] msg->data;
 		udp_message_queue.pop();
 	}
 }
@@ -112,11 +112,19 @@ int FLServer::get_addr_slot(IPaddress addr) {
 	return slot;
 }
 
-void FLServer::update_client_pos(IPaddress addr, int16_t x, int16_t y) {
-	int slot = get_addr_slot( addr );
+void FLServer::update_client_pos(IPaddress addr, Uint8* data) {
+	int slot;
+	int16_t x;
+	int16_t y;
+
+	slot = get_addr_slot( addr );
 
 	if ( slot >= 0 ) {
+		memcpy(&x, &(data[1]), sizeof(int16_t));
+		memcpy(&y, &(data[3]), sizeof(int16_t));
+
 		client_conns[slot].player->set_target((float) x, (float) y);
+		client_conns[slot].player->set_animation(data[5]);
 	}
 
 }
@@ -220,18 +228,13 @@ void FLServer::handle_packet() {
 			accept_client_conn(packet->address);
 			break;
 		case FL_MSG_POS:
-			int16_t x;
-			int16_t y;
-			memcpy(&x, &(data[1]), sizeof(int16_t));
-			memcpy(&y, &(data[3]), sizeof(int16_t));
-
-			update_client_pos(packet->address, x, y);
+			update_client_pos(packet->address, packet->data);
 			break;
 		default:
 			std::cout << "Server: Unknown message received.\n";
 			break;
 	}
 
-	delete data;
+	delete [] data;
 }
 

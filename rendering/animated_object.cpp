@@ -84,6 +84,7 @@ void FLAnimatedObject::reset_animation() {
 
 void FLAnimatedObject::set_start_repeat( unsigned int repeat, unsigned int animation ) { start_repeat[animation] = repeat; }
 
+unsigned int FLAnimatedObject::get_animation() { return cur_animation; }
 float FLAnimatedObject::s() { return _s + ( s_step * cur_step ); }
 float FLAnimatedObject::t() { return _t + ( t_step * cur_animation ); }
 

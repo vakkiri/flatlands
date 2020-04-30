@@ -19,6 +19,7 @@ struct FLNetMessage {
 struct FLMsgPos {
 	float x;
 	float y;
+	Uint8 animation;
 };
 
 void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket);

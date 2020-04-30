@@ -52,7 +52,7 @@ class FLServer {
 
 		// Message handling
 		void accept_client_conn(IPaddress addr);
-		void update_client_pos(IPaddress addr, int16_t x, int16_t y);
+		void update_client_pos(IPaddress addr, Uint8* data);
 
 		bool initialized;
 

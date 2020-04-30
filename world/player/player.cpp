@@ -535,6 +535,7 @@ void FLPlayer::update_net() {
 		last_update_tick = tick;
 		net_pos.x = x();
 		net_pos.y = y();
+		net_pos.animation = get_animation();
 		send_udp_to_server( FL_MSG_POS, &net_pos );
 	}
 }

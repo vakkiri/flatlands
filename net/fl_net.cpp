@@ -113,7 +113,7 @@ void send_pos_to_server( void* data ) {
 	FLMsgPos* in_data = (FLMsgPos*) data;
 	FLNetMessage* message = new FLNetMessage;
 
-	len = 5;
+	len = 6;
 	x = (int16_t) in_data->x;
 	y = (int16_t) in_data->y;
 
@@ -121,6 +121,7 @@ void send_pos_to_server( void* data ) {
 	out_data[0] = FL_MSG_POS;
 	memcpy(&(out_data[1]), &x, sizeof(int16_t));
 	memcpy(&(out_data[3]), &y, sizeof(int16_t));
+	out_data[5] = in_data->animation;
 
 	client.queue_message( out_data, len );
 }
