@@ -186,7 +186,6 @@ void FLClient::handle_packet() {
 }
 
 void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
-	std::cout << "Client: Updating remote client.\n";
 	if ( net_players[slot] == nullptr ) {
 		net_players[slot] = new FLNetPlayer();
 	}

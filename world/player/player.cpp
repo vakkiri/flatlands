@@ -530,17 +530,16 @@ FLAnimatedObject* FLPlayer::get_weapon() {
 
 void FLPlayer::update_net() {
 	Uint32 tick = SDL_GetTicks();
+	update_server_player_info( x() + vel.x * 3, y(), cur_animation );
 
 	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
 		float elapsed_frames = (tick - last_update_tick) / (1000/60);
 		last_update_tick = tick;
 		net_pos.x = x() + (vel.x * (elapsed_frames));
 		// let's just assume y won't really change lol
-		// // let's just assume y won't really change lol
 		net_pos.y = y();
-		net_pos.animation = get_animation();
+		net_pos.animation = cur_animation;
 		send_udp_to_server( FL_MSG_POS, &net_pos );
-		update_server_player_pos( &net_pos );
 	}
 }
 

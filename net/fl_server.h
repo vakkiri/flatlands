@@ -29,13 +29,21 @@ struct FLClientConn {
 	FLNetPlayer* player;
 };
 
+struct FLServerPlayerInfo {
+	float x;
+	float y;
+	float vx;
+	float vy;
+	int animation;
+};
+
 class FLServer {
 	public:
 		FLServer();
 		void start();
 		void update();
 
-		void update_player_pos( FLMsgPos* pos );
+		void update_player_info( float x, float y, int animation );
 	protected:
 		void queue_message(int slot, Uint8* data, int len);
 
@@ -68,7 +76,7 @@ class FLServer {
 		FLClientConn client_conns[FL_MAX_CONN];
 		UDPsocket socket;
 
-		FLMsgPos player_pos;
+		FLServerPlayerInfo player_info;
 		Uint32 last_pos_update;
 };
 
