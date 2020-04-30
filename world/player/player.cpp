@@ -533,8 +533,9 @@ void FLPlayer::update_net() {
 
 	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
 		last_update_tick = tick;
-		net_pos.x = x();
-		net_pos.y = y();
+		// The "2" should be based on latency
+		net_pos.x = x() + (vel.x * 2);
+		net_pos.y = y() + (vel.y * 2);
 		net_pos.animation = get_animation();
 		send_udp_to_server( FL_MSG_POS, &net_pos );
 	}

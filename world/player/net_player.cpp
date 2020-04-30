@@ -7,7 +7,7 @@
 #include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
 
-FLNetPlayer::FLNetPlayer() : FLAnimatedObject( 5, 6, 7, 16.f, 32.f ) {
+FLNetPlayer::FLNetPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	position.x = 0;
 	position.y = 0;
 	position.w = 16;
@@ -24,11 +24,13 @@ void FLNetPlayer::set_target( float tx, float ty ) {
 	target.x = tx;
 	target.y = ty;
 
-	float dx = target.x - position.x;
-	float dy = target.y - position.y;
+	// The "2" should be based on the interval with which we send position updates
+	// It is used to compensate for movement during "missing" frames
+	float dx = 2 * (target.x - position.x);
+	float dy = 2 * (target.y - position.y);
 
-	vel.x = dx / 16.f;
-	vel.y = dy / 16.f;
+	vel.x = dx / 4.f;
+	vel.y = dy / 4.f;
 }
 
 void FLNetPlayer::update() {
