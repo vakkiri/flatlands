@@ -19,5 +19,6 @@ void fl_update_server();
 void fl_update_client();
 
 void send_udp_to_server(int message_type, void* data);
+void update_server_player_pos( FLMsgPos* pos );
 
 #endif

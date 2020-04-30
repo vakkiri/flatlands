@@ -4,6 +4,8 @@
  */
 
 #include <iostream>
+#include <utility>
+
 #include "fl_net.h"
 #include "fl_server.h"
 #include "../world/player/net_player.h"
@@ -11,7 +13,8 @@
 FLServer::FLServer() {
 	initialized = false;
 	socket = nullptr;
-	
+	last_pos_update = SDL_GetTicks();
+
 	for (int i = 0; i < FL_MAX_CONN; ++i) {
 		client_conns[i].accepted = false;
 		client_conns[i].state = FL_CLIENT_DISCONNECTED;
@@ -55,10 +58,46 @@ void FLServer::queue_heartbeats() {
 	}
 }
 
+void FLServer::update_player_pos( FLMsgPos* pos ) {
+	player_pos.x = pos->x;
+	player_pos.y = pos->y;
+	player_pos.animation = pos->animation;
+}
+
+void FLServer::update_client_positions() {
+	// Only update after the appropriate amount of time has passed
+	Uint32 tick = SDL_GetTicks();
+	if ( tick - last_pos_update >= FL_POS_SEND_INTERVAL ) {
+		last_pos_update = tick;
+		// For every active client, send a message to all other clients with their last position
+		for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+			if ( client_conns[i].state == FL_CLIENT_CONNECTED ) {
+				int len = 7;
+				Uint8* data = new Uint8[7];
+				data[0] = FL_MSG_POS;
+				memcpy(&(data[1]), &(player_pos.x), sizeof(int16_t));
+				memcpy(&(data[3]), &(player_pos.y), sizeof(int16_t));
+				data[5] = player_pos.animation;
+				// We use the current slot for a client's connection to us, the server, since
+				// the client doesn't need that slot for themself
+				data[6] = i;
+				queue_message( i, data, len );
+			}
+		}
+	}
+}
+
+void FLServer::update_clients() {
+	// Send player positions to all clients
+	update_client_positions();
+	// Send world info to all clients?
+}
+
 void FLServer::update() {
 	if ( initialized ) {
 		queue_heartbeats();
 		check_conns();
+		update_clients();
 		send();
 		receive();
 	}
@@ -93,7 +132,6 @@ void FLServer::accept_heartbeat(IPaddress addr) {
 		// XXX again this isn't totally accurate since we won't process this immediately...
 		client_conns[slot].last_tick = SDL_GetTicks();
 		client_conns[slot].ping = client_conns[slot].last_tick - client_conns[slot].last_heartbeat;
-		std::cout << "client " << slot << " ping: " << client_conns[slot].ping << std::endl;
 	}
 }
 

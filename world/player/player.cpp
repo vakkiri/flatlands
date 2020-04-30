@@ -532,12 +532,15 @@ void FLPlayer::update_net() {
 	Uint32 tick = SDL_GetTicks();
 
 	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
+		float elapsed_frames = (tick - last_update_tick) / (1000/60);
 		last_update_tick = tick;
-		// The "2" should be based on latency
-		net_pos.x = x() + (vel.x * 2);
-		net_pos.y = y() + (vel.y * 2);
+		net_pos.x = x() + (vel.x * (elapsed_frames));
+		// let's just assume y won't really change lol
+		// // let's just assume y won't really change lol
+		net_pos.y = y();
 		net_pos.animation = get_animation();
 		send_udp_to_server( FL_MSG_POS, &net_pos );
+		update_server_player_pos( &net_pos );
 	}
 }
 

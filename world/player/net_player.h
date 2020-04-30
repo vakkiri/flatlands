@@ -17,10 +17,9 @@ class FLNetPlayer : public FLAnimatedObject, public FLDynamicObject {
 
 		void set_target( float tx, float ty );
 		virtual void update();
+
 	private:
 		point vel;
-		point last_real_pos;
-		point last_vel;
 		point target;
 		uint32_t last_position_update;
 };

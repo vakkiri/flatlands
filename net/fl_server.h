@@ -35,11 +35,15 @@ class FLServer {
 		void start();
 		void update();
 
+		void update_player_pos( FLMsgPos* pos );
 	protected:
 		void queue_message(int slot, Uint8* data, int len);
 
 		void queue_heartbeats();
 		void queue_heartbeat(int slot);
+
+		void update_clients();
+		void update_client_positions();
 
 		void check_conns();
 		void receive();
@@ -63,6 +67,9 @@ class FLServer {
 		IPaddress my_ip;
 		FLClientConn client_conns[FL_MAX_CONN];
 		UDPsocket socket;
+
+		FLMsgPos player_pos;
+		Uint32 last_pos_update;
 };
 
 #endif

@@ -17,8 +17,6 @@ FLNetPlayer::FLNetPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	position.y = 0;
 	position.w = 16;
 	position.h = 32;
-	last_real_pos.x = 0;
-	last_real_pos.y = 0;
 
 	target.x = 0;
 	target.y = 0;
@@ -29,55 +27,33 @@ FLNetPlayer::FLNetPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 }
 
 void FLNetPlayer::set_target( float tx, float ty ) {
+	// Note that the player sends the EXPECTED position by the time this packet is
+	// received, not the real position. Thus, it is just our job to smoothly move
+	// to that position.
 	Uint32 tick = SDL_GetTicks();
-	float dt;
-	float elapsed_frames;
-	float dx;
-	float dy;
-	float xerr;
-	float yerr;
-
-	// First, we calculate how many frames to repeat this. We do this by checking the interval
-	// in ms between updates, and converting this to frames.
-	// TODO: currently we just assume 60 fps
-	dt = tick - last_position_update;
+	Uint32 elapsed_ms = tick - last_position_update;
 	last_position_update = tick;
-	elapsed_frames = dt / MS_PER_FRAME;
 
+	float elapsed_frames = (elapsed_ms) / MS_PER_FRAME;
+	float dx = tx - x();
+	float dy = ty - y();
+	// per frame dx and dy
+	float fdx = dx / elapsed_frames;
+	float fdy = dy / elapsed_frames;
 
-	// Next, calculate the player's estimate velocity. We use the new position minus
-	// the last real position. Since velocity is per frame we need to adjust this 
-	// velocity based on how many frames have elapsed.
-	dx = tx - last_real_pos.x;
-	dy = ty - last_real_pos.y;
-	last_vel.x = dx / elapsed_frames;
-	last_vel.y = dy / elapsed_frames;
+	target.x = tx;
+	target.y = ty;
 
-	// Now, set the target position. Assuming we will move about as much and in the same
-	// direction as we did between the last updates, we just set the target to be the position
-	// we received plus the last distance moved.
-	// This target just sets the position we will stop at if we make it that far before the
-	// next update.
-	// We are more conservative with the target in the y direction since this is more prone to
-	// sudden changes (jumping etc.)
-	target.x = tx + dx * 2;
-	target.y = ty + dy;
-
-	// If the target is farther than the client could reasonably have moved. If this is the
-	// case we just jump to the given position, and assume some kind of teleport happend (ie. a
-	// level was started or a player respawned).
-	if ( last_vel.x > MAX_MOVEMENT || last_vel.x < -MAX_MOVEMENT || last_vel.y > MAX_MOVEMENT || last_vel.y < - MAX_MOVEMENT ) {
+	// In the case of huge jumps (assumed to be from respawning or teleporting) we just
+	// move instantly.
+	if ( fdx > MAX_MOVEMENT || fdx < -MAX_MOVEMENT || fdy > MAX_MOVEMENT || fdy < -MAX_MOVEMENT ) {
 		position.x = tx;
 		position.y = ty;
 	}
-	// Otherwise, approximate how we expect the client to move before the next packet
 	else {
 		vel.x = (tx - x()) / elapsed_frames;
 		vel.y = (ty - y()) / elapsed_frames;
 	}
-
-	last_real_pos.x = tx;
-	last_real_pos.y = ty;
 }
 
 void FLNetPlayer::update() {

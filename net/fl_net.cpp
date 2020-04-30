@@ -105,6 +105,10 @@ void send_udp_to_server( int message_type, void* data ) {
 	}
 }
 
+void update_server_player_pos( FLMsgPos* pos ) {
+	server.update_player_pos( pos );
+}
+
 void send_pos_to_server( void* data ) {
 	// XXX this is pretty dangerous, should use a better casting method for the message
 	int16_t x;
@@ -117,7 +121,7 @@ void send_pos_to_server( void* data ) {
 	x = (int16_t) in_data->x;
 	y = (int16_t) in_data->y;
 
-	Uint8* out_data = new Uint8[5];
+	Uint8* out_data = new Uint8[6];
 	out_data[0] = FL_MSG_POS;
 	memcpy(&(out_data[1]), &x, sizeof(int16_t));
 	memcpy(&(out_data[3]), &y, sizeof(int16_t));

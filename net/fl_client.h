@@ -12,6 +12,8 @@
 
 #include "fl_net.h"
 
+class FLNetPlayer;
+
 enum FLServerState {
 	FL_SERVER_ALIVE,
 	FL_SERVER_DEAD,
@@ -29,6 +31,7 @@ struct FLServerConn {
 class FLClient {
 	public:
 		FLClient();
+		~FLClient();
 		void start();
 		void update();
 
@@ -37,10 +40,12 @@ class FLClient {
 		void queue_heartbeat();
 
 		void connect_to_server( std::string server_hostname );
+		void update_players();
 		void check_conn();
 		void receive();
 		void send();
 		void handle_packet();
+		void update_player_pos( int slot, float x, float y, int animation );
 		
 		bool initialized;
 
@@ -50,6 +55,8 @@ class FLClient {
 		FLServerConn server_conn;
 		UDPsocket socket;
 		IPaddress my_ip;
+		
+		FLNetPlayer* net_players[FL_MAX_CONN];
 };
 
 #endif

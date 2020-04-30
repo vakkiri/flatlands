@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include "fl_client.h"
+#include "../world/player/net_player.h"
 
 FLClient::FLClient() {
 	initialized = false;
@@ -12,6 +13,20 @@ FLClient::FLClient() {
 
 	server_conn.last_tick = 0;
 	server_conn.state = FL_SERVER_DEAD;
+
+	for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+		net_players[i] = nullptr;
+	}
+}
+
+FLClient::~FLClient() {
+	if ( initialized ) {
+		for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+			if ( net_players[i] != nullptr ) {
+				delete net_players[i];
+			}
+		}
+	}
 }
 
 void FLClient::start() {
@@ -36,6 +51,7 @@ void FLClient::start() {
 
 	initialized = true;
 	std::cout << "Client running on port " << FL_CLIENT_PORT << std::endl;
+
 }
 
 void FLClient::connect_to_server( std::string server_hostname ) {
@@ -52,9 +68,18 @@ void FLClient::connect_to_server( std::string server_hostname ) {
 	fl_send_udp( &data, 1, server_conn.ip, socket );
 }
 
+void FLClient::update_players() {
+	for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+		if ( net_players[i] != nullptr ) {
+			net_players[i]->update();
+		}
+	}
+}
+
 void FLClient::update() {
 	if ( initialized ) {
 		check_conn();
+		update_players();
 		send();
 		receive();
 	}
@@ -141,11 +166,32 @@ void FLClient::handle_packet() {
 		case FL_MSG_CONN:
 			server_conn.state = FL_SERVER_ALIVE;
 			break;
+		case FL_MSG_POS:
+			Uint8 animation, slot;
+			int16_t x, y;
+
+			memcpy(&x, &(data[1]), sizeof(int16_t));
+			memcpy(&y, &(data[3]), sizeof(int16_t));
+			animation = data[5];
+			slot = data[6];
+			
+			update_player_pos(slot, (float) x, (float) y, animation);
+			break;
 		default:
 			std::cout << "Client: Unknown message received.\n";
 			break;
 	}
 
 	delete data;
+}
+
+void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
+	std::cout << "Client: Updating remote client.\n";
+	if ( net_players[slot] == nullptr ) {
+		net_players[slot] = new FLNetPlayer();
+	}
+
+	net_players[slot]->set_target(x, y);
+	net_players[slot]->set_animation(animation);
 }
 
