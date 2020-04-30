@@ -26,8 +26,8 @@ void FLNetPlayer::set_target( float tx, float ty ) {
 
 	// The "2" should be based on the interval with which we send position updates
 	// It is used to compensate for movement during "missing" frames
-	float dx = 2 * (target.x - position.x);
-	float dy = 2 * (target.y - position.y);
+	float dx = (FL_POS_SEND_INTERVAL / 16.f) * (target.x - position.x);
+	float dy = (FL_POS_SEND_INTERVAL / 16.f) * (target.y - position.y);
 
 	vel.x = dx / 4.f;
 	vel.y = dy / 4.f;
