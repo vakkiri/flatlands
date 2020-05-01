@@ -495,6 +495,7 @@ void FLPlayer::hit_ground() {
 	pound_frames = 0;
 	jump_frames = 0;
 	falling_frames = 0;
+	can_double_jump = true;
 }
 
 void FLPlayer::set_reset_position( float x, float y ) {

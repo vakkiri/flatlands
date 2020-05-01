@@ -23,6 +23,8 @@
 FLTilemap* FLWorldEnvironment::tilemap() { return _tilemap; }
 
 void FLWorldEnvironment::reset_environment() {
+	// XXX this code currently doesn't work properly for net games - net players are
+	// world objects and will be deleted but not restored properly
 	reset_tilemap();
 
 	clear_world_objects();
