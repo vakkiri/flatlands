@@ -160,7 +160,7 @@ void FLServer::update_client_pos(IPaddress addr, Uint8* data) {
 
 	slot = get_addr_slot( addr );
 
-	if ( slot >= 0 ) {
+	if ( slot >= 0 && client_conns[slot].player != nullptr ) {
 		bool reverse = animation & ANIM_REVERSE_BIT;
 		animation &= (ANIM_REVERSE_BIT - 1);
 		memcpy(&x, &(data[1]), sizeof(int16_t));

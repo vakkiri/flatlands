@@ -504,8 +504,10 @@ void FLPlayer::set_reset_position( float x, float y ) {
 
 void FLPlayer::reset() {
 	falling_frames = 0;
-
-	FLWorldEnvironment::getInstance().mark_reset();
+	position.x = reset_position.x;
+	position.y = reset_position.y;
+	// TODO: update health, ammo etc. based on reset values
+	//FLWorldEnvironment::getInstance().mark_reset();
 }
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {

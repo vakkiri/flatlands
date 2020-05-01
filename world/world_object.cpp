@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "player/player.h"
 #include "world_object.h"
 #include "world_environment.h"

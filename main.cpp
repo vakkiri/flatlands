@@ -60,6 +60,7 @@ void main_loop() {
 		fl_update_server();
 		fl_update_client();
 
+		// TODO: would probably be better to just run server and client in a separate thread
 		while ( SDL_GetTicks() < end_time ) {
 			fl_update_server();
 			fl_update_client();
