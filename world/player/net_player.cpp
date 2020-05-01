@@ -62,16 +62,11 @@ void FLNetPlayer::update() {
 
 	// if -1 < dx < 1
 	if ( -1.f < dx && dx < 1.f) {
-		vel.x = 0;
+		vel.x = 0.f;
 	}
 	if ( -1.f < dy && dy < 1.f) {
-		vel.y = 0;
+		vel.y = 0.f;
 	}
-
-	if ( vel.x < 0 )
-		set_reverse(true);
-	else if ( vel.x > 0 )
-		set_reverse(false);
 
 	position.x += vel.x;
 	position.y += vel.y;

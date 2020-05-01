@@ -22,6 +22,7 @@ class FLNetPlayer : public FLAnimatedObject, public FLDynamicObject {
 		point vel;
 		point target;
 		uint32_t last_position_update;
+		bool reverse_last_frame;
 };
 
 #endif

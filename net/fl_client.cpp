@@ -186,10 +186,14 @@ void FLClient::handle_packet() {
 }
 
 void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
+	bool reverse = animation & ANIM_REVERSE_BIT;
+	animation &= (ANIM_REVERSE_BIT - 1);
+		
 	if ( net_players[slot] == nullptr ) {
 		net_players[slot] = new FLNetPlayer();
 	}
 
+	net_players[slot]->set_reverse(reverse);
 	net_players[slot]->set_target(x, y);
 	net_players[slot]->set_animation(animation);
 }
