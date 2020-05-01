@@ -60,7 +60,10 @@ void main_loop() {
 		fl_update_server();
 		fl_update_client();
 
-		while ( SDL_GetTicks() < end_time );
+		while ( SDL_GetTicks() < end_time ) {
+			fl_update_server();
+			fl_update_client();
+		}
 	}
 }
 
