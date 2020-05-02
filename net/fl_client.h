@@ -51,12 +51,11 @@ class FLClient {
 		void handle_packet();
 		void update_player_pos( int slot, float x, float y, int animation );
 	
-
 		// Variables
 		bool initialized;
 
-		std::queue<FLNetMessage*> udp_message_queue;
-		std::queue<FLNetMessage*> synchronized_udp_message_queue;
+		std::queue<FLNetMessage*> udp_msg_queue;
+		std::queue<FLSynchronizedNetMessage*> synchronized_msg_queue;
 
 		UDPpacket* packet;		// used for all received packets
 		FLServerConn server_conn;

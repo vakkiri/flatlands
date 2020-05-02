@@ -10,7 +10,8 @@
 
 
 #define FL_MAX_CONN		16
-#define MAX_FRAME_RECV		10		// handle up to this many packets per frame
+#define MAX_FRAME_SEND		10
+#define MAX_FRAME_RECV		20		// handle up to this many packets per frame
 
 #define FL_SERVER_PORT		8099
 #define FL_CLIENT_PORT		8098

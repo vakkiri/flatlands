@@ -87,10 +87,13 @@ void FLClient::update() {
 
 void FLClient::queue_message( FLNetMessage* msg, bool synchronized ) {
 	if ( !synchronized ) {
-		udp_message_queue.push(msg);
+		udp_msg_queue.push(msg);
 	}
 	else {
-		synchronized_udp_message_queue.push(msg);
+		FLSynchronizedNetMessage* smsg = new FLSynchronizedNetMessage;
+		smsg->msg = msg;
+		smsg->last_send = 0;
+		synchronized_msg_queue.push_back(msg);
 	}
 }
 
@@ -106,13 +109,24 @@ void FLClient::queue_heartbeat() {
 void FLClient::send() {
 	static int frame = 0;
 	++frame;
+	int sent = 0;
+	Uint32 tick = SDL_GetTicks();
 
-	if ( !udp_message_queue.empty() ) {
-		FLNetMessage* msg = udp_message_queue.front();
+	while ( !udp_msg_queue.empty() && sent < MAX_FRAME_SEND) {
+		FLNetMessage* msg = udp_msg_queue.front();
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
 		delete msg->data;
-		udp_message_queue.pop();
+		udp_msg_queue.pop();
 	}
+	/*
+	while ( !udp_msg_queue.empty() && sent < MAX_FRAME_SEND) {
+		FLSynchronizedNetMessage* msg = synchronized_msg_queue.front();
+		if (synchronized_msg_queue[i] == nullptr) {
+			// I need to fix this, the vector should be of synchronized messages not just messages
+			synchronized_msg_queue[i] = synchronized_msg_queue.back();
+		}
+	}
+	*/
 }
 
 void FLClient::receive() {

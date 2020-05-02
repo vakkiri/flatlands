@@ -77,6 +77,7 @@ void FLServer::update_client_positions() {
 		last_pos_update = tick;
 		float elapsed_frames = (elapsed_ms) / MS_PER_FRAME;
 		// For every active client, send a message to all other clients with their last position
+		// TODO: currently this only sends the server's own position
 		for ( int i = 0; i < FL_MAX_CONN; ++i ) {
 			if ( client_conns[i].state == FL_CLIENT_CONNECTED ) {
 				int16_t x = (int16_t) (player_info.x + (player_info.vx * elapsed_frames));
@@ -115,8 +116,9 @@ void FLServer::update() {
 void FLServer::send() {
 	static int frame = 0;
 	++frame;
+	int sent = 0;
 
-	if ( !udp_message_queue.empty() ) {
+	while ( !udp_message_queue.empty() && sent < MAX_FRAME_SEND ) {
 		FLNetMessage* msg = udp_message_queue.front();
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
 		delete [] msg->data;
