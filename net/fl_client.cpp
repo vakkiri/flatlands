@@ -85,20 +85,22 @@ void FLClient::update() {
 	}
 }
 
-void FLClient::queue_message( Uint8* data, int len ) {
-	FLNetMessage* msg = new FLNetMessage;
-
-	msg->data = data;
-	msg->len = len;
-	msg->dest = server_conn.ip;
-
-	udp_message_queue.push(msg);
+void FLClient::queue_message( FLNetMessage* msg, bool synchronized ) {
+	if ( !synchronized ) {
+		udp_message_queue.push(msg);
+	}
+	else {
+		synchronized_udp_message_queue.push(msg);
+	}
 }
 
 void FLClient::queue_heartbeat() {
-	Uint8* data = new Uint8[1];
-	*data = FL_MSG_HEARTBEAT;
-	queue_message( data, 1 );
+	FLNetMessage* msg = new FLNetMessage;
+	msg->len = 1;
+	msg->data = new Uint8[1];
+	*(msg->data) = FL_MSG_HEARTBEAT;
+	msg->dest = server_conn.ip;
+	queue_message( msg, false );
 }
 
 void FLClient::send() {
@@ -196,5 +198,26 @@ void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
 	net_players[slot]->set_reverse(reverse);
 	net_players[slot]->set_target(x, y);
 	net_players[slot]->set_animation(animation);
+}
+
+void FLClient::fill_pos_message( void *data, FLNetMessage *msg ) {
+	int16_t x;
+	int16_t y;
+	int len;
+
+	FLMsgPos* in_data = (FLMsgPos*) data;
+	Uint8* msg_data = new Uint8[6];
+	msg->data = msg_data;
+
+	x = (int16_t) in_data->x;
+	y = (int16_t) in_data->y;
+	
+	msg->len = 6;
+	msg_data[0] = FL_MSG_POS;
+	memcpy( &(msg_data[1]), &x, sizeof(int16_t));
+	memcpy( &(msg_data[3]), &y, sizeof(int16_t));
+	msg_data[5] = in_data->animation;
+
+	msg->dest = server_conn.ip;
 }
 

@@ -8,10 +8,11 @@
 #ifndef AMMO_H_
 #define AMMO_H_
 
+#include "../../net/net_object.h"
 #include "../../rendering/animated_object.h"
 #include "../colliding_object.h"
 
-class FLAmmo : virtual public FLCollidingObject, virtual public FLAnimatedObject {
+class FLAmmo : virtual public FLCollidingObject, virtual public FLAnimatedObject, virtual public FLNetObject {
 	public:
 		FLAmmo( float x, float y, int weapon_index );
 		virtual ~FLAmmo();

@@ -3,6 +3,7 @@
  *
  */
 
+#include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
 #include "ammo.h"
@@ -17,6 +18,7 @@
 
 FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 	FLGameObject( x, y, SIZE, SIZE ),
+	FLNetObject(),
 	FLAnimatedObject(
 			NUM_ANIMATIONS,
 			NUM_STEPS,
@@ -39,6 +41,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
+	destroy_net_item( get_net_id(), FLNetObjectAmmo );
 }
 
 void FLAmmo::collide_with( FLPlayer *player ) {

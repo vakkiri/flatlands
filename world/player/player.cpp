@@ -547,7 +547,7 @@ void FLPlayer::update_net() {
 		// let's just assume y won't really change lol
 		net_pos.y = y();
 		net_pos.animation = animation;
-		send_udp_to_server( FL_MSG_POS, &net_pos );
+		send_udp_to_server( FL_MSG_POS, &net_pos, false );
 	}
 }
 

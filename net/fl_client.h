@@ -35,7 +35,11 @@ class FLClient {
 		void start();
 		void update();
 
-		void queue_message( Uint8* data, int len );
+		// Message factories
+		void fill_pos_message( void *data, FLNetMessage* msg );
+
+		// Message queueing
+		void queue_message( FLNetMessage* msg, bool synchronized );
 	protected:
 		void queue_heartbeat();
 
@@ -46,10 +50,13 @@ class FLClient {
 		void send();
 		void handle_packet();
 		void update_player_pos( int slot, float x, float y, int animation );
-		
+	
+
+		// Variables
 		bool initialized;
 
 		std::queue<FLNetMessage*> udp_message_queue;
+		std::queue<FLNetMessage*> synchronized_udp_message_queue;
 
 		UDPpacket* packet;		// used for all received packets
 		FLServerConn server_conn;

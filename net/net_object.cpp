@@ -12,7 +12,7 @@ FLNetObject::FLNetObject() {
 	last_net_id = net_id;
 }
 
-FLNetObject::FLNetObject( uint32_t id ) {
+FLNetObject::FLNetObject( uint16_t id ) {
 	net_id = id;
 }
 
@@ -20,6 +20,6 @@ FLNetObject::~FLNetObject() {
 	std::cout << "Net object deleted with id " << net_id << std::endl;
 }
 
-uint32_t FLNetObject::get_net_id() {
+uint16_t FLNetObject::get_net_id() {
 	return net_id;
 }

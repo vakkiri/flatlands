@@ -9,9 +9,6 @@
 #include "fl_server.h"
 #include "fl_client.h"
 
-// Prototypes
-void send_pos_to_server( void *data );
-
 // File scope variables
 
 FLServer server;
@@ -93,14 +90,21 @@ void fl_update_client() {
 	client.update();
 }
 
-void send_udp_to_server( int message_type, void* data ) {
+void send_udp_to_server( int message_type, void* data, bool synchronized ) {
+	FLNetMessage* msg = nullptr;
+
 	if ( is_client ) {
 		switch ( message_type ) {
 			case FL_MSG_POS:
-				send_pos_to_server( data );
+				msg = new FLNetMessage;
+				client.fill_pos_message( data, msg );
 				break;
 			default:
 				std::cout << "Unsupported message type " << message_type << "\n";
+		}
+
+		if ( msg != nullptr ) {
+			client.queue_message(msg, synchronized);
 		}
 	}
 }
@@ -109,24 +113,5 @@ void update_server_player_info( float x, float y, float vx, float vy, int animat
 	server.update_player_info( x, y, vx, vy, animation );
 }
 
-void send_pos_to_server( void* data ) {
-	// XXX this is pretty dangerous, should use a better casting method for the message
-	int16_t x;
-	int16_t y;
-	int len;
-	FLMsgPos* in_data = (FLMsgPos*) data;
-	FLNetMessage* message = new FLNetMessage;
-
-	len = 6;
-	x = (int16_t) in_data->x;
-	y = (int16_t) in_data->y;
-
-	Uint8* out_data = new Uint8[6];
-	out_data[0] = FL_MSG_POS;
-	memcpy(&(out_data[1]), &x, sizeof(int16_t));
-	memcpy(&(out_data[3]), &y, sizeof(int16_t));
-	out_data[5] = in_data->animation;
-
-	client.queue_message( out_data, len );
+void destroy_net_item( uint16_t id, uint8_t type ) {
 }
-
