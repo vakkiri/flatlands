@@ -93,7 +93,7 @@ void FLClient::queue_message( FLNetMessage* msg, bool synchronized ) {
 		FLSynchronizedNetMessage* smsg = new FLSynchronizedNetMessage;
 		smsg->msg = msg;
 		smsg->last_send = 0;
-		synchronized_msg_queue.push_back(msg);
+		synchronized_msg_queue.push(smsg);
 	}
 }
 
