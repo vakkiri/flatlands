@@ -105,8 +105,8 @@ void send_udp_to_server( int message_type, void* data ) {
 	}
 }
 
-void update_server_player_info( float x, float y, int animation ) {
-	server.update_player_info( x, y, animation );
+void update_server_player_info( float x, float y, float vx, float vy, int animation ) {
+	server.update_player_info( x, y, vx, vy, animation );
 }
 
 void send_pos_to_server( void* data ) {

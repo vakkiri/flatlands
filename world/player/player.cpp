@@ -538,7 +538,7 @@ void FLPlayer::update_net() {
 		animation |= ANIM_REVERSE_BIT;
 	}
 
-	update_server_player_info( x() + vel.x * 3, y(), animation );
+	update_server_player_info( x(), y(), vel.x, vel.y, animation );
 
 	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
 		float elapsed_frames = (tick - last_update_tick) / (1000/60);

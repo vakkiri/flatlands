@@ -19,6 +19,6 @@ void fl_update_server();
 void fl_update_client();
 
 void send_udp_to_server(int message_type, void* data);
-void update_server_player_info( float x, float y, int animation );
+void update_server_player_info( float x, float y, float vx, float vy, int animation );
 
 #endif

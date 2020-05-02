@@ -43,7 +43,7 @@ class FLServer {
 		void start();
 		void update();
 
-		void update_player_info( float x, float y, int animation );
+		void update_player_info( float x, float y, float vx, float vy, int animation );
 	protected:
 		void queue_message(int slot, Uint8* data, int len);
 

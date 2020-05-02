@@ -10,6 +10,9 @@
 #include "fl_server.h"
 #include "../world/player/net_player.h"
 
+// XXX this is bad and inaccurate
+#define MS_PER_FRAME (1000.f/60.f)
+
 FLServer::FLServer() {
 	initialized = false;
 	socket = nullptr;
@@ -58,21 +61,25 @@ void FLServer::queue_heartbeats() {
 	}
 }
 
-void FLServer::update_player_info( float x, float y, int animation ) {
+void FLServer::update_player_info( float x, float y, float vx, float vy, int animation ) {
 	player_info.x = x;
 	player_info.y = y;
+	player_info.vx = vx;
+	player_info.vy = vy;
 	player_info.animation = animation;
 }
 
 void FLServer::update_client_positions() {
 	// Only update after the appropriate amount of time has passed
 	Uint32 tick = SDL_GetTicks();
-	if ( tick - last_pos_update >= FL_POS_SEND_INTERVAL ) {
+	Uint32 elapsed_ms = (tick - last_pos_update);
+	if ( elapsed_ms >= FL_POS_SEND_INTERVAL ) {
 		last_pos_update = tick;
+		float elapsed_frames = (elapsed_ms) / MS_PER_FRAME;
 		// For every active client, send a message to all other clients with their last position
 		for ( int i = 0; i < FL_MAX_CONN; ++i ) {
 			if ( client_conns[i].state == FL_CLIENT_CONNECTED ) {
-				int16_t x = (int16_t) player_info.x;
+				int16_t x = (int16_t) (player_info.x + (player_info.vx * elapsed_frames));
 				int16_t y = (int16_t) player_info.y;
 				int len = 7;
 				Uint8* data = new Uint8[7];
