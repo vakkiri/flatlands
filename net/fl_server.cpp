@@ -8,6 +8,8 @@
 
 #include "fl_net.h"
 #include "fl_server.h"
+#include "net_object.h"
+
 #include "../world/player/net_player.h"
 
 // XXX this is bad and inaccurate
@@ -182,8 +184,9 @@ void FLServer::update_client_pos(IPaddress addr, Uint8* data) {
 
 }
 
-void FLServer::ack_del_item(IPaddress addr, Uint8* data) {
+void FLServer::ack_del_obj(IPaddress addr, Uint8* data) {
 	int slot;
+	int obj_id;
 
 	slot = get_addr_slot( addr );
 
@@ -193,11 +196,13 @@ void FLServer::ack_del_item(IPaddress addr, Uint8* data) {
 		// TODO ? it would be cleaner in these situations to just have a struct type for memcpy
 		Uint8* out_data = new Uint8(3);	// data is the message type plus a single uint16
 		memcpy(&(out_data[0]), data, sizeof(Uint8) + sizeof(uint16_t));
+		memcpy(&obj_id, &(data[1]), sizeof(uint16_t));
 
 		queue_message( slot, out_data, 3 );
+
+		// Delete the object if it still exists on the server
+		del_net_obj(obj_id);
 	}
-	// Delete the object if it still exists on the server
-	
 }
 
 void FLServer::accept_client_conn(IPaddress addr) {
@@ -301,8 +306,8 @@ void FLServer::handle_packet() {
 		case FL_MSG_POS:
 			update_client_pos(packet->address, packet->data);
 			break;
-		case FL_MSG_DEL_ITEM:
-			ack_del_item(packet->address, packet->data);
+		case FL_MSG_DEL_OBJ:
+			ack_del_obj(packet->address, packet->data);
 			break;
 		default:
 			std::cout << "Server: Unknown message received.\n";

@@ -99,9 +99,9 @@ void send_udp_to_server( int message_type, void* data, bool synchronized ) {
 				msg = new FLNetMessage;
 				client.fill_pos_message( data, msg );
 				break;
-			case FL_MSG_DEL_ITEM:
+			case FL_MSG_DEL_OBJ:
 				msg = new FLNetMessage;
-				client.fill_del_item_message( data, msg );
+				client.fill_del_obj_message( data, msg );
 				break;
 			default:
 				std::cout << "Unsupported message type " << message_type << "\n";
@@ -117,7 +117,7 @@ void update_server_player_info( float x, float y, float vx, float vy, int animat
 	server.update_player_info( x, y, vx, vy, animation );
 }
 
-void destroy_net_item( uint16_t id ) {
+void destroy_net_obj( uint16_t id ) {
 	// If we are the server, we have to update all clients
 	if ( is_server ) {
 	}
@@ -125,7 +125,7 @@ void destroy_net_item( uint16_t id ) {
 	else {
 		Uint8* data = new Uint8[2];
 		memcpy( data, &id, sizeof(uint16_t) );
-		send_udp_to_server( FL_MSG_DEL_ITEM, data, true );
+		send_udp_to_server( FL_MSG_DEL_OBJ, data, true );
 		delete data;
 	}
 }
