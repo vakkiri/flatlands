@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
@@ -46,6 +47,12 @@ FLAmmo::~FLAmmo() {
 
 void FLAmmo::collide_with( FLPlayer *player ) {
 	player->add_ammo( weapon_index, amt );
+	delete this;
+}
+
+void FLAmmo::on_delete_msg() {
+	// TODO: call player->add_ammo
+	std::cout << "Ammo deleted via net msg\n";
 	delete this;
 }
 

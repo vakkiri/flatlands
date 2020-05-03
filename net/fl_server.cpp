@@ -187,13 +187,17 @@ void FLServer::ack_del_item(IPaddress addr, Uint8* data) {
 
 	slot = get_addr_slot( addr );
 
+	// Send the acknowledgement back to the sender
 	if ( slot >= 0 && client_conns[slot].player != nullptr ) {
 
+		// TODO ? it would be cleaner in these situations to just have a struct type for memcpy
 		Uint8* out_data = new Uint8(3);	// data is the message type plus a single uint16
 		memcpy(&(out_data[0]), data, sizeof(Uint8) + sizeof(uint16_t));
 
 		queue_message( slot, out_data, 3 );
 	}
+	// Delete the object if it still exists on the server
+	
 }
 
 void FLServer::accept_client_conn(IPaddress addr) {
