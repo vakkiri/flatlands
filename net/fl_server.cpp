@@ -182,6 +182,20 @@ void FLServer::update_client_pos(IPaddress addr, Uint8* data) {
 
 }
 
+void FLServer::ack_del_item(IPaddress addr, Uint8* data) {
+	int slot;
+
+	slot = get_addr_slot( addr );
+
+	if ( slot >= 0 && client_conns[slot].player != nullptr ) {
+
+		Uint8* out_data = new Uint8(3);	// data is the message type plus a single uint16
+		memcpy(&(out_data[0]), data, sizeof(Uint8) + sizeof(uint16_t));
+
+		queue_message( slot, out_data, 3 );
+	}
+}
+
 void FLServer::accept_client_conn(IPaddress addr) {
 	// open a socket with the client
 	// add to client_sockets
@@ -282,6 +296,9 @@ void FLServer::handle_packet() {
 			break;
 		case FL_MSG_POS:
 			update_client_pos(packet->address, packet->data);
+			break;
+		case FL_MSG_DEL_ITEM:
+			ack_del_item(packet->address, packet->data);
 			break;
 		default:
 			std::cout << "Server: Unknown message received.\n";
