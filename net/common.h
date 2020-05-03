@@ -13,7 +13,7 @@
 struct FLNetMessage {
 	Uint8* data;
 	int len;
-	IPaddress dest;
+	IPaddress dest;		// TODO: this should be rennamed to addr as it can be either an origin or a dest
 };
 
 /* SynchronizedNetMessage:
@@ -40,7 +40,6 @@ struct FLMsgPos {
 
 struct FLMsgDelItem {
 	uint16_t id;
-	uint8_t item_type;
 };
 
 void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket);

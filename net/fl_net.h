@@ -20,6 +20,6 @@ void fl_update_client();
 
 void send_udp_to_server(int message_type, void* data, bool synchronized);
 void update_server_player_info( float x, float y, float vx, float vy, int animation );
-void destroy_net_item( uint16_t id, uint8_t item_type );
+void destroy_net_item( uint16_t id );
 
 #endif

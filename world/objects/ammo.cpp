@@ -41,7 +41,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
-	destroy_net_item( get_net_id(), FLNetObjectAmmo );
+	destroy_net_item( get_net_id() );
 }
 
 void FLAmmo::collide_with( FLPlayer *player ) {

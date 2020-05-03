@@ -117,16 +117,22 @@ void FLClient::send() {
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
 		delete msg->data;
 		udp_msg_queue.pop();
+		delete msg;
 	}
-	/*
-	while ( !udp_msg_queue.empty() && sent < MAX_FRAME_SEND) {
-		FLSynchronizedNetMessage* msg = synchronized_msg_queue.front();
-		if (synchronized_msg_queue[i] == nullptr) {
-			// I need to fix this, the vector should be of synchronized messages not just messages
-			synchronized_msg_queue[i] = synchronized_msg_queue.back();
+	while ( !synchronized_msg_queue.empty() && sent < MAX_FRAME_SEND ) {
+		++sent;
+		if ( synchronized_msg_queue.front() == nullptr ) {
+			synchronized_msg_queue.pop();
+		}
+		else if ( tick - synchronized_msg_queue.front()->last_send >= FL_RESEND_INTERVAL ) {
+			std::cout << "Sending synchronized message.\n";
+			FLSynchronizedNetMessage* smsg = synchronized_msg_queue.front();
+			fl_send_udp( smsg->msg->data, smsg->msg->len, smsg->msg->dest, socket );
+			synchronized_msg_queue.pop();
+			smsg->last_send = tick;
+			synchronized_msg_queue.push(smsg);
 		}
 	}
-	*/
 }
 
 void FLClient::receive() {
@@ -170,9 +176,11 @@ void FLClient::handle_packet() {
 		return;
 	}
 
+	// TODO: make sure packet is coming from an accepted address
 	Uint8* data = new Uint8[packet->len];
 	memcpy(data, packet->data, packet->len);
 
+	// Do the actual message handling
 	switch ( data[0] ) {
 		case FL_MSG_HEARTBEAT:
 			server_conn.state = FL_SERVER_ALIVE;
@@ -192,6 +200,12 @@ void FLClient::handle_packet() {
 			slot = data[6];
 			
 			update_player_pos(slot, (float) x, (float) y, animation);
+			break;
+		case FL_MSG_DEL_ITEM:
+			int16_t id;
+			memcpy(&id, &(data[1]), sizeof(int16_t));
+			delete_item(id);
+			handle_synchronized_message( FL_MSG_DEL_ITEM, id, packet->address.host );
 			break;
 		default:
 			std::cout << "Client: Unknown message received.\n";
@@ -233,5 +247,59 @@ void FLClient::fill_pos_message( void *data, FLNetMessage *msg ) {
 	msg_data[5] = in_data->animation;
 
 	msg->dest = server_conn.ip;
+}
+
+void FLClient::fill_del_item_message( void *data, FLNetMessage *msg ) {
+	int16_t id;
+	int len;
+	uint16_t* in_data = (uint16_t*) data;
+
+	// The message here will be the message type followed by the passed uint16
+	Uint8* msg_data = new Uint8[3];
+	msg_data[0] = FL_MSG_DEL_ITEM;
+	memcpy( &(msg_data[1]), in_data, sizeof(uint16_t) );
+	msg->data = msg_data;
+
+	msg->dest = server_conn.ip;
+	msg->len = 3;
+}
+
+void FLClient::delete_item( uint16_t id ) {
+	// Actually delete the item
+}
+
+void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uint32 host ) {
+	std::cout << "Handling synchronized message.\n";
+	std::queue<FLSynchronizedNetMessage*> alt_queue;
+	uint16_t sid;
+	Uint8 stype;
+	Uint32 shost;
+
+	// Delete every message which has identical type, id and host to the new received message.
+	// Non-matching messages will be placed in the alt_queue, which is then swapped with out
+	// original queue. 
+	// The result is that our synchronized message queue will have all messages cleared which
+	// have been "responded" to (matched).
+	while ( !synchronized_msg_queue.empty() ) {
+		FLSynchronizedNetMessage *smsg = synchronized_msg_queue.front();
+		synchronized_msg_queue.pop();
+
+		stype = smsg->msg->data[0];
+		memcpy( &sid, &(smsg->msg->data[1]), sizeof(uint16_t) );
+		shost = smsg->msg->dest.host;
+		// case 1: the messsage matches. delete it.
+		if ( stype == message_type && sid == id && shost == host ) {
+			delete smsg->msg->data;
+			delete smsg->msg;
+			delete smsg;
+			smsg = nullptr;
+		}
+		// case 2: no match. return to queue.
+		else {
+			alt_queue.push(smsg);
+		}
+
+		swap(alt_queue, synchronized_msg_queue);
+	}
 }
 
