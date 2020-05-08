@@ -19,7 +19,6 @@ class FLNetObject {
 		FLNetObject( uint16_t id );
 		virtual ~FLNetObject();
 
-		virtual void on_delete_msg() {};		// What should happen when a message is received to delete obj
 		uint16_t get_net_id();
 	private:
 		uint16_t net_id;

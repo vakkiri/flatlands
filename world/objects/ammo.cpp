@@ -42,16 +42,12 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
+	// TODO: call player->add_ammo
+	std::cout << "Ammo deleted\n";
 }
 
 void FLAmmo::collide_with( FLPlayer *player ) {
 	player->add_ammo( weapon_index, amt );
-	delete this;
-}
-
-void FLAmmo::on_delete_msg() {
-	// TODO: call player->add_ammo
-	std::cout << "Ammo deleted via net msg\n";
 	delete this;
 }
 

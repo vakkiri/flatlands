@@ -120,9 +120,9 @@ void update_server_player_info( float x, float y, float vx, float vy, int animat
 void destroy_net_obj( uint16_t id ) {
 	// If we are the server, we have to update all clients
 	if ( is_server ) {
-		server.sync_del_obj(id);
+		server.sync_del_obj( id );
 	}
-	// Otherwise, we just synchronzie with the server, who will then take care of updating clients
+	// Otherwise, we just synchronize with the server, who will then take care of updating clients
 	else {
 		Uint8* data = new Uint8[2];
 		memcpy( data, &id, sizeof(uint16_t) );
@@ -130,3 +130,4 @@ void destroy_net_obj( uint16_t id ) {
 		delete data;
 	}
 }
+

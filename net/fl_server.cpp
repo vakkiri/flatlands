@@ -93,7 +93,7 @@ void FLServer::update_client_positions() {
 				// We use the current slot for a client's connection to us, the server, since
 				// the client doesn't need that slot for themself
 				data[6] = i;
-				queue_message( i, data, len );
+				queue_message( i, data, len,  false );
 			}
 		}
 	}
@@ -102,7 +102,6 @@ void FLServer::update_client_positions() {
 void FLServer::update_clients() {
 	// Send player positions to all clients
 	update_client_positions();
-	// Send world info to all clients?
 }
 
 void FLServer::update() {
@@ -120,11 +119,11 @@ void FLServer::send() {
 	++frame;
 	int sent = 0;
 
-	while ( !udp_message_queue.empty() && sent < MAX_FRAME_SEND ) {
-		FLNetMessage* msg = udp_message_queue.front();
+	while ( !udp_msg_queue.empty() && sent < MAX_FRAME_SEND ) {
+		FLNetMessage* msg = udp_msg_queue.front();
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
 		delete [] msg->data;
-		udp_message_queue.pop();
+		udp_msg_queue.pop();
 	}
 }
 
@@ -195,34 +194,81 @@ void FLServer::ack_del_obj(IPaddress addr, Uint8* data) {
 
 		// TODO ? it would be cleaner in these situations to just have a struct type for memcpy
 		Uint8* out_data = new Uint8(3);	// data is the message type plus a single uint16
-		memcpy(&(out_data[0]), data, sizeof(Uint8) + sizeof(uint16_t));
-		memcpy(&obj_id, &(data[1]), sizeof(uint16_t));
+		memcpy( &(out_data[0]), data, sizeof(Uint8) + sizeof(uint16_t) );
+		memcpy( &obj_id, &(data[1]), sizeof(uint16_t) );
 
-		queue_message( slot, out_data, 3 );
+		queue_message( slot, out_data, 3, false );
+
+        // Create and/or update the deleted_net_objects table entry
+        mark_net_object_deleted( obj_id, slot );
 
 		// Delete the object if it still exists on the server
-		del_net_obj(obj_id);
+		del_net_obj( obj_id );
 	}
 }
 
 void FLServer::sync_del_obj(uint16_t id) {
-	// To sync the deletion of a net object, the server needs to receive a message from every client
-	// indicating that the message was deleted.
-	// This means we need a synchronized message for every client signalling to delete the item.
-	// If the origin of the deletion was a client, we shouldn't be creating a message for that client.
-	//
-	// note:  I just moved the deletion syncing to the destructor of all net objects.
-	// This means that when a client tells us to delete a net object, if it exists for us,
-	// we will delete it. This will trigger us signalling its deletion. Then, we will send the deletion
-	// message back to every client (except, hopefully, the client who sent us that message). In order
-	// to avoid an infinite chain, I should make sure that sending this message to a client who already
-	// deleted the item doesn't cause some kind of feedback loop. Since it's only the server who syncs
-	// with other clients, the server needs to make sure the sync only happens if the item is actually
-	// deleted on the server, not every time we receive a message to delete the object. That said,
-	// it would be nice to keep track of things such that even in a working implementation we don't
-	// send more message than necessary.
+    // This should be called *only* when an object is deleted by the server.
+    // It is a one-time generation of all the necessary synchronized messages for the object deletion.
+    // This method assumes that we have already filled in an entry in deleted_net_objects for the object.
 
-		
+    auto it = deleted_net_objects.find( id );
+    if ( it != deleted_net_objects.end() ) {
+        std::cout << "Sending synchronized deletion messages for item " << id << std::endl;
+        for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+            if ( it->second[i] == false ) {
+                Uint8* data = new Uint8[3];
+                data[0] = FL_MSG_DEL_OBJ;
+                memcpy( &(data[1]), &id, sizeof( uint16_t ));
+                queue_message( i, data, 3, true );
+            }
+            // else the client already knows the item was deleted
+        }
+    }
+    else {
+        std::cout << "ERROR: Could not find deletion entry for item to synchronize.\n";
+    }
+}
+
+void FLServer::mark_net_object_deleted( uint16_t id, int client_slot ) {
+    // If client_slot is -1 then we made this request
+    if ( net_object_exists(id) || client_slot == -1 ) {
+        auto it = deleted_net_objects.find(id);
+
+        // If we don't have an entry yet for the object's deletion, create one 
+        if ( it == deleted_net_objects.end() ) {
+            deleted_net_objects[id] = std::vector<bool>( FL_MAX_CONN, false );
+
+            // If the message came from a client, mark them as synchronized
+            if ( client_slot >= 0 ) {
+                deleted_net_objects[id][client_slot] = true;
+            }
+
+            // Also mark any inactive clients as synchronized so we don't wait for them
+            for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+                if ( client_conns[i].state == FL_CLIENT_DISCONNECTED ) {
+                    deleted_net_objects[id][i] = true;
+                }
+            }
+        }
+        // Otherwise, if a client sent the message, update the current entry
+        else if ( client_slot >= 0 ) {
+            bool synchronized = true;
+            deleted_net_objects[id][client_slot] = true;
+            for ( int i = 0; i < FL_MAX_CONN; ++i ) {
+                if ( deleted_net_objects[id][i] == false ) {
+                    synchronized = false;
+                    break;
+                }
+            }
+            // If all clients are synchronized, we can remove the entry
+            if ( synchronized ) {
+                deleted_net_objects.erase(it);
+            }
+        }
+
+    }
+    // Else, we received a message from a client about an item which does not exist
 }
 
 void FLServer::accept_client_conn(IPaddress addr) {
@@ -264,14 +310,22 @@ void FLServer::accept_client_conn(IPaddress addr) {
 	}
 }
 
-void FLServer::queue_message(int slot, Uint8* data, int len) {
+void FLServer::queue_message(int slot, Uint8* data, int len, bool synchronized) {
 	FLNetMessage* msg = new FLNetMessage;
 
 	msg->data = data;
 	msg->len = len;
 	msg->dest = client_conns[slot].ip;
 
-	udp_message_queue.push(msg);
+    if ( !synchronized ) {
+	    udp_msg_queue.push(msg);
+    }
+    else {
+        FLSynchronizedNetMessage* smsg = new FLSynchronizedNetMessage;
+        smsg->msg = msg;
+        smsg->last_send = 0;
+        synchronized_msg_queue.push(smsg);
+    }
 }
 
 void FLServer::queue_heartbeat(int slot) {
@@ -280,7 +334,7 @@ void FLServer::queue_heartbeat(int slot) {
 
 	client_conns[slot].last_heartbeat = SDL_GetTicks();
 
-	queue_message(slot, data, 1);
+	queue_message( slot, data, 1, false );
 }
 
 void FLServer::reconnect_client(int slot) {
