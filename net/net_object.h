@@ -25,6 +25,7 @@ class FLNetObject {
 		uint16_t net_id;
 };
 
+bool net_object_exists( uint16_t id );
 void add_net_obj( uint16_t id, FLNetObject* obj );
 void del_net_obj( uint16_t id );
 

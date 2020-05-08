@@ -46,7 +46,6 @@ FLAmmo::~FLAmmo() {
 
 void FLAmmo::collide_with( FLPlayer *player ) {
 	player->add_ammo( weapon_index, amt );
-	destroy_net_obj( get_net_id() );
 	delete this;
 }
 

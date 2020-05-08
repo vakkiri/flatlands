@@ -244,8 +244,8 @@ void Renderer::init_surface_textures() {
 	// background shape and texture
 	background_surface->set_tex( FLResources::getInstance().get_image("background") );
 
-	// We double the width/height so that the texture will repeat with parallax scrolling
-	FLTexturedObject* background_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2 );
+	// TODO: set background to repeat tile
+	FLTexturedObject* background_shape = new FLTexturedObject( 0, 0, SCREEN_WIDTH * 4, SCREEN_HEIGHT * 4 );
 	background_surface->update_buffers( background_shape );
 	delete background_shape;
 

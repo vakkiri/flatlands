@@ -19,26 +19,26 @@
 #include "../../logging/logging.h"
 
 #define MAX_FALL 		(90)
-#define INITIAL_WALK_ACCEL 	(0.54)
-#define WALK_ACCEL 		(0.49)
-#define RUN_ACCEL 		(0.49)
-#define DASH_INITIAL_ACCEL 	(4.3)
-#define DASH_ACCEL 		(0.4)
+#define INITIAL_WALK_ACCEL 	(0.39)
+#define WALK_ACCEL 		(0.35)
+#define RUN_ACCEL 		(0.35)
+#define DASH_INITIAL_ACCEL 	(4.0)
+#define DASH_ACCEL 		(0.35)
 
 #define INITIAL_JUMP_VEL 	(-4.1)
 #define JUMP_FRAME_ACCEL 	(0.2)
 #define NUM_JUMP_FRAMES 	(30)
 
-#define DASH_FRAMES 		(25)
+#define DASH_FRAMES 		(22)
 #define DASH_FLOAT		(0.95)
 #define DOUBLE_JUMP_ACCEL 	(3.6)
 #define GROUND_POUND_ACCEL 	(3.0)
 #define POUND_FRAMES 		(60)
 
-#define WALK_SPEED 			(2.5)
-#define RUN_SPEED 			(2.5)
-#define X_TERMINAL_VELOCITY 		(5.2)
-#define Y_TERMINAL_VELOCITY 		(6.1)
+#define WALK_SPEED 			(2.2)
+#define RUN_SPEED 			WALK_SPEED	// currently we are not supporting running
+#define X_TERMINAL_VELOCITY 		(5.0)
+#define Y_TERMINAL_VELOCITY 		(5.5)
 #define JUMP_RELEASE_GRAVITY_FACTOR 	(1.5)
 #define JUMP_HOLD_GRAVITY_FACTOR 	(0.8)
 

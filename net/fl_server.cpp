@@ -205,6 +205,26 @@ void FLServer::ack_del_obj(IPaddress addr, Uint8* data) {
 	}
 }
 
+void FLServer::sync_del_obj(uint16_t id) {
+	// To sync the deletion of a net object, the server needs to receive a message from every client
+	// indicating that the message was deleted.
+	// This means we need a synchronized message for every client signalling to delete the item.
+	// If the origin of the deletion was a client, we shouldn't be creating a message for that client.
+	//
+	// note:  I just moved the deletion syncing to the destructor of all net objects.
+	// This means that when a client tells us to delete a net object, if it exists for us,
+	// we will delete it. This will trigger us signalling its deletion. Then, we will send the deletion
+	// message back to every client (except, hopefully, the client who sent us that message). In order
+	// to avoid an infinite chain, I should make sure that sending this message to a client who already
+	// deleted the item doesn't cause some kind of feedback loop. Since it's only the server who syncs
+	// with other clients, the server needs to make sure the sync only happens if the item is actually
+	// deleted on the server, not every time we receive a message to delete the object. That said,
+	// it would be nice to keep track of things such that even in a working implementation we don't
+	// send more message than necessary.
+
+		
+}
+
 void FLServer::accept_client_conn(IPaddress addr) {
 	// open a socket with the client
 	// add to client_sockets

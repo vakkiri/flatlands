@@ -44,6 +44,7 @@ class FLServer {
 		void update();
 
 		void update_player_info( float x, float y, float vx, float vy, int animation );
+		void sync_del_obj(uint16_t id);
 	protected:
 		void queue_message(int slot, Uint8* data, int len);
 
