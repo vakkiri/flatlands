@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include "fl_client.h"
+#include "net_object.h"
 #include "../world/player/net_player.h"
 
 FLClient::FLClient() {
@@ -265,7 +266,7 @@ void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
 }
 
 void FLClient::delete_obj( uint16_t id ) {
-	// Actually delete the object 
+	del_net_obj( id );
 }
 
 void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uint32 host ) {

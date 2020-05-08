@@ -42,8 +42,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
-	// TODO: call player->add_ammo
-	std::cout << "Ammo deleted\n";
+	std::cout << "Reminder: we need to call player->add_ammo here\n";
 }
 
 void FLAmmo::collide_with( FLPlayer *player ) {
