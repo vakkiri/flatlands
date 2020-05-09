@@ -126,7 +126,7 @@ void FLClient::send() {
 			synchronized_msg_queue.pop();
 		}
 		else if ( tick - synchronized_msg_queue.front()->last_send >= FL_RESEND_INTERVAL ) {
-			std::cout << "Sending synchronized message.\n";
+			std::cout << "Client: Sending synchronized message.\n";
 			FLSynchronizedNetMessage* smsg = synchronized_msg_queue.front();
 			fl_send_udp( smsg->msg->data, smsg->msg->len, smsg->msg->dest, socket );
 			synchronized_msg_queue.pop();

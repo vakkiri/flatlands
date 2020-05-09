@@ -118,12 +118,27 @@ void FLServer::send() {
 	static int frame = 0;
 	++frame;
 	int sent = 0;
+	Uint32 tick = SDL_GetTicks();
 
 	while ( !udp_msg_queue.empty() && sent < MAX_FRAME_SEND ) {
 		FLNetMessage* msg = udp_msg_queue.front();
 		fl_send_udp( msg->data, msg->len, msg->dest, socket );
 		delete [] msg->data;
 		udp_msg_queue.pop();
+	}
+	while ( !synchronized_msg_queue.empty() && sent < MAX_FRAME_SEND ) {
+		++sent;
+		if ( synchronized_msg_queue.front() == nullptr ) {
+			synchronized_msg_queue.pop();
+		}
+		else if ( tick - synchronized_msg_queue.front()->last_send >= FL_RESEND_INTERVAL ) {
+			std::cout << "Server: Sending synchronized message.\n";
+			FLSynchronizedNetMessage* smsg = synchronized_msg_queue.front();
+			fl_send_udp( smsg->msg->data, smsg->msg->len, smsg->msg->dest, socket );
+			synchronized_msg_queue.pop();
+			smsg->last_send = tick;
+			synchronized_msg_queue.push(smsg);
+		}
 	}
 }
 

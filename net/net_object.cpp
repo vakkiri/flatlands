@@ -42,7 +42,7 @@ void add_net_obj( uint16_t id, FLNetObject* obj ) {
 void del_net_obj( uint16_t id ) {
 	auto it = net_objects.find(id);
 	if ( it != net_objects.end() ) {
-        delete it->second;
+        	delete it->second;
 		net_objects.erase(it);
 	}
 }
