@@ -205,7 +205,15 @@ void FLClient::handle_packet() {
 		case FL_MSG_DEL_OBJ:
 			int16_t id;
 			memcpy(&id, &(data[1]), sizeof(int16_t));
-			delete_obj(id);
+			// If the net object doesn't exist we just respond with a non-syncd message
+			if ( !net_object_exists(id) ) {
+				destroy_net_obj( id, false );
+			}
+			// Otherwise we delete it, and the destructor will send out a synchronized message
+			else {
+				del_net_obj( id );
+			}
+			destroy_net_obj( id, false );
 			handle_synchronized_message( FL_MSG_DEL_OBJ, id, packet->address.host );
 			break;
 		default:
@@ -265,9 +273,6 @@ void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
 	msg->len = 3;
 }
 
-void FLClient::delete_obj( uint16_t id ) {
-	del_net_obj( id );
-}
 
 void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uint32 host ) {
 	std::cout << "Handling synchronized message.\n";

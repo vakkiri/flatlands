@@ -54,7 +54,6 @@ class FLClient {
 
 		// Message handling
 		void update_player_pos( int slot, float x, float y, int animation );
-		void delete_obj( uint16_t id );
 	
 		// Variables
 		bool initialized;

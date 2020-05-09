@@ -117,17 +117,22 @@ void update_server_player_info( float x, float y, float vx, float vy, int animat
 	server.update_player_info( x, y, vx, vy, animation );
 }
 
-void destroy_net_obj( uint16_t id ) {
+void destroy_net_obj( uint16_t id, bool synchronize ) {
 	// If we are the server, we have to update all clients
 	if ( is_server ) {
 		server.sync_del_obj( id );
 	}
 	// Otherwise, we just synchronize with the server, who will then take care of updating clients
-	else {
+	else if ( is_client ) {
 		Uint8* data = new Uint8[2];
 		memcpy( data, &id, sizeof(uint16_t) );
-		send_udp_to_server( FL_MSG_DEL_OBJ, data, true );
+		send_udp_to_server( FL_MSG_DEL_OBJ, data, synchronize );
 		delete data;
+	}
+}
+
+void ack_destroy_net_obj( uint16_t id ) {
+	if ( is_client ) {
 	}
 }
 

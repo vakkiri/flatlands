@@ -242,9 +242,6 @@ void FLServer::ack_del_obj(IPaddress addr, Uint8* data) {
 
 		// Create and/or update the deleted_net_objects table entry
 		mark_net_object_deleted( obj_id, slot );
-
-		// Delete the object if it still exists on the server
-		del_net_obj( obj_id );
 	}
 }
 
@@ -306,6 +303,10 @@ void FLServer::mark_net_object_deleted( uint16_t id, int client_slot ) {
 			// If all clients are synchronized, we can remove the entry
 			if ( synchronized ) {
 				deleted_net_objects.erase(it);
+				clear_del_item_synchronized_messages(id);
+			}
+			else {
+				std::cout << " not synchronized yet for id " << id << std::endl;
 			}
 		}
 
