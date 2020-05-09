@@ -131,8 +131,3 @@ void destroy_net_obj( uint16_t id, bool synchronize ) {
 	}
 }
 
-void ack_destroy_net_obj( uint16_t id ) {
-	if ( is_client ) {
-	}
-}
-

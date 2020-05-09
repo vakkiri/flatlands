@@ -29,6 +29,7 @@ struct FLNetMessage {
 
 struct FLSynchronizedNetMessage {
 	FLNetMessage* msg;
+	Uint8 ack_type;
 	Uint32 last_send;
 };
 

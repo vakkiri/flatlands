@@ -94,7 +94,27 @@ void FLClient::queue_message( FLNetMessage* msg, bool synchronized ) {
 		FLSynchronizedNetMessage* smsg = new FLSynchronizedNetMessage;
 		smsg->msg = msg;
 		smsg->last_send = 0;
-		synchronized_msg_queue.push(smsg);
+
+		// Set the expected response
+		switch ( msg->data[0] ) {
+			case FL_MSG_DEL_OBJ:
+				smsg->ack_type = FL_MSG_ACK_DEL_OBJ;
+				break;
+			default:
+				smsg->ack_type = FL_MSG_UNK;
+				break;
+		}
+		
+		// Only follow through if there was a valid acceptance type
+		if ( smsg->ack_type != FL_MSG_UNK ) {
+			synchronized_msg_queue.push(smsg);
+		}
+		else {
+			std::cout << "Client: ERROR tried to create sync message with unknown response type.\n";
+			delete msg->data;
+			delete msg;
+			delete smsg;
+		}
 	}
 }
 
@@ -202,20 +222,22 @@ void FLClient::handle_packet() {
 			
 			update_player_pos(slot, (float) x, (float) y, animation);
 			break;
-		case FL_MSG_DEL_OBJ:
+		case FL_MSG_DEL_OBJ: 
+		{
 			int16_t id;
 			memcpy(&id, &(data[1]), sizeof(int16_t));
-			// If the net object doesn't exist we just respond with a non-syncd message
-			if ( !net_object_exists(id) ) {
-				destroy_net_obj( id, false );
-			}
-			// Otherwise we delete it, and the destructor will send out a synchronized message
-			else {
-				del_net_obj( id );
-			}
-			destroy_net_obj( id, false );
-			handle_synchronized_message( FL_MSG_DEL_OBJ, id, packet->address.host );
+
+			del_net_obj( id );
 			break;
+		}
+		case FL_MSG_ACK_DEL_OBJ:
+		{
+			int16_t id;
+			memcpy(&id, &(data[1]), sizeof(int16_t));
+
+			ack_synchronized_message( FL_MSG_ACK_DEL_OBJ, id, packet->address.host );
+			break;
+		}
 		default:
 			std::cout << "Client: Unknown message received.\n";
 			break;
@@ -273,13 +295,31 @@ void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
 	msg->len = 3;
 }
 
+void FLClient::fill_ack_del_obj_message( void *data, FLNetMessage *msg ) {
+	int16_t id;
+	int len;
+	uint16_t* in_data = (uint16_t*) data;
 
-void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uint32 host ) {
+	// The message here will be the message type followed by the passed uint16
+	Uint8* msg_data = new Uint8[3];
+	msg_data[0] = FL_MSG_ACK_DEL_OBJ;
+	memcpy( &(msg_data[1]), in_data, sizeof(uint16_t) );
+	msg->data = msg_data;
+
+	msg->dest = server_conn.ip;
+	msg->len = 3;
+}
+
+void FLClient::ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 host ) {
 	std::cout << "Handling synchronized message.\n";
 	std::queue<FLSynchronizedNetMessage*> alt_queue;
 	uint16_t sid;
 	Uint8 stype;
 	Uint32 shost;
+	
+	bool id_matches;
+	bool type_matches;
+	bool host_matches;
 
 	// Delete every message which has identical type, id and host to the new received message.
 	// Non-matching messages will be placed in the alt_queue, which is then swapped with out
@@ -293,8 +333,13 @@ void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uin
 		stype = smsg->msg->data[0];
 		memcpy( &sid, &(smsg->msg->data[1]), sizeof(uint16_t) );
 		shost = smsg->msg->dest.host;
+
+		id_matches = (sid == id );
+		type_matches = (smsg->ack_type == ack_type);
+		host_matches = (shost == host);
+
 		// case 1: the messsage matches. delete it.
-		if ( stype == message_type && sid == id && shost == host ) {
+		if ( id_matches && type_matches && host_matches ) {
 			delete smsg->msg->data;
 			delete smsg->msg;
 			delete smsg;

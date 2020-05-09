@@ -26,10 +26,12 @@
 
 #define ANIM_REVERSE_BIT	128
 
-#define FL_MSG_HEARTBEAT	0x00
-#define FL_MSG_CONN		0x01
-#define FL_MSG_POS		0x02
-#define FL_MSG_DEL_OBJ		0x03
+#define FL_MSG_UNK		0x00
+#define FL_MSG_HEARTBEAT	0x01
+#define FL_MSG_CONN		0x02
+#define FL_MSG_POS		0x03
+#define FL_MSG_DEL_OBJ		0x04
+#define FL_MSG_ACK_DEL_OBJ	0x05
 
 #endif
 

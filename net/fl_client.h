@@ -38,6 +38,7 @@ class FLClient {
 		// Message factories
 		void fill_pos_message( void *data, FLNetMessage* msg );
 		void fill_del_obj_message( void *data, FLNetMessage* msg );
+		void fill_ack_del_obj_message( void *data, FLNetMessage* msg );
 
 		// Message queueing
 		void queue_message( FLNetMessage* msg, bool synchronized );
@@ -50,7 +51,7 @@ class FLClient {
 		void receive();
 		void send();
 		void handle_packet();
-		void handle_synchronized_message( Uint8 message_type, uint16_t id, Uint32 host);
+		void ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 host);
 
 		// Message handling
 		void update_player_pos( int slot, float x, float y, int animation );

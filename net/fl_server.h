@@ -47,7 +47,6 @@ class FLServer {
 
 		void update_player_info( float x, float y, float vx, float vy, int animation );
 		void sync_del_obj( uint16_t id );
-
 	protected:
 		void queue_message(int slot, Uint8* data, int len, bool synchronized);
 
@@ -70,8 +69,10 @@ class FLServer {
 		void accept_client_conn(IPaddress addr);
 		void update_client_pos(IPaddress addr, Uint8* data);
 		void ack_del_obj(IPaddress addr, Uint8* data);
+		void handle_ack_del_obj(IPaddress addr, Uint8* data);
 		void mark_net_object_deleted(uint16_t id, int slot);
-		void clear_del_item_synchronized_messages( uint16_t id );
+		void create_obj_del_sync_table( uint16_t id );
+		void clear_del_item_synchronized_messages( uint16_t id, uint32_t host );
 
 		bool initialized;
 
