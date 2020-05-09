@@ -300,7 +300,8 @@ void FLClient::handle_synchronized_message( Uint8 message_type, uint16_t id, Uin
 			alt_queue.push(smsg);
 		}
 
-		swap(alt_queue, synchronized_msg_queue);
 	}
+
+	swap(alt_queue, synchronized_msg_queue);
 }
 

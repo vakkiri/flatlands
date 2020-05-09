@@ -46,7 +46,7 @@ class FLServer {
 		void update();
 
 		void update_player_info( float x, float y, float vx, float vy, int animation );
-        void sync_del_obj( uint16_t id );
+		void sync_del_obj( uint16_t id );
 
 	protected:
 		void queue_message(int slot, Uint8* data, int len, bool synchronized);
@@ -70,13 +70,14 @@ class FLServer {
 		void accept_client_conn(IPaddress addr);
 		void update_client_pos(IPaddress addr, Uint8* data);
 		void ack_del_obj(IPaddress addr, Uint8* data);
-        void mark_net_object_deleted(uint16_t id, int slot);
+		void mark_net_object_deleted(uint16_t id, int slot);
+		void clear_del_item_synchronized_messages( uint16_t id );
 
 		bool initialized;
 
 		std::queue<FLNetMessage*> udp_msg_queue;
 		std::queue<FLSynchronizedNetMessage*> synchronized_msg_queue;
-        std::unordered_map<uint16_t, std::vector<bool>> deleted_net_objects;
+		std::unordered_map<uint16_t, std::vector<bool>> deleted_net_objects;
 
 		UDPpacket* packet;	// used for all received packets
 

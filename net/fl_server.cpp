@@ -142,6 +142,32 @@ void FLServer::send() {
 	}
 }
 
+void FLServer::clear_del_item_synchronized_messages( uint16_t id ) {
+	std::queue<FLSynchronizedNetMessage*> alt_queue;
+	uint16_t sid;
+	Uint8 stype;
+	
+	while ( !synchronized_msg_queue.empty() ) {
+		FLSynchronizedNetMessage *smsg = synchronized_msg_queue.front();
+		synchronized_msg_queue.pop();
+
+		stype = smsg->msg->data[0];
+		memcpy( &sid, &(smsg->msg->data[1]), sizeof(uint16_t) );
+
+		if ( stype == FL_MSG_DEL_OBJ && sid == id ) {
+			delete smsg->msg->data;
+			delete smsg->msg;
+			delete smsg;
+			smsg = nullptr;
+		}
+		else {
+			alt_queue.push(smsg);
+		}
+	}
+
+	swap( alt_queue, synchronized_msg_queue );
+}
+
 void FLServer::receive() {
 	int received = 0;
 
