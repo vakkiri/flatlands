@@ -25,6 +25,11 @@ FLNetObject::FLNetObject( uint16_t id ) {
 
 
 FLNetObject::~FLNetObject() {
+	// Remove this item from our list
+	if ( net_objects.find(net_id) != net_objects.end() ) {
+		net_objects.erase(net_id);
+	}
+	// Synchronize deletion over the net
 	destroy_net_obj( net_id, true );
 	std::cout << "Net object deleted with id " << net_id << std::endl;
 }
@@ -46,10 +51,13 @@ void add_net_obj( uint16_t id, FLNetObject* obj ) {
 
 
 void del_net_obj( uint16_t id ) {
-	if ( net_objects.find(id) != net_objects.end() )
-		delete net_objects[id];
-
-	net_objects.erase(id);
+	FLNetObject* obj;
+	if ( net_objects.find(id) != net_objects.end() ) {
+		std::cout << "found net obj to delete with id " << id << std::endl;
+		obj = net_objects[id];
+		net_objects.erase(id);
+		delete obj;
+	}
 }
 
 
