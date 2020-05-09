@@ -262,6 +262,7 @@ void FLServer::ack_del_obj( IPaddress addr, Uint8* data ) {
 
 
 void FLServer::handle_ack_del_obj( IPaddress addr, Uint8* data ) {
+	std::cout << "Server: deletion acknowledged\n";
 	int slot = get_addr_slot( addr );
 	uint16_t obj_id;
 	if ( slot >= 0 ) {

@@ -347,6 +347,7 @@ void FLClient::ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 hos
 		}
 		// case 2: no match. return to queue.
 		else {
+			std::cout << "type doesn't match\n";
 			alt_queue.push(smsg);
 		}
 
