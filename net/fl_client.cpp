@@ -227,11 +227,18 @@ void FLClient::handle_packet() {
 			int16_t id;
 			memcpy(&id, &(data[1]), sizeof(int16_t));
 
+			// Respond to the server	
+			FLNetMessage* msg = new FLNetMessage;
+			fill_ack_del_obj_message( id, msg );
+			queue_message( msg, false );
+
+			// Make sure we delete the object locally
 			del_net_obj( id );
 			break;
 		}
 		case FL_MSG_ACK_DEL_OBJ:
 		{
+			std::cout << "Client: RECEIVED ACK\n";
 			int16_t id;
 			memcpy(&id, &(data[1]), sizeof(int16_t));
 
@@ -295,15 +302,11 @@ void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
 	msg->len = 3;
 }
 
-void FLClient::fill_ack_del_obj_message( void *data, FLNetMessage *msg ) {
-	int16_t id;
-	int len;
-	uint16_t* in_data = (uint16_t*) data;
-
+void FLClient::fill_ack_del_obj_message( uint16_t id, FLNetMessage *msg ) {
 	// The message here will be the message type followed by the passed uint16
 	Uint8* msg_data = new Uint8[3];
 	msg_data[0] = FL_MSG_ACK_DEL_OBJ;
-	memcpy( &(msg_data[1]), in_data, sizeof(uint16_t) );
+	memcpy( &(msg_data[1]), &id, sizeof(uint16_t) );
 	msg->data = msg_data;
 
 	msg->dest = server_conn.ip;

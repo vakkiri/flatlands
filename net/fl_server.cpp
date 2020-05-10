@@ -249,7 +249,7 @@ void FLServer::ack_del_obj( IPaddress addr, Uint8* data ) {
 
 		// TODO ? it would be cleaner in these situations to just have a struct type for memcpy
 		Uint8* out_data = new Uint8(3);
-		data[0] = FL_MSG_ACK_DEL_OBJ;
+		out_data[0] = FL_MSG_ACK_DEL_OBJ;
 		memcpy( &(out_data[1]), &(data[1]), sizeof(uint16_t) );
 		memcpy( &obj_id, &(data[1]), sizeof(uint16_t) );
 
@@ -257,6 +257,9 @@ void FLServer::ack_del_obj( IPaddress addr, Uint8* data ) {
 
 		// delete the object from the server
 		del_net_obj( obj_id );
+	}
+	else {
+		std::cout << "Server: Could not find slot of packet send.\n";
 	}
 }
 
@@ -476,6 +479,7 @@ void FLServer::handle_packet() {
 			ack_del_obj(packet->address, packet->data);
 			break;
 		case FL_MSG_ACK_DEL_OBJ:
+			std::cout << "Server: RECEIVED ACK\n";
 			handle_ack_del_obj(packet->address, packet->data);
 			break;
 		default:
