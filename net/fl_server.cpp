@@ -134,7 +134,6 @@ void FLServer::send() {
 			synchronized_msg_queue.pop();
 		}
 		else if ( tick - synchronized_msg_queue.front()->last_send >= FL_RESEND_INTERVAL ) {
-			std::cout << "Server: Sending synchronized message.\n";
 			FLSynchronizedNetMessage* smsg = synchronized_msg_queue.front();
 			fl_send_udp( smsg->msg->data, smsg->msg->len, smsg->msg->dest, socket );
 			synchronized_msg_queue.pop();
@@ -265,7 +264,6 @@ void FLServer::ack_del_obj( IPaddress addr, Uint8* data ) {
 
 
 void FLServer::handle_ack_del_obj( IPaddress addr, Uint8* data ) {
-	std::cout << "Server: deletion acknowledged\n";
 	int slot = get_addr_slot( addr );
 	uint16_t obj_id;
 	if ( slot >= 0 ) {
@@ -479,7 +477,6 @@ void FLServer::handle_packet() {
 			ack_del_obj(packet->address, packet->data);
 			break;
 		case FL_MSG_ACK_DEL_OBJ:
-			std::cout << "Server: RECEIVED ACK\n";
 			handle_ack_del_obj(packet->address, packet->data);
 			break;
 		default:

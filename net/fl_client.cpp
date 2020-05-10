@@ -146,7 +146,6 @@ void FLClient::send() {
 			synchronized_msg_queue.pop();
 		}
 		else if ( tick - synchronized_msg_queue.front()->last_send >= FL_RESEND_INTERVAL ) {
-			std::cout << "Client: Sending synchronized message.\n";
 			FLSynchronizedNetMessage* smsg = synchronized_msg_queue.front();
 			fl_send_udp( smsg->msg->data, smsg->msg->len, smsg->msg->dest, socket );
 			synchronized_msg_queue.pop();
@@ -238,7 +237,6 @@ void FLClient::handle_packet() {
 		}
 		case FL_MSG_ACK_DEL_OBJ:
 		{
-			std::cout << "Client: RECEIVED ACK\n";
 			int16_t id;
 			memcpy(&id, &(data[1]), sizeof(int16_t));
 
@@ -303,7 +301,6 @@ void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
 }
 
 void FLClient::fill_ack_del_obj_message( uint16_t id, FLNetMessage *msg ) {
-	// The message here will be the message type followed by the passed uint16
 	Uint8* msg_data = new Uint8[3];
 	msg_data[0] = FL_MSG_ACK_DEL_OBJ;
 	memcpy( &(msg_data[1]), &id, sizeof(uint16_t) );
@@ -314,7 +311,6 @@ void FLClient::fill_ack_del_obj_message( uint16_t id, FLNetMessage *msg ) {
 }
 
 void FLClient::ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 host ) {
-	std::cout << "Handling synchronized message.\n";
 	std::queue<FLSynchronizedNetMessage*> alt_queue;
 	uint16_t sid;
 	Uint8 stype;
