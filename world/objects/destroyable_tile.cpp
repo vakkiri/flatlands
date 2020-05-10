@@ -48,7 +48,9 @@ FLDestroyableTile::~FLDestroyableTile() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLDestroyableTile::collide_with( FLPlayer *player ) {
+void FLDestroyableTile::collide_with() {
+	FLPlayer* player = FLWorldEnvironment::getInstance().player();
+
 	if ( player->pounding() ) {
 		FLWorldEnvironment::getInstance().tilemap()->set_solid_at( this->x(), this->y(), SIZE, SIZE, false );
 		start_animation();

@@ -16,7 +16,7 @@ class FLAmmo : virtual public FLCollidingObject, virtual public FLAnimatedObject
 	public:
 		FLAmmo( float x, float y, int weapon_index );
 		virtual ~FLAmmo();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 	protected:
 		int weapon_index;
 		int amt;

@@ -16,7 +16,7 @@ class FLFireball : virtual public FLCollidingObject, virtual public FLAnimatedOb
 	public:
 		FLFireball( float x, float y );
 		virtual ~FLFireball();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 		virtual float x();
 		virtual float y();
 		virtual void update();
@@ -34,7 +34,7 @@ class FLSmallball : virtual public FLCollidingObject, virtual public FLAnimatedO
 	public:
 		FLSmallball( float x, float y );
 		virtual ~FLSmallball();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 
 		virtual void update();
 		void set_velocity( float x, float y );

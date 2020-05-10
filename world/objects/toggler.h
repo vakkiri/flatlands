@@ -15,7 +15,7 @@ class FLToggler : virtual public FLCollidingObject, virtual public FLAnimatedObj
 	public:
 		FLToggler( float x, float y );
 		virtual ~FLToggler();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 
 		virtual float y();
 		virtual float bounds_h();

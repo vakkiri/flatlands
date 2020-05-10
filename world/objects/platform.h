@@ -17,7 +17,7 @@ class FLPlatform : virtual public FLCollidingObject, virtual public FLAnimatedOb
 		FLPlatform( float x, float y );
 		virtual ~FLPlatform();
 
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 		virtual void update();
 
 	protected:

@@ -9,6 +9,7 @@
 
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
+#include "../world_environment.h"
 
 #define NUM_ANIMATIONS 1
 #define NUM_STEPS 2
@@ -50,7 +51,8 @@ FLPlatform::~FLPlatform() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLPlatform::collide_with( FLPlayer *player ) {
+void FLPlatform::collide_with() {
+	FLPlayer* player = FLWorldEnvironment::getInstance().player();
 	if ( vel.y <= 0 )
 		vel.y += player->get_vel().y * 0.9;
 

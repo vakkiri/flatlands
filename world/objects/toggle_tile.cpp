@@ -11,7 +11,6 @@
 #include "../../rendering/renderer.h"
 #include "../../tilemap/tilemap.h"
 #include "../world_environment.h"
-#include "../player/player.h"
 
 #define NUM_ANIMATIONS 1
 #define NUM_STEPS 2

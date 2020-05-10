@@ -15,7 +15,7 @@ class FLWarpGate : virtual public FLAnimatedObject, virtual public FLCollidingOb
 	public:
 		FLWarpGate( float x, float y );
 		virtual ~FLWarpGate();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 
 };
 

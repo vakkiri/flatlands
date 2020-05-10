@@ -355,7 +355,7 @@ void FLPlayer::update_physics() {
 	std::vector<FLCollidingObject*> collisions = FLWorldEnvironment::getInstance().find_colliding_objects( this );
 
 	for ( FLCollidingObject* collision : collisions )
-		collision->collide_with( this );
+		collision->collide_with();
 }
 
 void FLPlayer::update_camera() {
@@ -508,7 +508,6 @@ void FLPlayer::reset() {
 	position.x = reset_position.x;
 	position.y = reset_position.y;
 	// TODO: update health, ammo etc. based on reset values
-	//FLWorldEnvironment::getInstance().mark_reset();
 }
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {

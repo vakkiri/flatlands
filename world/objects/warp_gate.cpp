@@ -40,7 +40,7 @@ FLWarpGate::~FLWarpGate() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLWarpGate::collide_with( FLPlayer *player ) {
+void FLWarpGate::collide_with() {
 	FLWorldEnvironment::getInstance().load_next_level();
 }
 

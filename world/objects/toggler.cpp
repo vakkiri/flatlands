@@ -53,7 +53,9 @@ FLToggler::~FLToggler() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLToggler::collide_with( FLPlayer *player ) {
+void FLToggler::collide_with() {
+	FLPlayer* player = FLWorldEnvironment::getInstance().player();
+
 	if ( player->pounding() && cooldown == 0) {
 		std::vector<FLToggleTile*> tiles = get_toggle_tiles();
 

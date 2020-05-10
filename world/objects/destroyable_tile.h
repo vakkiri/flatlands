@@ -15,7 +15,7 @@ class FLDestroyableTile : virtual public FLCollidingObject, virtual public FLAni
 	public:
 		FLDestroyableTile( float x, float y );
 		virtual ~FLDestroyableTile();
-		virtual void collide_with( FLPlayer *player );
+		virtual void collide_with();
 		virtual float bounds_h();
 		virtual float bounds_y();
 		virtual void update_animation();

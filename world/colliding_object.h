@@ -18,7 +18,7 @@ class FLCollidingObject : virtual public FLWorldObject {
 	public:
 		FLCollidingObject();
 		virtual ~FLCollidingObject();
-		virtual void collide_with( FLPlayer *player ) = 0;
+		virtual void collide_with() = 0;
 	protected:
 		unsigned int colliding_object_list_pos;
 };

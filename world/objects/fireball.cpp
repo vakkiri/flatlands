@@ -59,8 +59,8 @@ FLFireball::~FLFireball() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLFireball::collide_with( FLPlayer *player ) {
-	player->reset();
+void FLFireball::collide_with() {
+	FLWorldEnvironment::getInstance().player()->reset();
 }
 
 float FLFireball::x() {
@@ -103,8 +103,8 @@ FLSmallball::~FLSmallball() {
 	Renderer::getInstance().remove_from_world( this );
 }
 
-void FLSmallball::collide_with( FLPlayer *player ) {
-	player->reset();
+void FLSmallball::collide_with() {
+	FLWorldEnvironment::getInstance().player()->reset();
 }
 
 void FLSmallball::update() {
