@@ -103,12 +103,19 @@ void Renderer::render() {
 	for ( FLParticleSurface *s : particle_surfaces )
 		s->render();
 
+	// UI
+	textured_rect_shader.bind();
+	textured_rect_shader.set_camera( ui_camera );
+	textured_rect_shader.update_pc_matrix();
+
+	colored_poly_shader.bind();
+	colored_poly_shader.set_camera( ui_camera );
+	colored_poly_shader.update_pc_matrix();
+
+	FLUIManager::getInstance().render();
+
 	// render framebuffer to screen	
 	render_to_screen();
-
-	// UI
-	// maybe this should come before render_to_screen?
-	FLUIManager::getInstance().render();
 }
 
 void Renderer::render_and_swap() {

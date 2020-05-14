@@ -42,6 +42,8 @@
 #define JUMP_RELEASE_GRAVITY_FACTOR 	(1.5)
 #define JUMP_HOLD_GRAVITY_FACTOR 	(0.8)
 
+#define MAX_HEALTH	100
+
 FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
 	// Size and bounds
@@ -80,6 +82,10 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	weapon->set_repeats(false);
 	weapon->stop_animation();
 	init_weapon_stats();
+
+	// stats
+	max_health = MAX_HEALTH;
+	health = max_health;
 
 	// Add to renderer and input mapping
 	Renderer::getInstance().add_to_world(this);
@@ -164,7 +170,7 @@ void FLPlayer::jump() {
 		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 9, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 8, 32, 16 );
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -508,6 +514,7 @@ void FLPlayer::reset() {
 	position.x = reset_position.x;
 	position.y = reset_position.y;
 	// TODO: update health, ammo etc. based on reset values
+	health = max_health;
 }
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {
@@ -548,5 +555,9 @@ void FLPlayer::update_net() {
 		net_pos.animation = animation;
 		send_udp_to_server( FL_MSG_POS, &net_pos, false );
 	}
+}
+
+float FLPlayer::health_ratio() {
+	return health / max_health;
 }
 

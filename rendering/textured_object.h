@@ -9,7 +9,9 @@
 #ifndef TEXTURED_OBJECT_H_
 #define TEXTURED_OBJECT_H_
 
+#include <vector>
 #include "../common/game_object.h"
+#include "../common/basic_types.h"
 
 class FLTexturedObject : virtual public FLGameObject {
 	public:

@@ -72,5 +72,11 @@ struct fl_colored_vertex {
 	fl_color c;
 };
 
+struct fl_textured_vertex {
+	point pos;
+	float s;
+	float t;
+};
+
 #endif
 

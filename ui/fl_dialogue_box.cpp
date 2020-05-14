@@ -73,13 +73,14 @@ void FLDialogueBox::init_vertices() {
 	fl_colored_vertex v6 = { p6, c6 };
 	fl_colored_vertex v7 = { p7, c7 };
 
-	vertices.push_back(v0);
-	vertices.push_back(v1);
-	vertices.push_back(v2);
-	vertices.push_back(v3);
-	vertices.push_back(v4);
-	vertices.push_back(v5);
-	vertices.push_back(v6);
-	vertices.push_back(v7);
+	primitive_vertices.push_back(v0);
+	primitive_vertices.push_back(v1);
+	primitive_vertices.push_back(v2);
+	primitive_vertices.push_back(v3);
+	primitive_vertices.push_back(v4);
+	primitive_vertices.push_back(v5);
+	primitive_vertices.push_back(v6);
+
+	primitive_vertices.push_back(v7);
 }
 

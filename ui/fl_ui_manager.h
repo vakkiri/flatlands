@@ -50,7 +50,8 @@ class FLUIManager {
 		FLUIElement* active_element;
 		std::vector<FLUIElement*> elements;
 
-		FLColoredSurface* ui_surface;
+		FLColoredSurface* primitive_surface;
+		FLTexturedSurface* image_surface;
 		FLTexturedSurface* text_surface;
 };
 

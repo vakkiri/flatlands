@@ -34,15 +34,19 @@ bool Renderer::init_shaders() {
 		return false;
 	}
 
-	world_camera = glm::mat4(1.0);
-	framebuffer_camera = glm::mat4(1.0);
-	background_camera = glm::mat4(1.0);
+	world_camera 		= glm::mat4(1.0);
+	framebuffer_camera 	= glm::mat4(1.0);
+	background_camera 	= glm::mat4(1.0);
+	ui_camera 		= glm::mat4(1.0);
+
 	// we have to flip the framebuffer camera since everything is 
 	// rendered upside down
 	framebuffer_camera[1][1] = -1.0;
 	framebuffer_camera[3][1] = (float) screen_height;
 	world_camera[0][0] = 2.0;
 	world_camera[1][1] = 2.0;
+	ui_camera[0][0] = 2.0;
+	ui_camera[1][1] = 2.0;
 
 	textured_rect_shader.create_program( "textured_rect_shader" );
 	textured_rect_shader.bind();

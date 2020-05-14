@@ -93,6 +93,7 @@ class Renderer {
 
 		glm::mat4 projection_matrix;
 		glm::mat4 world_camera;
+		glm::mat4 ui_camera;
 		glm::mat4 framebuffer_camera;
 		glm::mat4 background_camera;
 

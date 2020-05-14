@@ -8,6 +8,8 @@
 
 #include "fl_ui_manager.h"
 #include "fl_ui_element.h"
+#include "fl_healthbar.h"
+#include "fl_ammobar.h"
 
 #include "../game/fl_gamestate.h"
 #include "../input/input_handler.h"
@@ -26,17 +28,21 @@ FLUIManager::~FLUIManager() {
 		elements.pop_back();
 	}
 
-	delete ui_surface;
+	delete primitive_surface;
 	delete text_surface;
 }
 
 void FLUIManager::init() {
 	// init rendering surface
-	ui_surface = new FLColoredSurface();
+	primitive_surface = new FLColoredSurface();
+	image_surface = new FLTexturedSurface();
 	text_surface = new FLTexturedSurface();
 
-	ui_surface->set_shader( Renderer::getInstance().get_colored_poly_shader() );
+	primitive_surface->set_shader( Renderer::getInstance().get_colored_poly_shader() );
+	image_surface->set_shader( Renderer::getInstance().get_textured_rect_shader() );
 	text_surface->set_shader( Renderer::getInstance().get_textured_rect_shader() );
+
+	image_surface->set_tex( "ui" );
 
 	// init keys
 	std::function<void(void)> up = std::bind(&FLUIManager::handle_up, &(FLUIManager::getInstance()) );
@@ -52,6 +58,11 @@ void FLUIManager::init() {
 	FLInputHandler::getInstance().add_ui_action( FL_KEY_RIGHT, FL_KEY_PRESSED, right );
 	FLInputHandler::getInstance().add_ui_action( FL_KEY_ACTION1, FL_KEY_PRESSED, accept );
 	FLInputHandler::getInstance().add_ui_action( FL_KEY_ACTION2, FL_KEY_PRESSED, reject );
+	
+
+	// Add some default elements
+	add_element( new FLHealthbar );
+	add_element( new FLAmmobar );
 }
 
 void FLUIManager::handle_up() {
@@ -128,12 +139,26 @@ void FLUIManager::set_active_element( FLUIElement* element ) {
 }
 
 void FLUIManager::render() {
-	// render all graphical elements
-	ui_surface->clear_verts();
+	// render primitives
+	Renderer::getInstance().get_colored_poly_shader()->bind();
+
+	primitive_surface->clear_verts();
 	for (FLUIElement* element : elements) 
-		ui_surface->add_verts(element->get_vertices());
-	ui_surface->update_buffers();
-	ui_surface->render();
+		primitive_surface->add_verts(element->get_primitive_vertices());
+	primitive_surface->update_buffers();
+	primitive_surface->render();
+
+	// render images
+	Renderer::getInstance().get_textured_rect_shader()->bind();
+
+	std::vector<FLTexturedObject*> textures_to_draw;
+	for (FLUIElement* element : elements)  {
+		std::vector<FLTexturedObject*> new_textures = element->get_textured_objects();
+		textures_to_draw.reserve(textures_to_draw.size() + new_textures.size());
+		textures_to_draw.insert(textures_to_draw.end(), new_textures.begin(), new_textures.end());
+	}
+	image_surface->update_buffers(textures_to_draw);
+	image_surface->render();
 
 	// render all text
 }

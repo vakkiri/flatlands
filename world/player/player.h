@@ -86,6 +86,8 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		FLAnimatedObject* get_weapon();
 		virtual void drain_ammo();
 		virtual void add_ammo( int weapon, int amount );
+
+		float health_ratio();
 	protected:
 		virtual void update_net();
 
@@ -102,9 +104,12 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		FLPlayerAbility cur_ability;
 		FLPlayerWeapon	cur_weapon;
 		FLPlayerState state;
-
+		
 		FLAnimatedObject* weapon;
 		FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
+
+		int max_health;
+		int health;
 
 		bool can_use_ability;
 		bool can_double_jump;
