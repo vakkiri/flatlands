@@ -78,7 +78,7 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	last_update_tick = SDL_GetTicks();
 
 	// Weapon
-	weapon = new FLAnimatedObject( 1, 4, 4, 16.f, 16.f );
+	weapon = new FLAnimatedObject( 1, 6, 5, 16.f, 16.f );
 	weapon->set_repeats(false);
 	weapon->stop_animation();
 	init_weapon_stats();
@@ -146,6 +146,7 @@ void FLPlayer::bind_actions() {
 
 void FLPlayer::drain_ammo() {
 	--weapon_stats[cur_weapon].ammo;
+	play_sound("fusion_shoot");
 	if ( weapon_stats[cur_weapon].ammo <= 0 ) {
 		stop_attack();
 	}
@@ -390,12 +391,12 @@ void FLPlayer::update_camera() {
 void FLPlayer::update_animation() {
 	/* set weapon position to our own */
 	if (!reverse) {
-		weapon->set_x( x() + 8.f);
+		weapon->set_x( x() + 6.f);
 	}
 	else {
-		weapon->set_x( x() - 8.f);
+		weapon->set_x( x() - 4.f);
 	}
-	weapon->set_y( y() + 16.f );
+	weapon->set_y( y() + 14.f );
 	weapon->set_reverse( reverse );
 	/* the weapon switch comes first, since the later state switch may override weapon visibility */
 	switch ( cur_weapon ) {
@@ -416,11 +417,8 @@ void FLPlayer::update_animation() {
 	}
 	if ( attacking ) {
 		weapon->start_animation();
-		start_sound("fusion_shoot");
 	}
 	else {
-		stop_sound("fusion_shoot");
-		weapon->set_visible(false);
 		weapon->set_repeats(false);
 
 		if (weapon->finished()) {
