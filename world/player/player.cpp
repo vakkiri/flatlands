@@ -104,7 +104,8 @@ void FLPlayer::init_weapon_stats() {
 		memset(&(weapon_stats[i]), 0, sizeof(weapon_stats));
 	}
 
-	weapon_stats[FL_FUSION].ammo = 10;
+	weapon_stats[FL_FUSION].ammo = 12;
+	weapon_stats[FL_FUSION].clip_size = 12;
 	weapon_stats[FL_FUSION].recoil = 2.f;
 }
 
@@ -150,8 +151,8 @@ void FLPlayer::drain_ammo() {
 	}
 }
 
-void FLPlayer::add_ammo( int weapon, int amount ) {
-	weapon_stats[weapon].ammo += amount;
+void FLPlayer::add_ammo( int weapon, int num_clips ) {
+	weapon_stats[weapon].ammo += num_clips * weapon_stats[weapon].clip_size;
 }
 
 void FLPlayer::jump() {
@@ -561,3 +562,12 @@ float FLPlayer::health_ratio() {
 	return health / max_health;
 }
 
+float FLPlayer::clip_ratio() {
+	int clip_remaining = weapon_stats[cur_weapon].ammo % weapon_stats[cur_weapon].clip_size;
+
+	if ( clip_remaining == 0 && weapon_stats[cur_weapon].ammo > 0 ) {
+		clip_remaining = weapon_stats[cur_weapon].clip_size;
+	}
+
+	return ((float) clip_remaining) / ((float) weapon_stats[cur_weapon].clip_size);
+}

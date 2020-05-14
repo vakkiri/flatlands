@@ -19,7 +19,7 @@ class FLAmmo : virtual public FLCollidingObject, virtual public FLAnimatedObject
 		virtual void collide_with();
 	protected:
 		int weapon_index;
-		int amt;
+		int num_clips;
 		
 };
 

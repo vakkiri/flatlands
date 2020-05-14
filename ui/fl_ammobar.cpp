@@ -22,13 +22,13 @@ FLAmmobar::~FLAmmobar() {
 }
 
 std::vector<fl_colored_vertex>& FLAmmobar::get_primitive_vertices() {
-	float ratio = FLWorldEnvironment::getInstance().player()->health_ratio();
+	float ratio = FLWorldEnvironment::getInstance().player()->clip_ratio();
 
-	primitive_vertices[1].pos.x = primitive_vertices[0].pos.x + (62 * ratio);
+	primitive_vertices[1].pos.x = primitive_vertices[0].pos.x + (59 * ratio);
 	primitive_vertices[1].pos.y = primitive_vertices[0].pos.y;
 
 	primitive_vertices[2].pos.x = primitive_vertices[1].pos.x;
-	primitive_vertices[2].pos.y = primitive_vertices[1].pos.y + 4;
+	primitive_vertices[2].pos.y = primitive_vertices[1].pos.y + 3;
 
 	return FLUIElement::get_primitive_vertices();
 }
@@ -36,11 +36,11 @@ std::vector<fl_colored_vertex>& FLAmmobar::get_primitive_vertices() {
 void FLAmmobar::init_vertices() {
 	primitive_vertices = std::vector<fl_colored_vertex>(4);
 
-	primitive_vertices[0].pos.x = offset.x + 24;
+	primitive_vertices[0].pos.x = offset.x + 25;
 	primitive_vertices[0].pos.y = offset.y + 6;
 
 	primitive_vertices[3].pos.x = primitive_vertices[0].pos.x;
-	primitive_vertices[3].pos.y = primitive_vertices[0].pos.y + 4;
+	primitive_vertices[3].pos.y = primitive_vertices[0].pos.y + 3;
 
 	primitive_vertices[0].c = {79.f/255.f, 164.f/255.f, 184.f/255.f, 1.f};
 	primitive_vertices[1].c = primitive_vertices[0].c;

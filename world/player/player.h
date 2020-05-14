@@ -38,6 +38,7 @@ enum FLPlayerWeapon {
 
 struct FLWeaponStats {
 	int ammo;
+	int clip_size;
 	float recoil;
 	int posessed;
 };
@@ -85,9 +86,10 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 
 		FLAnimatedObject* get_weapon();
 		virtual void drain_ammo();
-		virtual void add_ammo( int weapon, int amount );
+		virtual void add_ammo( int weapon, int num_clips );
 
 		float health_ratio();
+		float clip_ratio();
 	protected:
 		virtual void update_net();
 

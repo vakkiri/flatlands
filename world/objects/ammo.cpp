@@ -35,15 +35,17 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 	// weapon index 0 has no ammo since it is FL_NO_WEAPON
 	set_st( 96, 16 + (8 * (weapon_index - 1)) );
 
-	if ( weapon_index == 0 )
-		amt = 0;
-	else if ( weapon_index == FL_FUSION )
-		amt = 10;
+	if ( weapon_index == 0 ) {
+		num_clips = 0;
+	}
+	else if ( weapon_index == FL_FUSION ) {
+		num_clips = 2;
+	}
 }
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
-	FLWorldEnvironment::getInstance().player()->add_ammo( weapon_index, amt );
+	FLWorldEnvironment::getInstance().player()->add_ammo( weapon_index, num_clips );
 }
 
 void FLAmmo::collide_with() {
