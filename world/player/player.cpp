@@ -44,15 +44,9 @@
 
 #define MAX_HEALTH	100
 
-FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
+FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
-	// Size and bounds
-	position.x = 32;
-	position.y = 64;
-	position.w = 16;
-	position.h = 32;
-
-    rect bounds;
+	rect bounds;
 	bounds.x = 2;
 	bounds.y = 10;
 	bounds.w = -4;
@@ -403,8 +397,8 @@ void FLPlayer::update_animation() {
 		case FL_FUSION:
 			weapon->set_st(96, 0);
 			weapon->set_steps(16, 0);
-			weapon->set_w(16.f);
-			weapon->set_h(16.f);
+			//weapon->set_w(16.f);
+			//weapon->set_h(16.f);
 			weapon->set_repeats(true);
 			break;
 		default:
@@ -516,8 +510,8 @@ void FLPlayer::set_reset_position( float x, float y ) {
 
 void FLPlayer::reset() {
 	falling_frames = 0;
-	position.x = reset_position.x;
-	position.y = reset_position.y;
+	set_x( reset_position.x );
+	set_y( reset_position.y );
 	// TODO: update health, ammo etc. based on reset values
 	health = max_health;
 }

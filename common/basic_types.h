@@ -8,10 +8,6 @@
 #ifndef BASIC_TYPES_H_
 #define BASIC_TYPES_H_
 
-#include <SDL2/SDL_opengl.h>
-
-class FLPolygonShader;
-
 struct point {
 	float x;
 	float y;

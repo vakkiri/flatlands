@@ -12,12 +12,7 @@
 #define MAX_MOVEMENT 32.f
 #define MS_PER_FRAME (1000.f/60.f)
 
-FLNetPlayer::FLNetPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
-	position.x = 0;
-	position.y = 0;
-	position.w = 16;
-	position.h = 32;
-
+FLNetPlayer::FLNetPlayer() : FLGameObject( 0, 0, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	target.x = 0;
 	target.y = 0;
 
@@ -47,8 +42,8 @@ void FLNetPlayer::set_target( float tx, float ty ) {
 	// In the case of huge jumps (assumed to be from respawning or teleporting) we just
 	// move instantly.
 	if ( fdx > MAX_MOVEMENT || fdx < -MAX_MOVEMENT || fdy > MAX_MOVEMENT || fdy < -MAX_MOVEMENT ) {
-		position.x = tx;
-		position.y = ty;
+		set_x( tx );
+		set_y( ty );
 	}
 	else {
 		vel.x = (tx - x()) / elapsed_frames;
@@ -57,8 +52,8 @@ void FLNetPlayer::set_target( float tx, float ty ) {
 }
 
 void FLNetPlayer::update() {
-	float dx = target.x - position.x;
-	float dy = target.y - position.y;
+	float dx = target.x - x();
+	float dy = target.y - y();
 
 	// if -1 < dx < 1
 	if ( -1.f < dx && dx < 1.f) {
@@ -68,7 +63,6 @@ void FLNetPlayer::update() {
 		vel.y = 0.f;
 	}
 
-	position.x += vel.x;
-	position.y += vel.y;
+	move( vel.x, vel.y );
 }
 

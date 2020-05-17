@@ -30,10 +30,10 @@ void FLPhysicsObject::set_bounds_margin( rect new_bounds ) {
 	bounds_margin.h = new_bounds.h;
 }
 
-float FLPhysicsObject::bounds_x() { return position.x + bounds_margin.x; }
-float FLPhysicsObject::bounds_y() { return position.y + bounds_margin.y; }
-float FLPhysicsObject::bounds_w() { return position.w + bounds_margin.w; }
-float FLPhysicsObject::bounds_h() { return position.h + bounds_margin.h; }
+float FLPhysicsObject::bounds_x() { return x() + bounds_margin.x; }
+float FLPhysicsObject::bounds_y() { return y() + bounds_margin.y; }
+float FLPhysicsObject::bounds_w() { return w() + bounds_margin.w; }
+float FLPhysicsObject::bounds_h() { return h() + bounds_margin.h; }
 
 bool FLPhysicsObject::collides_with( FLPhysicsObject& other ) {
 	// TODO: Implement rect-rect collision
@@ -53,7 +53,7 @@ void FLPhysicsObject::update_position() {
 			// move feet to tile top
 			int tile_pos = int(next.y + bounds_h());
 			tile_pos -= (tile_pos % 8);
-			position.y = tile_pos - bounds_h() - bounds_margin.y - PHYSICS_EPSILON;
+			set_y( tile_pos - bounds_h() - bounds_margin.y - PHYSICS_EPSILON );
 			set_on_ground();
 		}
 	}
@@ -66,7 +66,7 @@ void FLPhysicsObject::update_position() {
 			// move head to tile bottom
 			int tile_pos = int(next.y);
 			int diff = 8 - (tile_pos % 8);
-			position.y = tile_pos + diff + PHYSICS_EPSILON - bounds_margin.y;
+			set_y( tile_pos + diff + PHYSICS_EPSILON - bounds_margin.y );
 				
 			stop_vertical();
 		}
@@ -80,7 +80,7 @@ void FLPhysicsObject::update_position() {
 			if ( environment.solid_at(next.x + bounds_w(), y) ) {
 				int tile_pos = int(next.x + bounds_w());
 				int diff = tile_pos % 8;
-				position.x = tile_pos - diff - bounds_w() - PHYSICS_EPSILON;
+				set_x( tile_pos - diff - bounds_w() - PHYSICS_EPSILON );
 
 				stop_horizontal();
 			}
@@ -93,7 +93,7 @@ void FLPhysicsObject::update_position() {
 			if ( environment.solid_at(next.x, y) ) {
 				int tile_pos = int(next.x);
 				int diff = 8 - (tile_pos % 8);
-				position.x = tile_pos + diff - bounds_margin.x + PHYSICS_EPSILON;
+				set_x( tile_pos + diff - bounds_margin.x + PHYSICS_EPSILON );
 
 				stop_horizontal();
 			}
@@ -147,11 +147,6 @@ void FLPhysicsObject::set_vel( point vel ) {
 
 void FLPhysicsObject::accelerate( point amt ) {
 	vel += amt;
-}
-
-void FLPhysicsObject::move( point amt ) {
-	position.x += amt.x;
-	position.y += amt.y;
 }
 
 bool FLPhysicsObject::on_ground() {

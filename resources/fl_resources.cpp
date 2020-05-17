@@ -327,7 +327,7 @@ void FLResources::load_level( int id ) {
 					case 7:
 						new FLToggleTile( (float)input[1], (float) input[2], false );
 						break;
-					case 8: new FLFireball( (float)input[1], (float) input[2] );
+					case 8:
 						break;
 					case 9: new FLPlatform( (float)input[1], (float) input[2] );
 						break;

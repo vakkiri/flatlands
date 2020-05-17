@@ -3,34 +3,50 @@
  *
  */
 
+#include <utility>
+
 #include "game_object.h"
 
+// TODO: Once component based refactor is done I should be able to remove the null constructor
+FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
+
 FLGameObject::FLGameObject( float x, float y, float w, float h ) {
-	position.x = x;
-	position.y = y;
-	position.w = w;
-	position.h = h;
+	FLShape* position = new FLShape( x, y, w, h );
+	shapes.insert( std::make_pair("position", position) );
 }
 
-void FLGameObject::set_x( float x ) { position.x = x; }
-void FLGameObject::set_y( float y ) { position.y = y; }
-void FLGameObject::set_w( float w ) { position.w = w; }
-void FLGameObject::set_h( float h ) { position.h = h; }
+FLGameObject::~FLGameObject() {
+	for ( auto kv : shapes ) {
+		delete kv.second;
+	}
+}
 
-float FLGameObject::x() { return position.x; }
-float FLGameObject::y() { return position.y; }
-float FLGameObject::w() { return position.w; }
-float FLGameObject::h() { return position.h; }
+void FLGameObject::set_x( float x ) { 
+	shapes["position"]->set_pos( x, y() ); 
+}
+
+void FLGameObject::set_y( float y ) { 
+	shapes["position"]->set_pos( x(), y ); 
+}
+
+float FLGameObject::x() { return shapes["position"]->x(); }
+float FLGameObject::y() { return shapes["position"]->y(); }
+float FLGameObject::w() { return shapes["position"]->w(); }
+float FLGameObject::h() { return shapes["position"]->h(); }
 
 void FLGameObject::move( float x, float y ) {
-	position.x += x;
-	position.y += y;
+	shapes["position"]->translate( x, y );
+}
+
+void FLGameObject::move( point amt ) {
+	shapes["position"]->translate( amt );
 }
 
 void FLGameObject::movex( float x ) {
-	position.x += x;
+	shapes["position"]->translate( x, 0 );
 }
 
 void FLGameObject::movey( float y ) {
-	position.y += y;
+	shapes["position"]->translate( 0, y );
 }
+

@@ -32,7 +32,6 @@ class FLPhysicsObject : virtual public FLWorldObject {
 		virtual void update_physics();
 
 		void set_vel(point vel);
-		void move( point amt );
 		void accelerate( point amt );
 
 		void stop_horizontal();

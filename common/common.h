@@ -1,14 +1,8 @@
-/*
- * 	common.h
- *
- * 	Functionality common to the majority of the game engine.
- *
- */
+#ifndef FL_COMMON_H_
+#define FL_COMMON_H_
 
-#ifndef COMMON_H_
-#define COMMON_H_
-
-#include "basic_types.h"
 #include "game_object.h"
+#include "basic_types.h"
+#include "fl_shape.h"
 
 #endif
