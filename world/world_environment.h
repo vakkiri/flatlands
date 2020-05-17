@@ -17,8 +17,6 @@ class FLWorldObject;
 class FLCollidingObject;
 class FLInteractableObject;
 
-class NVAngel;
-
 class FLWorldEnvironment {
 	public:
 		static FLWorldEnvironment& getInstance() {
@@ -39,14 +37,11 @@ class FLWorldEnvironment {
 
 		void mark_reset();
 
-		void add_angel( NVAngel* angel );
-		void remove_angel( NVAngel* angel );
 		void add_interactable_object( FLInteractableObject* object );
 		void remove_interactable_object( FLInteractableObject* object );
 		FLCollidingObject* find_colliding_object( FLWorldObject* object );
 		std::vector<FLCollidingObject*> find_colliding_objects( FLWorldObject* object );
 		void interact( FLWorldObject* object );
-		std::vector<NVAngel*>* get_angels();
 
 		virtual void load_next_level();
 
@@ -54,7 +49,6 @@ class FLWorldEnvironment {
 		FLTilemap* _tilemap;
 		FLPlayer* _player;
 
-		std::vector<NVAngel*> angels;
 		std::vector<FLInteractableObject*> interactable_objects;
 		virtual void reset_environment();
 

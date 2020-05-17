@@ -17,7 +17,6 @@
 #include "../world/player/player.h"
 #include "../world/objects/objects.h"
 #include "../world/npcs/npcs.h"
-#include "../custom/angel.h"
 
 #include "../tilemap/tilemap.h"
 #include "fl_resources.h"
@@ -315,7 +314,6 @@ void FLResources::load_level( int id ) {
 						new FLWarpGate( (float)input[1], (float)input[2] );
 						break;
 					case 3:
-						new NVAngel( (float)input[1], (float)input[2] );
 						break;
 					case 4:
 						new FLNpc( (float)input[1], (float)input[2], 0, 160, 37, 18 );

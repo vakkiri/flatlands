@@ -6,7 +6,6 @@
 #include <iostream>
 #include <algorithm>
 
-#include "../custom/angel.h"
 #include "../game/fl_gamestate.h"
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
@@ -32,7 +31,6 @@ void FLWorldEnvironment::reset_environment() {
 	// clear special collections
 	clear_colliding_objects();
 	clear_toggle_tiles();
-	angels.clear();
 
 	// clear standard collections
 	clear_dynamic_objects();
@@ -86,14 +84,6 @@ bool FLWorldEnvironment::solid_at( float x, float y ) {
 	return _tilemap->solid_at( x, y );
 }
 
-void FLWorldEnvironment::remove_angel( NVAngel *angel ) {
-	angels.erase( std::remove( angels.begin(), angels.end(), angel ), angels.end() );
-}
-
-std::vector<NVAngel*>* FLWorldEnvironment::get_angels() {
-	return &angels;
-}
-
 void FLWorldEnvironment::add_interactable_object( FLInteractableObject *object ) {
 	interactable_objects.push_back( object );
 }
@@ -136,9 +126,5 @@ std::vector<FLCollidingObject*> FLWorldEnvironment::find_colliding_objects( FLWo
 
 void FLWorldEnvironment::mark_reset() {
 	reset = true;
-}
-
-void FLWorldEnvironment::add_angel( NVAngel* angel ) {
-	angels.push_back( angel );
 }
 

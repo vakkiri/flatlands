@@ -10,7 +10,6 @@
 #include <glm/ext.hpp>
 
 #include "../common/basic_types.h"
-#include "../custom/angel.h"
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
 #include "../world/world_environment.h"
@@ -20,7 +19,6 @@
 #include "renderable.h"
 #include "rendered_surface.h"
 #include "world_surface.h"
-#include "fl_distortion_surface.h"
 #include "fl_particle_surface.h"
 
 
@@ -151,10 +149,6 @@ float Renderer::world_camera_y() {
 
 FLTexturedRectShader* Renderer::get_textured_rect_shader() {
 	return &textured_rect_shader;
-}
-
-FLParticleShader* Renderer::get_lightning_shader() {
-	return &lightning_shader;
 }
 
 FLColoredPolyShader* Renderer::get_colored_poly_shader() {

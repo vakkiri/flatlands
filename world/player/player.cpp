@@ -51,7 +51,8 @@ FLPlayer::FLPlayer() : FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	position.y = 64;
 	position.w = 16;
 	position.h = 32;
-	rect bounds;
+
+    rect bounds;
 	bounds.x = 2;
 	bounds.y = 10;
 	bounds.w = -4;
@@ -106,7 +107,7 @@ void FLPlayer::init_weapon_stats() {
 
 	weapon_stats[FL_FUSION].ammo = 12;
 	weapon_stats[FL_FUSION].clip_size = 12;
-	weapon_stats[FL_FUSION].recoil = 2.f;
+	weapon_stats[FL_FUSION].recoil = 0.9f;
 }
 
 void FLPlayer::bind_actions() {
@@ -150,6 +151,12 @@ void FLPlayer::drain_ammo() {
 	if ( weapon_stats[cur_weapon].ammo <= 0 ) {
 		stop_attack();
 	}
+	if (facing_right()) {
+		vel.x -= weapon_stats[cur_weapon].recoil;
+	}
+	else {
+		vel.x += weapon_stats[cur_weapon].recoil;
+	}
 }
 
 void FLPlayer::add_ammo( int weapon, int num_clips ) {
@@ -166,13 +173,13 @@ void FLPlayer::jump() {
 		jump_frames = NUM_JUMP_FRAMES;
 
 		// Create a visual smoke effect
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 496, 7, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 288, 48, 7, 32, 16 );
 		
 		// play sound effect
 		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 0, 480, 8, 32, 16 );
+		new FLEffect( x() - (w()/2.f), y() + h() - 16, 288, 32, 7, 32, 16 );
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -208,17 +215,13 @@ void FLPlayer::double_jump() {
 }
 
 void FLPlayer::ground_pound() {
-	vel.y = GROUND_POUND_ACCEL;
-	pound_frames = POUND_FRAMES;
-
-	// create pound effect
-	new FLEffect( x(), y(), 64, 0, 6, 16, 16 );
+	// not implemented atm
 }
 
 void FLPlayer::dash() {
 	if ( can_dash() ) {
 		play_sound( "player_dash" );
-		FLEffect* effect = new FLEffect( x(), y(), 0, 448, 8, 16, 32 );
+		FLEffect* effect = new FLEffect( x(), y(), 288, 0, 8, 16, 32 );
 		dash_right = facing_right();
 		if (dash_right) {
 			vel.x += DASH_INITIAL_ACCEL;
@@ -346,11 +349,6 @@ void FLPlayer::update_physics() {
 	}
 
 	// abilities take precedence for state
-	if ( pounding() ) {
-		state = FL_PLAYER_POUND;
-		if ( pound_frames % 5 == 0 )
-			new FLEffect( x(), y(), 64, 0, 6, 16, 16 );
-	}
 	if ( dashing() ) {
 		state = FL_PLAYER_DASH;
 	}
@@ -394,14 +392,13 @@ void FLPlayer::update_animation() {
 		weapon->set_x( x() + 6.f);
 	}
 	else {
-		weapon->set_x( x() - 4.f);
+		weapon->set_x( x() - 6.f);
 	}
 	weapon->set_y( y() + 14.f );
 	weapon->set_reverse( reverse );
-	/* the weapon switch comes first, since the later state switch may override weapon visibility */
+
 	switch ( cur_weapon ) {
 		case FL_NO_WEAPON:
-			weapon->set_visible( false );
 			break;
 		case FL_FUSION:
 			weapon->set_st(96, 0);
@@ -409,42 +406,57 @@ void FLPlayer::update_animation() {
 			weapon->set_w(16.f);
 			weapon->set_h(16.f);
 			weapon->set_repeats(true);
-			weapon->set_visible(true);
 			break;
 		default:
-			weapon->set_visible(false);
 			break;
 	}
-	if ( attacking ) {
-		weapon->start_animation();
-	}
-	else {
-		weapon->set_repeats(false);
-
-		if (weapon->finished()) {
-			weapon->reset_animation();
-			weapon->stop_animation();
-		}
-	}
+	
 	switch ( state ) {
 		case FL_PLAYER_IDLE:
-			set_animation( 0 );
+			if ( attacking ) {
+				set_animation( 6 );
+			}
+			else {
+				set_animation( 0 );
+			}
 			break;
 		case FL_PLAYER_WALK:
-			set_animation( 1 );
+			if ( attacking ) {
+				set_animation( 2 );
+			}
+			else {
+				set_animation( 1 );
+			}
 			break;
 		case FL_PLAYER_JUMP:
-			set_animation( 2 );
+			if ( attacking ) {
+				set_animation( 4 );
+			}
+			else {
+				set_animation( 3 );
+			}
 			break;
 		case FL_PLAYER_DASH:
-			set_animation( 3 );
-			weapon->set_visible(false);
+			set_animation( 5 );
 			attacking = false;
 			break;
 		default:
 			break;
 	}
 
+	if ( attacking ) {
+		weapon->start_animation();
+		weapon->set_visible(true);
+	}
+	else {
+		weapon->set_repeats(false);
+		weapon->set_visible(false);
+
+		if (weapon->finished()) {
+			weapon->reset_animation();
+			weapon->stop_animation();
+		}
+	}
 	if ( state == FL_PLAYER_WALK && on_ground() ) {
 		start_sound("player_walk");
 	}
@@ -490,12 +502,6 @@ void FLPlayer::release_walk() {
 void FLPlayer::hit_ground() {
 	if ( state != FL_PLAYER_WALK && state != FL_PLAYER_DASH )
 		state = FL_PLAYER_IDLE;
-
-	if ( pounding() ) {
-		new FLEffect( x() - 12, y(), 64, 0, 6, 16, 16 );
-		new FLEffect( x() - 20, y() + 8, 64, 0, 6, 16, 16 );
-		new FLEffect( x() + 20, y() + 6, 64, 0, 6, 16, 16 );
-	}
 
 	pound_frames = 0;
 	jump_frames = 0;

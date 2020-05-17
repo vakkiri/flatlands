@@ -15,9 +15,7 @@
 
 #include "fl_colored_poly_shader.h"
 #include "fl_textured_rect_shader.h"
-#include "fl_smoke_background_shader.h"
 #include "fl_framebuffer_shader.h"
-#include "fl_angel_shader.h"
 #include "fl_particle_shader.h"
 
 class FLAnimatedObject;
@@ -53,19 +51,13 @@ class Renderer {
 
 		// Shaders
 		FLTexturedRectShader textured_rect_shader;
-		FLTexturedRectShader screen_blur_shader;
 		FLColoredPolyShader colored_poly_shader;
-		FLParticleShader lightning_shader;
-		FLSmokeBackgroundShader background_shader;
 		FLFramebufferShader framebuffer_shader;
-		FLFramebufferShader wave_shader;
-		FLAngelShader custom_shader;
 
 		// Surfaces
 		FLWorldSurface *world_surface;
 		FLTexturedSurface *tilemap_surface;
 		FLTexturedSurface *background_surface;
-		FLDistortionSurface *background_distortion_surface;
 		FLTexturedSurface *framebuffer_surface;
 		std::vector<FLParticleSurface*> particle_surfaces;
 
@@ -118,7 +110,6 @@ class Renderer {
 		void clear();
 
 		FLTexturedRectShader* get_textured_rect_shader();
-		FLParticleShader* get_lightning_shader();
 		FLColoredPolyShader* get_colored_poly_shader();
 		FLWorldSurface *get_world_surface();
 		FLTexturedSurface *get_tilemap_surface();
