@@ -39,6 +39,16 @@ FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int nu
 	this->repeats = repeats;
 }
 
+FLAnimatedObject::FLAnimatedObject( FLAnimatedObjectParams& params ) : FLAnimatedObject( params.num_animations ) {
+	this->num_steps = params.num_steps;
+	this->frames_per_step = params.frames_per_step;
+	this->s_step = params.sstep;
+	this->t_step = params.tstep;
+	this->repeats = params.repeats;
+	cur_animation = 0;
+
+}
+
 FLAnimatedObject::~FLAnimatedObject() {
 	animated_objects[animated_object_list_position] = nullptr;
 }

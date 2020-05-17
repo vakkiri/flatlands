@@ -13,12 +13,22 @@
 #include <functional>
 #include "textured_object.h"
 
-class FLAnimatedObject : virtual public FLTexturedObject {
+struct FLAnimatedObjectParams {
+	int num_animations;
+	unsigned int num_steps;
+	unsigned int frames_per_step;
+	float sstep;
+	float tstep;
+	bool repeats;
+};
+
+class FLAnimatedObject : public FLTexturedObject {
 	public:
 		FLAnimatedObject(unsigned int num_animations);
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float sstep, float tstep);
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step);
 		FLAnimatedObject(unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats);
+		FLAnimatedObject( FLAnimatedObjectParams& params );
 
 		virtual ~FLAnimatedObject();
 

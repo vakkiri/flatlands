@@ -11,6 +11,7 @@
 
 #include "../net/fl_net.h"
 #include "../logging/logging.h"
+#include "../world/monster/fl_monster_types.h"
 #include "../world/physics_settings.h"
 #include "../world/world_environment.h"
 #include "../world/player/player.h"
@@ -257,6 +258,7 @@ void FLResources::load_level( int id ) {
 				player->set_x( input[1] );
 				player->set_y( input[2] );
 				player->set_reset_position( input[1], input[2] );
+				new FLReep( input[1], input[2] );
 				input += 3;
 			}
 			else if ( current_type == 2 ) {
