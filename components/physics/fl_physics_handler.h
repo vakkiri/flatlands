@@ -14,8 +14,8 @@ class FLGameObject;
 
 class FLPhysicsHandler {
 	public:
-		FLPhysicsHandler() = delete;
-		FLPhysicsHandler(FLGameObject* owner, std::string collider_name);
+		FLPhysicsHandler();
+		bool init(FLGameObject* owner, std::string collider_name);
 
 		void update();
 		void accelerate( float x, float y);
@@ -25,6 +25,8 @@ class FLPhysicsHandler {
 		float yvel();
 
 		bool on_ground();
+		bool alive();
+		void kill();
 	protected:
 		void move();
 		void apply_gravity();
@@ -37,6 +39,7 @@ class FLPhysicsHandler {
 		point vel;
 		float gravity_factor;
 		int on_ground_timer;
+		bool _alive;
 };
 
 #endif

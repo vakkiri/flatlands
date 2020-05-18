@@ -47,7 +47,8 @@
 FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
 	add_collider( "position", "tilemap" );
-	physics_handler = new FLPhysicsHandler( this, "tilemap" );
+	physics_handler_handle = new_physics_handler( this, "tilemap" );
+	updator_handle = new_updator( this );
 
 	// Movement and abilities
 	dash_frames = 		0;
@@ -140,10 +141,10 @@ void FLPlayer::drain_ammo() {
 		stop_attack();
 	}
 	if (facing_right()) {
-		physics_handler->accelerate( -weapon_stats[cur_weapon].recoil, 0 );
+		physics_handler()->accelerate( -weapon_stats[cur_weapon].recoil, 0 );
 	}
 	else {
-		physics_handler->accelerate( weapon_stats[cur_weapon].recoil, 0 );
+		physics_handler()->accelerate( weapon_stats[cur_weapon].recoil, 0 );
 	}
 }
 
@@ -152,9 +153,9 @@ void FLPlayer::add_ammo( int weapon, int num_clips ) {
 }
 
 void FLPlayer::jump() {
-	if ( physics_handler->on_ground() ) {
+	if ( physics_handler()->on_ground() ) {
 		can_double_jump = true;
-		physics_handler->accelerate( 0, INITIAL_JUMP_VEL );
+		physics_handler()->accelerate( 0, INITIAL_JUMP_VEL );
 		reset_animation();
 		falling_frames = 0;
 
@@ -194,7 +195,7 @@ void FLPlayer::stop_attack() {
 }
 
 void FLPlayer::double_jump() {
-	physics_handler->accelerate( 0, -DOUBLE_JUMP_ACCEL );
+	physics_handler()->accelerate( 0, -DOUBLE_JUMP_ACCEL );
 
 	play_sound( "player_jump" );
 	reset_animation();
@@ -210,11 +211,11 @@ void FLPlayer::dash() {
 		FLEffect* effect = new FLEffect( x(), y(), 288, 0, 8, 16, 32 );
 		dash_right = facing_right();
 		if (dash_right) {
-			physics_handler->accelerate( DASH_INITIAL_ACCEL, 0 );
+			physics_handler()->accelerate( DASH_INITIAL_ACCEL, 0 );
 			effect->set_reverse(true);
 		}
 		else {
-			physics_handler->accelerate( -DASH_INITIAL_ACCEL, 0 );
+			physics_handler()->accelerate( -DASH_INITIAL_ACCEL, 0 );
 		}
 
 		dash_frames = DASH_FRAMES;
@@ -242,15 +243,15 @@ bool FLPlayer::can_attack() {
 }
 
 void FLPlayer::move_right() {
-	if ( physics_handler->xvel() < WALK_SPEED || (run_held && physics_handler->xvel() < RUN_SPEED) ) {
+	if ( physics_handler()->xvel() < WALK_SPEED || (run_held && physics_handler()->xvel() < RUN_SPEED) ) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
-		if ( physics_handler->xvel() > 0 && physics_handler->xvel() < 1.5 )
-			physics_handler->accelerate(INITIAL_WALK_ACCEL, 0);
+		if ( physics_handler()->xvel() > 0 && physics_handler()->xvel() < 1.5 )
+			physics_handler()->accelerate(INITIAL_WALK_ACCEL, 0);
 		else if ( run_held )
-			physics_handler->accelerate(RUN_ACCEL, 0);
+			physics_handler()->accelerate(RUN_ACCEL, 0);
 		else
-			physics_handler->accelerate(WALK_ACCEL, 0);
+			physics_handler()->accelerate(WALK_ACCEL, 0);
 
 		set_reverse(false);
 		 
@@ -261,15 +262,15 @@ void FLPlayer::move_right() {
 }
 
 void FLPlayer::move_left() {
-	if ( physics_handler->xvel() > -WALK_SPEED || (run_held && physics_handler->xvel() > -RUN_SPEED) ) {
+	if ( physics_handler()->xvel() > -WALK_SPEED || (run_held && physics_handler()->xvel() > -RUN_SPEED) ) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
-		if ( physics_handler->xvel() < 0 && physics_handler->xvel() > -1.5 )
-			physics_handler->accelerate(-INITIAL_WALK_ACCEL, 0);
+		if ( physics_handler()->xvel() < 0 && physics_handler()->xvel() > -1.5 )
+			physics_handler()->accelerate(-INITIAL_WALK_ACCEL, 0);
 		else if ( run_held )
-			physics_handler->accelerate(-RUN_ACCEL, 0);
+			physics_handler()->accelerate(-RUN_ACCEL, 0);
 		else
-			physics_handler->accelerate(-WALK_ACCEL, 0);
+			physics_handler()->accelerate(-WALK_ACCEL, 0);
 
 		set_reverse(true);
 	}
@@ -278,24 +279,25 @@ void FLPlayer::move_left() {
 		state = FL_PLAYER_WALK;
 }
 
-void FLPlayer::update_physics() {
+void FLPlayer::per_frame_update() {
 	// XXX This rrrrrreeeeeeeeally needs to be moved ASAP to a general update function yeesh im bad
 	update_net();
-	physics_handler->update();
 
 	// reduce effect of gravity immediately after jumping
-	if ( physics_handler->on_ground() ) {
+	if ( physics_handler()->on_ground() ) {
 		hit_ground();
 	}
 	else {
 		state = FL_PLAYER_JUMP;
 
-		if ( ++falling_frames > MAX_FALL )
+		if ( ++falling_frames > MAX_FALL ) {
 			reset();
+		}
 	}
 
 	// abilities take precedence for state
 	if ( dashing() ) {
+		--dash_frames;
 		state = FL_PLAYER_DASH;
 	}
 	
@@ -398,7 +400,7 @@ void FLPlayer::update_animation() {
 			weapon->stop_animation();
 		}
 	}
-	if ( state == FL_PLAYER_WALK && physics_handler->on_ground() ) {
+	if ( state == FL_PLAYER_WALK && physics_handler()->on_ground() ) {
 		start_sound("player_walk");
 	}
 	
@@ -418,14 +420,14 @@ void FLPlayer::hold_run() { run_held = true; }
 void FLPlayer::release_run() { run_held = false; }
 
 void FLPlayer::release_walk() { 
-	if ( state != FL_PLAYER_DASH )
+	if ( !dashing() )
 		state = FL_PLAYER_IDLE; 
 
 	stop_sound("player_walk");
 }
 
 void FLPlayer::hit_ground() {
-	if ( state != FL_PLAYER_WALK && state != FL_PLAYER_DASH )
+	if ( state != FL_PLAYER_WALK && !dashing() )
 		state = FL_PLAYER_IDLE;
 
 	pound_frames = 0;
@@ -442,7 +444,7 @@ void FLPlayer::reset() {
 	falling_frames = 0;
 	set_x( reset_position.x );
 	set_y( reset_position.y );
-	physics_handler->stop();
+	physics_handler()->stop();
 	// TODO: update health, ammo etc. based on reset values
 	health = max_health;
 }
@@ -474,12 +476,12 @@ void FLPlayer::update_net() {
 		animation |= ANIM_REVERSE_BIT;
 	}
 
-	update_server_player_info( x(), y(), physics_handler->xvel(), physics_handler->yvel(), animation );
+	update_server_player_info( x(), y(), physics_handler()->xvel(), physics_handler()->yvel(), animation );
 
 	if ( tick - last_update_tick >= FL_POS_SEND_INTERVAL ) {
 		float elapsed_frames = (tick - last_update_tick) / (1000/60);
 		last_update_tick = tick;
-		net_pos.x = x() + (physics_handler->xvel() * (elapsed_frames));
+		net_pos.x = x() + (physics_handler()->xvel() * (elapsed_frames));
 		// let's just assume y won't really change lol
 		net_pos.y = y();
 		net_pos.animation = animation;

@@ -16,7 +16,9 @@ FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
 FLGameObject::FLGameObject( float x, float y, float w, float h ) {
 	FLShape* position = new FLShape( x, y, w, h );
 	shapes.insert( std::make_pair("position", position) );
-	physics_handler = nullptr;
+
+	physics_handler_handle = -1;
+	updator_handle = -1;
 }
 
 FLGameObject::~FLGameObject() {
@@ -26,6 +28,9 @@ FLGameObject::~FLGameObject() {
 	for ( auto kv : colliders ) {
 		delete kv.second;
 	}
+
+	delete_physics_handler( physics_handler_handle );
+	delete_updator( updator_handle );
 }
 
 void FLGameObject::set_x( float x ) { 
@@ -105,3 +110,6 @@ void FLGameObject::add_collider( std::string shape, std::string name ) {
 	}
 }
 
+FLPhysicsHandler* FLGameObject::physics_handler() {
+	return ( get_physics_handler(physics_handler_handle) );
+}

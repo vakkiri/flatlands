@@ -35,14 +35,20 @@ class FLGameObject {
 		void move( float x, float y);
 		void move( point amt );
 
+		virtual void per_frame_update() {};
+
 		FLShape* get_shape( std::string name );
 		FLCollider* get_collider( std::string name );
 
 		void add_collider( std::string shape, std::string name );
+		bool is_active();
+		
+		FLPhysicsHandler* physics_handler();
 	protected:
 		std::unordered_map<std::string, FLShape*> shapes;
 		std::unordered_map<std::string, FLCollider*> colliders;
-		FLPhysicsHandler* physics_handler;
+		int physics_handler_handle;
+		int updator_handle;
 };
 
 #endif

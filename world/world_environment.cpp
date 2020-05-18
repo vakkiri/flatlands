@@ -62,9 +62,6 @@ void FLWorldEnvironment::update() {
 			reset_environment();
 
 		update_dynamic_objects();
-
-		_player->update_physics();
-
 	}
 }
 

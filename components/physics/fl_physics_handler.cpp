@@ -12,12 +12,19 @@
 
 #define ON_GROUND_FRAMES 10
 
-FLPhysicsHandler::FLPhysicsHandler( FLGameObject* owner, std::string collider_name ) {
+FLPhysicsHandler::FLPhysicsHandler() {
+	_alive = false;
+}
+
+bool FLPhysicsHandler::init( FLGameObject* owner, std::string collider_name ) {
+	bool success = true;
 	if ( owner == nullptr ) {
 		std::cout << "Error: Cannot create physics handler with no owner.\n";
+		success = false;
 	}
 	else if ( owner->get_collider(collider_name) == nullptr ) {
 			std::cout << "Error: Invalid collider name passed to physics handler.\n";
+			success = false;
 	}
 	else {
 		this->owner = owner;
@@ -26,7 +33,10 @@ FLPhysicsHandler::FLPhysicsHandler( FLGameObject* owner, std::string collider_na
 		vel.y = 0;
 		gravity_factor = 1.0;
 		on_ground_timer = 0;
+		_alive = true;
 	}
+
+	return success;
 }
 
 void FLPhysicsHandler::update() {
@@ -37,7 +47,7 @@ void FLPhysicsHandler::update() {
 }
 
 void FLPhysicsHandler::apply_gravity() {
-	vel.y += FLPhysics::getInstance().gravity();
+	vel.y += FLPhysics::getInstance().gravity() * gravity_factor;
 }
 
 void FLPhysicsHandler::apply_friction() {
@@ -119,3 +129,12 @@ void FLPhysicsHandler::stop() {
 	vel.x = 0;
 	vel.y = 0;
 }
+
+bool FLPhysicsHandler::alive() {
+	return _alive;
+}
+
+void FLPhysicsHandler::kill() {
+	_alive = false;
+}
+

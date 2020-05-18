@@ -1,7 +1,7 @@
 /*
  * 	player.h
  *
- * 	Base player class for a character who is sensitive to physics
+ * 	Base player class for a character
  * 	and user input.
  *
  */
@@ -59,7 +59,7 @@ class FLPlayer : public FLAnimatedObject, public FLWorldObject {
 		virtual void attack();
 		virtual void stop_attack();
 		virtual void set_ability( FLPlayerAbility ability );
-		void update_physics();
+		virtual void per_frame_update();
 
 		// movement methods
 		void move_left();

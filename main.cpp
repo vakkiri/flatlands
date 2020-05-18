@@ -10,6 +10,7 @@
 
 #include "audio/fl_audio.h"
 #include "common/common.h"
+#include "components/components.h"
 #include "input/input_handler.h"
 #include "logging/logging.h"
 #include "net/fl_net.h"
@@ -54,6 +55,7 @@ void main_loop() {
 		quit = input_handler.input_loop();
 
 		world.update();
+		fl_update_components();
 
 		renderer.render_and_swap();
 
