@@ -10,7 +10,11 @@
 
 #include <string>
 #include <unordered_map>
-#include "fl_shape.h"
+
+#include "basic_types.h"
+
+class FLShape;
+class FLCollider;
 
 class FLGameObject {
 	public:
@@ -29,8 +33,13 @@ class FLGameObject {
 		void movey( float y );
 		void move( float x, float y);
 		void move( point amt );
+
+		FLShape* get_shape( std::string name );
+
+		void add_collider( std::string shape, std::string name );
 	protected:
 		std::unordered_map<std::string, FLShape*> shapes;
+		std::unordered_map<std::string, FLCollider*> colliders;
 };
 
 #endif

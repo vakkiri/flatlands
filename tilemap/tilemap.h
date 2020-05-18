@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <string>
+#include "../common/common.h"
 
 class FLTexturedObject;
 class FLTexturedSurface;
@@ -29,6 +30,10 @@ class FLTilemap {
 		bool solid_at( float x, float y );
 		void set_solid_at( float x, float y, float w, float h, bool solid );
 		void set_tileset( unsigned int tileset );
+
+		bool touches_shape( FLShape* shape );
+		bool touches_line( point p1, point p2 );
+
 	protected:
 		std::vector<FLTexturedObject*> tiles;
 		std::vector<std::vector<bool>> collision_map;

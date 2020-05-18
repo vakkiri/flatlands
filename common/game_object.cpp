@@ -3,9 +3,12 @@
  *
  */
 
+#include <iostream>
 #include <utility>
 
 #include "game_object.h"
+#include "fl_shape.h"
+#include "../components/components.h"
 
 // TODO: Once component based refactor is done I should be able to remove the null constructor
 FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
@@ -17,6 +20,9 @@ FLGameObject::FLGameObject( float x, float y, float w, float h ) {
 
 FLGameObject::~FLGameObject() {
 	for ( auto kv : shapes ) {
+		delete kv.second;
+	}
+	for ( auto kv : colliders ) {
 		delete kv.second;
 	}
 }
@@ -48,5 +54,24 @@ void FLGameObject::movex( float x ) {
 
 void FLGameObject::movey( float y ) {
 	shapes["position"]->translate( 0, y );
+}
+
+FLShape* FLGameObject::get_shape( std::string name ) {
+	if ( shapes.find(name) == shapes.end() ) {
+		return nullptr;
+	}
+	else {
+		return shapes[name];
+	}
+}
+
+void FLGameObject::add_collider( std::string shape, std::string name ) {
+	if ( shapes.find(shape) != shapes.end() ) {
+		FLCollider* collider = new FLCollider( this, shape );
+		colliders.insert( std::make_pair(name, collider) );
+	}
+	else {
+		std::cout << "Error: invalid shape provided to collider.\n";
+	}
 }
 

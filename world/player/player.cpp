@@ -46,6 +46,8 @@
 
 FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 
+	add_collider( "position", "tilemap" );
+
 	rect bounds;
 	bounds.x = 2;
 	bounds.y = 10;

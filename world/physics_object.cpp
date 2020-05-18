@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include "../components/components.h"
+
 #include "physics_object.h"
 #include "physics_settings.h"
 #include "world_environment.h"
@@ -41,66 +43,44 @@ bool FLPhysicsObject::collides_with( FLPhysicsObject& other ) {
 }
 
 void FLPhysicsObject::update_position() {
-	// check for collisions with tilemap
-	point next = point(bounds_x(), bounds_y()) + vel;
-
-	// y direction:
-	// moving down:
-	if ( vel.y > 0 ) {
-		// check bottom left + bottom right
-		if (environment.solid_at(bounds_x(), next.y + bounds_h()) ||
-		    environment.solid_at(x() + bounds_w(), next.y + bounds_h())) {
-			// move feet to tile top
-			int tile_pos = int(next.y + bounds_h());
-			tile_pos -= (tile_pos % 8);
-			set_y( tile_pos - bounds_h() - bounds_margin.y - PHYSICS_EPSILON );
-			set_on_ground();
-		}
+	if ( colliders.find("tilemap") == colliders.end() ) {
+		move( vel );
 	}
+	else {
+		FLCollider* collider = colliders["tilemap"];
 
-	// moving up:
-	else if ( vel.y < 0 ) {
-		// check top left and top right
-		if (environment.solid_at(bounds_x(), next.y) ||
-		    environment.solid_at(x() + bounds_w(), next.y)) {
-			// move head to tile bottom
-			int tile_pos = int(next.y);
-			int diff = 8 - (tile_pos % 8);
-			set_y( tile_pos + diff + PHYSICS_EPSILON - bounds_margin.y );
-				
-			stop_vertical();
-		}
-	}
-
-	// x direction:
-	// moving right:
-	if ( vel.x > 0 ) {
-		// check top right and bottom right
-		for ( int y = bounds_y(); y < bounds_y() + bounds_h(); y += 8 ) {
-			if ( environment.solid_at(next.x + bounds_w(), y) ) {
-				int tile_pos = int(next.x + bounds_w());
-				int diff = tile_pos % 8;
-				set_x( tile_pos - diff - bounds_w() - PHYSICS_EPSILON );
-
+		// horizontal movement
+		move( vel.x, 0 );
+		if ( vel.x > 0 ) {
+			if ( collider->right_touches_tilemap() ) {
+				set_x( int(x() - ( int(x()) % 8 )) );
 				stop_horizontal();
 			}
 		}
-	}
-	// moving left:
-	else if ( vel.x < 0 ) {
-		// check top left and bottom left
-		for ( int y = bounds_y(); y < bounds_y() + bounds_h(); y += 8 ) {
-			if ( environment.solid_at(next.x, y) ) {
-				int tile_pos = int(next.x);
-				int diff = 8 - (tile_pos % 8);
-				set_x( tile_pos + diff - bounds_margin.x + PHYSICS_EPSILON );
-
+		else if ( vel.x < 0 ) {
+			if ( collider->left_touches_tilemap() ) {
+				set_x( int(x() + ( 8 - (int(x()) % 8) )) );
 				stop_horizontal();
 			}
 		}
-	}
 
-	move( vel );
+		// vertical movement
+		move( 0, vel.y );
+		if ( vel.y > 0 ) {
+			if ( collider->bottom_touches_tilemap() ) {
+				set_y( int(y() - ( int(y()) % 8 )) );
+				set_on_ground();
+				stop_vertical();
+			}
+		}
+		else if ( vel.y < 0 ) {
+			if ( collider->top_touches_tilemap() ) {
+				set_y( int(y() + ( 8 - (int(y()) % 8) )) );
+				move( 0, 1 );
+				stop_vertical();
+			}
+		}
+	}
 }
 
 void FLPhysicsObject::apply_gravity() {
