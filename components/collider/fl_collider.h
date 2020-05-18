@@ -26,6 +26,7 @@ class FLCollider {
 	protected:
 		FLGameObject* owner;
 		std::string shape_name;
+		std::string name;
 };
 
 #endif

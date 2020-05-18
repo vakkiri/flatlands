@@ -16,6 +16,7 @@ FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
 FLGameObject::FLGameObject( float x, float y, float w, float h ) {
 	FLShape* position = new FLShape( x, y, w, h );
 	shapes.insert( std::make_pair("position", position) );
+	physics_handler = nullptr;
 }
 
 FLGameObject::~FLGameObject() {
@@ -28,11 +29,23 @@ FLGameObject::~FLGameObject() {
 }
 
 void FLGameObject::set_x( float x ) { 
-	shapes["position"]->set_pos( x, y() ); 
+	// We use dx instead of just setting all positions to x, so that we can keep
+	// relative offsets between the object's position and all other shapes.
+	float dx = x - shapes["position"]->x();
+
+	for ( auto kv : shapes ) {
+		kv.second->translate( dx, 0 );
+	}
 }
 
 void FLGameObject::set_y( float y ) { 
-	shapes["position"]->set_pos( x(), y ); 
+	// We use dy instead of just setting all positions to y, so that we can keep
+	// relative offsets between the object's position and all other shapes.
+	float dy = y - shapes["position"]->y();
+
+	for ( auto kv : shapes ) {
+		kv.second->translate( 0, dy );
+	}
 }
 
 float FLGameObject::x() { return shapes["position"]->x(); }
@@ -41,19 +54,27 @@ float FLGameObject::w() { return shapes["position"]->w(); }
 float FLGameObject::h() { return shapes["position"]->h(); }
 
 void FLGameObject::move( float x, float y ) {
-	shapes["position"]->translate( x, y );
+	for ( auto kv : shapes ) {
+		kv.second->translate( x, y );
+	}
 }
 
 void FLGameObject::move( point amt ) {
-	shapes["position"]->translate( amt );
+	for ( auto kv : shapes ) {
+		kv.second->translate( amt );
+	}
 }
 
 void FLGameObject::movex( float x ) {
-	shapes["position"]->translate( x, 0 );
+	for ( auto kv : shapes ) {
+		kv.second->translate( x, 0 );
+	}
 }
 
 void FLGameObject::movey( float y ) {
-	shapes["position"]->translate( 0, y );
+	for ( auto kv : shapes ) {
+		kv.second->translate( 0, y );
+	}
 }
 
 FLShape* FLGameObject::get_shape( std::string name ) {
@@ -62,6 +83,15 @@ FLShape* FLGameObject::get_shape( std::string name ) {
 	}
 	else {
 		return shapes[name];
+	}
+}
+
+FLCollider* FLGameObject::get_collider( std::string name ) {
+	if ( colliders.find(name) == colliders.end() ) {
+		return nullptr;
+	}
+	else {
+		return colliders[name];
 	}
 }
 

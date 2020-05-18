@@ -9,6 +9,7 @@
 #define FL_COMPONENTS_H_
 
 #include "collider/fl_collider.h"
+#include "physics/fl_physics_handler.h"
 
 #endif
 

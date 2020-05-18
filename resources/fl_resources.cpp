@@ -308,10 +308,8 @@ void FLResources::load_level( int id ) {
 						new FLAmmo( (float)input[1], (float)input[2], FL_FUSION );
 						break;
 					case 1:
-						new FLDestroyableTile( (float)input[1], (float)input[2] );
 						break;
 					case 2:
-						new FLWarpGate( (float)input[1], (float)input[2] );
 						break;
 					case 3:
 						break;
@@ -319,17 +317,13 @@ void FLResources::load_level( int id ) {
 						new FLNpc( (float)input[1], (float)input[2], 0, 160, 37, 18 );
 						break;
 					case 5:
-						new FLToggler( (float)input[1], (float) input[2] );
 						break;
 					case 6:
-						new FLToggleTile( (float)input[1], (float) input[2], true );
 						break;
 					case 7:
-						new FLToggleTile( (float)input[1], (float) input[2], false );
 						break;
 					case 8:
 						break;
-					case 9: new FLPlatform( (float)input[1], (float) input[2] );
 						break;
 					case 10:
 						break;

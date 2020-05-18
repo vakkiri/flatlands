@@ -16,7 +16,6 @@
 #include "interactable_object.h"
 #include "world_environment.h"
 
-#include "objects/toggle_tile.h"
 #include "player/player.h"
 
 FLTilemap* FLWorldEnvironment::tilemap() { return _tilemap; }
@@ -30,7 +29,6 @@ void FLWorldEnvironment::reset_environment() {
 
 	// clear special collections
 	clear_colliding_objects();
-	clear_toggle_tiles();
 
 	// clear standard collections
 	clear_dynamic_objects();
@@ -64,7 +62,9 @@ void FLWorldEnvironment::update() {
 			reset_environment();
 
 		update_dynamic_objects();
+
 		_player->update_physics();
+
 	}
 }
 

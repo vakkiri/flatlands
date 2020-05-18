@@ -15,6 +15,7 @@
 
 class FLShape;
 class FLCollider;
+class FLPhysicsHandler;
 
 class FLGameObject {
 	public:
@@ -35,11 +36,13 @@ class FLGameObject {
 		void move( point amt );
 
 		FLShape* get_shape( std::string name );
+		FLCollider* get_collider( std::string name );
 
 		void add_collider( std::string shape, std::string name );
 	protected:
 		std::unordered_map<std::string, FLShape*> shapes;
 		std::unordered_map<std::string, FLCollider*> colliders;
+		FLPhysicsHandler* physics_handler;
 };
 
 #endif

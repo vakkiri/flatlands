@@ -12,7 +12,7 @@
 #include "../../net/fl_net.h"
 #include "../../resources/fl_resources.h"
 #include "../../rendering/animated_object.h"
-#include "../physics_object.h"
+#include "../world_object.h"
 
 class FLWorldSurface;
 struct texture;
@@ -43,7 +43,7 @@ struct FLWeaponStats {
 	int posessed;
 };
 
-class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
+class FLPlayer : public FLAnimatedObject, public FLWorldObject {
 	public:
 		FLPlayer();
 		virtual ~FLPlayer();
@@ -59,13 +59,13 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		virtual void attack();
 		virtual void stop_attack();
 		virtual void set_ability( FLPlayerAbility ability );
+		void update_physics();
 
 		// movement methods
 		void move_left();
 		void move_right();
 		virtual void release_walk();
 
-		virtual void update_physics();
 		virtual void update_camera();
 
 		virtual void hold_jump();
@@ -93,9 +93,7 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 	protected:
 		virtual void update_net();
 
-		virtual void apply_gravity();
 		virtual void bind_actions();
-		virtual void bound_velocity();
 
 		virtual void double_jump();
 		virtual void ground_pound();
@@ -120,7 +118,6 @@ class FLPlayer : public FLAnimatedObject, public FLPhysicsObject {
 		bool dash_right;
 		bool attacking;
 
-		unsigned int jump_frames;
 		unsigned int dash_frames;
 		unsigned int pound_frames;
 		unsigned int falling_frames;
