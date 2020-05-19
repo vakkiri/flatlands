@@ -10,11 +10,11 @@
 #define COLLIDING_OBJECT_H_
 
 #include <vector>
-#include "world_object.h"
+#include "../common/common.h"
 
 class FLPlayer;
 
-class FLCollidingObject : virtual public FLWorldObject {
+class FLCollidingObject : virtual public FLGameObject {
 	public:
 		FLCollidingObject();
 		virtual ~FLCollidingObject();

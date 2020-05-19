@@ -300,11 +300,6 @@ void FLPlayer::per_frame_update() {
 		--dash_frames;
 		state = FL_PLAYER_DASH;
 	}
-	
-	std::vector<FLCollidingObject*> collisions = FLWorldEnvironment::getInstance().find_colliding_objects( this );
-
-	for ( FLCollidingObject* collision : collisions )
-		collision->collide_with();
 }
 
 void FLPlayer::update_camera() {
@@ -454,7 +449,7 @@ void FLPlayer::set_ability( FLPlayerAbility ability ) {
 }
 
 void FLPlayer::interact() {
-	FLWorldEnvironment::getInstance().interact( this );
+	// stub
 }
 
 void FLPlayer::enable_ability() {

@@ -29,20 +29,20 @@ FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) :
 			) {
 	set_st( s, t );
 	Renderer::getInstance().add_to_world( this );
-	FLWorldEnvironment::getInstance().add_interactable_object( this );
 }
 
 FLNpc::~FLNpc() {
 	Renderer::getInstance().remove_from_world( this );
-	FLWorldEnvironment::getInstance().remove_interactable_object( this );
 }
 
 void FLNpc::interact_with() {
+	/*
 	set_game_state( FL_GAME_UI );
 	float cx = Renderer::getInstance().world_camera_x() / -2.f;
 	float cy = Renderer::getInstance().world_camera_y() / -2.f;
 	float _y = y() - cy + (512.f / 2.f);
 	float _x = x() - cx + (768.f / 2.f);
 	new FLDialogueBox( "", _x, _y );
+	*/
 }
 

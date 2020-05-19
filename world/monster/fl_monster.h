@@ -8,9 +8,7 @@
 #ifndef FL_MONSTER_H_
 #define FL_MONSTER_H_
 
-#include "../dynamic_object.h"
-#include "../physics_object.h"
-#include "../world_object.h"
+#include "../../common/common.h"
 #include "../../rendering/animated_object.h"
 
 enum FLMonsterState {
@@ -20,7 +18,7 @@ enum FLMonsterState {
 	FL_MONSTER_MOVING
 };
 
-class FLMonster : public FLAnimatedObject, public FLPhysicsObject, public FLDynamicObject {
+class FLMonster : public FLAnimatedObject {
 	public:
 		FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams animation_params );
 

@@ -6,14 +6,12 @@
 #include <iostream>
 #include <algorithm>
 
+#include "../common/common.h"
 #include "../game/fl_gamestate.h"
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
-#include "../utils/collision_utils.h"
 
 #include "colliding_object.h"
-#include "dynamic_object.h"
-#include "interactable_object.h"
 #include "world_environment.h"
 
 #include "player/player.h"
@@ -24,14 +22,6 @@ void FLWorldEnvironment::reset_environment() {
 	// XXX this code currently doesn't work properly for net games - net players are
 	// world objects and will be deleted but not restored properly
 	reset_tilemap();
-
-	clear_world_objects();
-
-	// clear special collections
-	clear_colliding_objects();
-
-	// clear standard collections
-	clear_dynamic_objects();
 
 	Renderer::getInstance().clear();
 
@@ -60,8 +50,6 @@ void FLWorldEnvironment::update() {
 	if ( get_game_state() == FL_GAME_RUNNING ) {
 		if (reset)
 			reset_environment();
-
-		update_dynamic_objects();
 	}
 }
 
@@ -79,46 +67,6 @@ void FLWorldEnvironment::set_tilemap(FLTilemap* tilemap) {
 
 bool FLWorldEnvironment::solid_at( float x, float y ) {
 	return _tilemap->solid_at( x, y );
-}
-
-void FLWorldEnvironment::add_interactable_object( FLInteractableObject *object ) {
-	interactable_objects.push_back( object );
-}
-
-void FLWorldEnvironment::remove_interactable_object( FLInteractableObject *object ) {
-	interactable_objects.erase( std::remove( interactable_objects.begin(), interactable_objects.end(), object ), interactable_objects.end() );
-}
-
-FLCollidingObject* FLWorldEnvironment::find_colliding_object( FLWorldObject* object ) {
-	std::vector<FLCollidingObject*>& colliding_objects = get_colliding_objects();
-
-	for ( FLCollidingObject* other : colliding_objects ) {
-		if ( rect_collision( object, other ) )
-			return other;
-	}
-
-	return nullptr;
-}
-
-void FLWorldEnvironment::interact( FLWorldObject* object ) {
-	for ( FLInteractableObject* other : interactable_objects ) {
-		if ( rect_collision( object, other ) ) {
-			other->interact_with();
-			break;
-		}
-	}
-}
-
-std::vector<FLCollidingObject*> FLWorldEnvironment::find_colliding_objects( FLWorldObject* object ) {
-	std::vector<FLCollidingObject*> objects;
-	std::vector<FLCollidingObject*>& colliding_objects = get_colliding_objects();
-
-	for ( FLCollidingObject* other : colliding_objects ) {
-		if ( other != nullptr && rect_collision( object, other ) )
-			objects.push_back( other );
-	}
-
-	return objects;
 }
 
 void FLWorldEnvironment::mark_reset() {

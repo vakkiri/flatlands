@@ -9,10 +9,10 @@
 #ifndef EFFECT_H_
 #define EFFECT_H_
 
-#include "world_object.h"
+#include "../common/common.h"
 #include "../rendering/animated_object.h"
 
-class FLEffect : virtual public FLAnimatedObject, virtual public FLWorldObject {
+class FLEffect : virtual public FLAnimatedObject {
 	public:
 		FLEffect( float x, float y, float s, float t, float num_frames, float w, float h );
 		virtual ~FLEffect();

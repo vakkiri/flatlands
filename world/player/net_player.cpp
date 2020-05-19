@@ -51,7 +51,7 @@ void FLNetPlayer::set_target( float tx, float ty ) {
 	}
 }
 
-void FLNetPlayer::update() {
+void FLNetPlayer::per_frame_update() {
 	float dx = target.x - x();
 	float dy = target.y - y();
 

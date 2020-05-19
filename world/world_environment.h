@@ -13,7 +13,7 @@
 
 class FLTilemap;
 class FLPlayer;
-class FLWorldObject;
+class FLGameObject;
 class FLCollidingObject;
 class FLInteractableObject;
 
@@ -39,9 +39,6 @@ class FLWorldEnvironment {
 
 		void add_interactable_object( FLInteractableObject* object );
 		void remove_interactable_object( FLInteractableObject* object );
-		FLCollidingObject* find_colliding_object( FLWorldObject* object );
-		std::vector<FLCollidingObject*> find_colliding_objects( FLWorldObject* object );
-		void interact( FLWorldObject* object );
 
 		virtual void load_next_level();
 

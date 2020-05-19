@@ -12,7 +12,7 @@
 #include "../../net/fl_net.h"
 #include "../../resources/fl_resources.h"
 #include "../../rendering/animated_object.h"
-#include "../world_object.h"
+#include "../../common/common.h"
 
 class FLWorldSurface;
 struct texture;
@@ -43,7 +43,7 @@ struct FLWeaponStats {
 	int posessed;
 };
 
-class FLPlayer : public FLAnimatedObject, public FLWorldObject {
+class FLPlayer : public FLAnimatedObject {
 	public:
 		FLPlayer();
 		virtual ~FLPlayer();

@@ -8,10 +8,9 @@
 #ifndef NPC_H_
 #define NPC_H_
 
-#include "../interactable_object.h"
 #include "../../rendering/animated_object.h"
 
-class FLNpc : virtual public FLAnimatedObject, virtual public FLInteractableObject {
+class FLNpc : virtual public FLAnimatedObject {
 	public:
 		FLNpc( float x, float y, float s, float t, float w, float h);
 		virtual ~FLNpc();

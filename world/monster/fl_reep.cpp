@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "fl_reep.h"
+#include "../../components/components.h"
 
 #define W 	32
 #define H 	32
@@ -28,7 +29,7 @@ FLReep::FLReep( float x, float y ) :
 	set_st( S, T );
 	movement_period = 1;
 	stun_duration = 120;
-	vel.x = 1.f;
+	physics_handler()->accelerate( 2.f, 0 );
 }
 
 void FLReep::update() {

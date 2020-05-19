@@ -72,7 +72,8 @@ void FLClient::connect_to_server( std::string server_hostname ) {
 void FLClient::update_players() {
 	for ( int i = 0; i < FL_MAX_CONN; ++i ) {
 		if ( net_players[i] != nullptr ) {
-			net_players[i]->update();
+			// TODO: can/should this just be called with other updator objects?
+			net_players[i]->per_frame_update();
 		}
 	}
 }
