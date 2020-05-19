@@ -14,7 +14,6 @@
 class FLTilemap;
 class FLPlayer;
 class FLGameObject;
-class FLCollidingObject;
 class FLInteractableObject;
 
 class FLWorldEnvironment {
@@ -33,12 +32,7 @@ class FLWorldEnvironment {
 		void set_tilemap(FLTilemap* tilemap);
 		void reset_tilemap();
 
-		bool solid_at(float x, float y);
-
 		void mark_reset();
-
-		void add_interactable_object( FLInteractableObject* object );
-		void remove_interactable_object( FLInteractableObject* object );
 
 		virtual void load_next_level();
 

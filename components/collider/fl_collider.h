@@ -23,6 +23,7 @@ class FLCollider {
 		bool top_touches_tilemap();
 		bool left_touches_tilemap();
 		bool right_touches_tilemap();
+
 	protected:
 		FLGameObject* owner;
 		std::string shape_name;

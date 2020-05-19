@@ -8,7 +8,6 @@
 
 #include "player.h"
 
-#include "../colliding_object.h"
 #include "../effect.h"
 #include "../physics_settings.h"
 #include "../world_environment.h"

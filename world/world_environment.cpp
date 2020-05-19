@@ -11,7 +11,6 @@
 #include "../rendering/renderer.h"
 #include "../tilemap/tilemap.h"
 
-#include "colliding_object.h"
 #include "world_environment.h"
 
 #include "player/player.h"
@@ -63,10 +62,6 @@ FLPlayer* FLWorldEnvironment::player() {
 
 void FLWorldEnvironment::set_tilemap(FLTilemap* tilemap) {
 	_tilemap = tilemap;
-}
-
-bool FLWorldEnvironment::solid_at( float x, float y ) {
-	return _tilemap->solid_at( x, y );
 }
 
 void FLWorldEnvironment::mark_reset() {
