@@ -12,7 +12,6 @@
 #include "../common/basic_types.h"
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
-#include "../world/world_environment.h"
 #include "../logging/logging.h"
 #include "animated_object.h"
 #include "renderer.h"

@@ -14,6 +14,8 @@
 #include <string>
 #include "../rendering/texture.h"
 
+class FLEnvironment;
+
 class FLResources {
 	public:
 		static FLResources& getInstance() {
@@ -24,7 +26,7 @@ class FLResources {
 		bool init();
 		void close();
 
-		void load_level( int id );
+		void load_level( int id, FLEnvironment* environment );
 		bool load_images( std::string csv_path );
 		void load_image( std::string path, std::string name );
 		texture* get_image( std::string image_name );

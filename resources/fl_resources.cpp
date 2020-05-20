@@ -9,11 +9,11 @@
 #include <IL/ilu.h>
 #include <SDL2/SDL_opengl.h>
 
+#include "../environment/fl_environment.h"
 #include "../net/fl_net.h"
 #include "../logging/logging.h"
 #include "../world/monster/fl_monster_types.h"
 #include "../world/physics_settings.h"
-#include "../world/world_environment.h"
 #include "../world/player/player.h"
 #include "../world/objects/objects.h"
 #include "../world/npcs/npcs.h"
@@ -208,13 +208,12 @@ Mix_Chunk* FLResources::get_sound( std::string effect_name ) {
 	return sfx_dict[effect_name];
 }
 
-void FLResources::load_level( int id ) {
+void FLResources::load_level( int id, FLEnvironment* environment ) {
 	std::string filepath = BASE_RESOURCE_PATH + std::to_string(id) + ".lvl";
 	std::ifstream file ( filepath, std::ios::in|std::ios::binary|std::ios::ate );
-	FLWorldEnvironment &environment = FLWorldEnvironment::getInstance();
 
-	FLTilemap* tilemap = environment.tilemap();
-	FLPlayer* player = environment.player();
+	FLTilemap* tilemap = environment->tilemap();
+	FLPlayer* player = environment->player();
 
 	if ( !file.is_open() ) {
 		log_error("Could not open map file");
@@ -257,7 +256,6 @@ void FLResources::load_level( int id ) {
 				player->set_x( input[1] );
 				player->set_y( input[2] );
 				player->set_reset_position( input[1], input[2] );
-				new FLReep( input[1], input[2] );
 				input += 3;
 			}
 			else if ( current_type == 2 ) {
@@ -303,30 +301,11 @@ void FLResources::load_level( int id ) {
 				// input[2]: y
 				// input[3]: type
 				switch ( input[3] ) {
-					case 0:
-						// was pound powerup
-						new FLAmmo( (float)input[1], (float)input[2], FL_FUSION );
+					case 0: {
+						FLAmmo* ammo = new FLAmmo( (float)input[1], (float)input[2], FL_FUSION );
+						environment->add_object( ammo );
 						break;
-					case 1:
-						break;
-					case 2:
-						break;
-					case 3:
-						break;
-					case 4:
-						new FLNpc( (float)input[1], (float)input[2], 0, 160, 37, 18 );
-						break;
-					case 5:
-						break;
-					case 6:
-						break;
-					case 7:
-						break;
-					case 8:
-						break;
-						break;
-					case 10:
-						break;
+					}
 					default:
 						log_warning( "Unknown item type" );
 						break;

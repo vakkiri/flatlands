@@ -6,9 +6,9 @@
 #include <iostream>
 
 #include "fl_collider.h"
+#include "../../environment/fl_environment.h"
 #include "../../common/common.h"
 #include "../../tilemap/tilemap.h"
-#include "../../world/world_environment.h"
 
 FLCollider::FLCollider( FLGameObject* owner, std::string shape_name ) {
 	if ( owner == nullptr ) {
@@ -31,7 +31,7 @@ bool FLCollider::touches_tilemap() {
 		std::cout << "Error: checking collision with null shape.\n";
 	}
 	else {
-		collision = FLWorldEnvironment::getInstance().tilemap()->touches_shape( shape );
+		collision = owner->environment()->tilemap()->touches_shape( shape );
 	}
 
 	return collision;
@@ -47,7 +47,7 @@ bool FLCollider::bottom_touches_tilemap() {
 	else {
 		point p1 = point( shape->x(), shape->y() + shape->h() );
 		point p2 = point( shape->x() + shape->w(), shape->y() + shape->h() );
-		collision = FLWorldEnvironment::getInstance().tilemap()->touches_line( p1, p2 );
+		collision = owner->environment()->tilemap()->touches_line( p1, p2 );
 	}
 
 	return collision;
@@ -64,7 +64,7 @@ bool FLCollider::top_touches_tilemap() {
 	else {
 		point p1 = point( shape->x(), shape->y() );
 		point p2 = point( shape->x() + shape->w(), shape->y() );
-		collision = FLWorldEnvironment::getInstance().tilemap()->touches_line( p1, p2 );
+		collision = owner->environment()->tilemap()->touches_line( p1, p2 );
 	}
 
 	return collision;
@@ -81,7 +81,7 @@ bool FLCollider::left_touches_tilemap() {
 	else {
 		point p1 = point( shape->x(), shape->y() );
 		point p2 = point( shape->x(), shape->y() + shape->h() );
-		collision = FLWorldEnvironment::getInstance().tilemap()->touches_line( p1, p2 );
+		collision = owner->environment()->tilemap()->touches_line( p1, p2 );
 	}
 
 	return collision;
@@ -98,7 +98,7 @@ bool FLCollider::right_touches_tilemap() {
 	else {
 		point p1 = point( shape->x() + shape->w(), shape->y() );
 		point p2 = point( shape->x() + shape->w(), shape->y() + shape->h() );
-		collision = FLWorldEnvironment::getInstance().tilemap()->touches_line( p1, p2 );
+		collision = owner->environment()->tilemap()->touches_line( p1, p2 );
 	}
 
 	return collision;

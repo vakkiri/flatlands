@@ -13,8 +13,10 @@
 
 #include "basic_types.h"
 
-class FLShape;
 class FLCollider;
+class FLEnvironment;
+class FLGame;
+class FLShape;
 class FLPhysicsHandler;
 
 class FLGameObject {
@@ -44,6 +46,9 @@ class FLGameObject {
 		bool is_active();
 		
 		FLPhysicsHandler* physics_handler();
+
+		FLEnvironment* environment();
+
 	protected:
 		std::unordered_map<std::string, FLShape*> shapes;
 		std::unordered_map<std::string, FLCollider*> colliders;

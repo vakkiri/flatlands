@@ -11,7 +11,6 @@
 #include "../../ui/fl_dialogue_box.h"
 #include "../../game/fl_gamestate.h"
 #include "../../rendering/renderer.h"
-#include "../world_environment.h"
 
 #define NUM_ANIMATIONS 1
 #define NUM_STEPS 2

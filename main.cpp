@@ -11,6 +11,8 @@
 #include "audio/fl_audio.h"
 #include "common/common.h"
 #include "components/components.h"
+#include "environment/fl_environment.h"
+#include "game/fl_game.h"
 #include "input/input_handler.h"
 #include "logging/logging.h"
 #include "net/fl_net.h"
@@ -19,14 +21,16 @@
 #include "tilemap/tilemap.h"
 #include "ui/fl_ui_manager.h"
 #include "world/player/player.h"
-#include "world/world_environment.h"
 
 #define TARGET_FPS 60
 #define MS_PER_FRAME (1000 / TARGET_FPS)
 
 void main_loop() {
+	bool quit = false;
+	unsigned int start_time = 0;
+	unsigned int end_time = 0;
+
 	Renderer& renderer = Renderer::getInstance();
-	FLWorldEnvironment& world = FLWorldEnvironment::getInstance();
 	FLInputHandler& input_handler = FLInputHandler::getInstance();
 	FLUIManager& ui_manager = FLUIManager::getInstance();
 
@@ -35,18 +39,9 @@ void main_loop() {
 	input_handler.init();
 	ui_manager.init();	
 
-	// Test objects...
-	FLTilemap tilemap(1024, 1024, 16);
-	world.set_tilemap(&tilemap);
-	world.set_player(new FLPlayer);
-
-	world.load_next_level();
-	// End of test objects
-
-	bool quit = false;
-
-	unsigned int start_time = 0;
-	unsigned int end_time = 0;
+	// start the game
+	FLGame::instance().init();
+	FLGame::instance().start();
 
 	while ( !quit ) {
 		start_time = SDL_GetTicks();
@@ -54,7 +49,6 @@ void main_loop() {
 
 		quit = input_handler.input_loop();
 
-		world.update();
 		fl_update_components();
 
 		renderer.render_and_swap();

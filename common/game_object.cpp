@@ -9,6 +9,7 @@
 #include "game_object.h"
 #include "fl_shape.h"
 #include "../components/components.h"
+#include "../game/fl_game.h"
 
 // TODO: Once component based refactor is done I should be able to remove the null constructor
 FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
@@ -112,4 +113,8 @@ void FLGameObject::add_collider( std::string shape, std::string name ) {
 
 FLPhysicsHandler* FLGameObject::physics_handler() {
 	return ( get_physics_handler(physics_handler_handle) );
+}
+
+FLEnvironment* FLGameObject::environment() {
+	return FLGame::instance().environment();
 }

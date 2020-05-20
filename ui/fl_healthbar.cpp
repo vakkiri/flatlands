@@ -5,7 +5,8 @@
 #include <iostream>
 #include "fl_healthbar.h"
 
-#include "../world/world_environment.h"
+#include "../environment/fl_environment.h"
+#include "../game/fl_game.h"
 #include "../world/player/player.h"
 
 #define X_POS	16
@@ -22,7 +23,7 @@ FLHealthbar::~FLHealthbar() {
 }
 
 std::vector<fl_colored_vertex>& FLHealthbar::get_primitive_vertices() {
-	float ratio = FLWorldEnvironment::getInstance().player()->health_ratio();
+	float ratio = FLGame::instance().environment()->player()->health_ratio();
 
 	primitive_vertices[1].pos.x = primitive_vertices[0].pos.x + (94 * ratio);
 	primitive_vertices[1].pos.y = primitive_vertices[0].pos.y;

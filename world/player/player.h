@@ -90,6 +90,7 @@ class FLPlayer : public FLAnimatedObject {
 
 		float health_ratio();
 		float clip_ratio();
+
 	protected:
 		virtual void update_net();
 

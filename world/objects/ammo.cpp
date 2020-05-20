@@ -4,10 +4,10 @@
  */
 
 #include <iostream>
+#include "../../environment/fl_environment.h"
 #include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
-#include "../world_environment.h"
 #include "ammo.h"
 
 #define SIZE 8
@@ -45,7 +45,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 
 FLAmmo::~FLAmmo() {
 	Renderer::getInstance().remove_from_world( this );
-	FLWorldEnvironment::getInstance().player()->add_ammo( weapon_index, num_clips );
+	environment()->player()->add_ammo( weapon_index, num_clips );
 }
 
 void FLAmmo::collide_with() {

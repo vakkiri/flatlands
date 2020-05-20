@@ -10,7 +10,6 @@
 
 #include "../effect.h"
 #include "../physics_settings.h"
-#include "../world_environment.h"
 #include "../../audio/fl_audio.h"
 #include "../../components/components.h"
 #include "../../input/input_handler.h"
@@ -44,7 +43,6 @@
 #define MAX_HEALTH	100
 
 FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
-
 	add_collider( "position", "tilemap" );
 	physics_handler_handle = new_physics_handler( this, "tilemap" );
 	updator_handle = new_updator( this );
@@ -496,3 +494,4 @@ float FLPlayer::clip_ratio() {
 
 	return ((float) clip_remaining) / ((float) weapon_stats[cur_weapon].clip_size);
 }
+
