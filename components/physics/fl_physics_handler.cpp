@@ -138,3 +138,6 @@ void FLPhysicsHandler::kill() {
 	_alive = false;
 }
 
+void FLPhysicsHandler::set_gravity_factor( float factor ) {
+	this->gravity_factor = factor;
+}

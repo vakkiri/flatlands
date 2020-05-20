@@ -277,10 +277,15 @@ void FLPlayer::move_left() {
 }
 
 void FLPlayer::per_frame_update() {
-	// XXX This rrrrrreeeeeeeeally needs to be moved ASAP to a general update function yeesh im bad
 	update_net();
 
-	// reduce effect of gravity immediately after jumping
+	if ( jump_held && physics_handler()->yvel() < 0.f ) {
+		physics_handler()->set_gravity_factor( 0.5 );
+	}
+	else {
+		physics_handler()->set_gravity_factor( 1.0 );
+	}
+
 	if ( physics_handler()->on_ground() ) {
 		hit_ground();
 	}

@@ -27,6 +27,8 @@ class FLPhysicsHandler {
 		bool on_ground();
 		bool alive();
 		void kill();
+
+		void set_gravity_factor( float factor );
 	protected:
 		void move();
 		void apply_gravity();

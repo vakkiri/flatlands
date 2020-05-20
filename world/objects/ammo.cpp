@@ -33,7 +33,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 	this->weapon_index = weapon_index;
 
 	// weapon index 0 has no ammo since it is FL_NO_WEAPON
-	set_st( 96, 16 + (8 * (weapon_index - 1)) );
+	set_st( 0, 240 + (8 * (weapon_index - 1)) );
 
 	if ( weapon_index == 0 ) {
 		num_clips = 0;

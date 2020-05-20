@@ -43,6 +43,7 @@ void main_loop() {
 	FLGame::instance().init();
 	FLGame::instance().start();
 
+	// FIXME this loop should just be in the game class
 	while ( !quit ) {
 		start_time = SDL_GetTicks();
 		end_time = start_time + MS_PER_FRAME;
@@ -58,8 +59,8 @@ void main_loop() {
 
 		// TODO: would probably be better to just run server and client in a separate thread
 		while ( SDL_GetTicks() < end_time ) {
-			fl_update_server();
-			fl_update_client();
+			//fl_update_server();
+			//fl_update_client();
 		}
 	}
 }
@@ -67,7 +68,7 @@ void main_loop() {
 int main( int argc, char* args[] ) {
 	Renderer& renderer = Renderer::getInstance();
 	FLResources& resources = FLResources::getInstance();
-	log_progress("Starting shift");
+	log_progress("Initializing flatlands engine...");
 
 	if ( renderer.init() && init_audio() && fl_init_net() ) {
 		if ( resources.init() ) {
@@ -85,7 +86,7 @@ int main( int argc, char* args[] ) {
 
 	renderer.close();
 	resources.close();
-	log_progress("Closing shift");
+	log_progress("Closing flatlands engine.");
 	return 0;
 }
 
