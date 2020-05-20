@@ -333,7 +333,10 @@ void FLResources::load_level( int id, FLEnvironment* environment ) {
 			else {
 				done = true;
 			}
+			
 		}
+
+		tilemap->update_surface();
 
 	}
 
