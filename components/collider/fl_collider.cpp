@@ -10,17 +10,26 @@
 #include "../../common/common.h"
 #include "../../tilemap/tilemap.h"
 
-FLCollider::FLCollider( FLGameObject* owner, std::string shape_name ) {
+FLCollider::FLCollider() {
+	_alive = false;
+}
+
+bool FLCollider::init( FLGameObject* owner, std::string shape_name, std::string name ) {
+	bool success = true; 
 	if ( owner == nullptr ) {
 		std::cout << "Error: cannot create collider with null owner.\n";
+		success = false;
 	}
 	else if  ( owner->get_shape(shape_name) == nullptr ) {
 		std::cout << "Error: cannot create collider with no shape.\n";
+		success = false;
 	}
 	else {
 		this->owner = owner;
 		this->shape_name = shape_name;
+		_alive = true;
 	}
+	return success;
 }
 
 bool FLCollider::touches_tilemap() {
@@ -104,3 +113,28 @@ bool FLCollider::right_touches_tilemap() {
 	return collision;
 
 }
+
+void FLCollider::add_collision_group( std::string group ) {
+	collision_groups.insert( group );
+}
+
+void FLCollider::add_target_collision_group( std::string group ) {
+	target_collision_groups.insert( group );
+}
+
+std::unordered_set<std::string>& FLCollider::get_collision_groups() {
+	return collision_groups;
+}
+
+bool FLCollider::alive() {
+	return _alive;
+}
+
+void FLCollider::kill() {
+	_alive = false;
+}
+
+void FLCollider::update() {
+
+}
+

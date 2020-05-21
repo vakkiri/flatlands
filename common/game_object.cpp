@@ -27,7 +27,7 @@ FLGameObject::~FLGameObject() {
 		delete kv.second;
 	}
 	for ( auto kv : colliders ) {
-		delete kv.second;
+		fl_delete_collider(kv.second);
 	}
 
 	delete_physics_handler( physics_handler_handle );
@@ -97,14 +97,21 @@ FLCollider* FLGameObject::get_collider( std::string name ) {
 		return nullptr;
 	}
 	else {
-		return colliders[name];
+		return fl_get_collider(colliders[name]);
 	}
 }
 
 void FLGameObject::add_collider( std::string shape, std::string name ) {
+	int result = -1;
 	if ( shapes.find(shape) != shapes.end() ) {
-		FLCollider* collider = new FLCollider( this, shape );
-		colliders.insert( std::make_pair(name, collider) );
+		result = fl_new_collider( this, shape, name );
+
+		if ( result >= 0 ) {
+			colliders.insert( std::make_pair(name, result) );
+		}
+		else {
+			std::cout << "Error: could not create new collider.\n";
+		}
 	}
 	else {
 		std::cout << "Error: invalid shape provided to collider.\n";

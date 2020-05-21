@@ -51,7 +51,7 @@ class FLGameObject {
 
 	protected:
 		std::unordered_map<std::string, FLShape*> shapes;
-		std::unordered_map<std::string, FLCollider*> colliders;
+		std::unordered_map<std::string, int> colliders;
 		int physics_handler_handle;
 		int updator_handle;
 };
