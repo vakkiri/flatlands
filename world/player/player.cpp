@@ -21,22 +21,19 @@
 #define INITIAL_WALK_ACCEL 	(0.39)
 #define WALK_ACCEL 		(0.35)
 #define RUN_ACCEL 		(0.35)
-#define DASH_INITIAL_ACCEL 	(4.0)
+#define DASH_INITIAL_ACCEL 	(5.0)
 #define DASH_ACCEL 		(0.35)
 
-#define INITIAL_JUMP_VEL 	(-4.1)
-#define JUMP_FRAME_ACCEL 	(0.2)
+#define JUMP_ACCEL 		(-4.3)
+#define DOUBLE_JUMP_ACCEL 	(-4.1)
 
 #define DASH_FRAMES 		(22)
 #define DASH_FLOAT		(0.95)
-#define DOUBLE_JUMP_ACCEL 	(3.6)
 #define GROUND_POUND_ACCEL 	(3.0)
 #define POUND_FRAMES 		(60)
 
 #define WALK_SPEED 			(2.2)
 #define RUN_SPEED 			WALK_SPEED	// currently we are not supporting running
-#define X_TERMINAL_VELOCITY 		(5.0)
-#define Y_TERMINAL_VELOCITY 		(5.5)
 #define JUMP_RELEASE_GRAVITY_FACTOR 	(1.5)
 #define JUMP_HOLD_GRAVITY_FACTOR 	(0.8)
 
@@ -150,9 +147,9 @@ void FLPlayer::add_ammo( int weapon, int num_clips ) {
 }
 
 void FLPlayer::jump() {
-	if ( physics_handler()->on_ground() ) {
+	if ( physics_handler()->on_ground() && !can_double_jump ) {
 		can_double_jump = true;
-		physics_handler()->accelerate( 0, INITIAL_JUMP_VEL );
+		physics_handler()->accelerate( 0, JUMP_ACCEL );
 		reset_animation();
 		falling_frames = 0;
 
@@ -192,7 +189,7 @@ void FLPlayer::stop_attack() {
 }
 
 void FLPlayer::double_jump() {
-	physics_handler()->accelerate( 0, -DOUBLE_JUMP_ACCEL );
+	physics_handler()->accelerate( 0, DOUBLE_JUMP_ACCEL - (0.9 * physics_handler()->yvel()) );
 
 	play_sound( "player_jump" );
 	reset_animation();
@@ -279,6 +276,7 @@ void FLPlayer::move_left() {
 void FLPlayer::per_frame_update() {
 	update_net();
 
+	// This gives the player a bit more control over their jump
 	if ( jump_held && physics_handler()->yvel() < 0.f ) {
 		physics_handler()->set_gravity_factor( 0.5 );
 	}
@@ -297,9 +295,14 @@ void FLPlayer::per_frame_update() {
 		}
 	}
 
-	// abilities take precedence for state
 	if ( dashing() ) {
 		--dash_frames;
+		if ( facing_right() ) { 
+			physics_handler()->accelerate( DASH_ACCEL, 0 );
+		}
+		else {
+			physics_handler()->accelerate( -DASH_ACCEL, 0 );
+		}
 		state = FL_PLAYER_DASH;
 	}
 }
@@ -320,7 +323,7 @@ void FLPlayer::update_camera() {
 	float dy = (r.world_camera_y() / 2) + y() + yoffset;
 
 	// TODO: replace hardcoded values with screen width/height * camera scale
-	xamt = (dx / 50) * -X_TERMINAL_VELOCITY;
+	xamt = (dx / 50) * -5.0;
 	yamt = (dy / 50) * -5.0;
 
 	r.translate_world_camera( glm::vec3( xamt, yamt, 0 ) );

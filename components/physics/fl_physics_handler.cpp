@@ -10,7 +10,9 @@
 #include "../components.h"
 #include "../../world/physics_settings.h"
 
-#define ON_GROUND_FRAMES 10
+#define ON_GROUND_FRAMES 		10
+#define DEFAULT_TERMINAL_VELOCITY_X	(5.0f)
+#define DEFAULT_TERMINAL_VELOCITY_Y	(5.5f)
 
 FLPhysicsHandler::FLPhysicsHandler() {
 	_alive = false;
@@ -42,6 +44,7 @@ bool FLPhysicsHandler::init( FLGameObject* owner, std::string collider_name ) {
 void FLPhysicsHandler::update() {
 	apply_gravity();
 	apply_friction();
+	bound_velocity();
 	move();
 	on_ground_timer -= 1;
 }
@@ -140,4 +143,19 @@ void FLPhysicsHandler::kill() {
 
 void FLPhysicsHandler::set_gravity_factor( float factor ) {
 	this->gravity_factor = factor;
+}
+
+void FLPhysicsHandler::bound_velocity() {
+	if ( vel.x > 0 ) {
+		vel.x = std::min( vel.x, DEFAULT_TERMINAL_VELOCITY_X );
+	}
+	else if ( vel.x < 0 ) {
+		vel.x = std::max( vel.x, -DEFAULT_TERMINAL_VELOCITY_X );
+	}
+	if ( vel.y > 0 ) {
+		vel.y = std::min( vel.y, DEFAULT_TERMINAL_VELOCITY_Y );
+	}
+	else if ( vel.y < 0 ) {
+		vel.y = std::max( vel.y, -DEFAULT_TERMINAL_VELOCITY_Y );
+	}
 }

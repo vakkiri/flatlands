@@ -33,6 +33,7 @@ class FLPhysicsHandler {
 		void move();
 		void apply_gravity();
 		void apply_friction();
+		void bound_velocity();
 
 
 		FLGameObject* owner;
