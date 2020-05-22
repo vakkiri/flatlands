@@ -13,6 +13,7 @@
 #include <vector>
 
 class FLGameObject;
+class FLShape;
 class FLTilemap;
 
 struct fl_collision {
@@ -41,6 +42,8 @@ class FLCollider {
 		std::unordered_set<std::string>& get_collision_groups();
 
 		fl_collision& pop_collision();
+
+		FLShape* get_shape();
 	protected:
 		FLGameObject* owner;
 		std::unordered_set<std::string> target_collision_groups;

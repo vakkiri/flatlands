@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include <unordered_map>
 #include <unordered_set>
 #include "fl_collider_manager.h"
@@ -12,6 +13,7 @@ const int NUM_COLLIDERS = 1000;
 
 FLCollider colliders[NUM_COLLIDERS];
 std::unordered_map<std::string, std::unordered_set<int>> collider_groups;
+std::unordered_set<int> empty_set;
 
 static int next_free = 0;
 static int slots_used = 0;
@@ -67,12 +69,11 @@ void fl_add_collider_to_group( int handle, std::string group ) {
 	if ( colliders[handle].alive() ) {
 		colliders[handle].add_collision_group( group );
 
-		if ( collider_groups.find( group ) != collider_groups.end() ) {
-			collider_groups[group].insert(handle);
+		if ( collider_groups.find( group ) == collider_groups.end() ) {
+			collider_groups[group] = std::unordered_set<int>();
 		}
-		else {
-			collider_groups[group] = std::unordered_set<int>(handle);
-		}
+
+		collider_groups[group].insert(handle);
 	}
 }
 
@@ -95,3 +96,12 @@ FLCollider* fl_get_collider( int handle ) {
 	return collider;
 }
 
+std::unordered_set<int>& fl_get_group_colliders( std::string group ) {
+	auto it = collider_groups.find( group );
+	if ( it != collider_groups.end() ) {
+		return it->second;
+	}
+	else {
+		return empty_set;
+	}
+}

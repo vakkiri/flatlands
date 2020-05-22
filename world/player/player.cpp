@@ -41,7 +41,11 @@
 
 FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
 	add_collider( "position", "tilemap" );
+	fl_add_collider_to_group( colliders["tilemap"], "player" );
+	fl_get_collider( colliders["tilemap"] )->add_target_collision_group( "items" );
+
 	physics_handler_handle = new_physics_handler( this, "tilemap" );
+
 	updator_handle = new_updator( this );
 
 	// Movement and abilities
@@ -147,7 +151,7 @@ void FLPlayer::add_ammo( int weapon, int num_clips ) {
 }
 
 void FLPlayer::jump() {
-	if ( physics_handler()->on_ground() && !can_double_jump ) {
+	if ( physics_handler()->on_ground() ) {
 		can_double_jump = true;
 		physics_handler()->accelerate( 0, JUMP_ACCEL );
 		reset_animation();

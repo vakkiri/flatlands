@@ -4,6 +4,7 @@
  */
 
 #include <iostream>
+#include "../../components/components.h"
 #include "../../environment/fl_environment.h"
 #include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
@@ -28,7 +29,11 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 			STEP,
 			REPEATS
 			) {
-	
+
+	// TODO: should maybe have some pre-defined groups to maintain consistency?
+	add_collider( "position", "position" );	
+	fl_add_collider_to_group( colliders["position"], "items" );
+
 	Renderer::getInstance().add_to_world( this );
 	this->weapon_index = weapon_index;
 

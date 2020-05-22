@@ -5,28 +5,25 @@
 
 
 #include "collision_utils.h"
-#include "../logging/logging.h"
-#include "../world/world_object.h"
+#include "../common/fl_shape.h"
 
-bool rect_collision( FLWorldObject* a, FLWorldObject* b ) {
+bool rect_collision( FLShape* a, FLShape* b ) {
 	if ( a == nullptr ) {
-		log_error( "First paramter of rect_collision is null" );
 		return false;
 	}
 	if ( b == nullptr ) {
-		log_error( "Second paramter of rect_collision is null" );
 		return false;
 	}
 
-	float ax = a->bounds_x();
-	float ay = a->bounds_y();
-	float aw = a->bounds_w();
-	float ah = a->bounds_h();
+	float ax = a->x();
+	float ay = a->y();
+	float aw = a->w();
+	float ah = a->h();
 
-	float bx = b->bounds_x();
-	float by = b->bounds_y();
-	float bw = b->bounds_w();
-	float bh = b->bounds_h();
+	float bx = b->x();
+	float by = b->y();
+	float bw = b->w();
+	float bh = b->h();
 
 	if ( ax > bx + bw || bx > ax + aw )
 		return false;

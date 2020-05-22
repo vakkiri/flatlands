@@ -6,9 +6,11 @@
 #include <iostream>
 
 #include "fl_collider.h"
+#include "fl_collider_manager.h"
 #include "../../environment/fl_environment.h"
 #include "../../common/common.h"
 #include "../../tilemap/tilemap.h"
+#include "../../utils/collision_utils.h"
 
 FLCollider::FLCollider() {
 	_alive = false;
@@ -30,6 +32,10 @@ bool FLCollider::init( FLGameObject* owner, std::string shape_name, std::string 
 		_alive = true;
 	}
 	return success;
+}
+
+FLShape* FLCollider::get_shape() {
+	return owner->get_shape( shape_name );
 }
 
 bool FLCollider::touches_tilemap() {
@@ -127,14 +133,29 @@ std::unordered_set<std::string>& FLCollider::get_collision_groups() {
 }
 
 bool FLCollider::alive() {
-	return _alive;
-}
+	return _alive; }
 
 void FLCollider::kill() {
 	_alive = false;
 }
 
 void FLCollider::update() {
+	FLCollider* target;
+	FLShape* target_shape;
+	FLShape* shape = get_shape();
 
+	for ( std::string group : target_collision_groups ) {
+		for ( int object_handle : fl_get_group_colliders(group) ) {
+			target = fl_get_collider( object_handle );
+
+			if ( target != nullptr && (target_shape = target->get_shape()) != nullptr ) {
+				if ( rect_collision( shape, target_shape ) ){
+				}
+			}
+			else {
+				std::cout << "Warning: a null collider is alive and being referenced.\n";
+			}
+		}
+	}
 }
 
