@@ -43,6 +43,7 @@ FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4
 	add_collider( "position", "tilemap" );
 	fl_add_collider_to_group( colliders["tilemap"], "player" );
 	fl_get_collider( colliders["tilemap"] )->add_target_collision_group( "items" );
+	fl_get_collider( colliders["tilemap"] )->set_collision_method( std::bind( &FLPlayer::handle_collision, this, std::placeholders::_1) );
 
 	physics_handler_handle = new_physics_handler( this, "tilemap" );
 
@@ -507,3 +508,6 @@ float FLPlayer::clip_ratio() {
 	return ((float) clip_remaining) / ((float) weapon_stats[cur_weapon].clip_size);
 }
 
+void FLPlayer::handle_collision( FLCollider* collision ) {
+	std::cout << "Player got a collision.\n";
+}

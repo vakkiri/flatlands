@@ -15,6 +15,8 @@
 #include "../../common/common.h"
 
 class FLWorldSurface;
+class FLCollider;
+
 struct texture;
 
 enum FLPlayerAbility {
@@ -92,6 +94,8 @@ class FLPlayer : public FLAnimatedObject {
 		float clip_ratio();
 
 	protected:
+		virtual void handle_collision(FLCollider* collision);
+
 		virtual void update_net();
 
 		virtual void bind_actions();

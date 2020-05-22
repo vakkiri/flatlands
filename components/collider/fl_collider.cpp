@@ -14,6 +14,7 @@
 
 FLCollider::FLCollider() {
 	_alive = false;
+	has_collision_method = false;
 }
 
 bool FLCollider::init( FLGameObject* owner, std::string shape_name, std::string name ) {
@@ -140,6 +141,11 @@ void FLCollider::kill() {
 }
 
 void FLCollider::update() {
+	detect_collisions();
+	process_collisions();
+}
+
+void FLCollider::detect_collisions() {
 	FLCollider* target;
 	FLShape* target_shape;
 	FLShape* shape = get_shape();
@@ -150,6 +156,7 @@ void FLCollider::update() {
 
 			if ( target != nullptr && (target_shape = target->get_shape()) != nullptr ) {
 				if ( rect_collision( shape, target_shape ) ){
+					collisions.push_back(target);
 				}
 			}
 			else {
@@ -159,3 +166,20 @@ void FLCollider::update() {
 	}
 }
 
+void FLCollider::process_collisions() {
+	if ( has_collision_method ) {
+		while ( !collisions.empty() ) {
+			FLCollider* collision = collisions.back();
+			on_collision( collision );
+			collisions.pop_back();
+		}
+	}
+	else {
+		collisions.clear();
+	}
+}
+
+void FLCollider::set_collision_method( std::function<void(FLCollider*)> meth ) {
+	on_collision = meth;
+	has_collision_method = true;
+}
