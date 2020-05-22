@@ -510,4 +510,5 @@ float FLPlayer::clip_ratio() {
 
 void FLPlayer::handle_collision( FLCollider* collision ) {
 	std::cout << "Player got a collision.\n";
+	collision->add_collision( nullptr );
 }

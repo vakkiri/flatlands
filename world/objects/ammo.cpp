@@ -4,6 +4,8 @@
  */
 
 #include <iostream>
+#include <functional>
+
 #include "../../components/components.h"
 #include "../../environment/fl_environment.h"
 #include "../../net/fl_net.h"
@@ -33,6 +35,7 @@ FLAmmo::FLAmmo( float x, float y, int weapon_index ) :
 	// TODO: should maybe have some pre-defined groups to maintain consistency?
 	add_collider( "position", "position" );	
 	fl_add_collider_to_group( colliders["position"], "items" );
+	fl_get_collider( colliders["position"] )->set_collision_method( std::bind( &FLAmmo::on_collision, this, std::placeholders::_1 ) );
 
 	Renderer::getInstance().add_to_world( this );
 	this->weapon_index = weapon_index;
@@ -53,7 +56,8 @@ FLAmmo::~FLAmmo() {
 	environment()->player()->add_ammo( weapon_index, num_clips );
 }
 
-void FLAmmo::collide_with() {
+void FLAmmo::on_collision( FLCollider* obj ) {
+	std::cout << "AMMO COLLISION\n";
 	delete this;
 }
 

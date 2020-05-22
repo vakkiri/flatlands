@@ -183,3 +183,8 @@ void FLCollider::set_collision_method( std::function<void(FLCollider*)> meth ) {
 	on_collision = meth;
 	has_collision_method = true;
 }
+
+void FLCollider::add_collision( FLCollider* collision ) {
+	collisions.push_back( collision );
+}
+

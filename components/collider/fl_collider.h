@@ -34,6 +34,7 @@ class FLCollider {
 		void update();
 		void detect_collisions();
 		void process_collisions();
+		void add_collision( FLCollider* collision );
 
 		void add_collision_group( std::string group );
 		void add_target_collision_group( std::string group );

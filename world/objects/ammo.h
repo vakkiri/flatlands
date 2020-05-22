@@ -11,11 +11,13 @@
 #include "../../net/net_object.h"
 #include "../../rendering/animated_object.h"
 
+class FLCollider;
+
 class FLAmmo : virtual public FLAnimatedObject, virtual public FLNetObject {
 	public:
 		FLAmmo( float x, float y, int weapon_index );
 		virtual ~FLAmmo();
-		virtual void collide_with();
+		void on_collision( FLCollider* obj );
 	protected:
 		int weapon_index;
 		int num_clips;
