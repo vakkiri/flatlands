@@ -8,6 +8,7 @@
 #include "../environment/fl_environment.h"
 #include "../game/fl_game.h"
 #include "../world/player/player.h"
+#include "../rendering/textured_object.h"
 
 #define X_POS	16
 #define Y_POS	16

@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "fl_environment.h"
 
 #include "../world/player/player.h"

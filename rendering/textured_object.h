@@ -13,17 +13,36 @@
 #include "../common/game_object.h"
 #include "../common/basic_types.h"
 
-class FLTexturedObject : virtual public FLGameObject {
+struct FLTexturedObjectParams {
+	FLGameObject* owner;
+	float x;
+	float y;
+	float w;
+	float h;
+};
+
+class FLTexturedObject {
 	public:
-		FLTexturedObject();
+		FLTexturedObject() = delete;
+		FLTexturedObject( FLGameObject* parent, float w, float h );
+		FLTexturedObject( FLGameObject* owner, float x, float y, float w, float h );
 		FLTexturedObject( float x, float y, float w, float h );
+		FLTexturedObject( FLTexturedObjectParams& params );
 
 		virtual ~FLTexturedObject() {};
 
+		float x();
+		float y();
+		float w();
+		float h();
 		virtual float s();
 		virtual float t();
 
 		void set_st( float s, float t );
+		void set_x( float x );
+		void set_y( float y );
+		void set_w( float w );
+		void set_h( float h );
 
 		void set_reverse( bool reverse );
 		bool reversed();
@@ -31,6 +50,11 @@ class FLTexturedObject : virtual public FLGameObject {
 		void set_visible( bool visible );	
 		bool is_visible();
 	protected:
+		FLGameObject* owner;
+		float _x;
+		float _y;
+		float _w;
+		float _h;
 		float _s;
 		float _t;
 		bool reverse;

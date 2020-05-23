@@ -260,9 +260,9 @@ void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
 		net_players[slot] = new FLNetPlayer();
 	}
 
-	net_players[slot]->set_reverse(reverse);
+	net_players[slot]->get_animator("body")->set_reverse(reverse);
 	net_players[slot]->set_target(x, y);
-	net_players[slot]->set_animation(animation);
+	net_players[slot]->get_animator("body")->set_animation(animation);
 }
 
 void FLClient::fill_pos_message( void *data, FLNetMessage *msg ) {

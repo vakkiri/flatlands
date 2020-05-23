@@ -9,44 +9,26 @@
 
 std::vector<FLAnimatedObject*> animated_objects;
 
-FLAnimatedObject::FLAnimatedObject(unsigned int num_animations) : FLTexturedObject() {
+FLAnimatedObject::FLAnimatedObject( FLTexturedObjectParams& tex_params, FLAnimatedObjectParams& anim_params ) :
+	FLTexturedObject( tex_params ) {
 	active = true;
-	repeats = true;
 	animation_finished = false;
 	elapsed_frames = 0;
 	elapsed_start_steps = 0;
 	cur_step = 0;
 	cur_animation = 0;
-	this->num_animations = num_animations;
-	start_repeat = std::vector<unsigned int>(num_animations, 0);
+	has_update_method = false;
 
+	this->num_steps = anim_params.num_steps;
+	this->frames_per_step = anim_params.frames_per_step;
+	this->s_step = anim_params.sstep;
+	this->t_step = anim_params.tstep;
+	this->repeats = anim_params.repeats;
+	this->num_animations = anim_params.num_animations;
+
+	start_repeat = std::vector<unsigned int>(num_animations, 0);
 	animated_object_list_position = animated_objects.size();
 	animated_objects.push_back( this );
-}
-
-FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float sstep, float tstep ) : FLAnimatedObject( num_animations ) {
-	this->num_steps = num_steps;
-	this->frames_per_step = frames_per_step;
-	this->s_step = sstep;
-	this->t_step = tstep;
-	cur_animation = 0;
-}
-
-FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step ) : FLAnimatedObject( num_animations, num_steps, frames_per_step, step, step) {}
-
-FLAnimatedObject::FLAnimatedObject( unsigned int num_animations, unsigned int num_steps, unsigned int frames_per_step, float step, bool repeats ) : 
-	FLAnimatedObject( num_animations, num_steps, frames_per_step, step ) {
-	this->repeats = repeats;
-}
-
-FLAnimatedObject::FLAnimatedObject( FLAnimatedObjectParams& params ) : FLAnimatedObject( params.num_animations ) {
-	this->num_steps = params.num_steps;
-	this->frames_per_step = params.frames_per_step;
-	this->s_step = params.sstep;
-	this->t_step = params.tstep;
-	this->repeats = params.repeats;
-	cur_animation = 0;
-
 }
 
 FLAnimatedObject::~FLAnimatedObject() {
@@ -54,6 +36,9 @@ FLAnimatedObject::~FLAnimatedObject() {
 }
 
 void FLAnimatedObject::update_animation() {
+	if ( has_update_method ) {
+		on_animation_update();
+	}
 	if ( active ) {
 		if (elapsed_frames == 0 && cur_step == 0) {
 			run_start_callbacks();
@@ -123,6 +108,15 @@ void FLAnimatedObject::run_start_callbacks() {
 	for (auto f : anim_start_callbacks) {
 		f();
 	}
+}
+
+int FLAnimatedObject::animation() {
+	return cur_animation;
+}
+
+void FLAnimatedObject::set_animation_update_method(std::function<void(void)> meth) {
+	on_animation_update = meth;
+	has_update_method = true;
 }
 
 std::vector<FLAnimatedObject*>& get_animated_objects() {

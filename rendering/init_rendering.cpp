@@ -230,7 +230,6 @@ void Renderer::init_surface_textures() {
 	framebuffer_surface->update_buffers( framebuffer_shape );
 
 	delete framebuffer_shape;
-
 }
 
 glm::mat4 Renderer::get_projection_matrix() {

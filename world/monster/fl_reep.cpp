@@ -23,10 +23,9 @@ FLAnimatedObjectParams animation_params = {
 	true,	// repeats
 };
 
-FLReep::FLReep( float x, float y ) : 
-	FLGameObject( x, y, W, H ),
-	FLMonster( x, y, W, H, animation_params ) {
-	set_st( S, T );
+
+FLReep::FLReep( float x, float y ) : FLMonster( x, y, W, H, animation_params ) {
+	animators["body"]->set_st( S, T );
 	movement_period = 1;
 	stun_duration = 120;
 	physics_handler()->accelerate( 2.f, 0 );

@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include <math.h>
 #include "tilemap.h"
 
@@ -12,6 +13,7 @@
 #include "../rendering/textured_object.h"
 
 FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
+	tileset = 0;
 	this->w = w;
 	this->h = h;
 	this->cell_size = cell_size;
@@ -46,7 +48,7 @@ void FLTilemap::set_solid_at( float x, float y, float w, float h, bool solid ) {
 }
 
 void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool solid ) {
-	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
+	FLTexturedObject *t = new FLTexturedObject( x, y, w, h );
 	t->set_st( index * cell_size, 16 * tileset );
 
 	tiles.push_back(t);
@@ -87,7 +89,9 @@ void FLTilemap::reset( unsigned int new_w, unsigned int new_h ) {
 }
 
 void FLTilemap::set_tileset( unsigned int tileset ) {
-	this->tileset = tileset;
+	// XXX getting rid of this for now cause only 1 tileset and it's mismatched with editor lol...
+	//this->tileset = tileset;
+	this->tileset = 0;
 }
 
 bool FLTilemap::touches_shape( FLShape* shape ) {

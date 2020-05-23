@@ -10,8 +10,9 @@
 #include "fl_shape.h"
 #include "../components/components.h"
 #include "../game/fl_game.h"
+#include "../rendering/animated_object.h"
 
-// TODO: Once component based refactor is done I should be able to remove the null constructor
+// TODO: should this be removed, or should I just initialize a large list of game objects at start?
 FLGameObject::FLGameObject() : FLGameObject( 0, 0, 0, 0 ) {}
 
 FLGameObject::FLGameObject( float x, float y, float w, float h ) {
@@ -20,6 +21,8 @@ FLGameObject::FLGameObject( float x, float y, float w, float h ) {
 
 	physics_handler_handle = -1;
 	updator_handle = -1;
+
+	parent = nullptr;
 }
 
 FLGameObject::~FLGameObject() {
@@ -28,6 +31,9 @@ FLGameObject::~FLGameObject() {
 	}
 	for ( auto kv : colliders ) {
 		fl_delete_collider(kv.second);
+	}
+	for ( auto kv : animators ) {
+		delete kv.second;
 	}
 
 	delete_physics_handler( physics_handler_handle );
@@ -54,8 +60,22 @@ void FLGameObject::set_y( float y ) {
 	}
 }
 
-float FLGameObject::x() { return shapes["position"]->x(); }
-float FLGameObject::y() { return shapes["position"]->y(); }
+float FLGameObject::x() { 
+	float x = shapes["position"]->x();
+	if ( parent != nullptr ) {
+		x += parent->x();
+	}
+	return x;
+}
+
+float FLGameObject::y() { 
+	float y = shapes["position"]->y();
+	if ( parent != nullptr ) {
+		y += parent->y();
+	}
+	return y;
+}
+
 float FLGameObject::w() { return shapes["position"]->w(); }
 float FLGameObject::h() { return shapes["position"]->h(); }
 
@@ -124,4 +144,19 @@ FLPhysicsHandler* FLGameObject::physics_handler() {
 
 FLEnvironment* FLGameObject::environment() {
 	return FLGame::instance().environment();
+}
+
+void FLGameObject::set_parent( FLGameObject* obj ) {
+	parent = obj;
+}
+
+FLAnimatedObject* FLGameObject::get_animator( std::string name ) {
+	FLAnimatedObject* anim = nullptr;
+
+	auto it = animators.find( name );
+	if ( it != animators.end() ) {
+		anim = it->second;
+	}
+
+	return anim;
 }

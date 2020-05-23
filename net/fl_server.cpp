@@ -229,9 +229,9 @@ void FLServer::update_client_pos( IPaddress addr, Uint8* data ) {
 		memcpy(&x, &(data[1]), sizeof(int16_t));
 		memcpy(&y, &(data[3]), sizeof(int16_t));
 
-		client_conns[slot].player->set_reverse(reverse);
+		client_conns[slot].player->get_animator("body")->set_reverse(reverse);
 		client_conns[slot].player->set_target((float) x, (float) y);
-		client_conns[slot].player->set_animation(data[5]);
+		client_conns[slot].player->get_animator("body")->set_animation(data[5]);
 	}
 
 }

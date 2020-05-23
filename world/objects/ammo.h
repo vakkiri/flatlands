@@ -13,7 +13,7 @@
 
 class FLCollider;
 
-class FLAmmo : virtual public FLAnimatedObject, virtual public FLNetObject {
+class FLAmmo : virtual public FLGameObject, virtual public FLNetObject {
 	public:
 		FLAmmo( float x, float y, int weapon_index );
 		virtual ~FLAmmo();

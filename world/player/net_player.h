@@ -10,7 +10,7 @@
 
 #include "../../rendering/animated_object.h"
 
-class FLNetPlayer : public FLAnimatedObject {
+class FLNetPlayer : public FLGameObject {
 	public:
 		FLNetPlayer();
 

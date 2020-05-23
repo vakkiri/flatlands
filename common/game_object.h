@@ -13,6 +13,7 @@
 
 #include "basic_types.h"
 
+class FLAnimatedObject;
 class FLCollider;
 class FLEnvironment;
 class FLGame;
@@ -23,8 +24,9 @@ class FLGameObject {
 	public:
 		FLGameObject();
 		FLGameObject(float x, float y, float w, float h);
-		~FLGameObject();
+		virtual ~FLGameObject();
 
+		void set_parent( FLGameObject* obj );
 		virtual void set_x( float x );
 		virtual void set_y( float y );
 		virtual float x();
@@ -49,9 +51,14 @@ class FLGameObject {
 
 		FLEnvironment* environment();
 
+		FLAnimatedObject* get_animator( std::string name );
 	protected:
+		FLGameObject* parent;
+
 		std::unordered_map<std::string, FLShape*> shapes;
 		std::unordered_map<std::string, int> colliders;
+		// TODO: this should be an int handle, and an Animator component..
+		std::unordered_map<std::string, FLAnimatedObject*> animators;
 		int physics_handler_handle;
 		int updator_handle;
 };

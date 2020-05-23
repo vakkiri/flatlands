@@ -17,21 +17,13 @@
 #define FRAMES_PER_STEP 10
 #define REPEATS true
 
-FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) :
-	FLGameObject(x, y, w, h ),
-	FLAnimatedObject(
-			NUM_ANIMATIONS,
-			NUM_STEPS,
-			FRAMES_PER_STEP,
-			w,
-			REPEATS
-			) {
-	set_st( s, t );
-	Renderer::getInstance().add_to_world( this );
+FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) : FLGameObject(x, y, w, h ) {
+	//set_st( s, t );
+	//Renderer::getInstance().add_to_world( this );
 }
 
 FLNpc::~FLNpc() {
-	Renderer::getInstance().remove_from_world( this );
+	//Renderer::getInstance().remove_from_world( this );
 }
 
 void FLNpc::interact_with() {

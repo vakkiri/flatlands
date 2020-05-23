@@ -11,9 +11,9 @@
 
 #include "../../net/fl_net.h"
 #include "../../resources/fl_resources.h"
-#include "../../rendering/animated_object.h"
 #include "../../common/common.h"
 
+class FLAnimatedObject;
 class FLWorldSurface;
 class FLCollider;
 
@@ -42,15 +42,14 @@ struct FLWeaponStats {
 	int ammo;
 	int clip_size;
 	float recoil;
-	int posessed;
+	bool posessed;
 };
 
-class FLPlayer : public FLAnimatedObject {
+class FLPlayer : public FLGameObject {
 	public:
 		FLPlayer();
 		virtual ~FLPlayer();
 
-		virtual void update_animation();
 
 		void enable_ability();
 
@@ -62,6 +61,7 @@ class FLPlayer : public FLAnimatedObject {
 		virtual void stop_attack();
 		virtual void set_ability( FLPlayerAbility ability );
 		virtual void per_frame_update();
+		virtual void animation_update();
 
 		// movement methods
 		void move_left();

@@ -8,8 +8,8 @@
 #ifndef FL_MONSTER_H_
 #define FL_MONSTER_H_
 
-#include "../../common/common.h"
 #include "../../rendering/animated_object.h"
+#include "../../common/common.h"
 
 enum FLMonsterState {
 	FL_MONSTER_IDLE,
@@ -18,7 +18,7 @@ enum FLMonsterState {
 	FL_MONSTER_MOVING
 };
 
-class FLMonster : public FLAnimatedObject {
+class FLMonster : public FLGameObject {
 	public:
 		FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams animation_params );
 

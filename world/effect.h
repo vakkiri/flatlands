@@ -14,7 +14,7 @@
 
 class FLEffect : virtual public FLAnimatedObject {
 	public:
-		FLEffect( float x, float y, float s, float t, float num_frames, float w, float h );
+		FLEffect( FLTexturedObjectParams tex_params, FLAnimatedObjectParams anim_params, float s, float t );
 		virtual ~FLEffect();
 		void update_animation();
 };

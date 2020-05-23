@@ -10,7 +10,7 @@
 
 #include "../../rendering/animated_object.h"
 
-class FLNpc : virtual public FLAnimatedObject {
+class FLNpc : virtual public FLGameObject {
 	public:
 		FLNpc( float x, float y, float s, float t, float w, float h);
 		virtual ~FLNpc();

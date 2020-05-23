@@ -37,11 +37,11 @@ void main_loop() {
 	// initialization	
 	renderer.init_surface_textures();
 	input_handler.init();
-	ui_manager.init();	
 
 	// start the game
 	FLGame::instance().init();
 	FLGame::instance().start();
+	ui_manager.init();	
 
 	// FIXME this loop should just be in the game class
 	while ( !quit ) {

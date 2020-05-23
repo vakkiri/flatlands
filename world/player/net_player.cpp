@@ -7,17 +7,22 @@
 #include "net_player.h"
 #include "../../net/fl_net.h"
 #include "../../rendering/renderer.h"
+#include "../../rendering/animated_object.h"
 
 // TODO: this should probably be based on the terminal velocities in the player class
 #define MAX_MOVEMENT 32.f
 #define MS_PER_FRAME (1000.f/60.f)
 
-FLNetPlayer::FLNetPlayer() : FLGameObject( 0, 0, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
+FLNetPlayer::FLNetPlayer() : FLGameObject( 0, 0, 16, 32 ) {
 	target.x = 0;
 	target.y = 0;
 
-	// Add to renderer
-	Renderer::getInstance().add_to_world(this);
+	FLAnimatedObjectParams anim_params = { 5, 6, 4, 16.f, 32.f };
+	FLTexturedObjectParams tex_params = { this, 0, 0, 16.f, 32.f };
+
+	animators["body"] = new FLAnimatedObject( tex_params, anim_params );
+	Renderer::getInstance().add_to_world( animators["body"] );
+
 	last_position_update = 0;
 }
 

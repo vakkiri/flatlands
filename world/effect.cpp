@@ -7,19 +7,8 @@
 
 #include "../rendering/renderer.h"
 
-#define REPEATS false
-#define NUM_ANIMATIONS 1
-#define FRAMES_PER_STEP 2
-
-FLEffect::FLEffect( float x, float y, float s, float t, float num_frames, float w, float h ) :
-	FLGameObject( x, y, w, h ),
-	FLAnimatedObject(
-			NUM_ANIMATIONS,
-			num_frames,
-			FRAMES_PER_STEP,
-			w,
-			REPEATS
-			) {
+FLEffect::FLEffect( FLTexturedObjectParams tex_params, FLAnimatedObjectParams anim_params, float s, float t ) :
+	FLAnimatedObject( tex_params, anim_params ) {
 	set_st( s, t );
 
 	Renderer::getInstance().add_to_world( this );

@@ -14,6 +14,7 @@
 #include "../../components/components.h"
 #include "../../input/input_handler.h"
 #include "../../rendering/world_surface.h"
+#include "../../rendering/animated_object.h"
 #include "../../rendering/renderer.h"
 #include "../../logging/logging.h"
 
@@ -39,7 +40,7 @@
 
 #define MAX_HEALTH	100
 
-FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4, 16.f, 32.f ) {
+FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ) {
 	add_collider( "position", "tilemap" );
 	fl_add_collider_to_group( colliders["tilemap"], "player" );
 	fl_get_collider( colliders["tilemap"] )->add_target_collision_group( "items" );
@@ -66,21 +67,28 @@ FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ), FLAnimatedObject( 5, 6, 4
 	// Network
 	last_update_tick = SDL_GetTicks();
 
-	// Weapon
-	weapon = new FLAnimatedObject( 1, 6, 5, 16.f, 16.f );
-	weapon->set_repeats(false);
+	// Add to renderer and input mapping
+	FLAnimatedObjectParams animation_params = { 5, 6, 4, 16.f, 32.f, true };
+	FLTexturedObjectParams tex_params = { this, 0, 0, 16.f, 32.f };
+
+	FLAnimatedObjectParams wep_animation_params = { 1, 6, 5, 16.f, 16.f, true };
+	FLTexturedObjectParams wep_tex_params = { this, 0, 10.f, 16.f, 16.f };
+	
+	weapon = new FLAnimatedObject( wep_tex_params, wep_animation_params );
+	weapon->set_st(0, 224);
+	animators["body"] = new FLAnimatedObject( tex_params, animation_params );
+
 	weapon->stop_animation();
-	init_weapon_stats();
+
+	Renderer::getInstance().add_to_world( animators["body"] );
+	Renderer::getInstance().add_to_world( weapon );
+
+	bind_actions();
 
 	// stats
 	max_health = MAX_HEALTH;
 	health = max_health;
-
-	// Add to renderer and input mapping
-	Renderer::getInstance().add_to_world(this);
-	Renderer::getInstance().add_to_world(weapon);
-
-	bind_actions();
+	init_weapon_stats();
 }
 
 FLPlayer::~FLPlayer() {
@@ -89,13 +97,10 @@ FLPlayer::~FLPlayer() {
 }
 
 void FLPlayer::init_weapon_stats() {
-	for (int i = 0; i < FL_NUM_WEAPONS; ++i) {
-		memset(&(weapon_stats[i]), 0, sizeof(weapon_stats));
-	}
-
 	weapon_stats[FL_FUSION].ammo = 12;
 	weapon_stats[FL_FUSION].clip_size = 12;
 	weapon_stats[FL_FUSION].recoil = 0.9f;
+	weapon_stats[FL_FUSION].posessed = true;
 }
 
 void FLPlayer::bind_actions() {
@@ -113,6 +118,7 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> attack = std::bind(&FLPlayer::attack, this);
 	std::function<void(void)> stop_attack = std::bind(&FLPlayer::stop_attack, this);
 	std::function<void(void)> drain_ammo = std::bind(&FLPlayer::drain_ammo, this);
+	std::function<void(void)> animation_update = std::bind(&FLPlayer::animation_update, this);
 
 	// map binded actions to input handler
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION3, FL_KEY_HELD, hold_run);
@@ -131,6 +137,8 @@ void FLPlayer::bind_actions() {
 
 	// Other callbacks
 	weapon->add_start_callback(drain_ammo);
+	animators["body"]->set_animation_update_method(animation_update);
+
 }
 
 void FLPlayer::drain_ammo() {
@@ -155,17 +163,22 @@ void FLPlayer::jump() {
 	if ( physics_handler()->on_ground() ) {
 		can_double_jump = true;
 		physics_handler()->accelerate( 0, JUMP_ACCEL );
-		reset_animation();
+		animators["body"]->reset_animation();
 		falling_frames = 0;
 
 		// Create a visual smoke effect
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 288, 48, 7, 32, 16 );
+		// FIXME need dedicated subclasses of effects etc. with params ready cause this UGLY
+		FLTexturedObjectParams tex_params = { nullptr, x() - (w()/2.f), y() + h() - 16, 32,  16};
+		FLAnimatedObjectParams anim_params = { 1, 7, 2, 32, 16, false };
+		new FLEffect( tex_params, anim_params, 288, 48 );
 		
 		// play sound effect
 		play_sound( "player_jump" );
 	}
 	else if ( can_double_jump ) {
-		new FLEffect( x() - (w()/2.f), y() + h() - 16, 288, 32, 7, 32, 16 );
+		FLTexturedObjectParams tex_params = { nullptr, x() - (w()/2.f), y() + h(), 32,  16};
+		FLAnimatedObjectParams anim_params = { 1, 7, 2, 32, 16, false };
+		new FLEffect( tex_params, anim_params, 288, 32 );
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -197,7 +210,7 @@ void FLPlayer::double_jump() {
 	physics_handler()->accelerate( 0, DOUBLE_JUMP_ACCEL - (0.9 * physics_handler()->yvel()) );
 
 	play_sound( "player_jump" );
-	reset_animation();
+	animators["body"]->reset_animation();
 }
 
 void FLPlayer::ground_pound() {
@@ -207,7 +220,12 @@ void FLPlayer::ground_pound() {
 void FLPlayer::dash() {
 	if ( can_dash() ) {
 		play_sound( "player_dash" );
-		FLEffect* effect = new FLEffect( x(), y(), 288, 0, 8, 16, 32 );
+
+		// Again, ugly, should have factories or somethin'
+		FLTexturedObjectParams tex_params = { nullptr, x(), y() + h(), 16, 32 };
+		FLAnimatedObjectParams anim_params = { 1, 7, 2, 16, 32, false };
+		FLEffect* effect = new FLEffect( tex_params, anim_params, 288, 0 );
+
 		dash_right = facing_right();
 		if (dash_right) {
 			physics_handler()->accelerate( DASH_INITIAL_ACCEL, 0 );
@@ -218,7 +236,7 @@ void FLPlayer::dash() {
 		}
 
 		dash_frames = DASH_FRAMES;
-		reset_animation();
+		animators["body"]->reset_animation();
 	}
 }
 
@@ -252,7 +270,7 @@ void FLPlayer::move_right() {
 		else
 			physics_handler()->accelerate(WALK_ACCEL, 0);
 
-		set_reverse(false);
+		animators["body"]->set_reverse(false);
 		 
 	}
 
@@ -271,7 +289,7 @@ void FLPlayer::move_left() {
 		else
 			physics_handler()->accelerate(-WALK_ACCEL, 0);
 
-		set_reverse(true);
+		animators["body"]->set_reverse(true);
 	}
 
 	if ( state != FL_PLAYER_DASH )
@@ -280,6 +298,7 @@ void FLPlayer::move_left() {
 
 void FLPlayer::per_frame_update() {
 	update_net();
+	update_camera();
 
 	// This gives the player a bit more control over their jump
 	if ( jump_held && physics_handler()->yvel() < 0.f ) {
@@ -317,7 +336,7 @@ void FLPlayer::update_camera() {
 	float xamt = 0;
 	float yamt = 0;
 	float xoffset;
-	if ( reverse )
+	if ( animators["body"]->reversed() )
 		xoffset = 32;
 	else
 		xoffset = 64;
@@ -334,25 +353,23 @@ void FLPlayer::update_camera() {
 	r.translate_world_camera( glm::vec3( xamt, yamt, 0 ) );
 }
 
-void FLPlayer::update_animation() {
+void FLPlayer::animation_update() {
 	/* set weapon position to our own */
-	if (!reverse) {
-		weapon->set_x( x() + 6.f);
+	if ( !animators["body"]->reversed() ) {
+		weapon->set_x( 6.f);
 	}
 	else {
-		weapon->set_x( x() - 6.f);
+		weapon->set_x( -6.f);
 	}
-	weapon->set_y( y() + 14.f );
-	weapon->set_reverse( reverse );
+	weapon->set_y( 14.f );
+	weapon->set_reverse( animators["body"]->reversed() );
 
 	switch ( cur_weapon ) {
 		case FL_NO_WEAPON:
 			break;
 		case FL_FUSION:
-			weapon->set_st(96, 0);
+			weapon->set_st(0, 224);
 			weapon->set_steps(16, 0);
-			//weapon->set_w(16.f);
-			//weapon->set_h(16.f);
 			weapon->set_repeats(true);
 			break;
 		default:
@@ -362,30 +379,30 @@ void FLPlayer::update_animation() {
 	switch ( state ) {
 		case FL_PLAYER_IDLE:
 			if ( attacking ) {
-				set_animation( 6 );
+				animators["body"]->set_animation( 6 );
 			}
 			else {
-				set_animation( 0 );
+				animators["body"]->set_animation( 0 );
 			}
 			break;
 		case FL_PLAYER_WALK:
 			if ( attacking ) {
-				set_animation( 2 );
+				animators["body"]->set_animation( 2 );
 			}
 			else {
-				set_animation( 1 );
+				animators["body"]->set_animation( 1 );
 			}
 			break;
 		case FL_PLAYER_JUMP:
 			if ( attacking ) {
-				set_animation( 4 );
+				animators["body"]->set_animation( 4 );
 			}
 			else {
-				set_animation( 3 );
+				animators["body"]->set_animation( 3 );
 			}
 			break;
 		case FL_PLAYER_DASH:
-			set_animation( 5 );
+			animators["body"]->set_animation( 5 );
 			attacking = false;
 			break;
 		default:
@@ -408,10 +425,6 @@ void FLPlayer::update_animation() {
 	if ( state == FL_PLAYER_WALK && physics_handler()->on_ground() ) {
 		start_sound("player_walk");
 	}
-	
-	weapon->update_animation();
-	FLAnimatedObject::update_animation();
-	update_camera();
 }
 
 void FLPlayer::hold_jump() { jump_held = true; }
@@ -467,7 +480,7 @@ void FLPlayer::enable_ability() {
 }
 
 bool FLPlayer::facing_right() {
-	return (!reverse);
+	return ( !animators["body"]->reversed() );
 }
 
 FLAnimatedObject* FLPlayer::get_weapon() {
@@ -476,8 +489,8 @@ FLAnimatedObject* FLPlayer::get_weapon() {
 
 void FLPlayer::update_net() {
 	Uint32 tick = SDL_GetTicks();
-	int animation = cur_animation;
-	if (reverse) {
+	int animation = animators["body"]->animation();
+	if ( animators["body"]->reversed() ) {
 		animation |= ANIM_REVERSE_BIT;
 	}
 
@@ -495,7 +508,11 @@ void FLPlayer::update_net() {
 }
 
 float FLPlayer::health_ratio() {
-	return health / max_health;
+	float ratio = 0.f;
+	if ( max_health > 0 )  {
+		ratio = float(health) / float(max_health);
+	}
+	return ratio;
 }
 
 float FLPlayer::clip_ratio() {
@@ -509,6 +526,12 @@ float FLPlayer::clip_ratio() {
 }
 
 void FLPlayer::handle_collision( FLCollider* collision ) {
-	std::cout << "Player got a collision.\n";
-	collision->add_collision( nullptr );
+	std::unordered_set<std::string> groups = collision->get_collision_groups();
+
+	if ( groups.find("items") != groups.end() ) {
+		// lol should prob just pass my own collider or something but whatever
+		collision->add_collision( nullptr );
+	}
+	if ( groups.find("monsters") != groups.end() ) {
+	}
 }
