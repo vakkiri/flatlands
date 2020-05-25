@@ -130,3 +130,7 @@ bool FLTilemap::touches_line( point p1, point p2 ) {
 
 	return false;
 }
+
+float FLTilemap::get_cell_size() {
+	return cell_size;
+}

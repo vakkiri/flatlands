@@ -9,6 +9,8 @@
 #include "fl_physics_handler.h"
 #include "../components.h"
 #include "../../world/physics_settings.h"
+#include "../../tilemap/tilemap.h"
+#include "../../environment/fl_environment.h"
 
 #define ON_GROUND_FRAMES 		10
 #define DEFAULT_TERMINAL_VELOCITY_X	(5.0f)
@@ -73,6 +75,7 @@ void FLPhysicsHandler::apply_friction() {
 
 void FLPhysicsHandler::move() {
 	FLCollider* collider = owner->get_collider( collider_name );
+	int cell_size = int(owner->environment()->tilemap()->get_cell_size());
 
 	if ( collider == nullptr ) {
 		owner->move( vel );
@@ -82,13 +85,13 @@ void FLPhysicsHandler::move() {
 		owner->move( vel.x, 0 );
 		if ( vel.x > 0 ) {
 			if ( collider->right_touches_tilemap() ) {
-				owner->set_x( int(owner->x() - ( int(owner->x()) % 8 )) );
+				owner->set_x( int(owner->x() - ( int(owner->x()) % cell_size )) );
 				vel.x = 0;
 			}
 		}
 		else if ( vel.x < 0 ) {
 			if ( collider->left_touches_tilemap() ) {
-				owner->set_x( int(owner->x() + ( 8 - (int(owner->x()) % 8) )) );
+				owner->set_x( int(owner->x() + ( cell_size - (int(owner->x()) % cell_size) )) );
 				vel.x = 0;
 			}
 		}
@@ -97,14 +100,14 @@ void FLPhysicsHandler::move() {
 		owner->move( 0, vel.y );
 		if ( vel.y > 0 ) {
 			if ( collider->bottom_touches_tilemap() ) {
-				owner->set_y( int(owner->y() - ( int(owner->y()) % 8 )) );
+				owner->set_y( int(owner->y() - ( int(owner->y()) % cell_size )) );
 				on_ground_timer = ON_GROUND_FRAMES;
 				vel.y = 0;
 			}
 		}
 		else if ( vel.y < 0 ) {
 			if ( collider->top_touches_tilemap() ) {
-				owner->set_y( int(owner->y() + ( 8 - (int(owner->y()) % 8) )) );
+				owner->set_y( int(owner->y() + ( cell_size - (int(owner->y()) % cell_size) )) );
 				vel.y = 0;
 			}
 		}

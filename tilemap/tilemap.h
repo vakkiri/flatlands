@@ -34,6 +34,7 @@ class FLTilemap {
 		bool touches_shape( FLShape* shape );
 		bool touches_line( point p1, point p2 );
 
+		float get_cell_size();
 	protected:
 		std::vector<FLTexturedObject*> tiles;
 		std::vector<std::vector<bool>> collision_map;

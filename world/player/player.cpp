@@ -71,7 +71,7 @@ FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ) {
 	FLAnimatedObjectParams animation_params = { 5, 6, 4, 16.f, 32.f, true };
 	FLTexturedObjectParams tex_params = { this, 0, 0, 16.f, 32.f };
 
-	FLAnimatedObjectParams wep_animation_params = { 1, 6, 5, 16.f, 16.f, true };
+	FLAnimatedObjectParams wep_animation_params = { 1, 6, 2, 16.f, 16.f, true };
 	FLTexturedObjectParams wep_tex_params = { this, 0, 10.f, 16.f, 16.f };
 	
 	weapon = new FLAnimatedObject( wep_tex_params, wep_animation_params );
@@ -222,7 +222,7 @@ void FLPlayer::dash() {
 		play_sound( "player_dash" );
 
 		// Again, ugly, should have factories or somethin'
-		FLTexturedObjectParams tex_params = { nullptr, x(), y() + h(), 16, 32 };
+		FLTexturedObjectParams tex_params = { nullptr, x(), y(), 16, 32 };
 		FLAnimatedObjectParams anim_params = { 1, 7, 2, 16, 32, false };
 		FLEffect* effect = new FLEffect( tex_params, anim_params, 288, 0 );
 
