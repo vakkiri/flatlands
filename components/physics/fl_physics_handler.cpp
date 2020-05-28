@@ -12,7 +12,7 @@
 #include "../../tilemap/tilemap.h"
 #include "../../environment/fl_environment.h"
 
-#define ON_GROUND_FRAMES 		10
+#define ON_GROUND_FRAMES 		2
 #define DEFAULT_TERMINAL_VELOCITY_X	(5.0f)
 #define DEFAULT_TERMINAL_VELOCITY_Y	(5.5f)
 

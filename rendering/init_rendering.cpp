@@ -17,7 +17,7 @@
 
 #define PRIMITIVE_RESTART 65535
 
-#define SCREEN_WIDTH (1024)
+#define SCREEN_WIDTH (1280)
 #define SCREEN_HEIGHT (608)
 
 bool Renderer::init_shaders() {
