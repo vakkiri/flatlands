@@ -20,6 +20,8 @@ class FLPhysicsHandler {
 		void update();
 		void accelerate( float x, float y);
 		void stop();
+		void stopx();
+		void stopy();
 
 		float xvel();
 		float yvel();

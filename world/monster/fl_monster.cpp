@@ -4,8 +4,11 @@
  */
 
 #include "fl_monster.h"
-#include "../../rendering/renderer.h"
+#include "../player/player.h"
 #include "../../components/components.h"
+#include "../../environment/fl_environment.h"
+#include "../../game/fl_game.h"
+#include "../../rendering/renderer.h"
 
 FLMonster::FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams animation_params ) :
 	FLGameObject( x, y, w, h ) {
@@ -22,5 +25,14 @@ FLMonster::FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams
 	monster_state = FL_MONSTER_IDLE;	
 	facing_right = true;
 
+}
+
+point FLMonster::distance_from_player() {
+	// TODO: choose closest of all net players
+	FLPlayer* player = FLGame::instance().environment()->player();
+	point p;
+	p.x = x() - player->x();
+	p.y = y() - player->y();
+	return p;
 }
 

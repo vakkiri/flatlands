@@ -158,6 +158,14 @@ void FLPhysicsHandler::stop() {
 	vel.y = 0;
 }
 
+void FLPhysicsHandler::stopx() {
+	vel.x = 0;
+}
+
+void FLPhysicsHandler::stopy() {
+	vel.y = 0;
+}
+
 bool FLPhysicsHandler::alive() {
 	return _alive;
 }

@@ -22,10 +22,10 @@ class FLMonster : public FLGameObject {
 	public:
 		FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams animation_params );
 
-		virtual void update() = 0;
+		virtual void per_frame_update() = 0;
 	protected:
-		virtual void move() {};
 		virtual void attack() {};
+		point distance_from_player();
 
 		int movement_period;
 		int stun_duration;
