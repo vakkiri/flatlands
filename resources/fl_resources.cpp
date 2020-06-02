@@ -156,6 +156,14 @@ void FLResources::load_image( std::string path, std::string name ) {
 		tex->h = (float) ilGetInteger( IL_IMAGE_HEIGHT );
 		tex->id = gl_id;
 		image_dict[name] = tex;
+
+		// add the pixels to a dict storing pixel rgba data 
+		float* pixels = new float[int(tex->w) * int(tex->h) * 4];
+		glBindTexture( GL_TEXTURE_2D, tex->id );
+		glGetTexImage( GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, pixels );
+		image_pixel_dict[name] = pixels;
+
+
 	}
 
 	ilDeleteImages( 1, &img_id );
@@ -202,6 +210,19 @@ bool FLResources::load_sfx( std::string csv_path ) {
 
 texture* FLResources::get_image( std::string image_name ) {
 	return image_dict[image_name];
+}
+
+float* FLResources::get_image_pixels( std::string image_name ) {
+	return image_pixel_dict[image_name];
+}
+
+float FLResources::get_image_transparency( std::string image_name, float s, float t ) {
+	float *pixels = get_image_pixels(image_name);
+	texture* tex = get_image(image_name);
+	int num_channels = 4;
+	int alpha_channel_offset = 3;
+	int index = (t * int(tex->w) * num_channels) + (s * num_channels) + alpha_channel_offset;
+	return pixels[index];
 }
 
 Mix_Chunk* FLResources::get_sound( std::string effect_name ) {
@@ -270,7 +291,8 @@ void FLResources::load_level( int id, FLEnvironment* environment ) {
 							16.f,
 							16.f,
 							(float)input[3]+1,
-							(bool)input[4]
+							(bool)input[4],
+							(int) input[5]
 						);
 				input += 6;
 			}
@@ -281,6 +303,11 @@ void FLResources::load_level( int id, FLEnvironment* environment ) {
 				input += 8;
 			}
 			else if ( current_type == 5) {
+				// monster
+				// input[1]: x
+				// input[2]: y
+				// input[3]: type
+				new FLReep( float(input[1]), float(input[2]) );
 				input += 5;
 			}
 			else if ( current_type == 6 ) {

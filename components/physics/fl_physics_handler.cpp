@@ -81,34 +81,56 @@ void FLPhysicsHandler::move() {
 		owner->move( vel );
 	}
 	else {
+		bool moved_x = false;
+		bool moved_y = false;
 		// move horizontally
 		owner->move( vel.x, 0 );
 		if ( vel.x > 0 ) {
-			if ( collider->right_touches_tilemap() ) {
-				owner->set_x( int(owner->x() - ( int(owner->x()) % cell_size )) );
+			while ( collider->right_touches_tilemap() ) {
+				owner->set_x( int(owner->x()) - 1 );
 				vel.x = 0;
+				moved_x = true;
+			}
+			// anti-jitter
+			if ( moved_x ) {
+				owner->set_x( int(owner->x()) + 1 );
 			}
 		}
 		else if ( vel.x < 0 ) {
-			if ( collider->left_touches_tilemap() ) {
-				owner->set_x( int(owner->x() + ( cell_size - (int(owner->x()) % cell_size) )) );
+			while ( collider->left_touches_tilemap() ) {
+				owner->set_x( int(owner->x()) + 1 );
 				vel.x = 0;
+				moved_x = true;
+			}
+			// anti-jitter
+			if ( moved_x ) {
+				owner->set_x( int(owner->x()) - 1 );
 			}
 		}
 
 		// move vertically
 		owner->move( 0, vel.y );
 		if ( vel.y > 0 ) {
-			if ( collider->bottom_touches_tilemap() ) {
-				owner->set_y( int(owner->y() - ( int(owner->y()) % cell_size )) );
+			while ( collider->bottom_touches_tilemap() ) {
+				owner->set_y( int(owner->y()) - 1 );
 				on_ground_timer = ON_GROUND_FRAMES;
 				vel.y = 0;
+				moved_y = true;
+			}
+			// anti-jitter
+			if ( moved_y ) {
+				owner->set_y( int(owner->y()) + 1 );
 			}
 		}
 		else if ( vel.y < 0 ) {
-			if ( collider->top_touches_tilemap() ) {
-				owner->set_y( int(owner->y() + ( cell_size - (int(owner->y()) % cell_size) )) );
+			while ( collider->top_touches_tilemap() ) {
+				owner->set_y( int(owner->y()) + 1 );
 				vel.y = 0;
+				moved_y = true;
+			}
+			// anti-jitter
+			if ( moved_y ) {
+				owner->set_y( int(owner->y()) - 1 );
 			}
 		}
 	}

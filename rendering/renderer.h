@@ -56,7 +56,8 @@ class Renderer {
 
 		// Surfaces
 		FLWorldSurface *world_surface;
-		FLTexturedSurface *tilemap_surface;
+		FLTexturedSurface *tilemap_bg_surface;
+		FLTexturedSurface *tilemap_fg_surface;
 		FLTexturedSurface *background_surface;
 		FLTexturedSurface *framebuffer_surface;
 		std::vector<FLParticleSurface*> particle_surfaces;
@@ -112,7 +113,8 @@ class Renderer {
 		FLTexturedRectShader* get_textured_rect_shader();
 		FLColoredPolyShader* get_colored_poly_shader();
 		FLWorldSurface *get_world_surface();
-		FLTexturedSurface *get_tilemap_surface();
+		FLTexturedSurface *get_tilemap_bg_surface();
+		FLTexturedSurface *get_tilemap_fg_surface();
 
 		static Renderer& getInstance() {
 			static Renderer instance;

@@ -189,17 +189,20 @@ bool Renderer::init() {
 	log_progress( "Settings surface textures" );
 
 	world_surface = new FLWorldSurface();
-	tilemap_surface = new FLTexturedSurface();
+	tilemap_bg_surface = new FLTexturedSurface();
+	tilemap_fg_surface = new FLTexturedSurface();
 	background_surface = new FLTexturedSurface();
 	framebuffer_surface = new FLTexturedSurface();
 
 	world_surface->set_shader( &textured_rect_shader );
-	tilemap_surface->set_shader( &textured_rect_shader );
+	tilemap_bg_surface->set_shader( &textured_rect_shader );
+	tilemap_fg_surface->set_shader( &textured_rect_shader );
 	background_surface->set_shader( &textured_rect_shader );
 	framebuffer_surface->set_shader( &framebuffer_shader );
 	
-	world_renderables.push_back(tilemap_surface);
+	world_renderables.push_back(tilemap_bg_surface);
 	world_renderables.push_back(world_surface);
+	world_renderables.push_back(tilemap_fg_surface);
 	background_renderables.push_back(background_surface);
 
 	return true;
@@ -207,7 +210,8 @@ bool Renderer::init() {
 
 void Renderer::init_surface_textures() {
 	world_surface->set_tex( FLResources::getInstance().get_image("world") );
-	tilemap_surface->set_tex( FLResources::getInstance().get_image("tiles") );
+	tilemap_bg_surface->set_tex( FLResources::getInstance().get_image("tiles") );
+	tilemap_fg_surface->set_tex( FLResources::getInstance().get_image("tiles") );
 
 	// background shape and texture
 	background_surface->set_tex( FLResources::getInstance().get_image("background") );

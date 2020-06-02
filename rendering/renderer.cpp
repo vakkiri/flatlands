@@ -158,8 +158,12 @@ FLWorldSurface* Renderer::get_world_surface() {
 	return world_surface;
 }
 
-FLTexturedSurface* Renderer::get_tilemap_surface() {
-	return tilemap_surface;
+FLTexturedSurface* Renderer::get_tilemap_bg_surface() {
+	return tilemap_bg_surface;
+}
+
+FLTexturedSurface* Renderer::get_tilemap_fg_surface() {
+	return tilemap_fg_surface;
 }
 
 void Renderer::update_animations() {

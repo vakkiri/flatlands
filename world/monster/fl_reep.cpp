@@ -16,7 +16,7 @@
 
 FLAnimatedObjectParams animation_params = {
 	1,	// num_animations
-	10,	// num_steps
+	8,	// num_steps
 	5,	// frames_per_step
 	32,	// sstep
 	32,	// tstep
@@ -29,6 +29,7 @@ FLReep::FLReep( float x, float y ) : FLMonster( x, y, W, H, animation_params ) {
 	movement_period = 1;
 	stun_duration = 120;
 	physics_handler()->accelerate( 2.f, 0 );
+	physics_handler()->set_gravity_factor( 0.f );
 }
 
 void FLReep::update() {

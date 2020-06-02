@@ -30,10 +30,13 @@ class FLResources {
 		bool load_images( std::string csv_path );
 		void load_image( std::string path, std::string name );
 		texture* get_image( std::string image_name );
+		float* get_image_pixels( std::string image_name );
+		float get_image_transparency( std::string image_name, float s, float t );
 		Mix_Chunk* get_sound( std::string effect_name );
 
 	protected:
 		std::unordered_map< std::string, texture* > image_dict;
+		std::unordered_map< std::string, float* > image_pixel_dict;
 		std::unordered_map< std::string, Mix_Chunk* > sfx_dict;
 
 	private:
