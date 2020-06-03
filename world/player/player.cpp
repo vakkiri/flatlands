@@ -44,6 +44,7 @@ FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ) {
 	add_collider( "position", "tilemap" );
 	fl_add_collider_to_group( colliders["tilemap"], "player" );
 	fl_get_collider( colliders["tilemap"] )->add_target_collision_group( "items" );
+	fl_get_collider( colliders["tilemap"] )->add_target_collision_group( "projectiles" );
 	fl_get_collider( colliders["tilemap"] )->set_collision_method( std::bind( &FLPlayer::handle_collision, this, std::placeholders::_1) );
 
 	physics_handler_handle = new_physics_handler( this, "tilemap" );
@@ -88,6 +89,7 @@ FLPlayer::FLPlayer() : FLGameObject( 32, 64, 16, 32 ) {
 	// stats
 	max_health = MAX_HEALTH;
 	health = max_health;
+	target_health = max_health;
 	init_weapon_stats();
 }
 
@@ -296,9 +298,19 @@ void FLPlayer::move_left() {
 		state = FL_PLAYER_WALK;
 }
 
+void FLPlayer::update_health() {
+	if ( health > target_health ) {
+		health -= 1;
+	}
+	else if ( health < target_health ) {
+		health += 1;
+	}
+}
+
 void FLPlayer::per_frame_update() {
 	update_net();
 	update_camera();
+	update_health();
 
 	// This gives the player a bit more control over their jump
 	if ( jump_held && physics_handler()->yvel() < 0.f ) {
@@ -534,4 +546,12 @@ void FLPlayer::handle_collision( FLCollider* collision ) {
 	}
 	if ( groups.find("monsters") != groups.end() ) {
 	}
+	if ( groups.find("projectiles") != groups.end() ) {
+		collision->add_collision( nullptr );
+	}
 }
+
+void FLPlayer::hit( int damage ) {
+	target_health = std::max( 0, target_health - damage );
+}
+

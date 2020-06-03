@@ -22,6 +22,9 @@ class FLProjectile : public FLGameObject {
 				int damage, 
 				FLAnimatedObjectParams animation_params );
 
+		virtual ~FLProjectile();
+
+		void on_collision( FLCollider* obj );
 	protected:
 		int damage;
 };

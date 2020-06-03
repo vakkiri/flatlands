@@ -56,9 +56,9 @@ void FLReep::move() {
 }
 
 void FLReep::attack() {
-	float vx = -(vector_from_player.x / distance_from_player);
-	float vy = -(vector_from_player.y / distance_from_player);
-
-	new FLReepProjectile( x(), y(), vx, vy );
+	float speed = 1.5f;
+	float vx = -(vector_from_player.x / distance_from_player) * speed;
+	float vy = -(vector_from_player.y / distance_from_player) * speed;
+	new FLReepProjectile( x(), y() + 16, vx, vy );
 }
 
