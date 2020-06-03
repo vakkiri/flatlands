@@ -36,6 +36,7 @@ bool FLPhysicsHandler::init( FLGameObject* owner, std::string collider_name ) {
 		vel.x = 0;
 		vel.y = 0;
 		gravity_factor = 1.0;
+		friction_factor = 1.0;
 		on_ground_timer = 0;
 		_alive = true;
 	}
@@ -64,6 +65,8 @@ void FLPhysicsHandler::apply_friction() {
 	else {
 		amt = FLPhysics::getInstance().air_resist();
 	}
+
+	amt *= friction_factor;
 
 	if ( vel.x > 0 ) {
 		vel.x = std::max( vel.x - amt, 0.f );
@@ -176,6 +179,10 @@ void FLPhysicsHandler::kill() {
 
 void FLPhysicsHandler::set_gravity_factor( float factor ) {
 	this->gravity_factor = factor;
+}
+
+void FLPhysicsHandler::set_friction_factor( float factor ) {
+	this->friction_factor = factor;
 }
 
 void FLPhysicsHandler::bound_velocity() {

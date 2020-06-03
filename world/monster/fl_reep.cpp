@@ -7,6 +7,7 @@
 
 #include "fl_reep.h"
 #include "../../components/components.h"
+#include "../projectiles/fl_projectiles.h"
 
 #define W 	32
 #define H 	32
@@ -47,12 +48,17 @@ void FLReep::move() {
 		animators["body"]->set_reverse(false);
 	}
 	if ( vector_from_player.x > 64 && xv > -1.2f ) {
-		physics_handler()->accelerate(-0.79, 0);
+		physics_handler()->accelerate(-0.76, 0);
 	}
 	else if ( vector_from_player.x < -64 && xv < 1.2f ) {
-		physics_handler()->accelerate(0.79, 0);
+		physics_handler()->accelerate(0.76, 0);
 	}
 }
 
 void FLReep::attack() {
+	float vx = -(vector_from_player.x / distance_from_player);
+	float vy = -(vector_from_player.y / distance_from_player);
+
+	new FLReepProjectile( x(), y(), vx, vy );
 }
+

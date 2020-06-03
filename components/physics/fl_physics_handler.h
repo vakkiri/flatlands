@@ -31,6 +31,7 @@ class FLPhysicsHandler {
 		void kill();
 
 		void set_gravity_factor( float factor );
+		void set_friction_factor( float factor );
 	protected:
 		void move();
 		void apply_gravity();
@@ -43,6 +44,7 @@ class FLPhysicsHandler {
 
 		point vel;
 		float gravity_factor;
+		float friction_factor;
 		int on_ground_timer;
 		bool _alive;
 };
