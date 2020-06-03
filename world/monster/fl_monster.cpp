@@ -3,6 +3,8 @@
  *
  */
 
+#include <math.h>
+
 #include "fl_monster.h"
 #include "../player/player.h"
 #include "../../components/components.h"
@@ -25,14 +27,45 @@ FLMonster::FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams
 	monster_state = FL_MONSTER_IDLE;	
 	facing_right = true;
 
+	movement_tick = 0;
+	attack_tick = 0;
+	stun_tick = 0;
 }
 
-point FLMonster::distance_from_player() {
+point FLMonster::get_distance_from_player() {
 	// TODO: choose closest of all net players
 	FLPlayer* player = FLGame::instance().environment()->player();
 	point p;
 	p.x = x() - player->x();
 	p.y = y() - player->y();
 	return p;
+}
+
+void FLMonster::per_frame_update() {
+	vector_from_player = get_distance_from_player();
+	distance_from_player = sqrt( (vector_from_player.x * vector_from_player.x) + (vector_from_player.y * vector_from_player.y) );
+
+	if ( stun_tick > 0 ) {
+		--stun_tick;
+	}
+
+	if ( distance_from_player < vision_radius && stun_tick <= 0 ) {
+		--movement_tick;
+		--attack_tick;
+
+		if ( movement_tick <= 0 ) {
+			move();
+			movement_tick = movement_period;
+		}
+
+		if ( attack_tick <= 0 ) {
+			attack();
+			attack_tick = attack_period;
+		}
+	
+		if ( distance_from_player < near_radius ) {
+			on_player_near();
+		}
+	}
 }
 
