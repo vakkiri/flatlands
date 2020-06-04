@@ -21,46 +21,47 @@ class FLShape;
 class FLPhysicsHandler;
 
 class FLGameObject {
-	public:
-		FLGameObject();
-		FLGameObject(float x, float y, float w, float h);
-		virtual ~FLGameObject();
+  public:
+	FLGameObject();
+	FLGameObject(float x, float y, float w, float h);
+	virtual ~FLGameObject();
 
-		void set_parent( FLGameObject* obj );
-		virtual void set_x( float x );
-		virtual void set_y( float y );
-		virtual float x();
-		virtual float y();
-		virtual float w();
-		virtual float h();
+	void set_parent(FLGameObject *obj);
+	virtual void set_x(float x);
+	virtual void set_y(float y);
+	virtual float x();
+	virtual float y();
+	virtual float w();
+	virtual float h();
 
-		void movex( float x );
-		void movey( float y );
-		void move( float x, float y);
-		void move( point amt );
+	void movex(float x);
+	void movey(float y);
+	void move(float x, float y);
+	void move(point amt);
 
-		virtual void per_frame_update() {};
+	virtual void per_frame_update(){};
 
-		FLShape* get_shape( std::string name );
-		FLCollider* get_collider( std::string name );
+	FLShape *get_shape(std::string name);
+	FLCollider *get_collider(std::string name);
 
-		void add_collider( std::string shape, std::string name );
-		bool is_active();
-		
-		FLPhysicsHandler* physics_handler();
+	void add_collider(std::string shape, std::string name);
+	bool is_active();
 
-		FLEnvironment* environment();
+	FLPhysicsHandler *physics_handler();
 
-		FLAnimatedObject* get_animator( std::string name );
-	protected:
-		FLGameObject* parent;
+	FLEnvironment *environment();
 
-		std::unordered_map<std::string, FLShape*> shapes;
-		std::unordered_map<std::string, int> colliders;
-		// TODO: this should be an int handle, and an Animator component..
-		std::unordered_map<std::string, FLAnimatedObject*> animators;
-		int physics_handler_handle;
-		int updator_handle;
+	FLAnimatedObject *get_animator(std::string name);
+
+  protected:
+	FLGameObject *parent;
+
+	std::unordered_map<std::string, FLShape *> shapes;
+	std::unordered_map<std::string, int> colliders;
+	// TODO: this should be an int handle, and an Animator component..
+	std::unordered_map<std::string, FLAnimatedObject *> animators;
+	int physics_handler_handle;
+	int updator_handle;
 };
 
 #endif

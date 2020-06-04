@@ -7,15 +7,8 @@
 
 #include "../environment/fl_environment.h"
 
-void FLGame::init() {
-	_environment = new FLEnvironment();
-}
+void FLGame::init() { _environment = new FLEnvironment(); }
 
-void FLGame::start() {
-	_environment->load_level(0);
-}
+void FLGame::start() { _environment->load_level(0); }
 
-FLEnvironment* FLGame::environment() {
-	return _environment;
-}
-
+FLEnvironment *FLGame::environment() { return _environment; }

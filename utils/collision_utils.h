@@ -9,6 +9,6 @@
 
 class FLShape;
 
-bool rect_collision( FLShape* a, FLShape* b );
+bool rect_collision(FLShape *a, FLShape *b);
 
 #endif

@@ -11,18 +11,19 @@
 #include "fl_ui_element.h"
 
 class FLAmmobar : public FLUIElement {
-	public:
-		FLAmmobar();
-		~FLAmmobar();
+  public:
+	FLAmmobar();
+	~FLAmmobar();
 
-		virtual std::vector<std::vector<fl_colored_vertex>>& get_primitive_vertices();
-	protected:
-		virtual void init_textures();
-		virtual void init_vertices();
+	virtual std::vector<std::vector<fl_colored_vertex>> &
+	get_primitive_vertices();
 
-		FLTexturedObject* icon;
-		FLTexturedObject* bar_image;
+  protected:
+	virtual void init_textures();
+	virtual void init_vertices();
+
+	FLTexturedObject *icon;
+	FLTexturedObject *bar_image;
 };
 
 #endif
-

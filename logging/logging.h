@@ -14,4 +14,3 @@ void log_warning(std::string str);
 void log_error(std::string str);
 
 #endif
-

@@ -3,15 +3,14 @@
  *
  */
 
-
 #include "collision_utils.h"
 #include "../common/fl_shape.h"
 
-bool rect_collision( FLShape* a, FLShape* b ) {
-	if ( a == nullptr ) {
+bool rect_collision(FLShape *a, FLShape *b) {
+	if (a == nullptr) {
 		return false;
 	}
-	if ( b == nullptr ) {
+	if (b == nullptr) {
 		return false;
 	}
 
@@ -25,12 +24,11 @@ bool rect_collision( FLShape* a, FLShape* b ) {
 	float bw = b->w();
 	float bh = b->h();
 
-	if ( ax > bx + bw || bx > ax + aw )
+	if (ax > bx + bw || bx > ax + aw)
 		return false;
 
-	if ( ay > by + bh || by > ay + ah )
+	if (ay > by + bh || by > ay + ah)
 		return false;
 
 	return true;
 }
-

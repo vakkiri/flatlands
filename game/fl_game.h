@@ -11,22 +11,22 @@
 class FLEnvironment;
 
 class FLGame {
-	public:
-		static FLGame& instance() {
-			static FLGame instance;
-			return instance;
-		}
+  public:
+	static FLGame &instance() {
+		static FLGame instance;
+		return instance;
+	}
 
-		void init();
-		void start();
+	void init();
+	void start();
 
-		FLEnvironment* environment();
+	FLEnvironment *environment();
 
-	protected:
-		FLEnvironment* _environment;
-	private:
-		FLGame() {};
+  protected:
+	FLEnvironment *_environment;
+
+  private:
+	FLGame(){};
 };
 
 #endif
-

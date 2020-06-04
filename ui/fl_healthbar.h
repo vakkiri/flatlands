@@ -11,17 +11,18 @@
 #include "fl_ui_element.h"
 
 class FLHealthbar : public FLUIElement {
-	public:
-		FLHealthbar();
-		~FLHealthbar();
+  public:
+	FLHealthbar();
+	~FLHealthbar();
 
-		virtual std::vector<std::vector<fl_colored_vertex>>& get_primitive_vertices();
-	protected:
-		virtual void init_textures();
-		virtual void init_vertices();
-		FLTexturedObject* icon;
-		FLTexturedObject* bar_image;
+	virtual std::vector<std::vector<fl_colored_vertex>> &
+	get_primitive_vertices();
+
+  protected:
+	virtual void init_textures();
+	virtual void init_vertices();
+	FLTexturedObject *icon;
+	FLTexturedObject *bar_image;
 };
 
 #endif
-

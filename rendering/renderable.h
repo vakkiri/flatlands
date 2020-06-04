@@ -12,13 +12,14 @@ class Renderer;
 class FLRenderedSurface;
 
 class FLRenderable {
-	public:
-		FLRenderable();
-		virtual ~FLRenderable();
+  public:
+	FLRenderable();
+	virtual ~FLRenderable();
 
-		virtual void render() = 0;
-	protected:
-		bool visible;
+	virtual void render() = 0;
+
+  protected:
+	bool visible;
 };
 
 #endif

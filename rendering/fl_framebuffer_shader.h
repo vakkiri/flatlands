@@ -10,17 +10,16 @@
 #include "fl_textured_rect_shader.h"
 
 class FLFramebufferShader : public virtual FLTexturedRectShader {
-	public:
-		FLFramebufferShader();
+  public:
+	FLFramebufferShader();
 
-		virtual bool create_program( std::string program_name );
+	virtual bool create_program(std::string program_name);
 
-		void set_time( float time );
-		void render( GLuint vao, unsigned int num_indices );
-	protected:
-		GLint time_location;		
+	void set_time(float time);
+	void render(GLuint vao, unsigned int num_indices);
+
+  protected:
+	GLint time_location;
 };
 
-
 #endif
-

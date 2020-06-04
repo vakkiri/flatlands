@@ -8,8 +8,8 @@
 #ifndef FL_MONSTER_H_
 #define FL_MONSTER_H_
 
-#include "../../rendering/animated_object.h"
 #include "../../common/common.h"
+#include "../../rendering/animated_object.h"
 
 enum FLMonsterState {
 	FL_MONSTER_IDLE,
@@ -19,34 +19,35 @@ enum FLMonsterState {
 };
 
 class FLMonster : public FLGameObject {
-	public:
-		FLMonster( float x, float y, float w, float h, FLAnimatedObjectParams animation_params );
+  public:
+	FLMonster(float x, float y, float w, float h,
+			  FLAnimatedObjectParams animation_params);
 
-		virtual void per_frame_update();
-	protected:
-		virtual void attack() {};
-		virtual void move() {};
-		virtual void on_player_near() {};
+	virtual void per_frame_update();
 
-		point get_distance_from_player();
+  protected:
+	virtual void attack(){};
+	virtual void move(){};
+	virtual void on_player_near(){};
 
-		int movement_period;
-		int attack_period;
-		int stun_duration;
-		int movement_tick;
-		int attack_tick;
-		int stun_tick;
+	point get_distance_from_player();
 
-		float vision_radius;
-		float near_radius;
+	int movement_period;
+	int attack_period;
+	int stun_duration;
+	int movement_tick;
+	int attack_tick;
+	int stun_tick;
 
-		float distance_from_player;
-		point vector_from_player;
+	float vision_radius;
+	float near_radius;
 
-		bool facing_right;
+	float distance_from_player;
+	point vector_from_player;
 
-		FLMonsterState monster_state;
+	bool facing_right;
+
+	FLMonsterState monster_state;
 };
 
 #endif
-

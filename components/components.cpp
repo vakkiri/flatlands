@@ -11,4 +11,3 @@ void fl_update_components() {
 	update_physics_handlers();
 	fl_update_colliders();
 }
-

@@ -12,12 +12,11 @@
 
 void Renderer::close() {
 	log_progress("Closing rendering libraries");
-	
-	glDeleteFramebuffers( 1, &framebuffer );
-	SDL_DestroyWindow( window );
+
+	glDeleteFramebuffers(1, &framebuffer);
+	SDL_DestroyWindow(window);
 	window = NULL;
 	delete framebuffer_texture;
 
 	SDL_Quit();
 }
-

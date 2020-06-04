@@ -16,20 +16,20 @@ class FLTilemap;
 class FLPlayer;
 
 class FLEnvironment {
-	public:
-		FLEnvironment();
-		~FLEnvironment();
+  public:
+	FLEnvironment();
+	~FLEnvironment();
 
-		void load_level( int id );
-		void add_object( FLGameObject* object );
+	void load_level(int id);
+	void add_object(FLGameObject *object);
 
-		FLPlayer* player();
-		FLTilemap* tilemap();
-	protected:
-		FLPlayer* _player;
-		FLTilemap* _tilemap;
-		std::vector<FLGameObject*> objects;
+	FLPlayer *player();
+	FLTilemap *tilemap();
+
+  protected:
+	FLPlayer *_player;
+	FLTilemap *_tilemap;
+	std::vector<FLGameObject *> objects;
 };
 
 #endif
-

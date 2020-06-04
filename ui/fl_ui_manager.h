@@ -16,44 +16,44 @@ class FLColoredSurface;
 class FLTexturedSurface;
 
 class FLUIManager {
-	private:
-		FLUIManager();
-		FLUIManager(FLUIManager const&) = delete;
-		FLUIManager& operator=(FLUIManager const&) = delete;
-	public:
-		static FLUIManager& getInstance() {
-			static FLUIManager instance;
-			return instance;
-		}
+  private:
+	FLUIManager();
+	FLUIManager(FLUIManager const &) = delete;
+	FLUIManager &operator=(FLUIManager const &) = delete;
 
-		~FLUIManager();
+  public:
+	static FLUIManager &getInstance() {
+		static FLUIManager instance;
+		return instance;
+	}
 
-		void init();
+	~FLUIManager();
 
-		// rendering	
-		virtual void render();
+	void init();
 
-		// input handling
-		virtual void handle_up();
-		virtual void handle_down();
-		virtual void handle_left();
-		virtual void handle_right();
-		virtual void handle_accept();
-		virtual void handle_reject();
+	// rendering
+	virtual void render();
 
-		// element access
-		void add_element( FLUIElement* element );
-		void remove_element( FLUIElement* element );
-		void set_active_element( FLUIElement* element );
+	// input handling
+	virtual void handle_up();
+	virtual void handle_down();
+	virtual void handle_left();
+	virtual void handle_right();
+	virtual void handle_accept();
+	virtual void handle_reject();
 
-	protected:
-		FLUIElement* active_element;
-		std::vector<FLUIElement*> elements;
+	// element access
+	void add_element(FLUIElement *element);
+	void remove_element(FLUIElement *element);
+	void set_active_element(FLUIElement *element);
 
-		FLColoredSurface* primitive_surface;
-		FLTexturedSurface* image_surface;
-		FLTexturedSurface* text_surface;
+  protected:
+	FLUIElement *active_element;
+	std::vector<FLUIElement *> elements;
+
+	FLColoredSurface *primitive_surface;
+	FLTexturedSurface *image_surface;
+	FLTexturedSurface *text_surface;
 };
 
 #endif
-

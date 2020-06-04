@@ -12,10 +12,9 @@
 class FLGameObject;
 class FLPhysicsHandler;
 
-int new_physics_handler( FLGameObject* owner, std::string collider_name );
-void delete_physics_handler( int handle );
+int new_physics_handler(FLGameObject *owner, std::string collider_name);
+void delete_physics_handler(int handle);
 void update_physics_handlers();
-FLPhysicsHandler* get_physics_handler( int handle );
+FLPhysicsHandler *get_physics_handler(int handle);
 
 #endif
-

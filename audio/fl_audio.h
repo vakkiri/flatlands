@@ -11,9 +11,8 @@
 #include <string>
 
 bool init_audio();
-void play_sound( std::string name );
-void start_sound( std::string name );
-void stop_sound( std::string name );
+void play_sound(std::string name);
+void start_sound(std::string name);
+void stop_sound(std::string name);
 
 #endif
-

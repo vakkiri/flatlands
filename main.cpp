@@ -30,21 +30,21 @@ void main_loop() {
 	unsigned int start_time = 0;
 	unsigned int end_time = 0;
 
-	Renderer& renderer = Renderer::getInstance();
-	FLInputHandler& input_handler = FLInputHandler::getInstance();
-	FLUIManager& ui_manager = FLUIManager::getInstance();
+	Renderer &renderer = Renderer::getInstance();
+	FLInputHandler &input_handler = FLInputHandler::getInstance();
+	FLUIManager &ui_manager = FLUIManager::getInstance();
 
-	// initialization	
+	// initialization
 	renderer.init_surface_textures();
 	input_handler.init();
 
 	// start the game
 	FLGame::instance().init();
 	FLGame::instance().start();
-	ui_manager.init();	
+	ui_manager.init();
 
 	// FIXME this loop should just be in the game class
-	while ( !quit ) {
+	while (!quit) {
 		start_time = SDL_GetTicks();
 		end_time = start_time + MS_PER_FRAME;
 
@@ -57,31 +57,30 @@ void main_loop() {
 		fl_update_server();
 		fl_update_client();
 
-		// TODO: would probably be better to just run server and client in a separate thread
-		while ( SDL_GetTicks() < end_time ) {
-			//fl_update_server();
-			//fl_update_client();
+		// TODO: would probably be better to just run server and client in a
+		// separate thread
+		while (SDL_GetTicks() < end_time) {
+			// fl_update_server();
+			// fl_update_client();
 		}
 	}
 }
 
 int main() {
-	Renderer& renderer = Renderer::getInstance();
-	FLResources& resources = FLResources::getInstance();
+	Renderer &renderer = Renderer::getInstance();
+	FLResources &resources = FLResources::getInstance();
 	log_progress("Initializing flatlands engine...");
 
-	if ( renderer.init() && init_audio() && fl_init_net() ) {
-		if ( resources.init() ) {
+	if (renderer.init() && init_audio() && fl_init_net()) {
+		if (resources.init()) {
 			fl_start_server();
 			fl_start_client();
 			main_loop();
+		} else {
+			log_error("Could not initialize resources.");
 		}
-		else {
-			log_error( "Could not initialize resources." );
-		}
-	}
-	else {
-		log_error( "Could not initialize rendering engine." );
+	} else {
+		log_error("Could not initialize rendering engine.");
 	}
 
 	renderer.close();
@@ -89,4 +88,3 @@ int main() {
 	log_progress("Closing flatlands engine.");
 	return 0;
 }
-

@@ -5,35 +5,35 @@
  *
  */
 
-#include <iostream>
 #include <fstream>
 #include <glm/ext.hpp>
+#include <iostream>
 
 #include "../common/basic_types.h"
+#include "../logging/logging.h"
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
-#include "../logging/logging.h"
 #include "animated_object.h"
-#include "renderer.h"
+#include "fl_particle_surface.h"
 #include "renderable.h"
 #include "rendered_surface.h"
+#include "renderer.h"
 #include "world_surface.h"
-#include "fl_particle_surface.h"
-
 
 void Renderer::flip_framebuffer() {
-	if ( current_rendered_texture == &alt_rendered_texture )
+	if (current_rendered_texture == &alt_rendered_texture)
 		current_rendered_texture = &main_rendered_texture;
 	else
 		current_rendered_texture = &alt_rendered_texture;
 
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *current_rendered_texture, 0 );
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+						   *current_rendered_texture, 0);
 }
 
-texture* Renderer::screen_texture() {
+texture *Renderer::screen_texture() {
 	// The texture returned will be the texture we are reading from, which
 	// must be the opposite of the texture we are writing to.
-	if ( current_rendered_texture == &alt_rendered_texture )
+	if (current_rendered_texture == &alt_rendered_texture)
 		return framebuffer_texture;
 	else
 		return alt_framebuffer_texture;
@@ -45,8 +45,8 @@ void Renderer::render_to_screen() {
 
 	// Bind our shader and ensure we are drawing to the screen
 	framebuffer_shader.bind();
-	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
-	framebuffer_surface->set_tex( screen_texture() );
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	framebuffer_surface->set_tex(screen_texture());
 
 	// Render the screen quad
 	framebuffer_surface->render();
@@ -55,13 +55,13 @@ void Renderer::render_to_screen() {
 void Renderer::prepare_to_render() {
 	clear_null_renderables();
 
-	glClear( GL_COLOR_BUFFER_BIT );
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
 	current_rendered_texture = &main_rendered_texture;
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, main_rendered_texture, 0 );
-
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+						   main_rendered_texture, 0);
 }
 
 void Renderer::render() {
@@ -75,117 +75,116 @@ void Renderer::render() {
 	// method
 	world_surface->update_buffers();
 
-	// draw background to framebuffer 
-	background_camera[3][0] = world_camera[3][0] * 0.2f;	// parallax x
-	background_camera[3][1] = world_camera[3][1] * 0.0f;	// parallax y
+	// draw background to framebuffer
+	background_camera[3][0] = world_camera[3][0] * 0.2f; // parallax x
+	background_camera[3][1] = world_camera[3][1] * 0.0f; // parallax y
 	textured_rect_shader.bind();
-	textured_rect_shader.set_camera( background_camera );
+	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 
-	background_surface->set_tex( FLResources::getInstance().get_image("background") );
-	background_surface->set_shader( &textured_rect_shader );
+	background_surface->set_tex(
+		FLResources::getInstance().get_image("background"));
+	background_surface->set_shader(&textured_rect_shader);
 	background_surface->render();
 
 	// draw world -----------------------------------------
-	// Note: rebinding the same shader/camera is wasteful, but I'm waiting until release to change this
-	// incase intermediate shaders are added.
+	// Note: rebinding the same shader/camera is wasteful, but I'm waiting until
+	// release to change this incase intermediate shaders are added.
 	textured_rect_shader.bind();
-	textured_rect_shader.set_camera( world_camera );
+	textured_rect_shader.set_camera(world_camera);
 	textured_rect_shader.update_pc_matrix();
 
-	for ( FLRenderable *r : world_renderables )
+	for (FLRenderable *r : world_renderables)
 		r->render();
 
 	// draw custom surfaces such as particle effects
-	for ( FLParticleSurface *s : particle_surfaces )
+	for (FLParticleSurface *s : particle_surfaces)
 		s->render();
 
 	// UI
 	textured_rect_shader.bind();
-	textured_rect_shader.set_camera( ui_camera );
+	textured_rect_shader.set_camera(ui_camera);
 	textured_rect_shader.update_pc_matrix();
 
 	colored_poly_shader.bind();
-	colored_poly_shader.set_camera( ui_camera );
+	colored_poly_shader.set_camera(ui_camera);
 	colored_poly_shader.update_pc_matrix();
 
 	FLUIManager::getInstance().render();
 
-	// render framebuffer to screen	
+	// render framebuffer to screen
 	render_to_screen();
 }
 
 void Renderer::render_and_swap() {
 	render();
-	SDL_GL_SwapWindow( window );
+	SDL_GL_SwapWindow(window);
 }
 
 void Renderer::clear_null_renderables() {
 	std::vector<int> nulls;
 
-	for ( unsigned int i = 0; i < world_renderables.size(); i++ ) {
-		if ( world_renderables[i] == nullptr )
+	for (unsigned int i = 0; i < world_renderables.size(); i++) {
+		if (world_renderables[i] == nullptr)
 			nulls.push_back(i);
 	}
 
-	for ( int i : nulls ) {
+	for (int i : nulls) {
 		world_renderables[i] = world_renderables.back();
 		world_renderables.pop_back();
 	}
 }
 
-void Renderer::translate_world_camera( glm::vec3 translation ) {
-	world_camera = glm::translate( world_camera, translation );
+void Renderer::translate_world_camera(glm::vec3 translation) {
+	world_camera = glm::translate(world_camera, translation);
 }
 
-float Renderer::world_camera_x() { 
+float Renderer::world_camera_x() {
 	return world_camera[3][0] - (screen_width / 2);
 }
 
-float Renderer::world_camera_y() { 
+float Renderer::world_camera_y() {
 	return world_camera[3][1] - (screen_height / 2);
 }
 
-FLTexturedRectShader* Renderer::get_textured_rect_shader() {
+FLTexturedRectShader *Renderer::get_textured_rect_shader() {
 	return &textured_rect_shader;
 }
 
-FLColoredPolyShader* Renderer::get_colored_poly_shader() {
+FLColoredPolyShader *Renderer::get_colored_poly_shader() {
 	return &colored_poly_shader;
 }
 
-FLWorldSurface* Renderer::get_world_surface() {
-	return world_surface;
-}
+FLWorldSurface *Renderer::get_world_surface() { return world_surface; }
 
-FLTexturedSurface* Renderer::get_tilemap_bg_surface() {
+FLTexturedSurface *Renderer::get_tilemap_bg_surface() {
 	return tilemap_bg_surface;
 }
 
-FLTexturedSurface* Renderer::get_tilemap_fg_surface() {
+FLTexturedSurface *Renderer::get_tilemap_fg_surface() {
 	return tilemap_fg_surface;
 }
 
 void Renderer::update_animations() {
 	remove_null_animated_objects();
 
-	std::vector<FLAnimatedObject*>& animated_objects = get_animated_objects();
-	for ( unsigned int i = 0; i < animated_objects.size(); ++i ) {
-		if ( animated_objects[i] != nullptr )
+	std::vector<FLAnimatedObject *> &animated_objects = get_animated_objects();
+	for (unsigned int i = 0; i < animated_objects.size(); ++i) {
+		if (animated_objects[i] != nullptr)
 			animated_objects[i]->update_animation();
 	}
 }
 
-void Renderer::add_to_world( FLTexturedObject* obj ) {
-	world_surface->add_object( obj );
+void Renderer::add_to_world(FLTexturedObject *obj) {
+	world_surface->add_object(obj);
 }
 
-void Renderer::remove_from_world( FLTexturedObject* obj ) {
-	world_surface->remove_object( obj );
+void Renderer::remove_from_world(FLTexturedObject *obj) {
+	world_surface->remove_object(obj);
 }
 
-void Renderer::add_particle_surface( FLParticleSurface* s ) {
-	particle_surfaces.push_back( s );
+void Renderer::add_particle_surface(FLParticleSurface *s) {
+	particle_surfaces.push_back(s);
 }
 
 void Renderer::clear() {
@@ -193,11 +192,6 @@ void Renderer::clear() {
 	particle_surfaces.clear();
 }
 
-unsigned int Renderer::get_screen_width() {
-	return screen_width;
-}
+unsigned int Renderer::get_screen_width() { return screen_width; }
 
-unsigned int Renderer::get_screen_height() {
-	return screen_height;
-}
-
+unsigned int Renderer::get_screen_height() { return screen_height; }

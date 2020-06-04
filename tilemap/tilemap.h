@@ -8,43 +8,45 @@
 #ifndef TILEMAP_H_
 #define TILEMAP_H_
 
-#include <vector>
-#include <string>
 #include "../common/common.h"
+#include <string>
+#include <vector>
 
 class FLTexturedObject;
 class FLTexturedSurface;
 struct texture;
 
 class FLTilemap {
-	public:
-		FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size);
-		virtual ~FLTilemap();
+  public:
+	FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size);
+	virtual ~FLTilemap();
 
-		void load_map( int id );
-		void update_surface();
-		void reset();
-		void reset( unsigned int new_w, unsigned int new_h );
-		void reset_collision_map();
-		void add_tile( float x, float y, float w, float h, float index, bool solid, int layer );
-		bool solid_at( float x, float y );
-		void set_solid_at( float x, float y );
-		void set_tileset( unsigned int tileset );
+	void load_map(int id);
+	void update_surface();
+	void reset();
+	void reset(unsigned int new_w, unsigned int new_h);
+	void reset_collision_map();
+	void add_tile(float x, float y, float w, float h, float index, bool solid,
+				  int layer);
+	bool solid_at(float x, float y);
+	void set_solid_at(float x, float y);
+	void set_tileset(unsigned int tileset);
 
-		bool touches_shape( FLShape* shape );
-		bool touches_line( point p1, point p2 );
+	bool touches_shape(FLShape *shape);
+	bool touches_line(point p1, point p2);
 
-		float get_cell_size();
-	protected:
-		std::vector<FLTexturedObject*> bg_tiles;
-		std::vector<FLTexturedObject*> fg_tiles;
-		std::vector<std::vector<bool>> collision_map;
-		unsigned int w;
-		unsigned int h;
-		unsigned int tileset;
-		float cell_size;
-		FLTexturedSurface *bgsurface;
-		FLTexturedSurface *fgsurface;
+	float get_cell_size();
+
+  protected:
+	std::vector<FLTexturedObject *> bg_tiles;
+	std::vector<FLTexturedObject *> fg_tiles;
+	std::vector<std::vector<bool>> collision_map;
+	unsigned int w;
+	unsigned int h;
+	unsigned int tileset;
+	float cell_size;
+	FLTexturedSurface *bgsurface;
+	FLTexturedSurface *fgsurface;
 };
 
 #endif

@@ -3,12 +3,12 @@
  *
  */
 
-#include <iostream>
 #include "fl_environment.h"
+#include <iostream>
 
-#include "../world/player/player.h"
 #include "../resources/fl_resources.h"
 #include "../tilemap/tilemap.h"
+#include "../world/player/player.h"
 
 FLEnvironment::FLEnvironment() {
 	_player = new FLPlayer();
@@ -19,25 +19,20 @@ FLEnvironment::~FLEnvironment() {
 	delete _player;
 	delete _tilemap;
 
-	while ( !objects.empty() ) {
+	while (!objects.empty()) {
 		delete objects.back();
 		objects.pop_back();
 	}
 }
 
-void FLEnvironment::load_level( int id ) {
-	FLResources::getInstance().load_level( id, this );
+void FLEnvironment::load_level(int id) {
+	FLResources::getInstance().load_level(id, this);
 }
 
-void FLEnvironment::add_object( FLGameObject* object ) {
-	objects.push_back( object );
+void FLEnvironment::add_object(FLGameObject *object) {
+	objects.push_back(object);
 }
 
-FLPlayer* FLEnvironment::player() {
-	return _player;
-}
+FLPlayer *FLEnvironment::player() { return _player; }
 
-FLTilemap* FLEnvironment::tilemap() {
-	return _tilemap;
-}
-
+FLTilemap *FLEnvironment::tilemap() { return _tilemap; }

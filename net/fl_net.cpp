@@ -3,11 +3,11 @@
  *
  */
 
+#include "fl_net.h"
+#include "fl_client.h"
+#include "fl_server.h"
 #include <fstream>
 #include <iostream>
-#include "fl_net.h"
-#include "fl_server.h"
-#include "fl_client.h"
 
 // File scope variables
 
@@ -22,8 +22,9 @@ bool is_client;
 bool fl_init_net() {
 	bool success = true;
 
-	if ( SDLNet_Init() == -1 ) {
-		std::cout << "Could not initialize SDL Net: " << SDLNet_GetError() << std::endl;
+	if (SDLNet_Init() == -1) {
+		std::cout << "Could not initialize SDL Net: " << SDLNet_GetError()
+				  << std::endl;
 		success = false;
 	}
 
@@ -38,21 +39,19 @@ bool fl_init_net() {
 	int val;
 
 	conf_file.open(conf_path);
-	if ( !conf_file.is_open() ) {
+	if (!conf_file.is_open()) {
 		std::cout << "Could not open network conf file.\n";
-	}
-	else {
-		while ( !conf_file.eof() ) {
-			getline( conf_file, line );
+	} else {
+		while (!conf_file.eof()) {
+			getline(conf_file, line);
 			if (line.size() > 0) {
 				int pos = line.find(":");
 				param = line.substr(0, pos);
-				val = std::stoi(line.substr(pos+1, line.size() - pos));
-				if ( param == "Server" && val == 1 ) {
+				val = std::stoi(line.substr(pos + 1, line.size() - pos));
+				if (param == "Server" && val == 1) {
 					std::cout << "Network Server enabled.\n";
 					is_server = true;
-				}
-				else if ( param == "Client" && val == 1 ) {
+				} else if (param == "Client" && val == 1) {
 					std::cout << "Network Client enabled.\n";
 					is_client = true;
 				}
@@ -65,69 +64,64 @@ bool fl_init_net() {
 }
 
 void fl_start_server() {
-	if ( is_server ) {
+	if (is_server) {
 		server.start();
-	}
-	else {
+	} else {
 		std::cout << "Ignoring call to start server: not enabled.\n";
 	}
 }
 
-void fl_update_server() {
-	server.update();
-}
+void fl_update_server() { server.update(); }
 
 void fl_start_client() {
-	if ( is_client ) {
+	if (is_client) {
 		client.start();
-	}
-	else {
+	} else {
 		std::cout << "Ignoring call to start client: not enabled.\n";
 	}
 }
 
-void fl_update_client() {
-	client.update();
-}
+void fl_update_client() { client.update(); }
 
-void send_udp_to_server( int message_type, void* data, bool synchronized ) {
-	FLNetMessage* msg = nullptr;
+void send_udp_to_server(int message_type, void *data, bool synchronized) {
+	FLNetMessage *msg = nullptr;
 
-	if ( is_client ) {
-		switch ( message_type ) {
-			case FL_MSG_POS:
-				msg = new FLNetMessage;
-				client.fill_pos_message( data, msg );
-				break;
-			case FL_MSG_DEL_OBJ:
-				msg = new FLNetMessage;
-				client.fill_del_obj_message( data, msg );
-				break;
-			default:
-				std::cout << "Unsupported message type " << message_type << "\n";
+	if (is_client) {
+		switch (message_type) {
+		case FL_MSG_POS:
+			msg = new FLNetMessage;
+			client.fill_pos_message(data, msg);
+			break;
+		case FL_MSG_DEL_OBJ:
+			msg = new FLNetMessage;
+			client.fill_del_obj_message(data, msg);
+			break;
+		default:
+			std::cout << "Unsupported message type " << message_type << "\n";
 		}
 
-		if ( msg != nullptr ) {
+		if (msg != nullptr) {
 			client.queue_message(msg, synchronized);
 		}
 	}
 }
 
-void update_server_player_info( float x, float y, float vx, float vy, int animation ) {
-	server.update_player_info( x, y, vx, vy, animation );
+void update_server_player_info(float x, float y, float vx, float vy,
+							   int animation) {
+	server.update_player_info(x, y, vx, vy, animation);
 }
 
-void destroy_net_obj( uint16_t id, bool synchronize ) {
+void destroy_net_obj(uint16_t id, bool synchronize) {
 	// If we are the server, we have to update all clients
-	if ( is_server ) {
-		server.sync_del_obj( id );
+	if (is_server) {
+		server.sync_del_obj(id);
 	}
-	// Otherwise, we just synchronize with the server, who will then take care of updating clients
-	else if ( is_client ) {
-		Uint8* data = new Uint8[2];
-		memcpy( data, &id, sizeof(uint16_t) );
-		send_udp_to_server( FL_MSG_DEL_OBJ, data, synchronize );
+	// Otherwise, we just synchronize with the server, who will then take care
+	// of updating clients
+	else if (is_client) {
+		Uint8 *data = new Uint8[2];
+		memcpy(data, &id, sizeof(uint16_t));
+		send_udp_to_server(FL_MSG_DEL_OBJ, data, synchronize);
 		delete data;
 	}
 }
-

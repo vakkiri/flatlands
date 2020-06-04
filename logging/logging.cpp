@@ -25,4 +25,3 @@ void log_error(std::string str) {
 void log_warning(std::string str) {
 	std::cout << warning_start << str << warning_end;
 }
-

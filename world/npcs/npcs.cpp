@@ -7,29 +7,30 @@
 
 #include "npcs.h"
 
-#include "../../ui/fl_ui_manager.h"
-#include "../../ui/fl_dialogue_box.h"
 #include "../../game/fl_gamestate.h"
 #include "../../rendering/renderer.h"
+#include "../../ui/fl_dialogue_box.h"
+#include "../../ui/fl_ui_manager.h"
 
 #define NUM_ANIMATIONS 1
 #define NUM_STEPS 2
 #define FRAMES_PER_STEP 10
 #define REPEATS true
 
-FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) : FLGameObject(x, y, w, h ) {
-	(void) x;
-	(void) y;
-	(void) s;
-	(void) t;
-	(void) w;
-	(void) h;
-	//set_st( s, t );
-	//Renderer::getInstance().add_to_world( this );
+FLNpc::FLNpc(float x, float y, float s, float t, float w, float h)
+	: FLGameObject(x, y, w, h) {
+	(void)x;
+	(void)y;
+	(void)s;
+	(void)t;
+	(void)w;
+	(void)h;
+	// set_st( s, t );
+	// Renderer::getInstance().add_to_world( this );
 }
 
 FLNpc::~FLNpc() {
-	//Renderer::getInstance().remove_from_world( this );
+	// Renderer::getInstance().remove_from_world( this );
 }
 
 void FLNpc::interact_with() {
@@ -42,4 +43,3 @@ void FLNpc::interact_with() {
 	new FLDialogueBox( "", _x, _y );
 	*/
 }
-

@@ -10,8 +10,7 @@
 class FLGameObject;
 
 void update_updators();
-int new_updator( FLGameObject* obj );
-void delete_updator( int handle );
+int new_updator(FLGameObject *obj);
+void delete_updator(int handle);
 
 #endif
-

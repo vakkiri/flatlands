@@ -3,9 +3,9 @@
  *
  */
 
-#include <iostream>
-#include "fl_net.h"
 #include "common.h"
+#include "fl_net.h"
+#include <iostream>
 
 void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket) {
 	if (data_len < FL_MIN_PACKET_LEN || data_len > FL_MAX_PACKET_LEN) {
@@ -24,11 +24,10 @@ void fl_send_udp(Uint8 *data, int data_len, IPaddress addr, UDPsocket socket) {
 	packet->len = data_len;
 	packet->address.host = addr.host;
 	packet->address.port = addr.port;
-	
-	if ( SDLNet_UDP_Send(socket, -1, packet) == 0 ) {
+
+	if (SDLNet_UDP_Send(socket, -1, packet) == 0) {
 		std::cout << "UDP send failed: " << SDLNet_GetError() << std::endl;
 	}
 
 	SDLNet_FreePacket(packet);
 }
-

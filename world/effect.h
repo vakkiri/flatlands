@@ -13,11 +13,11 @@
 #include "../rendering/animated_object.h"
 
 class FLEffect : virtual public FLAnimatedObject {
-	public:
-		FLEffect( FLTexturedObjectParams tex_params, FLAnimatedObjectParams anim_params, float s, float t );
-		virtual ~FLEffect();
-		void update_animation();
+  public:
+	FLEffect(FLTexturedObjectParams tex_params,
+			 FLAnimatedObjectParams anim_params, float s, float t);
+	virtual ~FLEffect();
+	void update_animation();
 };
 
 #endif
-

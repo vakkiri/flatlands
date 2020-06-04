@@ -11,18 +11,17 @@
 #include "../../rendering/animated_object.h"
 
 class FLNetPlayer : public FLGameObject {
-	public:
-		FLNetPlayer();
+  public:
+	FLNetPlayer();
 
-		void set_target( float tx, float ty );
-		virtual void per_frame_update();
+	void set_target(float tx, float ty);
+	virtual void per_frame_update();
 
-	private:
-		point vel;
-		point target;
-		uint32_t last_position_update;
-		bool reverse_last_frame;
+  private:
+	point vel;
+	point target;
+	uint32_t last_position_update;
+	bool reverse_last_frame;
 };
 
 #endif
-

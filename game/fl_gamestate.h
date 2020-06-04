@@ -8,14 +8,9 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 
-enum FLGameState {
-	FL_GAME_RUNNING,
-	FL_GAME_PAUSED,
-	FL_GAME_UI
-};
+enum FLGameState { FL_GAME_RUNNING, FL_GAME_PAUSED, FL_GAME_UI };
 
 FLGameState get_game_state();
-void set_game_state( FLGameState new_state );
+void set_game_state(FLGameState new_state);
 
 #endif
-

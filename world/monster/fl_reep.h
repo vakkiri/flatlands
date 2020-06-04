@@ -11,14 +11,13 @@
 #include "fl_monster.h"
 
 class FLReep : public FLMonster {
-	public:
-		FLReep( float x, float y );
+  public:
+	FLReep(float x, float y);
 
-	protected:
-		virtual void move();
-		virtual void attack();
-		int attack_index;
+  protected:
+	virtual void move();
+	virtual void attack();
+	int attack_index;
 };
 
 #endif
-

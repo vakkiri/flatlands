@@ -3,9 +3,9 @@
  *
  */
 
+#include "tilemap.h"
 #include <iostream>
 #include <math.h>
-#include "tilemap.h"
 
 #include "../logging/logging.h"
 #include "../rendering/rendered_surface.h"
@@ -31,35 +31,33 @@ FLTilemap::~FLTilemap() {
 }
 
 void FLTilemap::update_surface() {
-	bgsurface->update_buffers( bg_tiles );
-	fgsurface->update_buffers( fg_tiles );
+	bgsurface->update_buffers(bg_tiles);
+	fgsurface->update_buffers(fg_tiles);
 }
 
-void FLTilemap::set_solid_at( float x, float y ) {
-	collision_map[y][x] = true;
-}
+void FLTilemap::set_solid_at(float x, float y) { collision_map[y][x] = true; }
 
-void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool solid, int layer ) {
+void FLTilemap::add_tile(float x, float y, float w, float h, float index,
+						 bool solid, int layer) {
 	// TODO: cell size should be loaded from a config file
-	FLResources& res = FLResources::getInstance();
+	FLResources &res = FLResources::getInstance();
 	float _s = index * cell_size;
 	float _t = 16 * tileset;
-	FLTexturedObject *t = new FLTexturedObject( x, y, w, h );
-	t->set_st( _s, _t );
+	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
+	t->set_st(_s, _t);
 
-	if ( layer == 0 ) {
+	if (layer == 0) {
 		bg_tiles.push_back(t);
-	}
-	else if ( layer == 1 ) {
+	} else if (layer == 1) {
 		fg_tiles.push_back(t);
 	}
 
-	if ( solid ) {
+	if (solid) {
 		// TODO: create pixel-level collision map for solid tiles based on alpha
-		for ( int i = 0; i < 16; ++i ) {
-			for ( int j = 0; j < 16; ++j ) {
-				if ( res.get_image_transparency( "tiles", _s + i, _t + j ) > 0.0 ) {
-					set_solid_at( x + i, y + j );
+		for (int i = 0; i < 16; ++i) {
+			for (int j = 0; j < 16; ++j) {
+				if (res.get_image_transparency("tiles", _s + i, _t + j) > 0.0) {
+					set_solid_at(x + i, y + j);
 				}
 			}
 		}
@@ -67,10 +65,11 @@ void FLTilemap::add_tile( float x, float y, float w, float h, float index, bool 
 }
 
 void FLTilemap::reset_collision_map() {
-	collision_map = std::vector<std::vector<bool>>( int(h), std::vector<bool>( int(w), false ) );
+	collision_map = std::vector<std::vector<bool>>(
+		int(h), std::vector<bool>(int(w), false));
 }
 
-bool FLTilemap::solid_at( float x, float y ) {
+bool FLTilemap::solid_at(float x, float y) {
 	if (x < 0 || y < 0 || x >= w || y >= h)
 		return false;
 
@@ -80,36 +79,34 @@ bool FLTilemap::solid_at( float x, float y ) {
 void FLTilemap::reset() {
 	reset_collision_map();
 
-	while ( !bg_tiles.empty() ) {
+	while (!bg_tiles.empty()) {
 		delete bg_tiles.back();
 		bg_tiles.pop_back();
 	}
-	while ( !fg_tiles.empty() ) {
+	while (!fg_tiles.empty()) {
 		delete fg_tiles.back();
 		fg_tiles.pop_back();
 	}
 }
 
-void FLTilemap::reset( unsigned int new_w, unsigned int new_h ) {
+void FLTilemap::reset(unsigned int new_w, unsigned int new_h) {
 	w = new_w;
 	h = new_h;
 
 	reset();
 }
 
-void FLTilemap::set_tileset( unsigned int tileset ) {
-	this->tileset = tileset;
-}
+void FLTilemap::set_tileset(unsigned int tileset) { this->tileset = tileset; }
 
-bool FLTilemap::touches_shape( FLShape* shape ) {
+bool FLTilemap::touches_shape(FLShape *shape) {
 	float startx = shape->x();
 	float endx = startx + shape->w();
 	float starty = shape->y();
 	float endy = starty + shape->h();
 
-	for ( float x = startx; x < endx; ++x ) {
-		for ( float y = starty; y < endy; ++y ) {
-			if ( solid_at(x, y) ) {
+	for (float x = startx; x < endx; ++x) {
+		for (float y = starty; y < endy; ++y) {
+			if (solid_at(x, y)) {
 				return true;
 			}
 		}
@@ -118,7 +115,7 @@ bool FLTilemap::touches_shape( FLShape* shape ) {
 	return false;
 }
 
-bool FLTilemap::touches_line( point p1, point p2 ) {
+bool FLTilemap::touches_line(point p1, point p2) {
 	// TODO: base this on distance from p1 to p2, for large objects
 	// num steps should be distance / cell size but im so lazy rn
 	float num_steps = 4;
@@ -127,8 +124,8 @@ bool FLTilemap::touches_line( point p1, point p2 ) {
 	float x = p1.x;
 	float y = p1.y;
 
-	for ( int i = 0; i < num_steps; ++i ) {
-		if ( solid_at(x, y) ) {
+	for (int i = 0; i < num_steps; ++i) {
+		if (solid_at(x, y)) {
 			return true;
 		}
 		x += xstep;
@@ -138,6 +135,4 @@ bool FLTilemap::touches_line( point p1, point p2 ) {
 	return false;
 }
 
-float FLTilemap::get_cell_size() {
-	return cell_size;
-}
+float FLTilemap::get_cell_size() { return cell_size; }

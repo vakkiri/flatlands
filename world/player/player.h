@@ -9,9 +9,9 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include "../../common/common.h"
 #include "../../net/fl_net.h"
 #include "../../resources/fl_resources.h"
-#include "../../common/common.h"
 
 class FLAnimatedObject;
 class FLWorldSurface;
@@ -19,10 +19,7 @@ class FLCollider;
 
 struct texture;
 
-enum FLPlayerAbility {
-	FL_NO_ABILITY,
-	FL_DASH
-};
+enum FLPlayerAbility { FL_NO_ABILITY, FL_DASH };
 
 enum FLPlayerState {
 	FL_PLAYER_IDLE,
@@ -32,11 +29,7 @@ enum FLPlayerState {
 	FL_PLAYER_DASH
 };
 
-enum FLPlayerWeapon {
-	FL_NO_WEAPON,
-	FL_FUSION,
-	FL_NUM_WEAPONS
-};
+enum FLPlayerWeapon { FL_NO_WEAPON, FL_FUSION, FL_NUM_WEAPONS };
 
 struct FLWeaponStats {
 	int ammo;
@@ -46,98 +39,96 @@ struct FLWeaponStats {
 };
 
 class FLPlayer : public FLGameObject {
-	public:
-		FLPlayer();
-		virtual ~FLPlayer();
+  public:
+	FLPlayer();
+	virtual ~FLPlayer();
 
+	void enable_ability();
 
-		void enable_ability();
+	// actions
+	void interact();
+	void jump();
+	virtual void use_ability();
+	virtual void attack();
+	virtual void stop_attack();
+	virtual void set_ability(FLPlayerAbility ability);
+	virtual void per_frame_update();
+	virtual void animation_update();
 
-		//actions
-		void interact();
-		void jump();
-		virtual void use_ability();
-		virtual void attack();
-		virtual void stop_attack();
-		virtual void set_ability( FLPlayerAbility ability );
-		virtual void per_frame_update();
-		virtual void animation_update();
+	// movement methods
+	void move_left();
+	void move_right();
+	virtual void release_walk();
 
-		// movement methods
-		void move_left();
-		void move_right();
-		virtual void release_walk();
+	virtual void update_camera();
 
-		virtual void update_camera();
+	virtual void hold_jump();
+	virtual void release_jump();
+	virtual void hold_run();
+	virtual void release_run();
 
-		virtual void hold_jump();
-		virtual void release_jump();
-		virtual void hold_run();
-		virtual void release_run();
+	virtual void hit_ground();
 
-		virtual void hit_ground();
+	void set_reset_position(float x, float y);
+	virtual void reset();
 
-		void set_reset_position( float x, float y );
-		virtual void reset();
+	bool pounding();
+	bool dashing();
+	bool can_dash();
+	bool can_attack();
+	bool facing_right();
 
-		bool pounding();
-		bool dashing();
-		bool can_dash();
-		bool can_attack();
-		bool facing_right();
+	FLAnimatedObject *get_weapon();
+	virtual void drain_ammo();
+	virtual void add_ammo(int weapon, int num_clips);
 
-		FLAnimatedObject* get_weapon();
-		virtual void drain_ammo();
-		virtual void add_ammo( int weapon, int num_clips );
+	virtual void hit(int damage);
 
-		virtual void hit( int damage );
+	float health_ratio();
+	float clip_ratio();
 
-		float health_ratio();
-		float clip_ratio();
+  protected:
+	virtual void handle_collision(FLCollider *collision);
 
-	protected:
-		virtual void handle_collision(FLCollider* collision);
+	virtual void update_net();
+	virtual void update_health();
 
-		virtual void update_net();
-		virtual void update_health();
+	virtual void bind_actions();
 
-		virtual void bind_actions();
+	virtual void double_jump();
+	virtual void ground_pound();
+	virtual void dash();
 
-		virtual void double_jump();
-		virtual void ground_pound();
-		virtual void dash();
+	virtual void init_weapon_stats();
 
-		virtual void init_weapon_stats();
+	FLPlayerAbility cur_ability;
+	FLPlayerWeapon cur_weapon;
+	FLPlayerState state;
 
-		FLPlayerAbility cur_ability;
-		FLPlayerWeapon	cur_weapon;
-		FLPlayerState state;
-		
-		FLAnimatedObject* weapon;
-		FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
+	FLAnimatedObject *weapon;
+	FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
 
-		int max_health;
-		int health;
-		int target_health;
+	int max_health;
+	int health;
+	int target_health;
 
-		bool can_use_ability;
-		bool can_double_jump;
-		bool jump_held;
-		bool run_held;
-		bool dash_right;
-		bool attacking;
+	bool can_use_ability;
+	bool can_double_jump;
+	bool jump_held;
+	bool run_held;
+	bool dash_right;
+	bool attacking;
 
-		unsigned int dash_frames;
-		unsigned int pound_frames;
-		unsigned int falling_frames;
-		int jump_frames;
+	unsigned int dash_frames;
+	unsigned int pound_frames;
+	unsigned int falling_frames;
+	int jump_frames;
 
-		point reset_position;
+	point reset_position;
 
-		// Networking
-		Uint32 last_update_tick;
-		FLMsgPos net_pos;
+	// Networking
+	Uint32 last_update_tick;
+	FLMsgPos net_pos;
 };
 
 #endif
-
