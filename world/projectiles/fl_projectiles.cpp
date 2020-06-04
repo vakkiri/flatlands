@@ -30,7 +30,7 @@ FLProjectile::FLProjectile( 	float x, float y, float w, float h,
 	animators["body"] = new FLAnimatedObject( tex_params, animation_params );
 	Renderer::getInstance().add_to_world( animators["body"] );
 
-	FLShape* collision_shape = new FLShape( x + (0.2 * w), y + (0.2 * h), w * 0.8, h * 0.8);
+	FLShape* collision_shape = new FLShape( x + (0.25 * w), y + (0.25 * h), w * 0.5, h * 0.5);
 	shapes.insert( std::make_pair( "collision", collision_shape ) );
 
 	updator_handle = new_updator( this );
