@@ -58,6 +58,7 @@ FLAmmo::~FLAmmo() {
 }
 
 void FLAmmo::on_collision( FLCollider* obj ) {
+	(void) obj;
 	delete this;
 }
 

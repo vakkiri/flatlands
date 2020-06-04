@@ -6,7 +6,7 @@
 #include "../logging/logging.h"
 #include "fl_colored_poly_shader.h"
 
-FLColoredPolyShader::FLColoredPolyShader() : FLPolygonShader() {};
+FLColoredPolyShader::FLColoredPolyShader() : FLPolygonShader() {}
 
 bool FLColoredPolyShader::create_program( std::string program_name ) {
 	log_progress( "FLColoredPolyShader::create_program" );

@@ -7,7 +7,7 @@
 #include "../logging/logging.h"
 #include "fl_framebuffer_shader.h"
 
-FLFramebufferShader::FLFramebufferShader() : FLTexturedRectShader() {};
+FLFramebufferShader::FLFramebufferShader() : FLTexturedRectShader() {}
 
 bool FLFramebufferShader::create_program( std::string program_name ) {
 	log_progress( "FLFramebufferShader::create_program" );

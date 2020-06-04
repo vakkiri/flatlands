@@ -61,6 +61,7 @@ void FLProjectile::per_frame_update() {
 }
 
 void FLProjectile::on_collision( FLCollider* obj ) {
+	(void) obj;
 	environment()->player()->hit( damage );
 	delete this;
 }

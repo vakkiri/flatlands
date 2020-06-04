@@ -124,7 +124,7 @@ FLCollider* FLGameObject::get_collider( std::string name ) {
 void FLGameObject::add_collider( std::string shape, std::string name ) {
 	int result = -1;
 	if ( shapes.find(shape) != shapes.end() ) {
-		result = fl_new_collider( this, shape, name );
+		result = fl_new_collider( this, shape );
 
 		if ( result >= 0 ) {
 			colliders.insert( std::make_pair(name, result) );

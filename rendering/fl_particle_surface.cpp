@@ -37,9 +37,8 @@ void FLParticleSurface::add_particle( float x, float y ) {
 }
 
 void FLParticleSurface::add_particle( float x, float y, float vx, float vy ) {
-	unsigned int verts = 4;
 
-	if ( next_loc < 0 || next_loc > num_particles )
+	if ( next_loc > num_particles )
 		log_error( "location out of range of particle surface" );
 
 	particle_field[next_loc].xs.clear();
@@ -98,7 +97,7 @@ void FLParticleSurface::update_buffers() {
 
 	for ( fl_particle p : particle_field ) {
 		if ( p.life > 0 ) {
-			for ( int vert = 0; vert < p.xs.size(); ++vert ) {
+			for ( unsigned int vert = 0; vert < p.xs.size(); ++vert ) {
 				vbuf.push_back( p.xs[vert] );
 				vbuf.push_back( p.ys[vert] );
 				vbuf.push_back( p.life );

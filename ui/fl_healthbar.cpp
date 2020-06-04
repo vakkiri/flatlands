@@ -34,17 +34,17 @@ std::vector<std::vector<fl_colored_vertex>>& FLHealthbar::get_primitive_vertices
 
 	primitive_vertices[1][1].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.9;
 	primitive_vertices[1][1].pos.y = primitive_vertices[0][1].pos.y;
-	primitive_vertices[1][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.9;
+	primitive_vertices[1][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.8;
 	primitive_vertices[1][2].pos.y = primitive_vertices[0][2].pos.y;
 
 	primitive_vertices[2][1].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.5;
 	primitive_vertices[2][1].pos.y = primitive_vertices[1][1].pos.y;
-	primitive_vertices[2][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.5;
+	primitive_vertices[2][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.4;
 	primitive_vertices[2][2].pos.y = primitive_vertices[1][2].pos.y;
 
 	primitive_vertices[3][1].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.25;
 	primitive_vertices[3][1].pos.y = primitive_vertices[2][1].pos.y;
-	primitive_vertices[3][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.25;
+	primitive_vertices[3][2].pos.x = primitive_vertices[0][0].pos.x + 94.f * ratio * 0.15;
 	primitive_vertices[3][2].pos.y = primitive_vertices[2][2].pos.y;
 
 

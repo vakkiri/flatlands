@@ -6,7 +6,7 @@
 #include "../logging/logging.h"
 #include "fl_particle_shader.h"
 
-FLParticleShader::FLParticleShader() : FLPolygonShader() {};
+FLParticleShader::FLParticleShader() : FLPolygonShader() {}
 
 bool FLParticleShader::create_program( std::string program_name ) {
 	log_progress( "FLParticleShader::create_program" );

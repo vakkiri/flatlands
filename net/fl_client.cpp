@@ -268,7 +268,6 @@ void FLClient::update_player_pos( int slot, float x, float y, int animation ) {
 void FLClient::fill_pos_message( void *data, FLNetMessage *msg ) {
 	int16_t x;
 	int16_t y;
-	int len;
 
 	FLMsgPos* in_data = (FLMsgPos*) data;
 	Uint8* msg_data = new Uint8[6];
@@ -287,8 +286,6 @@ void FLClient::fill_pos_message( void *data, FLNetMessage *msg ) {
 }
 
 void FLClient::fill_del_obj_message( void *data, FLNetMessage *msg ) {
-	int16_t id;
-	int len;
 	uint16_t* in_data = (uint16_t*) data;
 
 	// The message here will be the message type followed by the passed uint16
@@ -314,7 +311,6 @@ void FLClient::fill_ack_del_obj_message( uint16_t id, FLNetMessage *msg ) {
 void FLClient::ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 host ) {
 	std::queue<FLSynchronizedNetMessage*> alt_queue;
 	uint16_t sid;
-	Uint8 stype;
 	Uint32 shost;
 	
 	bool id_matches;
@@ -330,7 +326,6 @@ void FLClient::ack_synchronized_message( Uint8 ack_type, uint16_t id, Uint32 hos
 		FLSynchronizedNetMessage *smsg = synchronized_msg_queue.front();
 		synchronized_msg_queue.pop();
 
-		stype = smsg->msg->data[0];
 		memcpy( &sid, &(smsg->msg->data[1]), sizeof(uint16_t) );
 		shost = smsg->msg->dest.host;
 

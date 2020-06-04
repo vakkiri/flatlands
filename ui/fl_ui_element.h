@@ -18,6 +18,8 @@ class FLUIElement {
 	public:
 		FLUIElement();
 		FLUIElement( float x, float y );
+	
+		virtual ~FLUIElement() {}
 
 		// methods to handle input while UI element is active
 		virtual void right(){}

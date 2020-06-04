@@ -78,7 +78,6 @@ void FLPhysicsHandler::apply_friction() {
 
 void FLPhysicsHandler::move() {
 	FLCollider* collider = owner->get_collider( collider_name );
-	int cell_size = int(owner->environment()->tilemap()->get_cell_size());
 
 	if ( collider == nullptr ) {
 		owner->move( vel );

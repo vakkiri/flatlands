@@ -93,7 +93,7 @@ void FLColoredSurface::add_verts(std::vector<fl_colored_vertex>& new_verts) {
 	// The "value" of each index for the ibuf should be the position of its associated
 	// vertex in our vertex buffer. We use verts.size() to find this position instead
 	// of indices.size() because the index vector contains RESTART indices.
-	for (int i = 0; i < new_verts.size(); ++i)
+	for (unsigned int i = 0; i < new_verts.size(); ++i)
 		indices.push_back(verts.size() + i);
 
 	// signify the end of a piece of geometry using the RESTART index
@@ -133,7 +133,7 @@ void FLTexturedSurface::update_buffers( std::vector<FLTexturedObject*>& objects 
 	float ttop;
 	float tbot;
 
-	for ( int i = 0; i < objects.size(); i++ ) {
+	for ( unsigned int i = 0; i < objects.size(); i++ ) {
 		if ( !objects[i]->is_visible() ) {
 			tleft = 0.f;
 			tright = 0.f;

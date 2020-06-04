@@ -14,12 +14,12 @@ const int DEFAULT_UPDATE_HANDLERS = 1000;
 
 std::vector<FLGameObject*> update_handlers = std::vector<FLGameObject*>( DEFAULT_UPDATE_HANDLERS, nullptr );
 
-static int next_free = 0;
-static int slots_used = 0;
+static unsigned int next_free = 0;
+static unsigned int slots_used = 0;
 
 int new_updator( FLGameObject* obj ) {
 	int handle = -1;
-	int slots_checked = 0;
+	unsigned int slots_checked = 0;
 
 	if ( obj == nullptr ) {
 		std::cout << "Error: Can't create updator for null object.\n";
@@ -49,7 +49,7 @@ int new_updator( FLGameObject* obj ) {
 }
 
 void delete_updator( int handle ) {
-	if ( handle >= 0 && handle < NUM_UPDATE_HANDLERS ) {
+	if ( handle >= 0 && (unsigned int) handle < NUM_UPDATE_HANDLERS ) {
 		update_handlers[handle] = nullptr;
 		slots_used--;
 	}

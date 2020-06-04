@@ -131,7 +131,7 @@ void remove_null_animated_objects() {
 				[](FLAnimatedObject* obj) { return obj == nullptr; } ),
 			animated_objects.end() );
 
-	for ( int i = 0; i < animated_objects.size(); ++i )
+	for ( unsigned int i = 0; i < animated_objects.size(); ++i )
 		animated_objects[i]->set_animated_object_list_position( i );
 }
 

@@ -65,7 +65,7 @@ void main_loop() {
 	}
 }
 
-int main( int argc, char* args[] ) {
+int main() {
 	Renderer& renderer = Renderer::getInstance();
 	FLResources& resources = FLResources::getInstance();
 	log_progress("Initializing flatlands engine...");

@@ -123,7 +123,7 @@ void Renderer::render_and_swap() {
 void Renderer::clear_null_renderables() {
 	std::vector<int> nulls;
 
-	for ( int i = 0; i < world_renderables.size(); i++ ) {
+	for ( unsigned int i = 0; i < world_renderables.size(); i++ ) {
 		if ( world_renderables[i] == nullptr )
 			nulls.push_back(i);
 	}
@@ -170,7 +170,7 @@ void Renderer::update_animations() {
 	remove_null_animated_objects();
 
 	std::vector<FLAnimatedObject*>& animated_objects = get_animated_objects();
-	for ( int i = 0; i < animated_objects.size(); ++i ) {
+	for ( unsigned int i = 0; i < animated_objects.size(); ++i ) {
 		if ( animated_objects[i] != nullptr )
 			animated_objects[i]->update_animation();
 	}

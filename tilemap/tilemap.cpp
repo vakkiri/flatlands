@@ -77,10 +77,6 @@ bool FLTilemap::solid_at( float x, float y ) {
 	return collision_map[y][x];
 }
 
-bool FLTilemap::pixel_solid_at( float x, float y ) {
-	return true;
-}
-
 void FLTilemap::reset() {
 	reset_collision_map();
 
@@ -102,9 +98,7 @@ void FLTilemap::reset( unsigned int new_w, unsigned int new_h ) {
 }
 
 void FLTilemap::set_tileset( unsigned int tileset ) {
-	// XXX getting rid of this for now cause only 1 tileset and it's mismatched with editor lol...
-	//this->tileset = tileset;
-	this->tileset = 0;
+	this->tileset = tileset;
 }
 
 bool FLTilemap::touches_shape( FLShape* shape ) {

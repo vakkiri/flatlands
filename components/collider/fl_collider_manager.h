@@ -12,7 +12,7 @@
 class FLGameObject;
 class FLCollider;
 
-int fl_new_collider( FLGameObject* owner, std::string shape, std::string name );
+int fl_new_collider( FLGameObject* owner, std::string shape );
 void fl_delete_collider( int handle );
 void fl_update_colliders();
 void fl_add_collider_to_group( int handle, std::string group );

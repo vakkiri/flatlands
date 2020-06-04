@@ -28,7 +28,6 @@ class FLTilemap {
 		void reset_collision_map();
 		void add_tile( float x, float y, float w, float h, float index, bool solid, int layer );
 		bool solid_at( float x, float y );
-		bool pixel_solid_at( float x, float y );
 		void set_solid_at( float x, float y );
 		void set_tileset( unsigned int tileset );
 

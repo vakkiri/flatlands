@@ -18,6 +18,12 @@
 #define REPEATS true
 
 FLNpc::FLNpc( float x, float y, float s, float t, float w, float h ) : FLGameObject(x, y, w, h ) {
+	(void) x;
+	(void) y;
+	(void) s;
+	(void) t;
+	(void) w;
+	(void) h;
 	//set_st( s, t );
 	//Renderer::getInstance().add_to_world( this );
 }

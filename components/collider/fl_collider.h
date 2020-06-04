@@ -20,7 +20,7 @@ class FLTilemap;
 class FLCollider {
 	public:
 		FLCollider();
-		bool init(FLGameObject* owner, std::string shape_name, std::string name);
+		bool init(FLGameObject* owner, std::string shape_name);
 
 		bool touches_tilemap();
 		bool bottom_touches_tilemap();

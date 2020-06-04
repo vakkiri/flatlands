@@ -14,6 +14,11 @@ struct point {
 
 	point( float x=0, float y=0 ) : x(x), y(y) {}
 
+	point ( const point& other ) {
+		x = other.x;
+		y = other.y;
+	}
+
 	point& operator = ( const point& other ) { 
 		x = other.x;
 		y = other.y;

@@ -18,7 +18,7 @@ std::unordered_set<int> empty_set;
 static int next_free = 0;
 static int slots_used = 0;
 
-int fl_new_collider( FLGameObject* owner, std::string shape, std::string name ) {
+int fl_new_collider( FLGameObject* owner, std::string shape ) {
 	int handle = -1;
 	int slots_checked = 0;
 
@@ -36,7 +36,7 @@ int fl_new_collider( FLGameObject* owner, std::string shape, std::string name ) 
 		
 		handle = next_free;
 
-		if ( colliders[handle].init( owner, shape, name ) ) {
+		if ( colliders[handle].init( owner, shape ) ) {
 			slots_used++;
 		}
 		else {

@@ -17,7 +17,7 @@ FLCollider::FLCollider() {
 	has_collision_method = false;
 }
 
-bool FLCollider::init( FLGameObject* owner, std::string shape_name, std::string name ) {
+bool FLCollider::init( FLGameObject* owner, std::string shape_name ) {
 	bool success = true; 
 	if ( owner == nullptr ) {
 		std::cout << "Error: cannot create collider with null owner.\n";

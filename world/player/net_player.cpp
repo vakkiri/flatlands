@@ -17,7 +17,7 @@ FLNetPlayer::FLNetPlayer() : FLGameObject( 0, 0, 16, 32 ) {
 	target.x = 0;
 	target.y = 0;
 
-	FLAnimatedObjectParams anim_params = { 5, 6, 4, 16.f, 32.f };
+	FLAnimatedObjectParams anim_params = { 5, 6, 4, 16.f, 32.f, true };
 	FLTexturedObjectParams tex_params = { this, 0, 0, 16.f, 32.f };
 
 	animators["body"] = new FLAnimatedObject( tex_params, anim_params );
