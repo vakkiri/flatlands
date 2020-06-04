@@ -143,8 +143,12 @@ void FLUIManager::render() {
 	Renderer::getInstance().get_colored_poly_shader()->bind();
 
 	primitive_surface->clear_verts();
-	for (FLUIElement* element : elements) 
-		primitive_surface->add_verts(element->get_primitive_vertices());
+	for (FLUIElement* element : elements) {
+		std::vector<std::vector<fl_colored_vertex>>& vert_sets = element->get_primitive_vertices();
+		for ( std::vector<fl_colored_vertex>& vert_set : vert_sets ) {
+			primitive_surface->add_verts(vert_set);
+		}
+	}
 	primitive_surface->update_buffers();
 	primitive_surface->render();
 

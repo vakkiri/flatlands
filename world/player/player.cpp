@@ -305,6 +305,10 @@ void FLPlayer::update_health() {
 	else if ( health < target_health ) {
 		health += 1;
 	}
+	if ( health <= 0 ) {
+		// TODO: death animation
+		reset();
+	}
 }
 
 void FLPlayer::per_frame_update() {
@@ -477,6 +481,7 @@ void FLPlayer::reset() {
 	physics_handler()->stop();
 	// TODO: update health, ammo etc. based on reset values
 	health = max_health;
+	target_health = max_health;
 }
 
 void FLPlayer::set_ability( FLPlayerAbility ability ) {

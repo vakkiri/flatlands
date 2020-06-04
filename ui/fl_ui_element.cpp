@@ -14,7 +14,7 @@ FLUIElement::FLUIElement( float x, float y ) {
 	offset.y = y;
 }
 
-std::vector<fl_colored_vertex>& FLUIElement::get_primitive_vertices() {
+std::vector<std::vector<fl_colored_vertex>>& FLUIElement::get_primitive_vertices() {
 	return primitive_vertices;
 }
 

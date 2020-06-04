@@ -28,14 +28,14 @@ class FLUIElement {
 		virtual void reject(){}
 
 		// rendering
-		virtual std::vector<fl_colored_vertex>& get_primitive_vertices();
+		virtual std::vector<std::vector<fl_colored_vertex>>& get_primitive_vertices();
 		virtual std::vector<FLTexturedObject*>& get_textured_objects();
 
 	protected:
 		// the element geometry
 		point offset;
-		std::vector<fl_colored_vertex> 	primitive_vertices;
-		std::vector<FLTexturedObject*>	textured_objects;
+		std::vector<std::vector<fl_colored_vertex>> primitive_vertices;
+		std::vector<FLTexturedObject*> textured_objects;
 };
 
 #endif

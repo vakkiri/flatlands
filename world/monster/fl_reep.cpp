@@ -57,8 +57,26 @@ void FLReep::move() {
 
 void FLReep::attack() {
 	float speed = 1.5f;
-	float vx = -(vector_from_player.x / distance_from_player) * speed;
-	float vy = -(vector_from_player.y / distance_from_player) * speed;
-	new FLReepProjectile( x(), y() + 16, vx, vy );
+
+	// first projectile
+	point p1 = vector_from_player;
+	point p2 = vector_from_player;
+	point p3 = vector_from_player;
+
+	p2.x -= 64;
+	p2.y -= 16;
+	p3.x += 64;
+
+	// second vectors aren't totally normalized but whatever lol
+	float vx1 = -(p1.x / distance_from_player) * speed;
+	float vy1 = -(p1.y / distance_from_player) * speed;
+	float vx2 = -(p2.x / distance_from_player) * speed;
+	float vy2 = -(p2.y / distance_from_player) * speed;
+	float vx3 = -(p3.x / distance_from_player) * speed;
+	float vy3 = -(p3.y / distance_from_player) * speed;
+
+	new FLReepProjectile( x(), y() + 16, vx1, vy1 );
+	new FLReepProjectile( x(), y() + 16, vx2, vy2 );
+	new FLReepProjectile( x(), y() + 16, vx3, vy3 );
 }
 

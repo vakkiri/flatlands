@@ -25,8 +25,10 @@ class FLProjectile : public FLGameObject {
 		virtual ~FLProjectile();
 
 		void on_collision( FLCollider* obj );
+		virtual void per_frame_update();
 	protected:
 		int damage;
+		int life;
 };
 
 

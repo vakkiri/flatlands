@@ -15,7 +15,7 @@ class FLHealthbar : public FLUIElement {
 		FLHealthbar();
 		~FLHealthbar();
 
-		virtual std::vector<fl_colored_vertex>& get_primitive_vertices();
+		virtual std::vector<std::vector<fl_colored_vertex>>& get_primitive_vertices();
 	protected:
 		virtual void init_textures();
 		virtual void init_vertices();
