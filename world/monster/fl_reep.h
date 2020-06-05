@@ -14,6 +14,7 @@ class FLReep : public FLMonster {
   public:
 	FLReep(float x, float y);
 
+	virtual void per_frame_update();
   protected:
 	virtual void move();
 	virtual void attack();

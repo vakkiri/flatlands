@@ -56,8 +56,25 @@ void FLReep::move() {
 	}
 }
 
+void FLReep::per_frame_update() {
+	FLMonster::per_frame_update();
+	// if we aren't attacking now, but will attack soon, change animation
+	if (attacks_on[attack_index]) {
+		if ( attack_tick == 40 ) {
+			animators["body"]->set_animation(1);
+			animators["body"]->reset_animation();
+		}
+		if ( attack_tick < 40 ) {
+			physics_handler()->stopx();
+		}
+	}
+}
+
 void FLReep::attack() {
 	if (attacks_on[attack_index]) {
+		animators["body"]->set_animation(0);
+
+		std::cout << "we attack now\n";
 		float speed = 1.5f;
 
 		// first projectile
