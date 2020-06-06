@@ -5,8 +5,10 @@
 
 #include <iostream>
 
-#include "../../components/components.h"
+#include "../effect.h"
 #include "../projectiles/fl_projectiles.h"
+#include "../../components/components.h"
+#include "../../rendering/animated_object.h"
 #include "fl_reep.h"
 
 #define W 32
@@ -74,18 +76,12 @@ void FLReep::attack() {
 	if (attacks_on[attack_index]) {
 		animators["body"]->set_animation(0);
 
-		std::cout << "we attack now\n";
-		float speed = 1.5f;
-
-		// first projectile
-		point p = vector_from_player;
-		p += attack_offsets[attack_index];
-
-		// second vectors aren't totally normalized but whatever lol
-		float vx = -(p.x / distance_from_player) * speed;
-		float vy = -(p.y / distance_from_player) * speed;
-
-		new FLReepProjectile(x(), y() + 16, vx, vy);
+		if ( vector_from_player.x > 48 ) {
+			attack1();
+		}
+		else {
+			attack2();
+		}
 	}
 
 	attack_index += 1;
@@ -94,3 +90,31 @@ void FLReep::attack() {
 		attack_index = 0;
 	}
 }
+
+void FLReep::attack1() {
+	float speed = 2.2f;
+
+	point p = vector_from_player;
+	p += attack_offsets[attack_index];
+
+	float vx = -(p.x / distance_from_player) * speed;
+	float vy = -(p.y / distance_from_player) * speed;
+
+	new FLReepProjectile(x(), y() + 16, vx, vy);
+
+}
+
+void FLReep::attack2() {
+	// TODO: this attack needs  a bit of randomness along x-axis 
+	FLTexturedObjectParams tex_params = {nullptr, x() - 32, y() + h() + 16, 30, 7};
+	FLAnimatedObjectParams anim_params = {1, 14, 2, 30, 7, false};
+	new FLEffect(tex_params, anim_params, 0, 416);
+
+	FLTexturedObjectParams tex_params2 = {nullptr, x() - vector_from_player.x, 
+								y() - vector_from_player.y + 32, 30, 7};
+
+	FLAnimatedObjectParams anim_params2 = {1, 14, 2, 30, 7, false};
+	new FLEffect(tex_params2, anim_params2, 0, 416);
+
+}
+

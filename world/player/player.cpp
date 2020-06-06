@@ -29,7 +29,7 @@
 #define DOUBLE_JUMP_ACCEL (-4.1)
 
 #define DASH_FRAMES (22)
-#define DASH_FLOAT (0.95)
+#define DASH_FLOAT (0.9)
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
 

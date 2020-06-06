@@ -18,6 +18,9 @@ class FLReep : public FLMonster {
   protected:
 	virtual void move();
 	virtual void attack();
+	virtual void attack1();
+	virtual void attack2();
+
 	int attack_index;
 };
 
