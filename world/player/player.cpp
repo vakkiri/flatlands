@@ -332,6 +332,8 @@ void FLPlayer::per_frame_update() {
 	// This gives the player a bit more control over their jump
 	if (jump_held && physics_handler()->yvel() < 0.f) {
 		physics_handler()->set_gravity_factor(0.5);
+	} else if (!jump_held && physics_handler()->yvel() < 0.f) {
+		physics_handler()->set_gravity_factor(2.5);
 	} else {
 		physics_handler()->set_gravity_factor(1.0);
 	}
@@ -450,7 +452,9 @@ void FLPlayer::animation_update() {
 
 void FLPlayer::hold_jump() { jump_held = true; }
 
-void FLPlayer::release_jump() { jump_held = false; }
+void FLPlayer::release_jump() { 
+	jump_held = false; 
+}
 
 void FLPlayer::hold_run() { run_held = true; }
 

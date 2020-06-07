@@ -4,8 +4,10 @@
  */
 
 #include <iostream>
+#include <stdlib.h>
 
 #include "../effect.h"
+#include "../attack/fl_reep_attacks.h"
 #include "../projectiles/fl_projectiles.h"
 #include "../../components/components.h"
 #include "../../rendering/animated_object.h"
@@ -16,6 +18,7 @@
 #define S 0
 #define T 288
 #define ATTACK_INDICES 7
+#define MAX_X_RAND 32
 
 point attack_offsets[] = {{64, 0}, {0, 0}, {-64, -16}, {0, 0},
 						  {0, 0},  {0, 0}, {0, 0}};
@@ -37,9 +40,8 @@ FLReep::FLReep(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 	attack_period = 50;
 	stun_duration = 120;
 	vision_radius = 600;
-	attack_index = 0;
-	physics_handler()->accelerate(2.f, 0);
-	physics_handler()->set_gravity_factor(0.f);
+	attack_index = rand() % 6;
+	physics_handler()->set_gravity_factor(0.0f);
 }
 
 void FLReep::move() {
@@ -48,13 +50,21 @@ void FLReep::move() {
 
 	if (vector_from_player.x > 0) {
 		animators["body"]->set_reverse(true);
+		facing_right = false;
 	} else if (vector_from_player.x < 0) {
 		animators["body"]->set_reverse(false);
+		facing_right = true;
 	}
 	if (vector_from_player.x > 64 && xv > -1.2f) {
-		physics_handler()->accelerate(-0.76, 0);
+		physics_handler()->accelerate(-0.64, 0);
 	} else if (vector_from_player.x < -64 && xv < 1.2f) {
-		physics_handler()->accelerate(0.76, 0);
+		physics_handler()->accelerate(0.64, 0);
+	}
+
+	if (vector_from_player.y > -94) {
+		physics_handler()->accelerate(0.0, -0.1);
+	} else if (vector_from_player.y < -96) {
+		physics_handler()->accelerate(0.0, 0.1);
 	}
 }
 
@@ -105,16 +115,7 @@ void FLReep::attack1() {
 }
 
 void FLReep::attack2() {
-	// TODO: this attack needs  a bit of randomness along x-axis 
-	FLTexturedObjectParams tex_params = {nullptr, x() - 32, y() + h() + 16, 30, 7};
-	FLAnimatedObjectParams anim_params = {1, 14, 2, 30, 7, false};
-	new FLEffect(tex_params, anim_params, 0, 416);
-
-	FLTexturedObjectParams tex_params2 = {nullptr, x() - vector_from_player.x, 
-								y() - vector_from_player.y + 32, 30, 7};
-
-	FLAnimatedObjectParams anim_params2 = {1, 14, 2, 30, 7, false};
-	new FLEffect(tex_params2, anim_params2, 0, 416);
-
+	int xrand = rand() % MAX_X_RAND - (MAX_X_RAND / 2);
+	new FLReepSecondary(x() - vector_from_player.x + xrand, y() - vector_from_player.y);
 }
 

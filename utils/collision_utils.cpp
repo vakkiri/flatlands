@@ -5,6 +5,7 @@
 
 #include "collision_utils.h"
 #include "../common/fl_shape.h"
+#include "../common/basic_types.h"
 
 bool rect_collision(FLShape *a, FLShape *b) {
 	if (a == nullptr) {
@@ -31,4 +32,11 @@ bool rect_collision(FLShape *a, FLShape *b) {
 		return false;
 
 	return true;
+}
+
+bool point_in_shape(FLShape* shape, point* p) {
+	return (	p->x >= shape->x() && 
+			p->x <= shape->x() + shape->w() &&
+			p->y >= shape->y() &&
+			p->y <= shape->y() + shape->h() );
 }
