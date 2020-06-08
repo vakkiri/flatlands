@@ -166,6 +166,7 @@ void FLPlayer::bind_actions() {
 	animators["body"]->set_animation_update_method(animation_update);
 }
 
+// TODO: this should be named differently, it's really the entry point for an attack.
 void FLPlayer::drain_ammo() {
 	--weapon_stats[cur_weapon].ammo;
 	play_sound("fusion_shoot");
@@ -177,6 +178,13 @@ void FLPlayer::drain_ammo() {
 	} else {
 		physics_handler()->accelerate(weapon_stats[cur_weapon].recoil, 0);
 	}
+
+	fl_line collision_line;
+	collision_line.u.x = x();
+	collision_line.u.y = y();
+	collision_line.v.x = x();
+	collision_line.v.y = y() - 1000.f;
+	get_nearest_collision(&collision_line);
 }
 
 void FLPlayer::add_ammo(int weapon, int num_clips) {
@@ -331,7 +339,7 @@ void FLPlayer::per_frame_update() {
 
 	// This gives the player a bit more control over their jump
 	if (jump_held && physics_handler()->yvel() < 0.f) {
-		physics_handler()->set_gravity_factor(0.5);
+		physics_handler()->set_gravity_factor(0.4);
 	} else if (!jump_held && physics_handler()->yvel() < 0.f) {
 		physics_handler()->set_gravity_factor(2.5);
 	} else {

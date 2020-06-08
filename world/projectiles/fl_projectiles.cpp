@@ -11,7 +11,7 @@
 #include "../player/player.h"
 #include "fl_projectiles.h"
 
-FLAnimatedObjectParams reep_animation_params = {1, 8, 5, 16, 16, true};
+FLAnimatedObjectParams reep_animation_params = {1, 8, 1, 16, 16, true};
 
 FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 						   float vy, int damage,

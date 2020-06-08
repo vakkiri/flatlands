@@ -34,6 +34,7 @@ bool FLCollider::init(FLGameObject *owner, std::string shape_name) {
 }
 
 FLShape *FLCollider::get_shape() { return owner->get_shape(shape_name); }
+FLGameObject *FLCollider::get_owner() { return owner; }
 
 bool FLCollider::touches_tilemap() {
 	FLShape *shape = owner->get_shape(shape_name);

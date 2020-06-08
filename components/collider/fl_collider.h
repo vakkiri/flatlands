@@ -42,6 +42,7 @@ class FLCollider {
 	std::unordered_set<std::string> &get_collision_groups();
 
 	FLShape *get_shape();
+	FLGameObject *get_owner();
 
 	void set_collision_method(std::function<void(FLCollider *)> meth);
 

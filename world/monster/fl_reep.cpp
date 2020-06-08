@@ -62,9 +62,17 @@ void FLReep::move() {
 	}
 
 	if (vector_from_player.y > -94) {
-		physics_handler()->accelerate(0.0, -0.1);
+		if (physics_handler()->yvel() > 0) {
+			physics_handler()->accelerate(0.0, -0.3);
+		} else {
+			physics_handler()->accelerate(0.0, -0.1);
+		}
 	} else if (vector_from_player.y < -96) {
-		physics_handler()->accelerate(0.0, 0.1);
+		if (physics_handler()->yvel() < 0) {
+			physics_handler()->accelerate(0.0, 0.3);
+		} else {
+			physics_handler()->accelerate(0.0, 0.1);
+		}
 	}
 }
 

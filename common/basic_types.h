@@ -78,4 +78,9 @@ struct fl_textured_vertex {
 	float t;
 };
 
+struct fl_line {
+	point u;
+	point v;
+};
+
 #endif
