@@ -42,6 +42,7 @@ int fl_new_collider(FLGameObject *owner, std::string shape) {
 		if (colliders[handle].init(owner, shape)) {
 			slots_used++;
 		} else {
+			std::cout << "Error creading collider handle: could not initialize\n";
 			handle = -1;
 		}
 	}
@@ -107,49 +108,46 @@ std::unordered_set<int> &fl_get_group_colliders(std::string group) {
 	}
 }
 
-std::pair<point, FLGameObject*> get_nearest_collision(fl_line* line) {
+std::pair<point, FLGameObject*> get_nearest_collision(fl_line* line, std::unordered_set<std::string> groups) {
 	point p = point {-1, -1};
 	point intersect;
 	std::vector<fl_line> edges = std::vector<fl_line>(2);
 
 	FLGameObject* obj = nullptr;
 
-	for (int i = 0; i < NUM_COLLIDERS; ++i) {
-		if (colliders[i].alive()) {
-			FLShape* shape = colliders[i].get_shape();
-			// instead of checking each outside edge, I'm just putting an X through the rect
-			// for monsters etc. this will make it look like the inside got hit
-			edges[0].u.x = shape->x();
-			edges[0].u.y = shape->y();
-			edges[0].v.x = shape->x() + shape->w();
-			edges[0].v.y = shape->y() + shape->h();
-			edges[0].v.x -= edges[0].u.x;
-			edges[0].v.y -= edges[0].u.y;
+	for (auto group : groups) {
+		for (int i : fl_get_group_colliders(group)) {
+			if (colliders[i].alive()) {
+				FLShape* shape = colliders[i].get_shape();
+				// instead of checking each outside edge, I'm just putting an X through the rect
+				// for monsters etc. this will make it look like the inside got hit
+				edges[0].u.x = shape->x();
+				edges[0].u.y = shape->y();
+				edges[0].v.x = shape->w();
+				edges[0].v.y = shape->h();
 
-			edges[1].u.x = shape->x();
-			edges[1].u.y = shape->y() + shape->h();
-			edges[1].v.x = shape->x() + shape->w();
-			edges[1].v.y = shape->y();
-			edges[1].v.x -= edges[1].u.x;
-			edges[1].v.y -= edges[1].u.y;
+				edges[1].u.x = shape->x();
+				edges[1].u.y = shape->y() + shape->h();
+				edges[1].v.x = shape->w();
+				edges[1].v.y = 0;
 
-			for (fl_line& edge : edges) {
-				intersect = intersection(line, &edge);
+				for (fl_line& edge : edges) {
+					intersect = intersection(line, &edge);
 
-				if (intersect.x >= 0 && intersect.y >= 0) {
-					// if this intersection is closer
-					if (intersect.x - line->u.x < p.x - line->u.x &&
-							intersect.y - line->u.y < p.y - line->u.y) {
-						p.x = intersect.x;
-						p.y = intersect.y;
-						obj = colliders[i].get_owner();
+					if (intersect.x >= 0 && intersect.y >= 0) {
+						// if this intersection is closer
+						if (p.x == -1 || (intersect.x - line->u.x < p.x - line->u.x &&
+								intersect.y - line->u.y < p.y - line->u.y)) {
+							p.x = intersect.x;
+							p.y = intersect.y;
+							obj = colliders[i].get_owner();
+						}
 					}
 				}
 			}
 		}
 	}
 
-	std::cout << "intersection: " << p.x << "," << p.y << std::endl;
 	return std::make_pair(p, obj);
 }
 

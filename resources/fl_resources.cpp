@@ -21,9 +21,9 @@
 #include "../tilemap/tilemap.h"
 #include "fl_resources.h"
 
-#define IMAGE_RESOURCE_PATH "test-assets/image-resources.csv"
-#define SFX_RESOURCE_PATH "test-assets/sfx-resources.csv"
-#define BASE_RESOURCE_PATH "test-assets/"
+#define IMAGE_RESOURCE_PATH "assets/image-resources.csv"
+#define SFX_RESOURCE_PATH "assets/sfx-resources.csv"
+#define BASE_RESOURCE_PATH "assets/"
 
 bool FLResources::init() {
 	bool success = true;

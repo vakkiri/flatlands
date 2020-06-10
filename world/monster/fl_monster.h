@@ -22,8 +22,10 @@ class FLMonster : public FLGameObject {
   public:
 	FLMonster(float x, float y, float w, float h,
 			  FLAnimatedObjectParams animation_params);
+	virtual ~FLMonster();
 
 	virtual void per_frame_update();
+	virtual void hit(float damage);
 
   protected:
 	virtual void attack(){};
@@ -47,6 +49,7 @@ class FLMonster : public FLGameObject {
 
 	bool facing_right;
 
+	float health;
 	FLMonsterState monster_state;
 };
 

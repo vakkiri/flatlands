@@ -19,6 +19,8 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 	FLTexturedObjectParams tex_params = {this, 0, 0, w, h};
 
 	add_collider("position", "tilemap");
+	fl_add_collider_to_group(colliders["tilemap"], "monsters");
+
 	physics_handler_handle = new_physics_handler(this, "tilemap");
 	updator_handle = new_updator(this);
 
@@ -30,6 +32,11 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 	movement_tick = 0;
 	attack_tick = 0;
 	stun_tick = 0;
+	health = 0;
+}
+
+FLMonster::~FLMonster() {
+	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
 point FLMonster::get_distance_from_player() {
@@ -68,4 +75,12 @@ void FLMonster::per_frame_update() {
 			on_player_near();
 		}
 	}
+
+	if (health <= 0) {
+		delete this;
+	}
+}
+
+void FLMonster::hit(float damage) {
+	health -= damage;
 }

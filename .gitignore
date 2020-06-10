@@ -1,5 +1,6 @@
 flatlands
 test-assets/*
+assets/*
 *.swp
 profile.txt
 gmon.out

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <unordered_set>
 
 #include "player.h"
 
@@ -15,6 +16,7 @@
 #include "../../rendering/animated_object.h"
 #include "../../rendering/renderer.h"
 #include "../../rendering/world_surface.h"
+#include "../attack/fl_player_attacks.h"
 #include "../effect.h"
 #include "../physics_settings.h"
 
@@ -72,8 +74,8 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 16, 32) {
 	last_update_tick = SDL_GetTicks();
 
 	// Add to renderer and input mapping
-	FLAnimatedObjectParams animation_params = {5, 6, 4, 16.f, 32.f, true};
-	FLTexturedObjectParams tex_params = {this, 0, 0, 16.f, 32.f};
+	FLAnimatedObjectParams animation_params = {5, 4, 5, 32.f, 32.f, true};
+	FLTexturedObjectParams tex_params = {this, 0, 0, 32.f, 32.f};
 
 	FLAnimatedObjectParams wep_animation_params = {1, 6, 2, 16.f, 16.f, true};
 	FLTexturedObjectParams wep_tex_params = {this, 0, 10.f, 16.f, 16.f};
@@ -97,6 +99,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 16, 32) {
 }
 
 FLPlayer::~FLPlayer() {
+	Renderer::getInstance().remove_from_world(animators["body"]);
 	if (weapon != nullptr)
 		delete weapon;
 }
@@ -179,12 +182,11 @@ void FLPlayer::drain_ammo() {
 		physics_handler()->accelerate(weapon_stats[cur_weapon].recoil, 0);
 	}
 
-	fl_line collision_line;
-	collision_line.u.x = x();
-	collision_line.u.y = y();
-	collision_line.v.x = x();
-	collision_line.v.y = y() - 1000.f;
-	get_nearest_collision(&collision_line);
+	if (facing_right()) {
+		new FLFusionPrimary(x() + 4, y() + 8);
+	} else {
+		new FLFusionPrimary(x() - 2, y() + 8);
+	}
 }
 
 void FLPlayer::add_ammo(int weapon, int num_clips) {

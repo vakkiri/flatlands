@@ -40,6 +40,7 @@ FLReep::FLReep(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 	attack_period = 50;
 	stun_duration = 120;
 	vision_radius = 600;
+	health = 40;
 	attack_index = rand() % 6;
 	physics_handler()->set_gravity_factor(0.0f);
 }
@@ -77,7 +78,6 @@ void FLReep::move() {
 }
 
 void FLReep::per_frame_update() {
-	FLMonster::per_frame_update();
 	// if we aren't attacking now, but will attack soon, change animation
 	if (attacks_on[attack_index]) {
 		if ( attack_tick == 40 ) {
@@ -88,6 +88,10 @@ void FLReep::per_frame_update() {
 			physics_handler()->stopx();
 		}
 	}
+	
+	// probably an indicator of poor design, but this *has* to be last, or we may crash
+	// ...if the monster dies
+	FLMonster::per_frame_update();
 }
 
 void FLReep::attack() {
