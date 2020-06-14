@@ -13,6 +13,8 @@
 #include "fl_physics_handler.h"
 
 #define ON_GROUND_FRAMES 2
+#define ON_WALL_FRAMES 2
+#define WALL_SLIDE_FACTOR 0.25
 #define DEFAULT_TERMINAL_VELOCITY_X (5.0f)
 #define DEFAULT_TERMINAL_VELOCITY_Y (5.5f)
 
@@ -35,6 +37,7 @@ bool FLPhysicsHandler::init(FLGameObject *owner, std::string collider_name) {
 		gravity_factor = 1.0;
 		friction_factor = 1.0;
 		on_ground_timer = 0;
+		on_wall_timer = 0;
 		_alive = true;
 	}
 
@@ -47,10 +50,19 @@ void FLPhysicsHandler::update() {
 	bound_velocity();
 	move();
 	on_ground_timer -= 1;
+	on_wall_timer -= 1;
 }
 
 void FLPhysicsHandler::apply_gravity() {
-	vel.y += FLPhysics::getInstance().gravity() * gravity_factor;
+	float amt = FLPhysics::getInstance().gravity();
+
+	if (on_wall()) {
+		amt *= WALL_SLIDE_FACTOR;
+	}
+
+	amt *= gravity_factor;
+
+	vel.y += amt;
 }
 
 void FLPhysicsHandler::apply_friction() {
@@ -83,6 +95,7 @@ void FLPhysicsHandler::move() {
 		owner->move(vel.x, 0);
 		if (vel.x > 0) {
 			while (collider->right_touches_tilemap()) {
+				on_wall_timer = ON_WALL_FRAMES;
 				owner->set_x(int(owner->x()) - 1);
 				vel.x = 0;
 				moved_x = true;
@@ -93,13 +106,10 @@ void FLPhysicsHandler::move() {
 			}
 		} else if (vel.x < 0) {
 			while (collider->left_touches_tilemap()) {
+				on_wall_timer = ON_WALL_FRAMES;
 				owner->set_x(int(owner->x()) + 1);
 				vel.x = 0;
 				moved_x = true;
-			}
-			// anti-jitter
-			if (moved_x) {
-				owner->set_x(int(owner->x()) - 1);
 			}
 		}
 
@@ -131,6 +141,8 @@ void FLPhysicsHandler::move() {
 }
 
 bool FLPhysicsHandler::on_ground() { return on_ground_timer > 0; }
+
+bool FLPhysicsHandler::on_wall() { return on_wall_timer > 0; }
 
 void FLPhysicsHandler::accelerate(float x, float y) {
 	vel.x += x;

@@ -20,29 +20,31 @@
 #include "../effect.h"
 #include "../physics_settings.h"
 
-#define MAX_FALL (90)
+#define MAX_FALL (180)
 #define INITIAL_WALK_ACCEL (0.39)
-#define WALK_ACCEL (0.35)
-#define RUN_ACCEL (0.35)
+#define WALK_ACCEL (0.4)
+#define RUN_ACCEL (0.4)
 #define DASH_INITIAL_ACCEL (5.0)
 #define DASH_ACCEL (0.35)
 
-#define JUMP_ACCEL (-4.3)
-#define DOUBLE_JUMP_ACCEL (-4.1)
+#define JUMP_ACCEL (-5)
+#define DOUBLE_JUMP_ACCEL (-4.3)
+#define WALL_JUMP_Y (-6)
+#define WALL_JUMP_X (5.5)
 
 #define DASH_FRAMES (22)
 #define DASH_FLOAT (0.9)
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
 
-#define WALK_SPEED (2.2)
+#define WALK_SPEED (2.7)
 #define RUN_SPEED WALK_SPEED // currently we are not supporting running
 #define JUMP_RELEASE_GRAVITY_FACTOR (1.5)
-#define JUMP_HOLD_GRAVITY_FACTOR (0.8)
+#define JUMP_HOLD_GRAVITY_FACTOR (0.7)
 
 #define MAX_HEALTH 100
 
-FLPlayer::FLPlayer() : FLGameObject(32, 64, 16, 32) {
+FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 	add_collider("position", "tilemap");
 	fl_add_collider_to_group(colliders["tilemap"], "player");
 	fl_get_collider(colliders["tilemap"])->add_target_collision_group("items");
@@ -69,12 +71,13 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 16, 32) {
 	jump_held = false;
 	run_held = false;
 	attacking = false;
+	wall_jump_frames = 0;
 
 	// Network
 	last_update_tick = SDL_GetTicks();
 
 	// Add to renderer and input mapping
-	FLAnimatedObjectParams animation_params = {5, 4, 5, 32.f, 32.f, true};
+	FLAnimatedObjectParams animation_params = {5, 6, 4, 32.f, 32.f, true};
 	FLTexturedObjectParams tex_params = {this, 0, 0, 32.f, 32.f};
 
 	FLAnimatedObjectParams wep_animation_params = {1, 6, 2, 16.f, 16.f, true};
@@ -194,7 +197,15 @@ void FLPlayer::add_ammo(int weapon, int num_clips) {
 }
 
 void FLPlayer::jump() {
-	if (physics_handler()->on_ground()) {
+	if (can_wall_jump()) {
+		if ((facing_right() && wall_sliding()) || (!facing_right() && !wall_sliding())) {
+			physics_handler()->accelerate(-WALL_JUMP_X, WALL_JUMP_Y);
+		}
+		else {
+			physics_handler()->accelerate(WALL_JUMP_X, WALL_JUMP_Y);
+		}
+	}
+	else if (physics_handler()->on_ground()) {
 		can_double_jump = true;
 		physics_handler()->accelerate(0, JUMP_ACCEL);
 		animators["body"]->reset_animation();
@@ -203,16 +214,14 @@ void FLPlayer::jump() {
 		// Create a visual smoke effect
 		// FIXME need dedicated subclasses of effects etc. with params ready
 		// cause this UGLY
-		FLTexturedObjectParams tex_params = {nullptr, x() - (w() / 2.f),
-											 y() + h() - 16, 32, 16};
+		FLTexturedObjectParams tex_params = {nullptr, x(), y() + h() - 16, 32, 16};
 		FLAnimatedObjectParams anim_params = {1, 7, 2, 32, 16, false};
 		new FLEffect(tex_params, anim_params, 288, 48);
 
 		// play sound effect
 		play_sound("player_jump");
 	} else if (can_double_jump) {
-		FLTexturedObjectParams tex_params = {nullptr, x() - (w() / 2.f),
-											 y() + h(), 32, 16};
+		FLTexturedObjectParams tex_params = {nullptr, x(), y() + h(), 32, 16};
 		FLAnimatedObjectParams anim_params = {1, 7, 2, 32, 16, false};
 		new FLEffect(tex_params, anim_params, 288, 32);
 		falling_frames = 0;
@@ -367,6 +376,14 @@ void FLPlayer::per_frame_update() {
 		}
 		state = FL_PLAYER_DASH;
 	}
+
+	if (wall_sliding()) {
+		wall_jump_frames = 20;
+		state = FL_PLAYER_WALL;
+	}
+
+	if (wall_jump_frames > 0)
+		wall_jump_frames -= 1;
 }
 
 void FLPlayer::update_camera() {
@@ -392,6 +409,8 @@ void FLPlayer::update_camera() {
 }
 
 void FLPlayer::animation_update() {
+	// TODO: this whole state mishmash is just not a good idea, should just have black and white checks
+	// to determine animation w/ priority
 	/* set weapon position to our own */
 	if (!animators["body"]->reversed()) {
 		weapon->set_x(6.f);
@@ -429,15 +448,14 @@ void FLPlayer::animation_update() {
 		}
 		break;
 	case FL_PLAYER_JUMP:
-		if (attacking) {
+		if (physics_handler()->yvel() >= -0.5) {
 			animators["body"]->set_animation(4);
 		} else {
 			animators["body"]->set_animation(3);
 		}
 		break;
-	case FL_PLAYER_DASH:
+	case FL_PLAYER_WALL:
 		animators["body"]->set_animation(5);
-		attacking = false;
 		break;
 	default:
 		break;
@@ -570,4 +588,15 @@ void FLPlayer::handle_collision(FLCollider *collision) {
 
 void FLPlayer::hit(int damage) {
 	target_health = std::max(0, target_health - damage);
+}
+
+bool FLPlayer::wall_sliding() {
+	bool on_wall = physics_handler()->on_wall();
+	bool on_ground = physics_handler()->on_ground();
+
+	return (on_wall && (!on_ground));
+}
+
+bool FLPlayer::can_wall_jump() {
+	return wall_jump_frames > 0;
 }

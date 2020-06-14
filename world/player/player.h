@@ -26,7 +26,8 @@ enum FLPlayerState {
 	FL_PLAYER_WALK,
 	FL_PLAYER_JUMP,
 	FL_PLAYER_POUND,
-	FL_PLAYER_DASH
+	FL_PLAYER_DASH,
+	FL_PLAYER_WALL
 };
 
 enum FLPlayerWeapon { FL_NO_WEAPON, FL_FUSION, FL_NUM_WEAPONS };
@@ -101,6 +102,9 @@ class FLPlayer : public FLGameObject {
 
 	virtual void init_weapon_stats();
 
+	bool wall_sliding();
+	bool can_wall_jump();
+
 	FLPlayerAbility cur_ability;
 	FLPlayerWeapon cur_weapon;
 	FLPlayerState state;
@@ -122,7 +126,7 @@ class FLPlayer : public FLGameObject {
 	unsigned int dash_frames;
 	unsigned int pound_frames;
 	unsigned int falling_frames;
-	int jump_frames;
+	int wall_jump_frames;
 
 	point reset_position;
 

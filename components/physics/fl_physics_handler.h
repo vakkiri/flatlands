@@ -27,6 +27,7 @@ class FLPhysicsHandler {
 	float yvel();
 
 	bool on_ground();
+	bool on_wall();
 	bool alive();
 	void kill();
 
@@ -46,6 +47,7 @@ class FLPhysicsHandler {
 	float gravity_factor;
 	float friction_factor;
 	int on_ground_timer;
+	int on_wall_timer;
 	bool _alive;
 };
 
