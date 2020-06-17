@@ -32,7 +32,7 @@
 #define WALL_JUMP_Y (-6)
 #define WALL_JUMP_X (5.5)
 
-#define DASH_FRAMES (22)
+#define DASH_FRAMES (18)
 #define DASH_FLOAT (0.9)
 #define GROUND_POUND_ACCEL (3.0)
 #define POUND_FRAMES (60)
@@ -380,6 +380,7 @@ void FLPlayer::per_frame_update() {
 	if (wall_sliding()) {
 		wall_jump_frames = 20;
 		state = FL_PLAYER_WALL;
+		falling_frames = 0;
 	}
 
 	if (wall_jump_frames > 0)
@@ -448,11 +449,16 @@ void FLPlayer::animation_update() {
 		}
 		break;
 	case FL_PLAYER_JUMP:
-		if (physics_handler()->yvel() >= -0.5) {
-			animators["body"]->set_animation(4);
-		} else {
+		if (physics_handler()->yvel() <= -0.5) {
 			animators["body"]->set_animation(3);
+		} else if (falling_frames >= 10) {
+			// We only switch to a falling animation if we've been falling for
+			// at least a few frames, to avoid animation jitter.
+			animators["body"]->set_animation(4);
 		}
+		break;
+	case FL_PLAYER_DASH:
+		animators["body"]->set_animation(7);
 		break;
 	case FL_PLAYER_WALL:
 		animators["body"]->set_animation(5);
