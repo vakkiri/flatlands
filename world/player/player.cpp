@@ -23,7 +23,6 @@
 #define MAX_FALL (180)
 #define INITIAL_WALK_ACCEL (0.39)
 #define WALK_ACCEL (0.4)
-#define RUN_ACCEL (0.4)
 #define DASH_INITIAL_ACCEL (5.0)
 #define DASH_ACCEL (0.35)
 
@@ -38,7 +37,6 @@
 #define POUND_FRAMES (60)
 
 #define WALK_SPEED (2.7)
-#define RUN_SPEED WALK_SPEED // currently we are not supporting running
 #define JUMP_RELEASE_GRAVITY_FACTOR (1.5)
 #define JUMP_HOLD_GRAVITY_FACTOR (0.7)
 
@@ -69,7 +67,6 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 	can_use_ability = false;
 	can_double_jump = false;
 	jump_held = false;
-	run_held = false;
 	attacking = false;
 	wall_jump_frames = 0;
 
@@ -121,14 +118,13 @@ void FLPlayer::bind_actions() {
 	std::function<void(void)> hold_jump = std::bind(&FLPlayer::hold_jump, this);
 	std::function<void(void)> release_jump =
 		std::bind(&FLPlayer::release_jump, this);
-	std::function<void(void)> hold_run = std::bind(&FLPlayer::hold_run, this);
-	std::function<void(void)> release_run =
-		std::bind(&FLPlayer::release_run, this);
 	std::function<void(void)> walk_left = std::bind(&FLPlayer::move_left, this);
 	std::function<void(void)> walk_right =
 		std::bind(&FLPlayer::move_right, this);
-	std::function<void(void)> release_walk =
-		std::bind(&FLPlayer::release_walk, this);
+	std::function<void(void)> release_left =
+		std::bind(&FLPlayer::release_left, this);
+	std::function<void(void)> release_right =
+		std::bind(&FLPlayer::release_right, this);
 	std::function<void(void)> use_ability =
 		std::bind(&FLPlayer::use_ability, this);
 	std::function<void(void)> attack = std::bind(&FLPlayer::attack, this);
@@ -140,10 +136,6 @@ void FLPlayer::bind_actions() {
 		std::bind(&FLPlayer::animation_update, this);
 
 	// map binded actions to input handler
-	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION3, FL_KEY_HELD,
-												  hold_run);
-	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION3,
-												  FL_KEY_RELEASED, release_run);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION2,
 												  FL_KEY_PRESSED, jump);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_DOWN, FL_KEY_PRESSED,
@@ -156,10 +148,10 @@ void FLPlayer::bind_actions() {
 												  walk_left);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_HELD,
 												  walk_right);
-	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_RELEASED,
-												  release_walk);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_LEFT, FL_KEY_RELEASED,
-												  release_walk);
+												  release_left);
+	FLInputHandler::getInstance().add_game_action(FL_KEY_RIGHT, FL_KEY_RELEASED,
+												  release_right);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION1,
 												  FL_KEY_PRESSED, use_ability);
 	FLInputHandler::getInstance().add_game_action(FL_KEY_ACTION4, FL_KEY_HELD,
@@ -269,8 +261,7 @@ void FLPlayer::dash() {
 		FLAnimatedObjectParams anim_params = {1, 7, 2, 16, 32, false};
 		FLEffect *effect = new FLEffect(tex_params, anim_params, 288, 0);
 
-		dash_right = facing_right();
-		if (dash_right) {
+		if (facing_right()) {
 			physics_handler()->accelerate(DASH_INITIAL_ACCEL, 0);
 			effect->set_reverse(true);
 		} else {
@@ -289,46 +280,38 @@ bool FLPlayer::dashing() { return dash_frames > 0; }
 bool FLPlayer::can_dash() { return (!dashing()); }
 
 bool FLPlayer::can_attack() {
-	return (cur_weapon != FL_NO_WEAPON && state != FL_PLAYER_DASH &&
+	return (cur_weapon != FL_NO_WEAPON && !dashing() &&
 			weapon_stats[cur_weapon].ammo > 0);
 }
 
 void FLPlayer::move_right() {
-	if (physics_handler()->xvel() < WALK_SPEED ||
-		(run_held && physics_handler()->xvel() < RUN_SPEED)) {
+	if (physics_handler()->xvel() < WALK_SPEED) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
 		if (physics_handler()->xvel() > 0 && physics_handler()->xvel() < 1.5)
 			physics_handler()->accelerate(INITIAL_WALK_ACCEL, 0);
-		else if (run_held)
-			physics_handler()->accelerate(RUN_ACCEL, 0);
 		else
 			physics_handler()->accelerate(WALK_ACCEL, 0);
 
 		animators["body"]->set_reverse(false);
 	}
 
-	if (state != FL_PLAYER_DASH)
-		state = FL_PLAYER_WALK;
+	right_held = true;
 }
 
 void FLPlayer::move_left() {
-	if (physics_handler()->xvel() > -WALK_SPEED ||
-		(run_held && physics_handler()->xvel() > -RUN_SPEED)) {
+	if (physics_handler()->xvel() > -WALK_SPEED) {
 		// accelerate more if we do not have much momentum, to break past
 		// the initial resistance of friction
 		if (physics_handler()->xvel() < 0 && physics_handler()->xvel() > -1.5)
 			physics_handler()->accelerate(-INITIAL_WALK_ACCEL, 0);
-		else if (run_held)
-			physics_handler()->accelerate(-RUN_ACCEL, 0);
 		else
 			physics_handler()->accelerate(-WALK_ACCEL, 0);
 
 		animators["body"]->set_reverse(true);
 	}
 
-	if (state != FL_PLAYER_DASH)
-		state = FL_PLAYER_WALK;
+	left_held = true;
 }
 
 void FLPlayer::update_health() {
@@ -359,12 +342,8 @@ void FLPlayer::per_frame_update() {
 
 	if (physics_handler()->on_ground()) {
 		hit_ground();
-	} else {
-		state = FL_PLAYER_JUMP;
-
-		if (++falling_frames > MAX_FALL) {
-			reset();
-		}
+	} else if (++falling_frames > MAX_FALL) {
+		reset();
 	}
 
 	if (dashing()) {
@@ -374,12 +353,10 @@ void FLPlayer::per_frame_update() {
 		} else {
 			physics_handler()->accelerate(-DASH_ACCEL, 0);
 		}
-		state = FL_PLAYER_DASH;
 	}
 
 	if (wall_sliding()) {
 		wall_jump_frames = 20;
-		state = FL_PLAYER_WALL;
 		falling_frames = 0;
 	}
 
@@ -409,9 +386,8 @@ void FLPlayer::update_camera() {
 	r.translate_world_camera(glm::vec3(xamt, yamt, 0));
 }
 
-void FLPlayer::animation_update() {
-	// TODO: this whole state mishmash is just not a good idea, should just have black and white checks
-	// to determine animation w/ priority
+void FLPlayer::weapon_animation_update() {
+	// This is so ugly, fix it FIXME
 	/* set weapon position to our own */
 	if (!animators["body"]->reversed()) {
 		weapon->set_x(6.f);
@@ -433,40 +409,6 @@ void FLPlayer::animation_update() {
 		break;
 	}
 
-	switch (state) {
-	case FL_PLAYER_IDLE:
-		if (attacking) {
-			animators["body"]->set_animation(6);
-		} else {
-			animators["body"]->set_animation(0);
-		}
-		break;
-	case FL_PLAYER_WALK:
-		if (attacking) {
-			animators["body"]->set_animation(2);
-		} else {
-			animators["body"]->set_animation(1);
-		}
-		break;
-	case FL_PLAYER_JUMP:
-		if (physics_handler()->yvel() <= -0.5) {
-			animators["body"]->set_animation(3);
-		} else if (falling_frames >= 10) {
-			// We only switch to a falling animation if we've been falling for
-			// at least a few frames, to avoid animation jitter.
-			animators["body"]->set_animation(4);
-		}
-		break;
-	case FL_PLAYER_DASH:
-		animators["body"]->set_animation(7);
-		break;
-	case FL_PLAYER_WALL:
-		animators["body"]->set_animation(5);
-		break;
-	default:
-		break;
-	}
-
 	if (attacking) {
 		weapon->start_animation();
 		weapon->set_visible(true);
@@ -479,32 +421,40 @@ void FLPlayer::animation_update() {
 			weapon->stop_animation();
 		}
 	}
-	if (state == FL_PLAYER_WALK && physics_handler()->on_ground()) {
-		start_sound("player_walk");
+}
+
+void FLPlayer::animation_update() {
+	weapon_animation_update();
+
+	if (dashing()) {
+		animators["body"]->set_animation(7);
+	} else if (wall_sliding()) {
+		animators["body"]->set_animation(5);
+	} else if (!physics_handler()->on_ground()) {
+		if (physics_handler()->yvel() <= -0.5) {
+			animators["body"]->set_animation(3);
+		} else if (falling_frames >= 5) {
+			// We check falling frames to avoid jittery animation changes
+			animators["body"]->set_animation(4);
+		}
+	} else if (running()) {
+		animators["body"]->set_animation(1);
+	} else if (attacking) {
+		animators["body"]->set_animation(6);
+	} else {
+		animators["body"]->set_animation(0);
 	}
 }
 
 void FLPlayer::hold_jump() { jump_held = true; }
 
-void FLPlayer::release_jump() { 
-	jump_held = false; 
-}
+void FLPlayer::release_jump() { jump_held = false; }
 
-void FLPlayer::hold_run() { run_held = true; }
+void FLPlayer::release_left() { left_held = false; }
 
-void FLPlayer::release_run() { run_held = false; }
-
-void FLPlayer::release_walk() {
-	if (!dashing())
-		state = FL_PLAYER_IDLE;
-
-	stop_sound("player_walk");
-}
+void FLPlayer::release_right() { right_held = false; }
 
 void FLPlayer::hit_ground() {
-	if (state != FL_PLAYER_WALK && !dashing())
-		state = FL_PLAYER_IDLE;
-
 	pound_frames = 0;
 	falling_frames = 0;
 	can_double_jump = true;
@@ -606,3 +556,8 @@ bool FLPlayer::wall_sliding() {
 bool FLPlayer::can_wall_jump() {
 	return wall_jump_frames > 0;
 }
+
+bool FLPlayer::running() {
+	return left_held || right_held;
+}
+

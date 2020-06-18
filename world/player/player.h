@@ -54,19 +54,19 @@ class FLPlayer : public FLGameObject {
 	virtual void stop_attack();
 	virtual void set_ability(FLPlayerAbility ability);
 	virtual void per_frame_update();
+	virtual void weapon_animation_update();
 	virtual void animation_update();
 
 	// movement methods
 	void move_left();
 	void move_right();
-	virtual void release_walk();
+	void release_left();
+	void release_right();
 
 	virtual void update_camera();
 
 	virtual void hold_jump();
 	virtual void release_jump();
-	virtual void hold_run();
-	virtual void release_run();
 
 	virtual void hit_ground();
 
@@ -75,6 +75,7 @@ class FLPlayer : public FLGameObject {
 
 	bool pounding();
 	bool dashing();
+	bool running();
 	bool can_dash();
 	bool can_attack();
 	bool facing_right();
@@ -118,10 +119,10 @@ class FLPlayer : public FLGameObject {
 
 	bool can_use_ability;
 	bool can_double_jump;
-	bool jump_held;
-	bool run_held;
-	bool dash_right;
 	bool attacking;
+	bool right_held;
+	bool left_held;
+	bool jump_held;
 
 	unsigned int dash_frames;
 	unsigned int pound_frames;
