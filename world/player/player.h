@@ -19,6 +19,7 @@ class FLCollider;
 
 struct texture;
 
+enum FLVerticalDirection { FL_FORWARD, FL_UP, FL_DOWN };
 enum FLPlayerAbility { FL_NO_ABILITY, FL_DASH };
 
 enum FLPlayerState {
@@ -67,6 +68,10 @@ class FLPlayer : public FLGameObject {
 
 	virtual void hold_jump();
 	virtual void release_jump();
+	virtual void press_up();
+	virtual void press_down();
+	virtual void release_up();
+	virtual void release_down();
 
 	virtual void hit_ground();
 
@@ -108,7 +113,7 @@ class FLPlayer : public FLGameObject {
 
 	FLPlayerAbility cur_ability;
 	FLPlayerWeapon cur_weapon;
-	FLPlayerState state;
+	FLVerticalDirection vertical_direction;
 
 	FLAnimatedObject *weapon;
 	FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
@@ -122,6 +127,8 @@ class FLPlayer : public FLGameObject {
 	bool attacking;
 	bool right_held;
 	bool left_held;
+	bool up_held;
+	bool down_held;
 	bool jump_held;
 
 	unsigned int dash_frames;
