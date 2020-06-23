@@ -70,6 +70,8 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 	jump_held = false;
 	up_held = false;
 	down_held = false;
+	right_held = false;
+	left_held = false;
 	attacking = false;
 	wall_jump_frames = 0;
 
@@ -80,18 +82,9 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 	FLAnimatedObjectParams animation_params = {5, 6, 4, 48.f, 32.f, true};
 	FLTexturedObjectParams tex_params = {this, 0, 0, 48.f, 32.f};
 
-	FLAnimatedObjectParams wep_animation_params = {1, 6, 4, 32.f, 32.f, true};
-	FLTexturedObjectParams wep_tex_params = {this, 0, 10.f, 32.f, 32.f};
-
-	weapon = new FLAnimatedObject(wep_tex_params, wep_animation_params);
-	weapon->set_st(0, 432);
-	weapon->set_visible(false);
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 
-	weapon->stop_animation();
-
 	Renderer::getInstance().add_to_world(animators["body"]);
-	Renderer::getInstance().add_to_world(weapon);
 
 	bind_actions();
 
@@ -104,8 +97,6 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 
 FLPlayer::~FLPlayer() {
 	Renderer::getInstance().remove_from_world(animators["body"]);
-	if (weapon != nullptr)
-		delete weapon;
 }
 
 void FLPlayer::init_weapon_stats() {
@@ -239,6 +230,9 @@ void FLPlayer::use_ability() {
 
 void FLPlayer::attack() {
 	if (can_attack()) {
+		if (!attacking) {
+			animators["body"]->reset_animation();
+		}
 		attacking = true;
 	}
 }
@@ -391,15 +385,7 @@ void FLPlayer::update_camera() {
 	r.translate_world_camera(glm::vec3(xamt, yamt, 0));
 }
 
-void FLPlayer::weapon_animation_update() {
-	if (!attacking and weapon->finished()) {
-		animators["body"]->reset_animation();
-	}
-}
-
 void FLPlayer::animation_update() {
-	weapon_animation_update();
-
 	if (dashing()) {
 		animators["body"]->set_animation(7);
 	} else if (wall_sliding()) {
@@ -506,8 +492,6 @@ void FLPlayer::interact() {
 void FLPlayer::enable_ability() { can_use_ability = true; }
 
 bool FLPlayer::facing_right() { return (!animators["body"]->reversed()); }
-
-FLAnimatedObject *FLPlayer::get_weapon() { return weapon; }
 
 void FLPlayer::update_net() {
 	Uint32 tick = SDL_GetTicks();

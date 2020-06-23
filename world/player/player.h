@@ -55,7 +55,6 @@ class FLPlayer : public FLGameObject {
 	virtual void stop_attack();
 	virtual void set_ability(FLPlayerAbility ability);
 	virtual void per_frame_update();
-	virtual void weapon_animation_update();
 	virtual void animation_update();
 
 	// movement methods
@@ -85,7 +84,6 @@ class FLPlayer : public FLGameObject {
 	bool can_attack();
 	bool facing_right();
 
-	FLAnimatedObject *get_weapon();
 	virtual void drain_ammo();
 	virtual void add_ammo(int weapon, int num_clips);
 
@@ -115,7 +113,6 @@ class FLPlayer : public FLGameObject {
 	FLPlayerWeapon cur_weapon;
 	FLVerticalDirection vertical_direction;
 
-	FLAnimatedObject *weapon;
 	FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
 
 	int max_health;
