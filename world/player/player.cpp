@@ -79,7 +79,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 	last_update_tick = SDL_GetTicks();
 
 	// Add to renderer and input mapping
-	FLAnimatedObjectParams animation_params = {5, 6, 4, 48.f, 32.f, true};
+	FLAnimatedObjectParams animation_params = {5, 6, 3, 48.f, 32.f, true};
 	FLTexturedObjectParams tex_params = {this, 0, 0, 48.f, 32.f};
 
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
@@ -391,29 +391,56 @@ void FLPlayer::animation_update() {
 	} else if (wall_sliding()) {
 		animators["body"]->set_animation(5);
 	} else if (!physics_handler()->on_ground()) {
-		if (physics_handler()->yvel() <= -0.5) {
-			if (attacking) {
-				animators["body"]->set_animation(9);
+		if (attacking && vertical_direction != FL_FORWARD) {
+			if (vertical_direction == FL_UP) {
+				animators["body"]->set_animation(19);
 			} else {
-				animators["body"]->set_animation(3);
+				animators["body"]->set_animation(20);
 			}
-		} else if (falling_frames >= 5) {
-			// We check falling frames to avoid jittery animation changes
-			if (attacking) {
-				animators["body"]->set_animation(10);
-			} else {
-				animators["body"]->set_animation(4);
+		}
+		else {
+			if (physics_handler()->yvel() <= -0.5) {
+				if (attacking) {
+					animators["body"]->set_animation(9);
+				} else {
+					animators["body"]->set_animation(3);
+				}
+			} else if (falling_frames >= 5) {
+				// We check falling frames to avoid jittery animation changes
+				if (attacking) {
+					animators["body"]->set_animation(10);
+				} else {
+					animators["body"]->set_animation(4);
+				}
 			}
 		}
 	} else if (running()) {
 		if (attacking) {
-			animators["body"]->set_animation(8);
+			if (vertical_direction == FL_FORWARD) {
+				animators["body"]->set_animation(8);
+			} else if (vertical_direction == FL_UP) {
+				animators["body"]->set_animation(18);
+			} else {
+				animators["body"]->set_animation(17);
+			}
 		} else {
-			animators["body"]->set_animation(1);
+			if (vertical_direction == FL_FORWARD) {
+				animators["body"]->set_animation(1);
+			} else if (vertical_direction == FL_UP) {
+				animators["body"]->set_animation(14);
+			} else {
+				animators["body"]->set_animation(13);
+			}
 		}
-	} else {
+	} else {	// stationary
 		if (attacking) {
-			animators["body"]->set_animation(6);
+			if (vertical_direction == FL_FORWARD) {
+				animators["body"]->set_animation(6);
+			} else if (vertical_direction == FL_UP) {
+				animators["body"]->set_animation(16);
+			} else {
+				animators["body"]->set_animation(15);
+			}
 		} else {
 			if (vertical_direction == FL_FORWARD) {
 				animators["body"]->set_animation(0);
