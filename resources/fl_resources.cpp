@@ -8,6 +8,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <fstream>
 #include <iostream>
+#include <cstring>
 
 #include "../environment/fl_environment.h"
 #include "../logging/logging.h"
@@ -233,101 +234,86 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		log_progress("Loading map");
 		tilemap->reset();
 
-		// TODO: create new map format
-		// This code is largely just a carryover from the format of an
-		// old engine (shift).
-
-		int current_type;
-		bool done = false;
-		int *input;
+		std::vector<char> buffer;
+		file.seekg(0, file.end);
 		int size = file.tellg();
-
-		input = new int[size];
-
-		file.seekg(0, std::ios::beg);
-		file.read((char *)input, size * sizeof(int));
+		buffer.reserve(size);
+		file.seekg(0, file.beg);
+		file.read(buffer.data(), size);
 		file.close();
 
-		while (!done) {
-			current_type = *input;
 
-			if (current_type == 0) {
-				// input[1]: background
-				// input[2]: tileset
-				// input[3]: map width
-				// input[4]: map height
+		int16_t val;
+		char* cur = buffer.data();
+		std::memcpy(&val, cur, sizeof(int16_t));
 
-				tilemap->reset(input[3], input[4]);
-				tilemap->set_tileset(input[2]);
-				input += 5;
-			} else if (current_type == 1) {
-				// input[1]: player x
-				// input[2]: player y
-				player->set_x(input[1]);
-				player->set_y(input[2]);
-				player->set_reset_position(input[1], input[2]);
-				input += 3;
-			} else if (current_type == 2) {
-				// input[1]: x
-				// input[2]: y
-				// input[3]: id
-				// input[4]: solid?
-				// input[5]: layer
-				tilemap->add_tile((float)input[1], (float)input[2], 16.f, 16.f,
-								  (float)input[3] + 1, (bool)input[4],
-								  (int)input[5]);
-				input += 6;
-			} else if (current_type == 3) {
-				input += 6;
-			} else if (current_type == 4) {
-				input += 8;
-			} else if (current_type == 5) {
-				// monster
-				// input[1]: x
-				// input[2]: y
-				// input[3]: type
-				new FLReep(float(input[1]), float(input[2]));
-				input += 5;
-			} else if (current_type == 6) {
-				input += 3;
-			} else if (current_type == 7) {
-				input += 4;
-			} else if (current_type == 8) {
-				input += 7;
-			} else if (current_type == 9) {
-				input += 3;
-			} else if (current_type == 10) {
-				// items, or general objects
-				// input[1]: x
-				// input[2]: y
-				// input[3]: type
-				switch (input[3]) {
-				case 0: {
-					FLAmmo *ammo =
-						new FLAmmo((float)input[1], (float)input[2], FL_FUSION);
-					environment->add_object(ammo);
-					break;
-				}
-				default:
-					log_warning("Unknown item type");
-					break;
-				}
-				input += 4;
-			} else if (current_type == 11) {
-				input += 4;
-			} else if (current_type == 12) {
-				input += 3;
-			} else if (current_type == 13) {
-				input += 3;
-			} else if (current_type == 14) {
-				input += 4;
-			} else if (current_type == 15) {
-				input += 3;
-			} else if (current_type == 16) {
-				input += 4;
+		// TODO: actually save width/height/tileset of map
+		tilemap->reset(1024, 1024);
+		tilemap->set_tileset(0);
+
+		while (val != -1) {
+			if (val == 0 || val == 1) {
+				int16_t x;
+				int16_t y;
+				int16_t index;
+				bool solid = val == 1;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&index, cur, sizeof(int16_t));
+
+				tilemap->add_tile(x, y, 16.f, 16.f, index, solid, 1);
+				
+				cur += 2;
+			} else if (val == 2) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+				std::cout << "player position: " << x << "," << y << std::endl;
+				player->set_x(x);
+				player->set_y(y);
+				player->set_reset_position(x, y);
+
+				cur += 2;
+			} else if (val == 3) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+				new FLReep(float(x), float(y));
+
+				cur += 2;
+			} else if (val == 4) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+
+				FLAmmo *ammo = new FLAmmo(float(x), float(y), FL_FUSION);
+				environment->add_object(ammo);
+
+				cur += 2;
 			} else {
-				done = true;
+				val = -1;
 			}
+
+			std::memcpy(&val, cur, sizeof(int16_t));
 		}
 
 		tilemap->update_surface();
