@@ -248,7 +248,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		std::memcpy(&val, cur, sizeof(int16_t));
 
 		// TODO: actually save width/height/tileset of map
-		tilemap->reset(1024, 1024);
+		tilemap->reset(4096, 4096);
 		tilemap->set_tileset(0);
 
 		while (val != -1) {
@@ -277,7 +277,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 2;
 				std::memcpy(&y, cur, sizeof(int16_t));
 
-				std::cout << "player position: " << x << "," << y << std::endl;
 				player->set_x(x);
 				player->set_y(y);
 				player->set_reset_position(x, y);

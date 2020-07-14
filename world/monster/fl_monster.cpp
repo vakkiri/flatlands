@@ -16,7 +16,7 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 					 FLAnimatedObjectParams animation_params)
 	: FLGameObject(x, y, w, h) {
 
-	FLTexturedObjectParams tex_params = {this, 0, 0, w, h};
+	FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};
 
 	add_collider("position", "tilemap");
 	fl_add_collider_to_group(colliders["tilemap"], "monsters");

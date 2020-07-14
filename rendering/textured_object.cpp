@@ -6,7 +6,7 @@
 #include "textured_object.h"
 #include <iostream>
 
-FLTexturedObject::FLTexturedObject(FLGameObject *owner, float x, float y,
+FLTexturedObject::FLTexturedObject(FLShape *parent, float x, float y,
 								   float w, float h) {
 	_x = x;
 	_y = y;
@@ -16,17 +16,17 @@ FLTexturedObject::FLTexturedObject(FLGameObject *owner, float x, float y,
 	_t = 0;
 	reverse = false;
 	visible = true;
-	this->owner = owner;
+	this->parent = parent;
 }
 
 FLTexturedObject::FLTexturedObject(float x, float y, float w, float h)
 	: FLTexturedObject(nullptr, x, y, w, h) {}
 
-FLTexturedObject::FLTexturedObject(FLGameObject *owner, float w, float h)
-	: FLTexturedObject(owner, 0, 0, w, h) {}
+FLTexturedObject::FLTexturedObject(FLShape *parent, float w, float h)
+	: FLTexturedObject(parent, 0, 0, w, h) {}
 
 FLTexturedObject::FLTexturedObject(FLTexturedObjectParams &params)
-	: FLTexturedObject(params.owner, params.x, params.y, params.w, params.h) {}
+	: FLTexturedObject(params.parent, params.x, params.y, params.w, params.h) {}
 
 void FLTexturedObject::set_st(float s, float t) {
 	_s = s;
@@ -43,16 +43,16 @@ void FLTexturedObject::set_h(float h) { _h = h; }
 
 float FLTexturedObject::x() {
 	float x = _x;
-	if (owner != nullptr) {
-		x += owner->x();
+	if (parent != nullptr) {
+		x += parent->x();
 	}
 	return x;
 }
 
 float FLTexturedObject::y() {
 	float y = _y;
-	if (owner != nullptr) {
-		y += owner->y();
+	if (parent != nullptr) {
+		y += parent->y();
 	}
 	return y;
 }

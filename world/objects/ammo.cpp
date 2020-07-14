@@ -27,7 +27,7 @@ FLAmmo::FLAmmo(float x, float y, int weapon_index)
 
 	FLAnimatedObjectParams anim_params = {
 		NUM_ANIMATIONS, NUM_STEPS, FRAMES_PER_STEP, STEP, STEP, REPEATS};
-	FLTexturedObjectParams tex_params = {this, 0, 0, SIZE, SIZE};
+	FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, SIZE, SIZE};
 
 	FLAnimatedObject *animation = new FLAnimatedObject(tex_params, anim_params);
 	animators["body"] = animation;

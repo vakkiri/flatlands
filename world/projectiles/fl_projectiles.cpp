@@ -18,7 +18,7 @@ FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 						   FLAnimatedObjectParams animation_params)
 	: FLGameObject(x, y, w, h) {
 
-	FLTexturedObjectParams tex_params = {this, 0, 0, w, h};
+	FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 	Renderer::getInstance().add_to_world(animators["body"]);
 

@@ -9,6 +9,7 @@
 #define FL_NET_PLAYER_H_
 
 #include "../../rendering/animated_object.h"
+#include "../../common/game_object.h"
 
 class FLNetPlayer : public FLGameObject {
   public:

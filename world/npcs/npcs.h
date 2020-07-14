@@ -9,6 +9,7 @@
 #define NPC_H_
 
 #include "../../rendering/animated_object.h"
+#include "../../common/game_object.h"
 
 class FLNpc : virtual public FLGameObject {
   public:

@@ -10,11 +10,11 @@
 #define TEXTURED_OBJECT_H_
 
 #include "../common/basic_types.h"
-#include "../common/game_object.h"
+#include "../common/fl_shape.h"
 #include <vector>
 
 struct FLTexturedObjectParams {
-	FLGameObject *owner;
+	FLShape *parent;
 	float x;
 	float y;
 	float w;
@@ -24,8 +24,8 @@ struct FLTexturedObjectParams {
 class FLTexturedObject {
   public:
 	FLTexturedObject() = delete;
-	FLTexturedObject(FLGameObject *parent, float w, float h);
-	FLTexturedObject(FLGameObject *owner, float x, float y, float w, float h);
+	FLTexturedObject(FLShape *parent, float w, float h);
+	FLTexturedObject(FLShape *parent, float x, float y, float w, float h);
 	FLTexturedObject(float x, float y, float w, float h);
 	FLTexturedObject(FLTexturedObjectParams &params);
 
@@ -51,7 +51,7 @@ class FLTexturedObject {
 	bool is_visible();
 
   protected:
-	FLGameObject *owner;
+	FLShape *parent;
 	float _x;
 	float _y;
 	float _w;

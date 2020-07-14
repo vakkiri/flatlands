@@ -70,8 +70,10 @@ void FLTilemap::reset_collision_map() {
 }
 
 bool FLTilemap::solid_at(float x, float y) {
-	if (x < 0 || y < 0 || x >= w || y >= h)
+	if (x < 0 || y < 0 || x >= w || y >= h) {
+		std::cout << "warning: position out of map bounds" << std::endl;
 		return false;
+	}
 
 	return collision_map[y][x];
 }

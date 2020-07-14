@@ -42,7 +42,9 @@
 
 #define MAX_HEALTH 100
 
-FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
+FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
+	FLShape *tex_position = new FLShape(x() - 9, y(), 48.f, 32.f);
+	shapes.insert(std::make_pair("texture_position", tex_position));
 	add_collider("position", "tilemap");
 	fl_add_collider_to_group(colliders["tilemap"], "player");
 	fl_get_collider(colliders["tilemap"])->add_target_collision_group("items");
@@ -80,7 +82,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 24, 32) {
 
 	// Add to renderer and input mapping
 	FLAnimatedObjectParams animation_params = {5, 6, 3, 48.f, 32.f, true};
-	FLTexturedObjectParams tex_params = {this, 0, 0, 48.f, 32.f};
+	FLTexturedObjectParams tex_params = {tex_position, 0, 0, 48.f, 32.f};
 
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 
@@ -295,6 +297,7 @@ void FLPlayer::move_right() {
 		animators["body"]->set_reverse(false);
 	}
 
+	shapes["texture_position"]->set_pos(x() - 9, y());
 	right_held = true;
 }
 
@@ -310,6 +313,7 @@ void FLPlayer::move_left() {
 		animators["body"]->set_reverse(true);
 	}
 
+	shapes["texture_position"]->set_pos(x() - 25, y());
 	left_held = true;
 }
 
