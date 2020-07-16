@@ -394,6 +394,11 @@ void FLPlayer::animation_update() {
 		animators["body"]->set_animation(7);
 	} else if (wall_sliding()) {
 		animators["body"]->set_animation(5);
+		if (!facing_right()) {
+			shapes["texture_position"]->set_pos(x(), y());
+		} else {
+			shapes["texture_position"]->set_pos(x() - 32, y());
+		}
 	} else if (!physics_handler()->on_ground()) {
 		if (attacking && vertical_direction != FL_FORWARD) {
 			if (vertical_direction == FL_UP) {
