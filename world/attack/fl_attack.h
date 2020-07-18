@@ -17,11 +17,13 @@ enum FLAttackState {
 class FLAttack : public FLGameObject {
 	public:
 		FLAttack() = delete;
-		FLAttack(float x, float y, float w, float h);
+		FLAttack(float x, float y, float w, float h, FLHorizontalDirection hdir, FLVerticalDirection vdir);
 
 		virtual void per_frame_update();
 
 	protected:
+		FLVerticalDirection vdir;
+		FLHorizontalDirection hdir;
 		virtual void pre_attack() {};
 		virtual void attack() {};
 		virtual void post_attack() {};

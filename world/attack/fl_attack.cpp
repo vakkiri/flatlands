@@ -6,12 +6,14 @@
 #include "fl_attack.h"
 #include "../../components/components.h"
 
-FLAttack::FLAttack(float x, float y, float w, float h) : FLGameObject(x, y, w, h) {
+FLAttack::FLAttack(float x, float y, float w, float h, FLHorizontalDirection hdir, FLVerticalDirection vdir) : FLGameObject(x, y, w, h) {
 	updator_handle = new_updator(this);
 	attack_state = FL_ATTACK_PRE;
 	pre_ticks = 0;
 	attack_ticks = 0;
 	post_ticks = 0;
+	this->hdir = hdir;
+	this->vdir = vdir;
 }
 
 void FLAttack::per_frame_update() {

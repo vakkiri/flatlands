@@ -12,7 +12,7 @@
 
 class FLFusionPrimary : public FLAttack {
 	public:
-		FLFusionPrimary(float x, float y);
+		FLFusionPrimary(float x, float y, FLHorizontalDirection hdir, FLVerticalDirection vdir);
 	protected:
 		virtual void attack();
 };

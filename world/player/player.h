@@ -19,7 +19,6 @@ class FLCollider;
 
 struct texture;
 
-enum FLVerticalDirection { FL_FORWARD, FL_UP, FL_DOWN };
 enum FLPlayerAbility { FL_NO_ABILITY, FL_DASH };
 
 enum FLPlayerState {
@@ -112,7 +111,6 @@ class FLPlayer : public FLGameObject {
 	FLPlayerAbility cur_ability;
 	FLPlayerWeapon cur_weapon;
 	FLVerticalDirection vertical_direction;
-
 	FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
 
 	int max_health;

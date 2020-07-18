@@ -174,10 +174,14 @@ void FLPlayer::drain_ammo() {
 			physics_handler()->accelerate(weapon_stats[cur_weapon].recoil, 0);
 		}
 
-		if (facing_right()) {
-			new FLFusionPrimary(x() + 4, y() + 8);
+		if (vertical_direction == FL_FORWARD) {
+			if (facing_right()) {
+				new FLFusionPrimary(x() + 4, y() + 8, FL_RIGHT, FL_FORWARD);
+			} else {
+				new FLFusionPrimary(x() - 2, y() + 8, FL_LEFT, FL_FORWARD);
+			}
 		} else {
-			new FLFusionPrimary(x() - 2, y() + 8);
+			new FLFusionPrimary(x() - 2, y() + 8, FL_NONE, vertical_direction);
 		}
 	}
 }

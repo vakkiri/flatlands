@@ -14,7 +14,7 @@
 #define W 32
 #define H 32
 
-FLReepSecondary::FLReepSecondary(float x, float y) : FLAttack(x, y, W, H) {
+FLReepSecondary::FLReepSecondary(float x, float y) : FLAttack(x, y, W, H, FL_NONE, FL_FORWARD) {
 	pre_ticks = 56;
 }
 

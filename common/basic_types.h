@@ -83,4 +83,7 @@ struct fl_line {
 	point v;
 };
 
+enum FLVerticalDirection { FL_FORWARD, FL_UP, FL_DOWN };
+enum FLHorizontalDirection { FL_NONE, FL_LEFT, FL_RIGHT };
+
 #endif

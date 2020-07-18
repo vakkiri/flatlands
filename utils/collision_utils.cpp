@@ -53,7 +53,7 @@ point intersection(fl_line* l1, fl_line* l2) {
 		t = (1 / d) * (-((-(l1->u.x - l2->u.x)) * l2->v.y + (l1->u.y - l2->u.y) * l2->v.x));
 
 		if (s >= 0 && t >= 0 && s <= 1 && t <= 1) {
-			p.x = l1->u.x + s * l1->v.x;
+			p.x = l1->u.x + t * l1->v.x;
 			p.y = l1->u.y + t * l1->v.y;
 		}
 	}
