@@ -9,5 +9,6 @@
 #define FL_MONSTER_TYPES_H_
 
 #include "fl_reep.h"
+#include "fl_orb.h"
 
 #endif

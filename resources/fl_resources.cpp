@@ -304,6 +304,20 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&y, cur, sizeof(int16_t));
 
 
+				new FLOrb(float(x), float(y));
+
+				cur += 2;
+
+			} else if (val == 5) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+
 				FLAmmo *ammo = new FLAmmo(float(x), float(y), FL_FUSION);
 				environment->add_object(ammo);
 
@@ -312,7 +326,9 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				val = -1;
 			}
 
-			std::memcpy(&val, cur, sizeof(int16_t));
+			if (val != -1) {
+				std::memcpy(&val, cur, sizeof(int16_t));
+			}
 		}
 
 		tilemap->update_surface();

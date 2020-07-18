@@ -24,7 +24,7 @@ point attack_offsets[] = {{64, 0}, {0, 0}, {-64, -16}, {0, 0},
 						  {0, 0},  {0, 0}, {0, 0}};
 bool attacks_on[] = {true, true, true, false, false, false, false};
 
-FLAnimatedObjectParams animation_params = {
+static FLAnimatedObjectParams animation_params = {
 	1,	  // num_animations
 	8,	  // num_steps
 	5,	  // frames_per_step

@@ -82,5 +82,6 @@ void FLMonster::per_frame_update() {
 }
 
 void FLMonster::hit(float damage) {
+	stun_tick = stun_duration;
 	health -= damage;
 }
