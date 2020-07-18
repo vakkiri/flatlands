@@ -12,9 +12,10 @@
 #include "../components.h"
 #include "fl_physics_handler.h"
 
-#define ON_GROUND_FRAMES 2
+#define ON_GROUND_FRAMES 4
 #define ON_WALL_FRAMES 2
-#define WALL_SLIDE_FACTOR 0.25
+#define WALL_SLIDE_FACTOR_UP 0.5
+#define WALL_SLIDE_FACTOR_DOWN 0.05
 #define DEFAULT_TERMINAL_VELOCITY_X (5.0f)
 #define DEFAULT_TERMINAL_VELOCITY_Y (5.5f)
 
@@ -57,7 +58,11 @@ void FLPhysicsHandler::apply_gravity() {
 	float amt = FLPhysics::getInstance().gravity();
 
 	if (on_wall()) {
-		amt *= WALL_SLIDE_FACTOR;
+		if (vel.y < 0) {
+			amt *= WALL_SLIDE_FACTOR_UP;
+		} else {
+			amt *= WALL_SLIDE_FACTOR_DOWN;
+		}
 	}
 
 	amt *= gravity_factor;

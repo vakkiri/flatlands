@@ -28,7 +28,7 @@
 
 #define JUMP_ACCEL (-5)
 #define DOUBLE_JUMP_ACCEL (-4.3)
-#define WALL_JUMP_Y (-6)
+#define WALL_JUMP_Y (-3)
 #define WALL_JUMP_X (5.5)
 
 #define DASH_FRAMES (18)
@@ -297,7 +297,6 @@ void FLPlayer::move_right() {
 		animators["body"]->set_reverse(false);
 	}
 
-	shapes["texture_position"]->set_pos(x() - 9, y());
 	right_held = true;
 }
 
@@ -313,7 +312,6 @@ void FLPlayer::move_left() {
 		animators["body"]->set_reverse(true);
 	}
 
-	shapes["texture_position"]->set_pos(x() - 25, y());
 	left_held = true;
 }
 
@@ -338,7 +336,7 @@ void FLPlayer::per_frame_update() {
 	if (jump_held && physics_handler()->yvel() < 0.f) {
 		physics_handler()->set_gravity_factor(0.4);
 	} else if (!jump_held && physics_handler()->yvel() < 0.f) {
-		physics_handler()->set_gravity_factor(2.5);
+		physics_handler()->set_gravity_factor(1.3);
 	} else {
 		physics_handler()->set_gravity_factor(1.0);
 	}
@@ -390,6 +388,14 @@ void FLPlayer::update_camera() {
 }
 
 void FLPlayer::animation_update() {
+	if (!wall_sliding()) {
+		if (facing_right()) {
+			shapes["texture_position"]->set_pos(x() - 9, y());
+		} else {
+			shapes["texture_position"]->set_pos(x() - 25, y());
+		}
+	}
+
 	if (dashing()) {
 		animators["body"]->set_animation(7);
 	} else if (wall_sliding()) {
