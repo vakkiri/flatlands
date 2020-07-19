@@ -4,11 +4,12 @@
  */
 
 #include <math.h>
-
+#include <stdlib.h>
 #include "../../components/components.h"
 #include "../../environment/fl_environment.h"
 #include "../../game/fl_game.h"
 #include "../../rendering/renderer.h"
+#include "../effect.h"
 #include "../player/player.h"
 #include "fl_monster.h"
 
@@ -36,6 +37,21 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 }
 
 FLMonster::~FLMonster() {
+	// generate some generic effects
+	int num_explosions =  w() / 6.f;
+	if (num_explosions < 1) {
+		num_explosions = 1;
+	}
+	for (int i = 0; i < num_explosions; ++i) {
+		int randx = rand() % int(w() + 16) - 8;
+		int randy = rand() % int(h() + 16) - 8;
+		// TODO I should really just have a struct that contains these settings defined
+		// ie. effects.h can include them
+		FLTexturedObjectParams tex_params = {nullptr, x() + randx, y() + randy, 16, 16};
+		FLAnimatedObjectParams anim_params = {1, 8, 3, 32, 16, false};
+		new FLEffect(tex_params, anim_params, 560, 0);
+	}
+
 	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
