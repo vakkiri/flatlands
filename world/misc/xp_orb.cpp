@@ -53,23 +53,16 @@ void FLXPOrb::per_frame_update() {
 	if (ticks_since_created >= 50) {
 		point d = distance_from_player();
 		float mag = sqrt(d.x * d.x + d.y * d.y);
-		float accel_amount = 0.1;
+		float v = 5;
 		if (mag <= 8) {
 			delete this;
 		} else if (mag != 0) {
-			mag *= accel_amount;
-			if (d.x < -4 || d.x > 4) {
-				d.x /= mag;
-			} else {
-				d.x = 0;
-				physics_handler()->stopx();
-			}
-			if (d.y < -4 || d.y > 4) {
-				d.y /= mag;
-			} else {
-				d.y = 0;
-				physics_handler()->stopy();
-			}
+			physics_handler()->stopx();
+			physics_handler()->stopy();
+			d.x /= mag;
+			d.y /= mag;
+			d.x *= v;
+			d.y *= v;
 			physics_handler()->accelerate(-d.x, -d.y);
 		}
 	}

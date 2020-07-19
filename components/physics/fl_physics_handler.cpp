@@ -90,6 +90,8 @@ void FLPhysicsHandler::apply_friction() {
 
 void FLPhysicsHandler::move() {
 	FLCollider *collider = owner->get_collider(collider_name);
+	bool top_touches_wall = false;;
+	bool bot_touches_wall = false;;
 
 	if (collider == nullptr) {
 		owner->move(vel);
@@ -98,9 +100,23 @@ void FLPhysicsHandler::move() {
 		bool moved_y = false;
 		// move horizontally
 		owner->move(vel.x, 0);
+		
+		// extra initial horizontal check for detecting wall slides
+		// move vertically by the object's height and see if we
+		// still have a horizontal collision
+		owner->move(0, owner->h());
+
+		if (	(vel.x > 0 && collider->right_touches_tilemap()) || 
+			(vel.x < 0 && collider->left_touches_tilemap()) ) {
+			bot_touches_wall = true;
+		}
+
+		// move back
+		owner->move(0, -owner->h());
+
 		if (vel.x > 0) {
 			while (collider->right_touches_tilemap()) {
-				on_wall_timer = ON_WALL_FRAMES;
+				top_touches_wall = true;
 				owner->set_x(int(owner->x()) - 1);
 				vel.x = 0;
 				moved_x = true;
@@ -111,13 +127,13 @@ void FLPhysicsHandler::move() {
 			}
 		} else if (vel.x < 0) {
 			while (collider->left_touches_tilemap()) {
-				on_wall_timer = ON_WALL_FRAMES;
+				top_touches_wall = true;
 				owner->set_x(int(owner->x()) + 1);
 				vel.x = 0;
 				moved_x = true;
 			}
 		}
-
+		
 		// move vertically
 		owner->move(0, vel.y);
 		if (vel.y > 0) {
@@ -142,6 +158,9 @@ void FLPhysicsHandler::move() {
 				owner->set_y(int(owner->y()) - 1);
 			}
 		}
+	}
+	if (bot_touches_wall && top_touches_wall) {
+		on_wall_timer = ON_WALL_FRAMES;
 	}
 }
 
