@@ -26,7 +26,9 @@ static FLAnimatedObjectParams animation_params = {
 
 FLOrb::~FLOrb() {
 	for (int i = 0; i < 5; ++i) {
-		new FLXPOrb(x(), y());
+		int dx = (rand() % 16) - 8;
+		int dy = (rand() % 16) - 8;
+		new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f  + dy);
 	}
 }
 

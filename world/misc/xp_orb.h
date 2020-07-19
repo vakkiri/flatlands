@@ -21,6 +21,7 @@ class FLXPOrb : public FLGameObject {
 
 	protected:
 		int ticks_since_created;
+		point distance_from_player();
 };
 
 #endif
