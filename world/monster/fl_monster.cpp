@@ -38,17 +38,21 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 
 FLMonster::~FLMonster() {
 	// generate some generic effects
-	int num_explosions =  w() / 6.f;
+	int num_explosions =  w() / 8.f;
 	if (num_explosions < 1) {
 		num_explosions = 1;
 	}
+	srand(FLGame::instance().environment()->player()->x()); // idk this is kind of an odd choice
 	for (int i = 0; i < num_explosions; ++i) {
-		int randx = rand() % int(w() + 16) - 8;
-		int randy = rand() % int(h() + 16) - 8;
+		float _x = x() + (w() / 2.f);
+		float _y = y() + (h() / 2.f);
+		unsigned int speed = 3 + rand() % 4;
+		_x += (rand() % 32) - 16;
+		_y += (rand() % 32) - 16;
 		// TODO I should really just have a struct that contains these settings defined
 		// ie. effects.h can include them
-		FLTexturedObjectParams tex_params = {nullptr, x() + randx, y() + randy, 16, 16};
-		FLAnimatedObjectParams anim_params = {1, 8, 3, 32, 16, false};
+		FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
+		FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
 		new FLEffect(tex_params, anim_params, 560, 0);
 	}
 

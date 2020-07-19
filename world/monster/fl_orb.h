@@ -13,6 +13,7 @@
 class FLOrb : public FLMonster {
 	public:
 		FLOrb(float x, float y);
+		virtual ~FLOrb();
 		virtual void hit(float damage) override;
 		virtual void per_frame_update();
 };

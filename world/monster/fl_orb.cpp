@@ -3,10 +3,12 @@
  *
  */
 
+#include <stdlib.h>
 #include "fl_orb.h"
 
 #include "../../components/components.h"
 #include "../../rendering/animated_object.h"
+#include "../misc/xp_orb.h"
 
 #define W 32
 #define H 32
@@ -21,6 +23,12 @@ static FLAnimatedObjectParams animation_params = {
 	32, 	// tstep
 	true	// repeats
 };
+
+FLOrb::~FLOrb() {
+	for (int i = 0; i < 5; ++i) {
+		new FLXPOrb(x(), y());
+	}
+}
 
 FLOrb::FLOrb(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 	animators["body"]->set_st(S, T);
