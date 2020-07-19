@@ -8,6 +8,7 @@
 #ifndef AMMO_H_
 #define AMMO_H_
 
+#include "../../common/game_object.h"
 #include "../../net/net_object.h"
 #include "../../rendering/animated_object.h"
 

@@ -9,7 +9,6 @@
 #include "../../components/components.h"
 #include "../../environment/fl_environment.h"
 #include "../../net/fl_net.h"
-#include "../../rendering/animated_object.h"
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
 #include "ammo.h"

@@ -8,6 +8,7 @@
 
 #include "../../components/components.h"
 #include "../../rendering/animated_object.h"
+#include "../objects/chip.h"
 #include "../misc/xp_orb.h"
 
 #define W 32
@@ -30,6 +31,7 @@ FLOrb::~FLOrb() {
 		int dy = (rand() % 16) - 8;
 		new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f  + dy);
 	}
+	new FLChip(x() + w()/2.f, y() + h() /2.f);
 }
 
 FLOrb::FLOrb(float x, float y) : FLMonster(x, y, W, H, animation_params) {
