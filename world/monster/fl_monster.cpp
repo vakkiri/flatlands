@@ -10,6 +10,7 @@
 #include "../../game/fl_game.h"
 #include "../../rendering/renderer.h"
 #include "../effect.h"
+#include "../misc/xp_orb.h"
 #include "../player/player.h"
 #include "fl_monster.h"
 
@@ -34,6 +35,7 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 	attack_tick = 0;
 	stun_tick = 0;
 	health = 0;
+	xp = 1;
 }
 
 FLMonster::~FLMonster() {
@@ -54,6 +56,11 @@ FLMonster::~FLMonster() {
 		FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
 		FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
 		new FLEffect(tex_params, anim_params, 560, 0);
+	}
+	for (int i = 0; i < xp; ++i) {
+		int dx = (rand() % 16) - 8;
+		int dy = (rand() % 16) - 8;
+		new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f + dy);
 	}
 
 	Renderer::getInstance().remove_from_world(animators["body"]);

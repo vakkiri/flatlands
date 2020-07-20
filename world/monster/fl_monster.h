@@ -50,6 +50,7 @@ class FLMonster : public FLGameObject {
 	bool facing_right;
 
 	float health;
+	int xp;	// how much xp to drop
 	FLMonsterState monster_state;
 };
 

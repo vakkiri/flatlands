@@ -307,7 +307,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				new FLOrb(float(x), float(y));
 
 				cur += 2;
-
 			} else if (val == 5) {
 				int16_t x;
 				int16_t y;
@@ -318,8 +317,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&y, cur, sizeof(int16_t));
 
 
-				FLAmmo *ammo = new FLAmmo(float(x), float(y), FL_FUSION);
-				environment->add_object(ammo);
+				new FLHopper(float(x), float(y));
 
 				cur += 2;
 			} else {

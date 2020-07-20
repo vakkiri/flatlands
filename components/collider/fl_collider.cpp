@@ -123,7 +123,10 @@ std::unordered_set<std::string> &FLCollider::get_collision_groups() {
 
 bool FLCollider::alive() { return _alive; }
 
-void FLCollider::kill() { _alive = false; }
+void FLCollider::kill() { 
+	_alive = false; 
+	collisions.clear();
+}
 
 void FLCollider::update() {
 	detect_collisions();
@@ -154,7 +157,7 @@ void FLCollider::detect_collisions() {
 
 void FLCollider::process_collisions() {
 	if (has_collision_method) {
-		while (!collisions.empty()) {
+		while (!collisions.empty() && _alive) {
 			FLCollider *collision = collisions.back();
 			on_collision(collision);
 			collisions.pop_back();
@@ -172,3 +175,4 @@ void FLCollider::set_collision_method(std::function<void(FLCollider *)> meth) {
 void FLCollider::add_collision(FLCollider *collision) {
 	collisions.push_back(collision);
 }
+

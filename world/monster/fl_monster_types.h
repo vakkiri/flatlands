@@ -10,5 +10,6 @@
 
 #include "fl_reep.h"
 #include "fl_orb.h"
+#include "fl_hopper.h"
 
 #endif

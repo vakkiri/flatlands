@@ -155,3 +155,4 @@ FLAnimatedObject *FLGameObject::get_animator(std::string name) {
 
 	return anim;
 }
+

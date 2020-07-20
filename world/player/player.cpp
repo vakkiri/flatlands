@@ -102,7 +102,7 @@ FLPlayer::~FLPlayer() {
 }
 
 void FLPlayer::init_weapon_stats() {
-	weapon_stats[FL_FUSION].ammo = 12;
+	weapon_stats[FL_FUSION].ammo = 60;
 	weapon_stats[FL_FUSION].clip_size = 12;
 	weapon_stats[FL_FUSION].recoil = 0.9f;
 	weapon_stats[FL_FUSION].posessed = true;
@@ -176,9 +176,9 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionPrimary(x() + 4, y() + 8, FL_RIGHT, FL_FORWARD);
+				new FLFusionPrimary(x() + 4, y() + 16, FL_RIGHT, FL_FORWARD);
 			} else {
-				new FLFusionPrimary(x() - 2, y() + 8, FL_LEFT, FL_FORWARD);
+				new FLFusionPrimary(x() - 2, y() + 16, FL_LEFT, FL_FORWARD);
 			}
 		} else {
 			new FLFusionPrimary(x() - 2, y() + 8, FL_NONE, vertical_direction);

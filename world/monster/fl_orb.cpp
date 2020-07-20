@@ -9,7 +9,6 @@
 #include "../../components/components.h"
 #include "../../rendering/animated_object.h"
 #include "../objects/chip.h"
-#include "../misc/xp_orb.h"
 
 #define W 32
 #define H 32
@@ -26,11 +25,6 @@ static FLAnimatedObjectParams animation_params = {
 };
 
 FLOrb::~FLOrb() {
-	for (int i = 0; i < 5; ++i) {
-		int dx = (rand() % 16) - 8;
-		int dy = (rand() % 16) - 8;
-		new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f  + dy);
-	}
 	new FLChip(x() + w()/2.f, y() + h() /2.f);
 }
 
@@ -41,6 +35,7 @@ FLOrb::FLOrb(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 	physics_handler()->set_gravity_factor(0.0f);
 	health = 50;
 	stun_duration = animation_params.num_steps * animation_params.frames_per_step;
+	xp = 5;
 }
 
 void FLOrb::per_frame_update() {

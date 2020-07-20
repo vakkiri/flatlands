@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include "chip.h"
 #include "../../components/components.h"
 #include "../../environment/fl_environment.h"
