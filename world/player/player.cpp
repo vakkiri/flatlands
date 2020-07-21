@@ -19,6 +19,7 @@
 #include "../attack/fl_player_attacks.h"
 #include "../effect.h"
 #include "../physics_settings.h"
+#include "../monster/fl_monster.h"
 
 #define MAX_FALL (180)
 #define INITIAL_WALK_ACCEL (0.39)
@@ -48,8 +49,8 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	add_collider("position", "tilemap");
 	fl_add_collider_to_group(colliders["tilemap"], "player");
 	fl_get_collider(colliders["tilemap"])->add_target_collision_group("items");
-	fl_get_collider(colliders["tilemap"])
-		->add_target_collision_group("projectiles");
+	fl_get_collider(colliders["tilemap"])->add_target_collision_group("monsters");
+	fl_get_collider(colliders["tilemap"])->add_target_collision_group("projectiles");
 	fl_get_collider(colliders["tilemap"])
 		->set_collision_method(std::bind(&FLPlayer::handle_collision, this,
 										 std::placeholders::_1));
@@ -588,6 +589,19 @@ void FLPlayer::handle_collision(FLCollider *collision) {
 		collision->add_collision(nullptr);
 	}
 	if (groups.find("monsters") != groups.end()) {
+		FLMonster* m = (FLMonster*) collision->get_owner();
+		point p = m->get_vector_from_player();
+		if (p.y >= -4) {
+			physics_handler()->accelerate(0, -3);
+		} else {
+			physics_handler()->accelerate(0, 2);
+		}
+		if (p.x >= 0) {
+			physics_handler()->accelerate(-2, 0);
+		} else {
+			physics_handler()->accelerate(2, 0);
+		}
+		hit(10);
 	}
 	if (groups.find("projectiles") != groups.end()) {
 		collision->add_collision(nullptr);

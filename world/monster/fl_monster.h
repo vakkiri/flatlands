@@ -26,6 +26,7 @@ class FLMonster : public FLGameObject {
 
 	virtual void per_frame_update();
 	virtual void hit(float damage);
+	point get_vector_from_player();
 
   protected:
 	virtual void attack(){};

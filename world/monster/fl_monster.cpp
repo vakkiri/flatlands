@@ -115,3 +115,7 @@ void FLMonster::hit(float damage) {
 	stun_tick = stun_duration;
 	health -= damage;
 }
+
+point FLMonster::get_vector_from_player() {
+	return vector_from_player;
+}

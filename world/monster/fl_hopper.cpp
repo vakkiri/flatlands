@@ -45,7 +45,9 @@ FLHopper::FLHopper(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 void FLHopper::per_frame_update() {
 	// the hop period - 10 thing is an ugly hack to avoid jumping multiple frames in a row
 	// sorry not sorry
-	if (physics_handler()->on_ground() && movement_tick <= HOP_PERIOD - 5) {
+	if (physics_handler()->on_ground() && 
+			movement_tick <= HOP_PERIOD - 5 &&
+			stun_tick <= 1) {
 		if (vector_from_player.x >= -vision_radius -WARNING_X &&
 				vector_from_player.x <= vision_radius + WARNING_X) {
 
@@ -84,3 +86,8 @@ void FLHopper::attack() {
 	}
 }
 
+void FLHopper::hit(float damage) {
+	FLMonster::hit(damage);
+	animators["body"]->set_animation(3);
+	animators["body"]->reset_animation();
+}
