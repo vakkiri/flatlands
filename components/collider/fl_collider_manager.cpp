@@ -136,8 +136,9 @@ std::pair<point, FLGameObject*> get_nearest_collision(fl_line* line, std::unorde
 
 					if (intersect.x >= 0 && intersect.y >= 0) {
 						// if this intersection is closer
-						if (p.x == -1 || (intersect.x - line->u.x < p.x - line->u.x &&
-								intersect.y - line->u.y < p.y - line->u.y)) {
+						// this doesn't work lmao i need to take an actual distance
+						// along the line wtf was i thinking
+						if (p.x == -1 || (intersect.x - line->u.x < p.x - line->u.x)) {
 							p.x = intersect.x;
 							p.y = intersect.y;
 							obj = colliders[i].get_owner();

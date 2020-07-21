@@ -14,7 +14,10 @@ class FLHopper : public FLMonster {
 	public:
 		FLHopper(float x, float y);
 		
-		virtual void per_frame_update();
+		virtual void per_frame_update() override;
+	protected:
+		virtual void on_player_near() override;
+		virtual void attack() override;
 };
 
 #endif

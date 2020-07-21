@@ -84,8 +84,11 @@ void FLMonster::per_frame_update() {
 		--stun_tick;
 	}
 
-	if (distance_from_player < vision_radius && stun_tick <= 0) {
+	if (movement_tick > 0) {
 		--movement_tick;
+	}
+
+	if (distance_from_player < vision_radius && stun_tick <= 0) {
 		--attack_tick;
 
 		if (movement_tick <= 0) {
