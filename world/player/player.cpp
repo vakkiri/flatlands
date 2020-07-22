@@ -177,9 +177,9 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionPrimary(x() + 4, y() + 16, FL_RIGHT, FL_FORWARD);
+				new FLFusionPrimary(x() + 4, y() + 12, FL_RIGHT, FL_FORWARD);
 			} else {
-				new FLFusionPrimary(x() - 2, y() + 16, FL_LEFT, FL_FORWARD);
+				new FLFusionPrimary(x() - 2, y() + 12, FL_LEFT, FL_FORWARD);
 			}
 		} else {
 			new FLFusionPrimary(x() - 2, y() + 8, FL_NONE, vertical_direction);

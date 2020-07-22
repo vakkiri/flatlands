@@ -248,7 +248,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		std::memcpy(&val, cur, sizeof(int16_t));
 
 		// TODO: actually save width/height/tileset of map
-		tilemap->reset(4096, 4096);
+		tilemap->reset(4096 * 2, 4096);
 		tilemap->set_tileset(0);
 
 		while (val != -1) {

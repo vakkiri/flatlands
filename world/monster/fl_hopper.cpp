@@ -17,7 +17,7 @@
 #define JUMP_X		-2.5
 #define JUMP_Y		-3.25
 #define HOP_PERIOD	65
-#define WARNING_X	16
+#define WARNING_X	32
 
 static FLAnimatedObjectParams animation_params = {
 	2,	// num_animations
@@ -36,9 +36,9 @@ FLHopper::FLHopper(float x, float y) : FLMonster(x, y, W, H, animation_params) {
 	health = 30;
 	stun_duration = 30;
 	xp = 3;
-	near_radius = 70;
+	near_radius = 24;
 	vision_radius = 140;
-	attack_period = 240;
+	attack_period = 160;
 	movement_period = 1;
 }
 
@@ -63,6 +63,11 @@ void FLHopper::per_frame_update() {
 
 void FLHopper::on_player_near() {
 	if (physics_handler()->on_ground() && movement_tick <= 1) {
+		if (vector_from_player.x < 0) {
+			animators["body"]->set_reverse(false);
+		} else {
+			animators["body"]->set_reverse(true);
+		}
 		movement_tick = HOP_PERIOD;
 		animators["body"]->set_animation(1);
 		animators["body"]->reset_animation();
@@ -77,8 +82,10 @@ void FLHopper::attack() {
 		animators["body"]->reset_animation();
 		if (vector_from_player.x < 0) {
 			physics_handler()->accelerate(-JUMP_X, JUMP_Y);
+			animators["body"]->set_reverse(false);
 		} else {
 			physics_handler()->accelerate(JUMP_X, JUMP_Y);
+			animators["body"]->set_reverse(true);
 		}
 	} else {
 		// don't waste the attack if we couldn't use it
