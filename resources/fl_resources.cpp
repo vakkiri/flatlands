@@ -320,6 +320,22 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				new FLHopper(float(x), float(y));
 
 				cur += 2;
+			} else if (val == 6) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+				FLAnimatedObjectParams animation_params = {
+					1, 7, 5, 16, 32, true
+				};
+				new FLNpc(float(x), float(y), 16, 32, animation_params);
+
+				cur += 2;
+
 			} else {
 				val = -1;
 			}

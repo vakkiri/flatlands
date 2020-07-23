@@ -17,23 +17,21 @@
 #define FRAMES_PER_STEP 10
 #define REPEATS true
 
-FLNpc::FLNpc(float x, float y, float s, float t, float w, float h)
+FLNpc::FLNpc(float x, float y, float w, float h,
+		FLAnimatedObjectParams animation_params)
 	: FLGameObject(x, y, w, h) {
-	(void)x;
-	(void)y;
-	(void)s;
-	(void)t;
-	(void)w;
-	(void)h;
-	// set_st( s, t );
-	// Renderer::getInstance().add_to_world( this );
+	FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};
+	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
+	Renderer::getInstance().add_to_world(animators["body"]);
+	animators["body"]->set_st(912, 96);
 }
 
 FLNpc::~FLNpc() {
-	// Renderer::getInstance().remove_from_world( this );
+	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
 void FLNpc::interact_with() {
+	std::cout << "ummmm hi" << std::endl;
 	/*
 	set_game_state( FL_GAME_UI );
 	float cx = Renderer::getInstance().world_camera_x() / -2.f;
@@ -43,3 +41,4 @@ void FLNpc::interact_with() {
 	new FLDialogueBox( "", _x, _y );
 	*/
 }
+
