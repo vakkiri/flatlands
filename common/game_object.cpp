@@ -22,6 +22,7 @@ FLGameObject::FLGameObject(float x, float y, float w, float h) {
 
 	physics_handler_handle = -1;
 	updator_handle = -1;
+	interactable_handle = -1;
 
 	parent = nullptr;
 }

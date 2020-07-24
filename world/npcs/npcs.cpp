@@ -11,7 +11,7 @@
 #include "../../rendering/renderer.h"
 #include "../../ui/fl_dialogue_box.h"
 #include "../../ui/fl_ui_manager.h"
-
+#include "../../components/components.h"
 #define NUM_ANIMATIONS 1
 #define NUM_STEPS 2
 #define FRAMES_PER_STEP 10
@@ -24,6 +24,7 @@ FLNpc::FLNpc(float x, float y, float w, float h,
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 	Renderer::getInstance().add_to_world(animators["body"]);
 	animators["body"]->set_st(912, 96);
+	interactable_handle = fl_new_interactable(this);
 }
 
 FLNpc::~FLNpc() {

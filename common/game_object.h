@@ -63,6 +63,7 @@ class FLGameObject {
 	std::unordered_map<std::string, FLAnimatedObject *> animators;
 	int physics_handler_handle;
 	int updator_handle;
+	int interactable_handle;
 };
 
 #endif

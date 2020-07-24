@@ -534,6 +534,7 @@ void FLPlayer::set_ability(FLPlayerAbility ability) { cur_ability = ability; }
 
 void FLPlayer::interact() {
 	std::cout << "henlo frum player\n";
+	fl_interact(this);
 }
 
 void FLPlayer::enable_ability() { can_use_ability = true; }
