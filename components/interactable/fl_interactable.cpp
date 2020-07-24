@@ -28,7 +28,7 @@ void FLInteractable::kill() {
 }
 
 void FLInteractable::set_owner(FLGameObject* owner) {
-	if (owner != nullptr ) {
+	if (this->owner != nullptr ) {
 		std::cout << "Warning: replacing existing non-null interactable owner." << std::endl;
 	}
 	this->owner = owner;
