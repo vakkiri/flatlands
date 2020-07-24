@@ -145,7 +145,7 @@ void FLPlayer::bind_actions() {
 	input_handler.add_game_action(FL_KEY_DOWN, FL_KEY_RELEASED, release_down);
 	input_handler.add_game_action(FL_KEY_UP, FL_KEY_PRESSED, press_up);
 	input_handler.add_game_action(FL_KEY_DOWN, FL_KEY_PRESSED, press_down);
-	input_handler.add_game_action(FL_KEY_DOWN, FL_KEY_PRESSED, interact);
+	input_handler.add_game_action(FL_KEY_ACTION3, FL_KEY_RELEASED, interact);
 	input_handler.add_game_action(FL_KEY_ACTION2, FL_KEY_HELD, hold_jump);
 	input_handler.add_game_action(FL_KEY_ACTION2, FL_KEY_RELEASED, release_jump);
 	input_handler.add_game_action(FL_KEY_LEFT, FL_KEY_HELD, walk_left);
@@ -533,7 +533,7 @@ void FLPlayer::reset() {
 void FLPlayer::set_ability(FLPlayerAbility ability) { cur_ability = ability; }
 
 void FLPlayer::interact() {
-	// stub
+	std::cout << "henlo frum player\n";
 }
 
 void FLPlayer::enable_ability() { can_use_ability = true; }

@@ -52,6 +52,8 @@ class FLGameObject {
 	FLEnvironment *environment();
 
 	FLAnimatedObject *get_animator(std::string name);
+
+	virtual void interact(){};
   protected:
 	FLGameObject *parent;
 

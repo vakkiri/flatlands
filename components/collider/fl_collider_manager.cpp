@@ -26,7 +26,6 @@ int fl_new_collider(FLGameObject *owner, std::string shape) {
 	int slots_checked = 0;
 
 	if (slots_used < NUM_COLLIDERS) {
-
 		// The slots_checked counter should not be necessary, but I really hate
 		// infinite loops even if they should be impossible...
 		while (colliders[next_free].alive() && slots_checked < NUM_COLLIDERS) {

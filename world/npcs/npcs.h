@@ -16,7 +16,7 @@ class FLNpc : virtual public FLGameObject {
 	FLNpc(float x, float y, float w, float h,
 			FLAnimatedObjectParams animation_params);
 	virtual ~FLNpc();
-	virtual void interact_with();
+	virtual void interact();
 };
 
 #endif

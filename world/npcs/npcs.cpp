@@ -30,7 +30,7 @@ FLNpc::~FLNpc() {
 	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
-void FLNpc::interact_with() {
+void FLNpc::interact() {
 	std::cout << "ummmm hi" << std::endl;
 	/*
 	set_game_state( FL_GAME_UI );
