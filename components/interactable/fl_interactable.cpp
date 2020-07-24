@@ -34,3 +34,7 @@ void FLInteractable::set_owner(FLGameObject* owner) {
 	this->owner = owner;
 }
 
+FLGameObject* FLInteractable::get_owner() {
+	return owner;
+}
+

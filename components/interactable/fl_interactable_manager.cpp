@@ -7,6 +7,8 @@
 #include <vector>
 #include "fl_interactable_manager.h"
 #include "fl_interactable.h"
+#include "../../common/game_object.h"
+#include "../../utils/collision_utils.h"
 
 static std::vector<FLInteractable> interactables = std::vector<FLInteractable>(500);
 int last_free = 0;
@@ -60,8 +62,11 @@ void fl_interact(FLGameObject* obj) {
 	(void) obj;
 	for (auto i : interactables) {
 		if (i.alive()) {
-			i.interact();
-			break;
+			// TODO: should support setting a specific shape or collider
+			if (rect_collision(i.get_owner()->get_shape("position"), obj->get_shape("position"))) {
+				i.interact();
+				break;
+			}
 		}
 	}
 }

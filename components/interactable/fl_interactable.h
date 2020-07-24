@@ -18,6 +18,7 @@ class FLInteractable {
 		void kill();
 		bool alive();
 		void set_owner(FLGameObject* owner);
+		FLGameObject *get_owner();
 	protected:
 		FLGameObject *owner;
 
