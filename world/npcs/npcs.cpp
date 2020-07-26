@@ -32,14 +32,17 @@ FLNpc::~FLNpc() {
 }
 
 void FLNpc::interact() {
+	Renderer& r = Renderer::getInstance();
+
 	std::cout << "ummmm hi" << std::endl;
-	/*
+
 	set_game_state( FL_GAME_UI );
-	float cx = Renderer::getInstance().world_camera_x() / -2.f;
-	float cy = Renderer::getInstance().world_camera_y() / -2.f;
-	float _y = y() - cy + (512.f / 2.f);
-	float _x = x() - cx + (768.f / 2.f);
-	new FLDialogueBox( "", _x, _y );
-	*/
+	float cx = r.world_camera_x() / -2.f;
+	float cy = r.world_camera_y() / -2.f;
+	float _y = y() - cy + r.get_screen_height() / 4.f;
+	float _x = x() - cx + r.get_screen_width() / 4.f;
+	_y -= 64.f;
+	_x -= 128.f;
+	new FLDialogueBox( "hey what's up my dude", _x, _y );
 }
 

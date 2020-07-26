@@ -66,9 +66,9 @@ void FLUIManager::init() {
 												left);
 	FLInputHandler::getInstance().add_ui_action(FL_KEY_RIGHT, FL_KEY_PRESSED,
 												right);
-	FLInputHandler::getInstance().add_ui_action(FL_KEY_ACTION1, FL_KEY_PRESSED,
+	FLInputHandler::getInstance().add_ui_action(FL_KEY_ACTION3, FL_KEY_RELEASED,
 												accept);
-	FLInputHandler::getInstance().add_ui_action(FL_KEY_ACTION2, FL_KEY_PRESSED,
+	FLInputHandler::getInstance().add_ui_action(FL_KEY_ACTION2, FL_KEY_RELEASED,
 												reject);
 
 	// Add some default elements

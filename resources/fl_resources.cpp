@@ -348,3 +348,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		tilemap->update_surface();
 	}
 }
+
+void FLResources::init_fonts() {
+}
+
