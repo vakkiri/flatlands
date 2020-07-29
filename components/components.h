@@ -14,6 +14,8 @@
 #include "interactable/fl_interactable_manager.h"
 #include "physics/fl_physics_handler.h"
 #include "physics/fl_physics_handler_manager.h"
+#include "renderer/fl_renderer.h"
+#include "renderer/fl_renderer_manager.h"
 #include "updator/fl_update_manager.h"
 
 void fl_update_components();

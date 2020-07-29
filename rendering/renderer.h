@@ -15,8 +15,8 @@
 
 #include "fl_colored_poly_shader.h"
 #include "fl_framebuffer_shader.h"
-#include "fl_particle_shader.h"
 #include "fl_textured_rect_shader.h"
+#include "fl_text_shader.h"
 
 class FLAnimatedObject;
 class FLRenderable;
@@ -24,7 +24,6 @@ class FLTexturedSurface;
 class FLDistortionSurface;
 class FLWorldSurface;
 class FLTexturedObject;
-class FLParticleSurface;
 
 struct texture;
 
@@ -51,6 +50,7 @@ class Renderer {
 	FLTexturedRectShader textured_rect_shader;
 	FLColoredPolyShader colored_poly_shader;
 	FLFramebufferShader framebuffer_shader;
+	FLTextShader text_shader;
 
 	// Surfaces
 	FLWorldSurface *world_surface;
@@ -58,7 +58,6 @@ class Renderer {
 	FLTexturedSurface *tilemap_fg_surface;
 	FLTexturedSurface *background_surface;
 	FLTexturedSurface *framebuffer_surface;
-	std::vector<FLParticleSurface *> particle_surfaces;
 
 	// Private methods
 	bool init_sdl();
@@ -103,7 +102,6 @@ class Renderer {
 	unsigned int get_screen_height();
 
 	void add_to_world(FLTexturedObject *obj);
-	void add_particle_surface(FLParticleSurface *s);
 	void remove_from_world(FLTexturedObject *obj);
 	void render_and_swap();
 
@@ -112,6 +110,7 @@ class Renderer {
 
 	FLTexturedRectShader *get_textured_rect_shader();
 	FLColoredPolyShader *get_colored_poly_shader();
+	FLTextShader *get_text_shader();
 	FLWorldSurface *get_world_surface();
 	FLTexturedSurface *get_tilemap_bg_surface();
 	FLTexturedSurface *get_tilemap_fg_surface();

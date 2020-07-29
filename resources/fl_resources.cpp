@@ -18,6 +18,7 @@
 #include "../world/objects/objects.h"
 #include "../world/physics_settings.h"
 #include "../world/player/player.h"
+#include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
 #include "fl_resources.h"
@@ -36,6 +37,8 @@ bool FLResources::init() {
 
 	if (!init_images() || !init_sfx())
 		success = false;
+
+	init_fonts();
 
 	return success;
 }
@@ -350,5 +353,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 }
 
 void FLResources::init_fonts() {
+	// TODO: read fonts from a config list w/ char dimensions
+	fl_add_font("fl-plain-mono", 5, 10);
 }
 

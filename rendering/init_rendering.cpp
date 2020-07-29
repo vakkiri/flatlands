@@ -54,6 +54,12 @@ bool Renderer::init_shaders() {
 	textured_rect_shader.set_camera(world_camera);
 	textured_rect_shader.update_pc_matrix();
 
+	text_shader.create_program("text_shader");
+	text_shader.bind();
+	text_shader.set_projection(projection_matrix);
+	text_shader.set_camera(ui_camera);
+	text_shader.update_pc_matrix();
+
 	colored_poly_shader.create_program("colored_poly_shader");
 	colored_poly_shader.bind();
 	colored_poly_shader.set_projection(projection_matrix);

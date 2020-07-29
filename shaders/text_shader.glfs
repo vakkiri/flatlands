@@ -1,0 +1,13 @@
+#version 330
+uniform sampler2D texUnit;
+
+in vec4 textColor;
+in vec2 texCoord;
+
+void main() {
+	gl_FragColor = texture( texUnit, texCoord );
+	if (gl_FragColor.a != 0.f) {
+		gl_FragColor = textColor;
+	}
+}
+

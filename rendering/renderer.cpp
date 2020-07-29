@@ -14,7 +14,6 @@
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
 #include "animated_object.h"
-#include "fl_particle_surface.h"
 #include "renderable.h"
 #include "rendered_surface.h"
 #include "renderer.h"
@@ -88,18 +87,12 @@ void Renderer::render() {
 	background_surface->render();
 
 	// draw world -----------------------------------------
-	// Note: rebinding the same shader/camera is wasteful, but I'm waiting until
-	// release to change this incase intermediate shaders are added.
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera(world_camera);
 	textured_rect_shader.update_pc_matrix();
 
 	for (FLRenderable *r : world_renderables)
 		r->render();
-
-	// draw custom surfaces such as particle effects
-	for (FLParticleSurface *s : particle_surfaces)
-		s->render();
 
 	// UI
 	textured_rect_shader.bind();
@@ -155,6 +148,10 @@ FLColoredPolyShader *Renderer::get_colored_poly_shader() {
 	return &colored_poly_shader;
 }
 
+FLTextShader *Renderer::get_text_shader() {
+	return &text_shader;
+}
+
 FLWorldSurface *Renderer::get_world_surface() { return world_surface; }
 
 FLTexturedSurface *Renderer::get_tilemap_bg_surface() {
@@ -183,13 +180,8 @@ void Renderer::remove_from_world(FLTexturedObject *obj) {
 	world_surface->remove_object(obj);
 }
 
-void Renderer::add_particle_surface(FLParticleSurface *s) {
-	particle_surfaces.push_back(s);
-}
-
 void Renderer::clear() {
 	world_surface->clear();
-	particle_surfaces.clear();
 }
 
 unsigned int Renderer::get_screen_width() { return screen_width; }
