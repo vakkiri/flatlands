@@ -40,8 +40,9 @@ void FLNpc::interact() {
 	float _y = y() - cy + r.get_screen_height() / 4.f;
 	float _x = x() - cx + r.get_screen_width() / 4.f;
 	_y -= 64.f;
-	_x -= 128.f;
+	_x -= 210.f;
 
-	new FLDialogueBox( "hey what's up my dude", _x, _y );
+	std::string test_string = "There are things that you can't get anywhere... but we dream they can be found in other people.";
+	new FLDialogueBox(test_string, _x, _y);
 }
 

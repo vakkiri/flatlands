@@ -36,7 +36,7 @@ void FLTextSurface::add_character(fl_character& c) {
 
 void FLTextSurface::add_character(float x, float y, char c) {
 	point st = font->get_character(c);
-	fl_color color = {1.f, 1.f, 1.f, 1.f};
+	fl_color color = {245.f/255.f, 255.f/255.f, 232.f/255.f, 1.f};
 	characters.push_back(fl_character{x, y, st.x, st.y, color});
 }
 

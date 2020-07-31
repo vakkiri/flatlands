@@ -19,17 +19,15 @@ class FLDialogueBox : public FLUIElement {
 	FLDialogueBox(std::string text, float x, float y);
 
 	virtual void accept();
-	std::string get_message();
-	std::vector<std::vector<fl_colored_vertex>>& get_primitive_vertices() override;
+	std::vector<FLTexturedObject*>& get_textured_objects() override;
   protected:
-	// protected methods
-	virtual void init_vertices();
+	virtual void init_textures();
 
-	// member variables
 	unsigned int width;
 	unsigned int height;
 	unsigned int border_size;
 
+	FLTexturedObject* background;
 	std::vector<std::string> messages;
 };
 
