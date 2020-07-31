@@ -62,6 +62,10 @@ void FLTextShader::enable_tex_coord_pointer() {
 	glEnableVertexAttribArray(intex_coord_location);
 }
 
+void FLTextShader::enable_color_pointer() {
+	glEnableVertexAttribArray(color_location);
+}
+
 void FLTextShader::render(GLuint vao, unsigned int num_indices) {
 	if (num_indices > 0) {
 		glBindVertexArray(vao);

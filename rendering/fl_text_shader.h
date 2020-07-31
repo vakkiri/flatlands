@@ -22,6 +22,7 @@ class FLTextShader : public virtual FLPolygonShader {
 	void set_tex_coord_pointer(GLsizei stride, const GLvoid *data);
 	void set_color_pointer(GLsizei stride, const GLvoid *data);
 	void enable_tex_coord_pointer();
+	void enable_color_pointer();
 	GLint get_id();
 
   protected:

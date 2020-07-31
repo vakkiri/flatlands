@@ -25,10 +25,43 @@ void FLBitmapFont::initialize() {
 	char c = ' ';
 	for (float t = 0; t < tex->h; t += char_h) {
 		for (float s = 0; s < tex->w; s += char_w) {
-			characters[c] = fl_character{s, t};
+			characters[c] = point{s, t};
 			c++;
 		}
 	}
+}
+
+point& FLBitmapFont::get_character(char c) {
+	point out = characters[' '];
+
+	if (characters.find(c) != characters.end()) {
+		out = characters[c];
+	}
+
+	return characters[c];
+}
+
+texture* FLBitmapFont::get_texture() {
+	return tex;
+}
+
+int FLBitmapFont::get_char_w() {
+	return char_w;
+}
+
+int FLBitmapFont::get_char_h() {
+	return char_h;
+}
+
+FLBitmapFont* get_font(std::string name) {
+	FLBitmapFont *font = nullptr;
+	if (fonts.find(name) != fonts.end()) {
+		font = fonts[name];
+	} else {
+		std::cout << "Warning: font not found: " << name << std::endl;
+	}
+
+	return font;
 }
 
 void fl_add_font(std::string name) {

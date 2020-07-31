@@ -308,8 +308,9 @@ void FLTexturedSurface::render() {
 	if (shader != nullptr) {
 		glBindTexture(GL_TEXTURE_2D, tex->id);
 		shader->render(vao, num_indices);
-	} else
-		log_warning("Attempted to render with null shader");
+	} else {
+		log_warning("Attempted to render with null shader.");
+	}
 }
 
 void FLTexturedSurface::set_shader(FLTexturedRectShader *shader) {

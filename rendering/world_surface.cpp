@@ -20,8 +20,9 @@ void FLWorldSurface::remove_object(FLTexturedObject *object) {
 	auto position =
 		std::find(objects_to_render.begin(), objects_to_render.end(), object);
 
-	if (position != objects_to_render.end())
+	if (position != objects_to_render.end()) {
 		objects_to_render.erase(position);
+	}
 }
 
 void FLWorldSurface::clear() {

@@ -9,6 +9,7 @@
 #include "../common/basic_types.h"
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
+#include "fl_text_surface.h"
 #include "rendered_surface.h"
 #include "renderer.h"
 #include "texture.h"
@@ -206,12 +207,14 @@ bool Renderer::init() {
 	tilemap_fg_surface = new FLTexturedSurface();
 	background_surface = new FLTexturedSurface();
 	framebuffer_surface = new FLTexturedSurface();
+	text_surface = new FLTextSurface();
 
 	world_surface->set_shader(&textured_rect_shader);
 	tilemap_bg_surface->set_shader(&textured_rect_shader);
 	tilemap_fg_surface->set_shader(&textured_rect_shader);
 	background_surface->set_shader(&textured_rect_shader);
 	framebuffer_surface->set_shader(&framebuffer_shader);
+	text_surface->set_shader(&text_shader);
 
 	world_renderables.push_back(tilemap_bg_surface);
 	world_renderables.push_back(world_surface);
@@ -245,6 +248,7 @@ void Renderer::init_surface_textures() {
 
 	framebuffer_surface->set_tex(framebuffer_texture);
 
+
 	// set shape of framebuffer based surfaces
 	FLTexturedObject *framebuffer_shape =
 		new FLTexturedObject(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -252,6 +256,9 @@ void Renderer::init_surface_textures() {
 	framebuffer_surface->update_buffers(framebuffer_shape);
 
 	delete framebuffer_shape;
+
+	// set the font of the text surface (the font contains a texture)
+	text_surface->set_font("fl-plain-mono");
 }
 
 glm::mat4 Renderer::get_projection_matrix() { return projection_matrix; }

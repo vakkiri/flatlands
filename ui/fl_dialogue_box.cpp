@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include "../rendering/renderer.h"
+#include "../rendering/fl_text_surface.h"
 #include "fl_dialogue_box.h"
 #include "fl_ui_manager.h"
 
@@ -74,4 +76,25 @@ void FLDialogueBox::init_vertices() {
 	primitive_vertices[0].push_back(v5);
 	primitive_vertices[0].push_back(v6);
 	primitive_vertices[0].push_back(v7);
+
+}
+
+std::string FLDialogueBox::get_message() {
+	return messages.front();
+}
+
+// TODO: this should be replaced with a render() function instead of returning verts wtf lmao
+// i see why i thought this may have been a good idea
+// but it was quite a bad idea
+
+std::vector<std::vector<fl_colored_vertex>>& FLDialogueBox::get_primitive_vertices() {
+	FLTextSurface* text_surface = Renderer::getInstance().get_text_surface();
+	std::string test = "sorrow, very";
+	float x = offset.x + border_size;
+	float y = offset.y + 4;
+	for (auto c : test) {
+		text_surface->add_character(x + 3, y, c);
+		x += 6;
+	}
+	return FLUIElement::get_primitive_vertices();
 }

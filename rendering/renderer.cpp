@@ -17,13 +17,16 @@
 #include "renderable.h"
 #include "rendered_surface.h"
 #include "renderer.h"
+#include "fl_text_surface.h"
 #include "world_surface.h"
 
 void Renderer::flip_framebuffer() {
-	if (current_rendered_texture == &alt_rendered_texture)
+	if (current_rendered_texture == &alt_rendered_texture) {
 		current_rendered_texture = &main_rendered_texture;
-	else
+	}
+	else {
 		current_rendered_texture = &alt_rendered_texture;
+	}
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
 						   *current_rendered_texture, 0);
@@ -32,10 +35,12 @@ void Renderer::flip_framebuffer() {
 texture *Renderer::screen_texture() {
 	// The texture returned will be the texture we are reading from, which
 	// must be the opposite of the texture we are writing to.
-	if (current_rendered_texture == &alt_rendered_texture)
+	if (current_rendered_texture == &alt_rendered_texture) {
 		return framebuffer_texture;
-	else
+	}
+	else {
 		return alt_framebuffer_texture;
+	}
 }
 
 void Renderer::render_to_screen() {
@@ -105,6 +110,11 @@ void Renderer::render() {
 
 	FLUIManager::getInstance().render();
 
+	text_shader.bind();
+	text_shader.set_camera(ui_camera);
+	text_shader.update_pc_matrix();
+	text_surface->render();
+
 	// render framebuffer to screen
 	render_to_screen();
 }
@@ -156,6 +166,10 @@ FLWorldSurface *Renderer::get_world_surface() { return world_surface; }
 
 FLTexturedSurface *Renderer::get_tilemap_bg_surface() {
 	return tilemap_bg_surface;
+}
+
+FLTextSurface *Renderer::get_text_surface() {
+	return text_surface;
 }
 
 FLTexturedSurface *Renderer::get_tilemap_fg_surface() {

@@ -22,3 +22,4 @@ FLUIElement::get_primitive_vertices() {
 std::vector<FLTexturedObject *> &FLUIElement::get_textured_objects() {
 	return textured_objects;
 }
+

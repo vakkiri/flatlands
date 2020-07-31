@@ -21,6 +21,7 @@
 class FLAnimatedObject;
 class FLRenderable;
 class FLTexturedSurface;
+class FLTextSurface;
 class FLDistortionSurface;
 class FLWorldSurface;
 class FLTexturedObject;
@@ -58,6 +59,7 @@ class Renderer {
 	FLTexturedSurface *tilemap_fg_surface;
 	FLTexturedSurface *background_surface;
 	FLTexturedSurface *framebuffer_surface;
+	FLTextSurface *text_surface;
 
 	// Private methods
 	bool init_sdl();
@@ -113,6 +115,7 @@ class Renderer {
 	FLTextShader *get_text_shader();
 	FLWorldSurface *get_world_surface();
 	FLTexturedSurface *get_tilemap_bg_surface();
+	FLTextSurface *get_text_surface();
 	FLTexturedSurface *get_tilemap_fg_surface();
 
 	static Renderer &getInstance() {
