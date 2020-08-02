@@ -18,11 +18,6 @@ FLHealthbar::FLHealthbar() : FLUIElement(X_POS, Y_POS) {
 	init_textures();
 }
 
-FLHealthbar::~FLHealthbar() {
-	delete icon;
-	delete bar_image;
-}
-
 std::vector<std::vector<fl_colored_vertex>> &
 FLHealthbar::get_primitive_vertices() {
 	float ratio = FLGame::instance().environment()->player()->health_ratio();

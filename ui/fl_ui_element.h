@@ -19,7 +19,7 @@ class FLUIElement {
 	FLUIElement();
 	FLUIElement(float x, float y);
 
-	virtual ~FLUIElement() {}
+	virtual ~FLUIElement();
 
 	// methods to handle input while UI element is active
 	virtual void right() {}
@@ -33,6 +33,9 @@ class FLUIElement {
 	virtual std::vector<std::vector<fl_colored_vertex>> &
 	get_primitive_vertices();
 	virtual std::vector<FLTexturedObject *> &get_textured_objects();
+
+	//setters
+	void set_pos(float x, float y);
 
   protected:
 	// the element geometry

@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "../common/game_object.h"
 #include "../rendering/renderer.h"
 #include "../rendering/fl_text_surface.h"
 #include "../rendering/textured_object.h"
@@ -14,11 +15,14 @@
 #define S
 #define T
 
-FLDialogueBox::FLDialogueBox() : FLDialogueBox("", 0, 0) {}
+FLDialogueBox::FLDialogueBox(std::vector<fl_message> text)
+	: FLUIElement(0, 0) {
 
-FLDialogueBox::FLDialogueBox(std::string text, float x, float y)
-	: FLUIElement(x, y) {
-	messages.push_back(text);
+	while (!text.empty()) {	
+		messages.push_back(text.back());
+		text.pop_back();
+	}
+
 	width = 192;
 	height = 64;
 	border_size = 7;
@@ -35,7 +39,6 @@ void FLDialogueBox::accept() {
 	if (messages.empty()) {
 		FLUIManager::getInstance().remove_element(this);
 		delete this;
-	} else {
 	}
 }
 
@@ -51,24 +54,41 @@ void FLDialogueBox::init_textures() {
 // but it was quite a bad idea
 
 std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
-	FLTextSurface* text_surface = Renderer::getInstance().get_text_surface();
+	Renderer &r = Renderer::getInstance();
+	FLTextSurface* text_surface = r.get_text_surface();
+
+	fl_message msg = messages.back();
+	float cx = r.world_camera_x() / -2.f;
+	float cy = r.world_camera_y() / -2.f;
+	float _x = msg.speaker->x() - cx + r.get_screen_width() / 4.f;
+	float _y = msg.speaker->y() - height - cy + r.get_screen_height() / 4.f;
+	if (!msg.flipped) {
+		_x -= width;
+	} else {
+		_x += msg.speaker->w();
+	}
+
+	set_pos(_x, _y);
+
+	background->set_x(_x);
+	background->set_y(_y);
+	background->set_reverse(msg.flipped);
+
 	float left = offset.x + border_size;
 	float right = offset.x + width - border_size - 5;
 	float x = offset.x + border_size;
 	float y = offset.y + border_size;
 	float charw = 5;	// this should be grabbed from font lol
 
-	std::string msg = messages.front();
-
 	unsigned int i = 0;
-	while (i < msg.size()) {
+	while (i < msg.text.size()) {
 		unsigned int cur = i;
 		unsigned int end = i;
 		float curx = left;
 		x = left;
 
-		for (cur = i; cur < msg.size(); ++cur) {
-			if (msg[cur] == ' ') {
+		for (cur = i; cur < msg.text.size(); ++cur) {
+			if (msg.text[cur] == ' ') {
 				end = cur;
 			}
 			curx += charw;
@@ -78,12 +98,12 @@ std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
 		}
 
 		// if we hit the end of the string
-		if (cur >= msg.size() || msg[cur] == ' ') {
+		if (cur >= msg.text.size() || msg.text[cur] == ' ') {
 			end = cur;
 		}
 
 		while (i <= end) {
-			text_surface->add_character(x, y, msg[i]);
+			text_surface->add_character(x, y, msg.text[i]);
 			x += charw;
 			++i;
 		}

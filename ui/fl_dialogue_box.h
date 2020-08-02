@@ -13,10 +13,18 @@
 
 #include "fl_ui_element.h"
 
+class FLGameObject;
+
+struct fl_message {
+	std::string text;
+	FLGameObject* speaker;
+	bool flipped;
+};
+
 class FLDialogueBox : public FLUIElement {
   public:
-	FLDialogueBox();
-	FLDialogueBox(std::string text, float x, float y);
+	FLDialogueBox() = delete;
+	FLDialogueBox(std::vector<fl_message> text);
 
 	virtual void accept();
 	std::vector<FLTexturedObject*>& get_textured_objects() override;
@@ -28,7 +36,7 @@ class FLDialogueBox : public FLUIElement {
 	unsigned int border_size;
 
 	FLTexturedObject* background;
-	std::vector<std::string> messages;
+	std::vector<fl_message> messages;
 };
 
 #endif

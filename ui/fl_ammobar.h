@@ -13,7 +13,6 @@
 class FLAmmobar : public FLUIElement {
   public:
 	FLAmmobar();
-	~FLAmmobar();
 
 	virtual std::vector<std::vector<fl_colored_vertex>> &
 	get_primitive_vertices();

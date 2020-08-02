@@ -7,7 +7,10 @@
 
 #include "npcs.h"
 
+#include "../player/player.h"
+#include "../../environment/fl_environment.h"
 #include "../../game/fl_gamestate.h"
+#include "../../game/fl_game.h"
 #include "../../rendering/renderer.h"
 #include "../../ui/fl_dialogue_box.h"
 #include "../../ui/fl_ui_manager.h"
@@ -32,17 +35,15 @@ FLNpc::~FLNpc() {
 }
 
 void FLNpc::interact() {
-	Renderer& r = Renderer::getInstance();
-
+	FLPlayer *player = FLGame::instance().environment()->player();
+	bool flipped = player->x() > x();
 	set_game_state( FL_GAME_UI );
-	float cx = r.world_camera_x() / -2.f;
-	float cy = r.world_camera_y() / -2.f;
-	float _y = y() - cy + r.get_screen_height() / 4.f;
-	float _x = x() - cx + r.get_screen_width() / 4.f;
-	_y -= 64.f;
-	_x -= 210.f;
 
 	std::string test_string = "Quick wafting zephyrs vex bold Jim. Truly wonderful.";
-	new FLDialogueBox(test_string, _x, _y);
+	std::vector<fl_message> messages;
+	messages.push_back(fl_message{"Hey guy!", player, flipped});
+	messages.push_back(fl_message{"Yeah?", this, !flipped});
+	messages.push_back(fl_message{"Ummm nothing.", player, flipped});
+	new FLDialogueBox(messages);
 }
 

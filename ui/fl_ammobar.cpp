@@ -18,11 +18,6 @@ FLAmmobar::FLAmmobar() : FLUIElement(X_POS, Y_POS) {
 	init_textures();
 }
 
-FLAmmobar::~FLAmmobar() {
-	delete icon;
-	delete bar_image;
-}
-
 std::vector<std::vector<fl_colored_vertex>> &
 FLAmmobar::get_primitive_vertices() {
 	float ratio = FLGame::instance().environment()->player()->clip_ratio();

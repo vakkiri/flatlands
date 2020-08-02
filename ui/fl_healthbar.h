@@ -13,7 +13,6 @@
 class FLHealthbar : public FLUIElement {
   public:
 	FLHealthbar();
-	~FLHealthbar();
 
 	virtual std::vector<std::vector<fl_colored_vertex>> &
 	get_primitive_vertices();
