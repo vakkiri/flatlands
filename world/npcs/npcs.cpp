@@ -42,7 +42,7 @@ void FLNpc::interact() {
 	_y -= 64.f;
 	_x -= 210.f;
 
-	std::string test_string = "There are things that you can't get anywhere... but we dream they can be found in other people.";
+	std::string test_string = "Quick wafting zephyrs vex bold Jim. Truly wonderful.";
 	new FLDialogueBox(test_string, _x, _y);
 }
 
