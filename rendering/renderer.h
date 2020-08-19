@@ -55,6 +55,7 @@ class Renderer {
 
 	// Surfaces
 	FLWorldSurface *world_surface;
+	FLWorldSurface *scenery_surface;
 	FLTexturedSurface *tilemap_bg_surface;
 	FLTexturedSurface *tilemap_fg_surface;
 	FLTexturedSurface *background_surface;
@@ -104,6 +105,7 @@ class Renderer {
 	unsigned int get_screen_height();
 
 	void add_to_world(FLTexturedObject *obj);
+	void add_to_world(FLTexturedObject *obj, bool scenery);
 	void remove_from_world(FLTexturedObject *obj);
 	void render_and_swap();
 

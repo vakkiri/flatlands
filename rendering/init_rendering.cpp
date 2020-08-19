@@ -18,8 +18,8 @@
 
 #define PRIMITIVE_RESTART 65535
 
-#define SCREEN_WIDTH (1280)
-#define SCREEN_HEIGHT (608)
+#define SCREEN_WIDTH (1000)
+#define SCREEN_HEIGHT (600)
 
 bool Renderer::init_shaders() {
 	GLenum error;
@@ -203,6 +203,7 @@ bool Renderer::init() {
 	log_progress("Settings surface textures");
 
 	world_surface = new FLWorldSurface();
+	scenery_surface = new FLWorldSurface();
 	tilemap_bg_surface = new FLTexturedSurface();
 	tilemap_fg_surface = new FLTexturedSurface();
 	background_surface = new FLTexturedSurface();
@@ -210,6 +211,7 @@ bool Renderer::init() {
 	text_surface = new FLTextSurface();
 
 	world_surface->set_shader(&textured_rect_shader);
+	scenery_surface->set_shader(&textured_rect_shader);
 	tilemap_bg_surface->set_shader(&textured_rect_shader);
 	tilemap_fg_surface->set_shader(&textured_rect_shader);
 	background_surface->set_shader(&textured_rect_shader);
@@ -217,8 +219,9 @@ bool Renderer::init() {
 	text_surface->set_shader(&text_shader);
 
 	world_renderables.push_back(tilemap_bg_surface);
-	world_renderables.push_back(world_surface);
 	world_renderables.push_back(tilemap_fg_surface);
+	world_renderables.push_back(scenery_surface);
+	world_renderables.push_back(world_surface);
 	background_renderables.push_back(background_surface);
 
 	return true;
@@ -226,16 +229,16 @@ bool Renderer::init() {
 
 void Renderer::init_surface_textures() {
 	world_surface->set_tex(FLResources::getInstance().get_image("world"));
+	scenery_surface->set_tex(FLResources::getInstance().get_image("scenery"));
 	tilemap_bg_surface->set_tex(FLResources::getInstance().get_image("tiles"));
 	tilemap_fg_surface->set_tex(FLResources::getInstance().get_image("tiles"));
 
 	// background shape and texture
-	background_surface->set_tex(
-		FLResources::getInstance().get_image("background"));
+	background_surface->set_tex(FLResources::getInstance().get_image("background1"));
 
 	// TODO: set background to repeat tile
 	FLTexturedObject *background_shape =
-		new FLTexturedObject(0, 0, SCREEN_WIDTH * 4, SCREEN_HEIGHT * 4);
+		new FLTexturedObject(0, 0, SCREEN_WIDTH * 8, SCREEN_HEIGHT * 8);
 	background_surface->update_buffers(background_shape);
 	delete background_shape;
 

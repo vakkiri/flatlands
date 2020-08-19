@@ -376,11 +376,11 @@ void FLPlayer::update_camera() {
 	float yamt = 0;
 	float xoffset;
 	if (animators["body"]->reversed())
-		xoffset = 32;
+		xoffset = 8;
 	else
-		xoffset = 64;
+		xoffset = 48;
 
-	float yoffset = -16;
+	float yoffset = -48;
 
 	float dx = (r.world_camera_x() / 2) + x() + xoffset;
 	float dy = (r.world_camera_y() / 2) + y() + yoffset;

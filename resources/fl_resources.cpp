@@ -18,6 +18,7 @@
 #include "../world/objects/objects.h"
 #include "../world/physics_settings.h"
 #include "../world/player/player.h"
+#include "../world/scenery.h"
 #include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
@@ -339,7 +340,24 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				cur += 2;
 
+			} else if (val >= 101 && val <= 300) {
+				// scenery
+
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+
+				// create it ...
+				new FLScenery(x, y, val);
+
+				cur += 2;
+
 			} else {
+				std::cout << "UNK: " << val << std::endl;
 				val = -1;
 			}
 
