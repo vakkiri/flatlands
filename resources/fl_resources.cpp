@@ -340,7 +340,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				cur += 2;
 
-			} else if (val >= 101 && val <= 300) {
+			} else if (val >= 101 && val < 300) {
 				// scenery
 
 				int16_t x;
@@ -356,6 +356,31 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				cur += 2;
 
+			} else if (val == 300) {
+				std::cout << "PORTAL" << std::endl;
+				float x;
+				float y;
+				float w;
+				float h;
+				float destx;
+				float desty;
+				int16_t dest_level;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&y, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&w, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&h, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&destx, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&desty, cur, sizeof(float));
+				cur += 4;
+				std::memcpy(&dest_level, cur, sizeof(int16_t));
+				cur += 2;
 			} else {
 				std::cout << "UNK: " << val << std::endl;
 				val = -1;
