@@ -63,6 +63,7 @@ class FLPlayer : public FLGameObject {
 	void release_right();
 
 	virtual void update_camera();
+	void reset_camera();
 
 	virtual void hold_jump();
 	virtual void release_jump();

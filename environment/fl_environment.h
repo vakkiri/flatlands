@@ -22,13 +22,15 @@ class FLEnvironment {
 
 	void load_level(int id);
 	void add_object(FLGameObject *object);
-
+	void set_level_id(int id);
+	int get_level_id();
 	FLPlayer *player();
 	FLTilemap *tilemap();
 
   protected:
 	FLPlayer *_player;
 	FLTilemap *_tilemap;
+	int level_id;
 	std::vector<FLGameObject *> objects;
 };
 

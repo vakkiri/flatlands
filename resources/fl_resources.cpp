@@ -18,6 +18,7 @@
 #include "../world/objects/objects.h"
 #include "../world/physics_settings.h"
 #include "../world/player/player.h"
+#include "../world/portal.h"
 #include "../world/scenery.h"
 #include "../rendering/text/fl_font.h"
 
@@ -231,6 +232,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 	FLTilemap *tilemap = environment->tilemap();
 	FLPlayer *player = environment->player();
+	environment->set_level_id(id);
 
 	if (!file.is_open()) {
 		log_error("Could not open map file");
@@ -251,12 +253,19 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		char* cur = buffer.data();
 		std::memcpy(&val, cur, sizeof(int16_t));
 
-		// TODO: actually save width/height/tileset of map
+		// TODO: encode width/height in map format
 		tilemap->reset(4096 * 2, 4096);
-		tilemap->set_tileset(0);
 
 		while (val != -1) {
-			if (val == 0 || val == 1) {
+			if (val == -2 ) {
+				int16_t tileset;
+
+				cur += 2;
+				std::memcpy(&tileset, cur, sizeof(int16_t));
+				tilemap->set_tileset((unsigned int)tileset);
+				cur += 2;
+			}
+			else if (val == 0 || val == 1) {
 				int16_t x;
 				int16_t y;
 				int16_t index;
@@ -284,6 +293,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				player->set_x(x);
 				player->set_y(y);
 				player->set_reset_position(x, y);
+				player->reset_camera();
 
 				cur += 2;
 			} else if (val == 3) {
@@ -381,6 +391,11 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 4;
 				std::memcpy(&dest_level, cur, sizeof(int16_t));
 				cur += 2;
+
+				// TODO: this should be replaced with add_portal
+				// which should add them to a maintained list
+				new FLPortal(x, y, w, h, destx, desty, dest_level);
+
 			} else {
 				std::cout << "UNK: " << val << std::endl;
 				val = -1;

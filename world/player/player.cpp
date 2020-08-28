@@ -627,3 +627,12 @@ bool FLPlayer::running() {
 	return left_held || right_held;
 }
 
+void FLPlayer::reset_camera() {
+	Renderer &r = Renderer::getInstance();
+	float dx = (r.world_camera_x() / 2) + x();
+	float dy = (r.world_camera_y() / 2) + y();
+
+	r.translate_world_camera(glm::vec3(-dx, -dy, 0));
+
+}
+

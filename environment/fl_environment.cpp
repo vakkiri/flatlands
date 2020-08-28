@@ -36,3 +36,12 @@ void FLEnvironment::add_object(FLGameObject *object) {
 FLPlayer *FLEnvironment::player() { return _player; }
 
 FLTilemap *FLEnvironment::tilemap() { return _tilemap; }
+
+int FLEnvironment::get_level_id() {
+	return level_id;
+}
+
+void FLEnvironment::set_level_id(int id) {
+	level_id = id;
+}
+
