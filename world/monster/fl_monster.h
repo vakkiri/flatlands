@@ -26,6 +26,8 @@ class FLMonster : public FLGameObject {
 
 	virtual void per_frame_update();
 	virtual void hit(float damage);
+	void remove_from_play();
+	bool removed_from_play();
 	point get_vector_from_player();
 
   protected:
@@ -34,6 +36,7 @@ class FLMonster : public FLGameObject {
 	virtual void on_player_near(){};
 
 	point get_distance_from_player();
+	bool removed;
 
 	int movement_period;
 	int attack_period;
@@ -54,5 +57,7 @@ class FLMonster : public FLGameObject {
 	int xp;	// how much xp to drop
 	FLMonsterState monster_state;
 };
+
+void clear_monsters();
 
 #endif

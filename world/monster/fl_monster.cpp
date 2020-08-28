@@ -3,6 +3,7 @@
  *
  */
 
+#include <algorithm>
 #include <math.h>
 #include <stdlib.h>
 #include "../../components/components.h"
@@ -13,6 +14,8 @@
 #include "../misc/xp_orb.h"
 #include "../player/player.h"
 #include "fl_monster.h"
+
+static std::vector<FLMonster*> monsters;
 
 FLMonster::FLMonster(float x, float y, float w, float h,
 					 FLAnimatedObjectParams animation_params)
@@ -36,31 +39,40 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 	stun_tick = 0;
 	health = 0;
 	xp = 1;
+
+	removed = false;
+	monsters.push_back(this);
 }
 
 FLMonster::~FLMonster() {
-	// generate some generic effects
-	int num_explosions =  w() / 8.f;
-	if (num_explosions < 1) {
-		num_explosions = 1;
-	}
-	srand(FLGame::instance().environment()->player()->x()); // idk this is kind of an odd choice
-	for (int i = 0; i < num_explosions; ++i) {
-		float _x = x() + (w() / 2.f);
-		float _y = y() + (h() / 2.f);
-		unsigned int speed = 3 + rand() % 4;
-		_x += (rand() % 32) - 16;
-		_y += (rand() % 32) - 16;
-		// TODO I should really just have a struct that contains these settings defined
-		// ie. effects.h can include them
-		FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
-		FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
-		new FLEffect(tex_params, anim_params, 560, 0);
-	}
-	for (int i = 0; i < xp; ++i) {
-		int dx = (rand() % 16) - 8;
-		int dy = (rand() % 16) - 8;
-		new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f + dy);
+	// this is super not efficient at all but i don't expect to have many monsters...
+	monsters.erase(std::remove(monsters.begin(), monsters.end(), this), monsters.end());
+
+	// monsters can be removed from play, such that they don't spawn xp etc. when deleted
+	if (!removed) {
+		// generate some generic effects
+		int num_explosions =  w() / 8.f;
+		if (num_explosions < 1) {
+			num_explosions = 1;
+		}
+		srand(FLGame::instance().environment()->player()->x()); // idk this is kind of an odd choice
+		for (int i = 0; i < num_explosions; ++i) {
+			float _x = x() + (w() / 2.f);
+			float _y = y() + (h() / 2.f);
+			unsigned int speed = 3 + rand() % 4;
+			_x += (rand() % 32) - 16;
+			_y += (rand() % 32) - 16;
+			// TODO I should really just have a struct that contains these settings defined
+			// ie. effects.h can include them
+			FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
+			FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
+			new FLEffect(tex_params, anim_params, 560, 0);
+		}
+		for (int i = 0; i < xp; ++i) {
+			int dx = (rand() % 16) - 8;
+			int dy = (rand() % 16) - 8;
+			new FLXPOrb(x() + w() / 2.f + dx, y() + h() / 2.f + dy);
+		}
 	}
 
 	Renderer::getInstance().remove_from_world(animators["body"]);
@@ -119,3 +131,19 @@ void FLMonster::hit(float damage) {
 point FLMonster::get_vector_from_player() {
 	return vector_from_player;
 }
+
+void FLMonster::remove_from_play() {
+	removed = true;
+}
+
+bool FLMonster::removed_from_play() {
+	return removed;
+}
+
+void clear_monsters() {
+	while (!monsters.empty()) {
+		monsters.back()->remove_from_play();
+		delete monsters.back();
+	}
+}
+

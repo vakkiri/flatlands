@@ -25,7 +25,9 @@ static FLAnimatedObjectParams animation_params = {
 };
 
 FLOrb::~FLOrb() {
-	new FLChip(x() + w()/2.f, y() + h() /2.f);
+	if (!removed) {
+		new FLChip(x() + w()/2.f, y() + h() /2.f);
+	}
 }
 
 FLOrb::FLOrb(float x, float y) : FLMonster(x, y, W, H, animation_params) {

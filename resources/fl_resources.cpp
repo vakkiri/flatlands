@@ -255,6 +255,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 		// TODO: encode width/height in map format
 		tilemap->reset(4096 * 2, 4096);
+		clear_monsters();
 
 		while (val != -1) {
 			if (val == -2 ) {
