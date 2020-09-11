@@ -25,7 +25,7 @@ FLDialogueBox::FLDialogueBox(std::vector<fl_message> text)
 
 	width = 192;
 	height = 64;
-	border_size = 7;
+	border_size = 12;
 
 	init_textures();
 
@@ -77,7 +77,7 @@ std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
 	float left = offset.x + border_size;
 	float right = offset.x + width - border_size - 5;
 	float x = offset.x + border_size;
-	float y = offset.y + border_size;
+	float y = offset.y + 6;
 	float charw = 5;	// this should be grabbed from font lol
 
 	unsigned int i = 0;

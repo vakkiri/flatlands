@@ -3,6 +3,7 @@
  *
  */
 
+#include <fstream>
 #include <iostream>
 
 #include "npcs.h"
@@ -39,11 +40,32 @@ void FLNpc::interact() {
 	bool flipped = player->x() > x();
 	set_game_state( FL_GAME_UI );
 
-	std::string test_string = "Quick wafting zephyrs vex bold Jim. Truly wonderful.";
 	std::vector<fl_message> messages;
-	messages.push_back(fl_message{"Hey guy!", player, flipped});
-	messages.push_back(fl_message{"Yeah?", this, !flipped});
-	messages.push_back(fl_message{"Ummm nothing.", player, flipped});
+	std::ifstream file("assets/text/0");
+	std::string line;
+	int state = 0;	// 0 = get speaker 1 = get text
+	int speaker = 0; // 0 = player, 1 = npc
+
+	while (std::getline(file, line)) { 
+		if (line.size() > 0 && line != "\n") {
+			if (state == 0) {
+				if (line == "player") {
+					speaker = 0;
+				} else {
+					speaker = 1;
+				}
+				state= 1;
+			} else {
+				if (speaker == 0) {
+					messages.push_back(fl_message{line, player, flipped});
+				} else {
+					messages.push_back(fl_message{line, this, !flipped});
+				}
+				state = 0;
+			} 
+		}
+	}
+
 	new FLDialogueBox(messages);
 }
 

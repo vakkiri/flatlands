@@ -368,7 +368,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 2;
 
 			} else if (val == 300) {
-				std::cout << "PORTAL" << std::endl;
 				float x;
 				float y;
 				float w;
