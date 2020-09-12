@@ -21,6 +21,7 @@ class FLEnvironment {
 	~FLEnvironment();
 
 	void load_level(int id);
+	void load_level(int id, float player_x, float player_y);
 	void add_object(FLGameObject *object);
 	void set_level_id(int id);
 	int get_level_id();

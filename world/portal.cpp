@@ -10,12 +10,15 @@
 #include "../game/fl_game.h"
 #include "player/player.h"
 
+static std::vector<FLPortal*> portals;
+
 FLPortal::FLPortal(float x, float y, float w, float h, float destx, float desty, int dest_level) 
 	: FLGameObject(x, y, w, h) {
 	this->destx = destx;
 	this->desty = desty;
 	this->dest_level = dest_level;
 	interactable_handle = fl_new_interactable(this);
+	portals.push_back(this);
 }
 
 void FLPortal::interact() {
@@ -28,12 +31,14 @@ void FLPortal::interact() {
 		player->set_x(destx);
 		player->set_y(desty);
 	} else {
-		env->load_level(dest_level);
-		if (destx != 0 && desty != 0) {
-			player->set_x(destx);
-			player->set_y(desty);
-			player->reset_camera();
-		}
+		env->load_level(dest_level, destx, desty);
+	}
+}
+
+void clear_portals() {
+	while (!portals.empty()) {
+		delete portals.back();
+		portals.pop_back();
 	}
 }
 

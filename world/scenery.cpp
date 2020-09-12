@@ -3,10 +3,13 @@
  *
  */
 
+#include <vector>
 #include <iostream>
 
 #include "scenery.h"
 #include "../rendering/renderer.h"
+
+static std::vector<FLScenery*> scenery;
 
 FLScenery::FLScenery(float x, float y, int index) 
 	: FLGameObject(x, y, 1, 1) {
@@ -42,9 +45,18 @@ FLScenery::FLScenery(float x, float y, int index)
 		animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 		animators["body"]->set_st(s, t);
 		Renderer::getInstance().add_to_world(animators["body"], true);
+
+		scenery.push_back(this);
 }
 
 FLScenery::~FLScenery() {
 	Renderer::getInstance().remove_from_world(animators["body"]);
+}
+
+void clear_scenery() {
+	while (!scenery.empty()) {
+		delete scenery.back();
+		scenery.pop_back();
+	}
 }
 

@@ -20,6 +20,7 @@
 #include "../world/player/player.h"
 #include "../world/portal.h"
 #include "../world/scenery.h"
+#include "../world/teleporter.h"
 #include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
@@ -240,6 +241,12 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		log_progress("Loading map");
 		tilemap->reset();
 
+		clear_npcs();
+		clear_scenery();
+		clear_portals();
+		clear_monsters();
+		clear_teleporters();
+
 		std::vector<char> buffer;
 		file.seekg(0, file.end);
 		int size = file.tellg();
@@ -255,10 +262,9 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 		// TODO: encode width/height in map format
 		tilemap->reset(4096 * 2, 4096);
-		clear_monsters();
 
 		while (val != -1) {
-			if (val == -2 ) {
+			if (val == -2) {
 				int16_t tileset;
 
 				cur += 2;
@@ -293,6 +299,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				player->set_x(x);
 				player->set_y(y);
+				std::cout << "moving player...\n";
 				player->set_reset_position(x, y);
 				player->reset_camera();
 
@@ -327,14 +334,14 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				int16_t y;
 
 				cur += 2;
+
 				std::memcpy(&x, cur, sizeof(int16_t));
 				cur += 2;
 				std::memcpy(&y, cur, sizeof(int16_t));
-
+				cur += 2;
 
 				new FLHopper(float(x), float(y));
 
-				cur += 2;
 			} else if (val == 6) {
 				int16_t x;
 				int16_t y;
@@ -351,6 +358,17 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				cur += 2;
 
+			} else if (val == 7) {
+				int16_t x;
+				int16_t y;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				new FLTeleporter(x, y);
 			} else if (val >= 101 && val < 300) {
 				// scenery
 
@@ -392,8 +410,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&dest_level, cur, sizeof(int16_t));
 				cur += 2;
 
-				// TODO: this should be replaced with add_portal
-				// which should add them to a maintained list
 				new FLPortal(x, y, w, h, destx, desty, dest_level);
 
 			} else {

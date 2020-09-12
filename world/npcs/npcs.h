@@ -26,4 +26,6 @@ class FLNpc : virtual public FLGameObject {
 		int script_id;
 };
 
+void clear_npcs();
+
 #endif

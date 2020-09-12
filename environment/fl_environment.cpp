@@ -25,6 +25,14 @@ FLEnvironment::~FLEnvironment() {
 	}
 }
 
+void FLEnvironment::load_level(int id, float player_x, float player_y) {
+	load_level(id);
+	if (player_x != 0 || player_y != 0) {
+		_player->set_x(player_x);
+		_player->set_y(player_y);
+	}
+}
+
 void FLEnvironment::load_level(int id) {
 	FLResources::getInstance().load_level(id, this);
 }

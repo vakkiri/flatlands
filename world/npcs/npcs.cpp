@@ -21,6 +21,8 @@
 #define FRAMES_PER_STEP 10
 #define REPEATS true
 
+static std::vector<FLNpc*> npcs;
+
 FLNpc::FLNpc(float x, float y, float w, float h,
 		FLAnimatedObjectParams animation_params)
 	: FLGameObject(x, y, w, h) {
@@ -29,6 +31,8 @@ FLNpc::FLNpc(float x, float y, float w, float h,
 	Renderer::getInstance().add_to_world(animators["body"]);
 	animators["body"]->set_st(912, 96);
 	interactable_handle = fl_new_interactable(this);
+
+	npcs.push_back(this);
 }
 
 FLNpc::~FLNpc() {
@@ -67,5 +71,12 @@ void FLNpc::interact() {
 	}
 
 	new FLDialogueBox(messages);
+}
+
+void clear_npcs() {
+	while (!npcs.empty()) {
+		delete npcs.back();
+		npcs.pop_back();
+	}
 }
 

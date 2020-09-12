@@ -22,5 +22,7 @@ class FLPortal : virtual public FLGameObject {
 		int dest_level;
 };
 
+void clear_portals();
+
 #endif
 

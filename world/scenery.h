@@ -17,5 +17,7 @@ class FLScenery : virtual public FLGameObject {
 		virtual ~FLScenery();
 };
 
+void clear_scenery();
+
 #endif
 
