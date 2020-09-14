@@ -28,6 +28,7 @@ class FLTeleporterBox : public FLUIElement {
 
 	virtual void accept() override;
 	virtual void reject() override;
+	std::vector<FLTexturedObject*>& get_textured_objects() override;
   protected:
 	int area_id;
 	virtual void init_textures();
@@ -35,7 +36,7 @@ class FLTeleporterBox : public FLUIElement {
 	unsigned int width;
 	unsigned int height;
 	float s, t;
-	float x, float y;
+	float x, y;
 
 	FLTexturedObject* tex;
 };

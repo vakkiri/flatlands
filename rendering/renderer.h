@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+#include "../common/basic_types.h"
 #include "fl_colored_poly_shader.h"
 #include "fl_framebuffer_shader.h"
 #include "fl_textured_rect_shader.h"
@@ -100,6 +101,7 @@ class Renderer {
 	void translate_world_camera(glm::vec3 translation);
 	float world_camera_x();
 	float world_camera_y();
+	point screen_pos(float x, float y);
 
 	unsigned int get_screen_width();
 	unsigned int get_screen_height();

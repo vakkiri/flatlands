@@ -187,6 +187,10 @@ float Renderer::world_camera_y() {
 	return world_camera[3][1] - (screen_height / 2);
 }
 
+point Renderer::screen_pos(float x, float y) {
+	return point{x + (world_camera[3][0] / 2.f), y + (world_camera[3][1] / 2.f)};
+}
+
 FLTexturedRectShader *Renderer::get_textured_rect_shader() {
 	return &textured_rect_shader;
 }

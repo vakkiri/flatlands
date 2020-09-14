@@ -7,7 +7,6 @@
 
 #include "../common/game_object.h"
 #include "../rendering/renderer.h"
-#include "../rendering/fl_text_surface.h"
 #include "../rendering/textured_object.h"
 #include "fl_teleporter_box.h"
 #include "fl_ui_manager.h"
@@ -15,9 +14,10 @@
 #define W 16
 #define H 16
 
-FLTeleporterBox::FLTeleporterBox(int area_id)
+FLTeleporterBox::FLTeleporterBox(float x, float y, int area_id)
 	: FLUIElement(0, 0) {
-
+	this->x = x;
+	this->y = y;
 	this->area_id = area_id;
 
 	width = 16;
@@ -44,10 +44,17 @@ void FLTeleporterBox::reject() {
 }
 
 void FLTeleporterBox::init_textures() {
-	tex = new FLTexturedObject(0, 0, W, H);
+	tex = new FLTexturedObject(x, y, W, H);
 	tex->set_st(s, t);
 	
 	textured_objects.push_back(tex);
 }
 
+std::vector<FLTexturedObject*>& FLTeleporterBox::get_textured_objects() {
+	point p = Renderer::getInstance().screen_pos(x, y);
+	tex->set_x(p.x - 32.f);
+	tex->set_y(p.y - 32.f);
+
+	return FLUIElement::get_textured_objects();
+}
 
