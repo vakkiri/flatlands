@@ -10,6 +10,8 @@
 #include "../game/fl_game.h"
 #include "../rendering/animated_object.h"
 #include "../rendering/renderer.h"
+#include "../ui/fl_teleporter_box.h"
+#include "../game/fl_gamestate.h"
 #include "player/player.h"
 
 #define TP_WIDTH 16
@@ -34,7 +36,8 @@ FLTeleporter::~FLTeleporter() {
 }
 
 void FLTeleporter::interact() {
-	std::cout << " hellllloo\n";
+	set_game_state(FL_GAME_UI);
+	new FLTeleporterBox(x(), y(), 0);
 	// create a teleporter UI -> this will handle actually teleporting
 }
 

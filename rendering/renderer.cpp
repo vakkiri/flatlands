@@ -84,6 +84,7 @@ void Renderer::render() {
 	textured_rect_shader.bind();
 	background_surface->set_shader(&textured_rect_shader);
 
+	// this should obviously be factored into a class lol
 	background_camera[3][0] = world_camera[3][0] * 0.005f; // parallax x
 	background_camera[3][1] = world_camera[3][1] * 0.0f + 0.f; // parallax y
 	textured_rect_shader.set_camera(background_camera);
