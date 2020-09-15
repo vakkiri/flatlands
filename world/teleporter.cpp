@@ -32,12 +32,17 @@ FLTeleporter::FLTeleporter(float x, float y)
 }
 
 FLTeleporter::~FLTeleporter() {
+	fl_delete_interactable(interactable_handle);
 	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
 void FLTeleporter::interact() {
 	set_game_state(FL_GAME_UI);
-	new FLTeleporterBox(x(), y(), 0);
+	std::vector<int> ids;
+	ids.push_back(0);
+	ids.push_back(1);
+	ids.push_back(2);
+	new FLTeleporterBox(x(), y(), ids);
 	// create a teleporter UI -> this will handle actually teleporting
 }
 

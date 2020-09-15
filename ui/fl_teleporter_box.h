@@ -24,10 +24,12 @@ struct fl_message {
 class FLTeleporterBox : public FLUIElement {
   public:
 	FLTeleporterBox() = delete;
-	FLTeleporterBox(float x, float y, int area_id);
+	FLTeleporterBox(float x, float y, std::vector<int>& area_ids);
 
 	virtual void accept() override;
 	virtual void reject() override;
+	virtual void left() override;
+	virtual void right() override;
 	std::vector<FLTexturedObject*>& get_textured_objects() override;
   protected:
 	int area_id;
@@ -35,10 +37,11 @@ class FLTeleporterBox : public FLUIElement {
 
 	unsigned int width;
 	unsigned int height;
-	float s, t;
+	unsigned int active_id;
 	float x, y;
 
-	FLTexturedObject* tex;
+	std::vector<FLTexturedObject*> textures;
+	std::vector<int> area_ids;
 };
 
 #endif

@@ -36,6 +36,7 @@ FLNpc::FLNpc(float x, float y, float w, float h,
 }
 
 FLNpc::~FLNpc() {
+	fl_delete_interactable(interactable_handle);
 	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 

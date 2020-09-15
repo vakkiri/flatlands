@@ -21,6 +21,10 @@ FLPortal::FLPortal(float x, float y, float w, float h, float destx, float desty,
 	portals.push_back(this);
 }
 
+FLPortal::~FLPortal() {
+	fl_delete_interactable(interactable_handle);
+}
+
 void FLPortal::interact() {
 	FLEnvironment *env = FLGame::instance().environment();
 	FLPlayer *player = env->player();
