@@ -23,3 +23,4 @@ void FLEffect::update_animation() {
 	if (animation_finished)
 		delete this;
 }
+

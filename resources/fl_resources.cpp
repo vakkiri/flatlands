@@ -246,6 +246,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		clear_portals();
 		clear_monsters();
 		clear_teleporters();
+		clear_geysers();
 
 		std::vector<char> buffer;
 		file.seekg(0, file.end);
@@ -299,7 +300,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				player->set_x(x);
 				player->set_y(y);
-				std::cout << "moving player...\n";
 				player->set_reset_position(x, y);
 				player->reset_camera();
 
@@ -369,6 +369,18 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 2;
 
 				new FLTeleporter(x, y);
+			} else if (val == 8) {
+				int16_t x;
+				int16_t y;
+
+				// geyser
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				new FLGeyser(x, y);
 			} else if (val >= 101 && val < 300) {
 				// scenery
 

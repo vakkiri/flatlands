@@ -9,5 +9,6 @@
 #define OBJECTS_H_
 
 #include "ammo.h"
+#include "geyser.h"
 
 #endif
