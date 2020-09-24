@@ -92,6 +92,10 @@ class FLPlayer : public FLGameObject {
 	float health_ratio();
 	float clip_ratio();
 
+	int get_chips();
+	int get_fragments();
+	void add_chip();
+	void add_fragment();
   protected:
 	virtual void handle_collision(FLCollider *collision);
 
@@ -117,6 +121,8 @@ class FLPlayer : public FLGameObject {
 	int max_health;
 	int health;
 	int target_health;
+	int chips;
+	int fragments;
 
 	bool can_use_ability;
 	bool can_double_jump;

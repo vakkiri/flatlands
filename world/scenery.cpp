@@ -46,6 +46,11 @@ FLScenery::FLScenery(float x, float y, int index)
 			t = 0;
 			w = 48;
 			h = 64;
+		} else if (index == 107) {
+			s = 368;
+			t = 0;
+			w = 53;
+			h = 70;
 		} else {
 			std::cout << "Warning: unknown scenery <" << index << ">" << std::endl;
 		}

@@ -32,10 +32,10 @@ FLChip::FLChip(float x, float y) : FLGameObject(x, y, SIZE, SIZE), FLNetObject()
 
 FLChip::~FLChip() {
 	Renderer::getInstance().remove_from_world(animators["body"]);
-	//environment()->player()->add_chip();
 }
 
 void FLChip::on_collision(FLCollider *obj) {
 	(void)obj;
+	environment()->player()->add_chip();
 	delete this;
 }

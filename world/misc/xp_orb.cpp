@@ -30,9 +30,6 @@ FLXPOrb::FLXPOrb(float x, float y) : FLGameObject(x, y, W, H) {
 	updator_handle = new_updator(this);
 	add_collider("position", "tilemap");
 	fl_add_collider_to_group(colliders["tilemap"], "projectiles");
-	fl_get_collider(colliders["tilemap"])
-		->set_collision_method(std::bind(&FLXPOrb::on_collision, this,
-									 	std::placeholders::_1));
 
 	ticks_since_created = 0;
 	physics_handler_handle = new_physics_handler(this, "tilemap");
@@ -55,6 +52,8 @@ void FLXPOrb::per_frame_update() {
 		float mag = sqrt(d.x * d.x + d.y * d.y);
 		float v = 5;
 		if (mag <= 8) {
+			FLPlayer *player = FLGame::instance().environment()->player();
+			player->add_fragment();
 			delete this;
 		} else if (mag != 0) {
 			physics_handler()->stopx();
@@ -64,16 +63,6 @@ void FLXPOrb::per_frame_update() {
 			d.x *= v;
 			d.y *= v;
 			physics_handler()->accelerate(-d.x, -d.y);
-		}
-	}
-}
-
-void FLXPOrb::on_collision(FLCollider *obj) {
-	(void) obj;
-	if (obj != nullptr) {
-		std::unordered_set<std::string>& collision_groups = obj->get_collision_groups();
-		if (collision_groups.find("player") != collision_groups.end()) {
-			std::cout << "playa\n";
 		}
 	}
 }

@@ -96,6 +96,9 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	health = max_health;
 	target_health = max_health;
 	init_weapon_stats();
+
+	chips = 0;
+	fragments = 0;
 }
 
 FLPlayer::~FLPlayer() {
@@ -634,5 +637,21 @@ void FLPlayer::reset_camera() {
 
 	r.translate_world_camera(glm::vec3(-dx, -dy, 0));
 
+}
+
+int FLPlayer::get_chips() {
+	return chips;
+}
+
+int FLPlayer::get_fragments() {
+	return fragments;
+}
+
+void FLPlayer::add_chip() {
+	chips += 1;
+}
+
+void FLPlayer::add_fragment() {
+	fragments += 1;
 }
 

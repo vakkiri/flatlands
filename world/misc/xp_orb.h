@@ -16,7 +16,6 @@ class FLXPOrb : public FLGameObject {
 		FLXPOrb(float x, float y);
 		virtual ~FLXPOrb();
 
-		virtual void on_collision(FLCollider *obj);
 		virtual void per_frame_update();
 
 	protected:

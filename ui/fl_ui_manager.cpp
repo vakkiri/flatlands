@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "fl_ammobar.h"
+#include "fl_chipbar.h"
 #include "fl_healthbar.h"
 #include "fl_ui_element.h"
 #include "fl_ui_manager.h"
@@ -74,6 +75,7 @@ void FLUIManager::init() {
 	// Add some default elements
 	add_element(new FLHealthbar);
 	add_element(new FLAmmobar);
+	add_element(new FLChipbar);
 }
 
 void FLUIManager::handle_up() {
