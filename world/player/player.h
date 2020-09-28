@@ -94,6 +94,7 @@ class FLPlayer : public FLGameObject {
 
 	int get_chips();
 	int get_fragments();
+	int get_ammo();
 	void add_chip();
 	void add_fragment();
   protected:

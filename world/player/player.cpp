@@ -655,3 +655,7 @@ void FLPlayer::add_fragment() {
 	fragments += 1;
 }
 
+int FLPlayer::get_ammo() {
+	return (weapon_stats[cur_weapon].ammo - 1) / weapon_stats[cur_weapon].clip_size;
+}
+

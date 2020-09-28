@@ -7,7 +7,9 @@
 
 #include "../environment/fl_environment.h"
 #include "../game/fl_game.h"
+#include "../rendering/fl_text_surface.h"
 #include "../rendering/textured_object.h"
+#include "../rendering/renderer.h"
 #include "../world/player/player.h"
 
 #define X_POS 16
@@ -20,6 +22,17 @@ FLAmmobar::FLAmmobar() : FLUIElement(X_POS, Y_POS) {
 
 std::vector<std::vector<fl_colored_vertex>> &
 FLAmmobar::get_primitive_vertices() {
+	// this does not belong here lol refactor plz eeee
+	// --
+	Renderer& r = Renderer::getInstance();
+	FLTextSurface* text_surface = r.get_text_surface();
+	std::string ammo = std::to_string(FLGame::instance().environment()->player()->get_ammo());
+
+	for (unsigned int i = 0; i < ammo.size(); ++i) {
+		text_surface->add_character(offset.x + 90 + 5 * i, offset.y + 4, ammo[i]);
+	}
+	// --
+
 	float ratio = FLGame::instance().environment()->player()->clip_ratio();
 
 	primitive_vertices[0][1].pos.x =

@@ -21,6 +21,7 @@
 #include "../world/portal.h"
 #include "../world/scenery.h"
 #include "../world/teleporter.h"
+#include "../world/water.h"
 #include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
@@ -247,6 +248,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		clear_monsters();
 		clear_teleporters();
 		clear_geysers();
+		clear_water();
 
 		std::vector<char> buffer;
 		file.seekg(0, file.end);
@@ -420,10 +422,27 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&desty, cur, sizeof(float));
 				cur += 4;
 				std::memcpy(&dest_level, cur, sizeof(int16_t));
-				cur += 2;
+				cur += 4;
 
 				new FLPortal(x, y, w, h, destx, desty, dest_level);
 
+			} else if (val == 301) {
+				int16_t x;
+				int16_t y;
+				int16_t w;
+				int16_t h;
+
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&w, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&h, cur, sizeof(int16_t));
+				cur += 2;
+
+				new FLWater(x, y, w, h);
 			} else {
 				std::cout << "UNK: " << val << std::endl;
 				val = -1;
