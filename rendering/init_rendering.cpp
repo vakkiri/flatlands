@@ -18,9 +18,6 @@
 
 #define PRIMITIVE_RESTART 65535
 
-#define SCREEN_WIDTH (1000)
-#define SCREEN_HEIGHT (600)
-
 bool Renderer::init_shaders() {
 	GLenum error;
 
@@ -72,6 +69,12 @@ bool Renderer::init_shaders() {
 	framebuffer_shader.set_projection(projection_matrix);
 	framebuffer_shader.set_camera(framebuffer_camera);
 	framebuffer_shader.update_pc_matrix();
+
+	water_shader.create_program("water-shader");
+	water_shader.bind();
+	water_shader.set_projection(projection_matrix);
+	water_shader.set_camera(world_camera);
+	water_shader.update_pc_matrix();
 
 	return true;
 }

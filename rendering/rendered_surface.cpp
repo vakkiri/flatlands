@@ -13,8 +13,6 @@
 #include "rendered_surface.h"
 #include "textured_object.h"
 
-#define RESTART 0xFFFF
-
 FLRenderedSurface::FLRenderedSurface() : FLRenderable() {
 	// initialize buffers
 	vbo = 0;
@@ -305,11 +303,11 @@ void FLTexturedSurface::update_buffers(FLTexturedObject *object) {
 }
 
 void FLTexturedSurface::render() {
-	if (shader != nullptr) {
+	if (shader != nullptr && tex != nullptr) {
 		glBindTexture(GL_TEXTURE_2D, tex->id);
 		shader->render(vao, num_indices);
 	} else {
-		log_warning("Attempted to render with null shader.");
+		log_warning("Attempted to render with null shader or texture.");
 	}
 }
 

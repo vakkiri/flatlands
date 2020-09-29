@@ -8,6 +8,7 @@
 #include <fstream>
 #include <glm/ext.hpp>
 #include <iostream>
+#include <algorithm>
 
 #include "../common/basic_types.h"
 #include "../logging/logging.h"
@@ -126,14 +127,28 @@ void Renderer::render() {
 	background_surface->set_tex(FLResources::getInstance().get_image("background1"));
 	background_surface->render();
 
-
-
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();
 	textured_rect_shader.set_camera(world_camera);
 	textured_rect_shader.update_pc_matrix();
 
 	for (FLRenderable *r : world_renderables)
+		r->render();
+
+	flip_framebuffer();
+
+	// draw a copy of the screen ---
+	framebuffer_shader.bind();
+	framebuffer_surface->set_tex(screen_texture());
+	framebuffer_surface->render();
+	// ---
+
+	// draw custom ... things.... like water
+	water_shader.bind();
+	water_shader.set_camera(world_camera);
+	water_shader.update_pc_matrix();
+
+	for (FLRenderable *r : custom_renderables)
 		r->render();
 
 	// UI
@@ -153,6 +168,7 @@ void Renderer::render() {
 	text_surface->render();
 
 	// render framebuffer to screen
+	
 	render_to_screen();
 }
 
@@ -231,6 +247,17 @@ void Renderer::add_to_world(FLTexturedObject *obj) {
 	add_to_world(obj, false);
 }
 
+void Renderer::add_custom(FLRenderable *obj) {
+	custom_renderables.push_back(obj);
+}
+
+void Renderer::remove_custom(FLRenderable *obj) {
+	custom_renderables.erase(
+			std::remove(custom_renderables.begin(), 
+					custom_renderables.end(), obj),
+			custom_renderables.end());
+}
+
 void Renderer::add_to_world(FLTexturedObject *obj, bool scenery) {
 	if (scenery) {
 		scenery_surface->add_object(obj);
@@ -251,3 +278,8 @@ void Renderer::clear() {
 unsigned int Renderer::get_screen_width() { return screen_width; }
 
 unsigned int Renderer::get_screen_height() { return screen_height; }
+
+FLFramebufferShader *Renderer::get_water_shader() {
+	return &water_shader;
+}
+

@@ -19,6 +19,7 @@ class FLEnvironment;
 class FLGame;
 class FLShape;
 class FLPhysicsHandler;
+class FLRenderable;
 
 class FLGameObject {
   public:
@@ -61,6 +62,7 @@ class FLGameObject {
 	std::unordered_map<std::string, int> colliders;
 	// TODO: this should be an int handle, and an Animator component..
 	std::unordered_map<std::string, FLAnimatedObject *> animators;
+	std::unordered_map<std::string, FLRenderable *> renderers;
 	int physics_handler_handle;
 	int updator_handle;
 	int interactable_handle;

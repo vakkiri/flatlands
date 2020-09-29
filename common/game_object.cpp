@@ -9,6 +9,7 @@
 #include "../components/components.h"
 #include "../game/fl_game.h"
 #include "../rendering/animated_object.h"
+#include "../rendering/renderable.h"
 #include "fl_shape.h"
 #include "game_object.h"
 
@@ -35,6 +36,9 @@ FLGameObject::~FLGameObject() {
 		fl_delete_collider(kv.second);
 	}
 	for (auto kv : animators) {
+		delete kv.second;
+	}
+	for (auto kv : renderers) {
 		delete kv.second;
 	}
 

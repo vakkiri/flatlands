@@ -7,6 +7,10 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
+#define RESTART 	0xFFFF
+#define SCREEN_WIDTH	1000
+#define SCREEN_HEIGHT	600
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <glm/glm.hpp>
@@ -45,6 +49,7 @@ class Renderer {
 	SDL_Window *window;
 	SDL_GLContext context;
 	std::vector<FLRenderable *> world_renderables;
+	std::vector<FLRenderable *> custom_renderables;
 	std::vector<FLRenderable *> background_renderables;
 	std::vector<FLRenderable *> ui_renderables;
 
@@ -52,6 +57,7 @@ class Renderer {
 	FLTexturedRectShader textured_rect_shader;
 	FLColoredPolyShader colored_poly_shader;
 	FLFramebufferShader framebuffer_shader;
+	FLFramebufferShader water_shader;
 	FLTextShader text_shader;
 
 	// Surfaces
@@ -72,7 +78,6 @@ class Renderer {
 	void prepare_to_render();
 	void flip_framebuffer();
 	void render_to_screen();
-	texture *screen_texture();
 
   protected:
 	unsigned int screen_height;
@@ -97,6 +102,7 @@ class Renderer {
 
   public:
 	// Public methods
+	texture *screen_texture();
 	glm::mat4 get_projection_matrix();
 	void translate_world_camera(glm::vec3 translation);
 	float world_camera_x();
@@ -107,8 +113,10 @@ class Renderer {
 	unsigned int get_screen_height();
 
 	void add_to_world(FLTexturedObject *obj);
+	void add_custom(FLRenderable *obj);
 	void add_to_world(FLTexturedObject *obj, bool scenery);
 	void remove_from_world(FLTexturedObject *obj);
+	void remove_custom(FLRenderable *obj);
 	void render_and_swap();
 
 	void close();
@@ -116,6 +124,7 @@ class Renderer {
 
 	FLTexturedRectShader *get_textured_rect_shader();
 	FLColoredPolyShader *get_colored_poly_shader();
+	FLFramebufferShader *get_water_shader();
 	FLTextShader *get_text_shader();
 	FLWorldSurface *get_world_surface();
 	FLTexturedSurface *get_tilemap_bg_surface();
