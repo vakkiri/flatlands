@@ -37,6 +37,7 @@ class FLReepProjectile : public FLProjectile {
 class FLFusionProjectile : public FLProjectile {
 	public:
 		FLFusionProjectile(float x, float y, float vx, float vy);
+		virtual ~FLFusionProjectile();
 };
 
 #endif

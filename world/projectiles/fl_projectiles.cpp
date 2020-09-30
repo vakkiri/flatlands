@@ -3,11 +3,13 @@
  *
  */
 
+#include <stdlib.h>
 #include <functional>
 
 #include "../../components/components.h"
 #include "../../environment/fl_environment.h"
 #include "../../rendering/renderer.h"
+#include "../effect.h"
 #include "../player/player.h"
 #include "../monster/fl_monster.h"
 #include "fl_projectiles.h"
@@ -84,11 +86,33 @@ FLReepProjectile::FLReepProjectile(float x, float y, float vx, float vy)
 
 FLFusionProjectile::FLFusionProjectile(float x, float y, float vx, float vy)
 	: FLProjectile(x, y, 16, 8, vx, vy, 50, fusion_animation_params) {
-	animators["body"]->set_st(544, 144);
-	life = 25;
+	if (vx != 0) {
+		animators["body"]->set_st(544, 144);
+	} else {
+		// this is hacky TODO just add rotation support hrrrghh???
+		animators["body"]->set_st(560, 144);
+		animators["body"]->set_w(8);
+		animators["body"]->set_h(16);
+	}
+	life = 22;
 	hits_player = false;
 	physics_handler()->unbound_velocity();
 	fl_get_collider(colliders["body"])->add_target_collision_group("monsters");
+}
+
+FLFusionProjectile::~FLFusionProjectile() {
+	srand(x());
+
+	for (int i = 0; i < 5; ++i) {
+		float _x = x() + (w() / 2.f);
+		float _y = y() + (h() / 2.f);
+		unsigned int speed = 3 + rand() % 4;
+		_x += (rand() % 16) - 8;
+		_y += (rand() % 16) - 8;
+		FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
+		FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
+		new FLEffect(tex_params, anim_params, 544, 160);
+	}
 }
 
 bool FLProjectile::stationary() {

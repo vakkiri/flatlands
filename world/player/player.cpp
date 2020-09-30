@@ -181,12 +181,16 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionProjectile(x() + 4, y() + 12, 7, 0);
+				new FLFusionProjectile(x() + 8, y() + 10, 9, 0);
 			} else {
-				new FLFusionProjectile(x() - 18, y() + 12, -7, 0);
+				new FLFusionProjectile(x() - 18, y() + 10, -9, 0);
 			}
 		} else {
-			new FLFusionPrimary(x() - 2, y() + 8, FL_NONE, vertical_direction);
+			if (vertical_direction == FL_UP) {
+				new FLFusionProjectile(x() + 8, y() - 2, 0, -9);
+			} else {
+				new FLFusionProjectile(x() + 8, y() + 20, 0, 9);
+			}
 		}
 	}
 }
