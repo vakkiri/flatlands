@@ -10,11 +10,10 @@ void main() {
 	coord.y = gl_FragCoord.y / 600;
 	coord.y = 0.35 - coord.y;
 
-	coord.x += 0.01 * sin((time * 4) * coord.y * 0.5);
+	coord.x += 0.02 * sin((time * 4) * cos(coord.y * 5));
 	coord.x = max(coord.x, 0);
 
-	coord.y += 0.01 * sin((time * 2) * coord.x);
-	coord.y += 0.001 * cos((time * 3) * coord.y);
+	coord.y += 0.005 * cos((time * 3) * sin(coord.x));
 	coord.y = max(coord.y, 0);
 
 	gl_FragColor = texture( texUnit, coord );

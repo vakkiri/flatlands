@@ -22,13 +22,21 @@ class FLProjectile : public FLGameObject {
 	virtual void per_frame_update();
 
   protected:
+	bool stationary();
 	int damage;
 	int life;
+	bool hits_player;
+	bool die_on_stop;
 };
 
 class FLReepProjectile : public FLProjectile {
   public:
 	FLReepProjectile(float x, float y, float vx, float vy);
+};
+
+class FLFusionProjectile : public FLProjectile {
+	public:
+		FLFusionProjectile(float x, float y, float vx, float vy);
 };
 
 #endif

@@ -9,9 +9,11 @@
 #include "../../environment/fl_environment.h"
 #include "../../rendering/renderer.h"
 #include "../player/player.h"
+#include "../monster/fl_monster.h"
 #include "fl_projectiles.h"
 
 FLAnimatedObjectParams reep_animation_params = {1, 8, 1, 16, 16, true};
+FLAnimatedObjectParams fusion_animation_params = {1, 1, 1, 16, 8, true};
 
 FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 						   float vy, int damage,
@@ -39,6 +41,8 @@ FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 	physics_handler()->set_gravity_factor(0.f);
 	physics_handler()->set_friction_factor(0.f);
 	physics_handler()->accelerate(vx, vy);
+	hits_player = true;
+	die_on_stop = true;
 }
 
 FLProjectile::~FLProjectile() {
@@ -48,15 +52,28 @@ FLProjectile::~FLProjectile() {
 void FLProjectile::per_frame_update() {
 	--life;
 
-	if (life <= 0 || physics_handler()->on_ground()) {
+	if (life <= 0) {
+		delete this;
+	} else if (die_on_stop and stationary()) {
 		delete this;
 	}
 }
 
 void FLProjectile::on_collision(FLCollider *obj) {
+	// TODO: this is clearly an uncomplete implementation lol
+	// need to check the obj group and hit either player, enemy or neither
 	(void)obj;
-	environment()->player()->hit(damage);
-	delete this;
+	if (obj != nullptr) {
+		if (hits_player && obj->is_in_group("player")) {
+			environment()->player()->hit(damage);
+			delete this;
+		} else {
+			if (obj->is_in_group("monsters")) {
+				((FLMonster*)(obj->get_owner()))->hit(damage);
+				delete this;
+			}
+		}
+	}
 }
 
 FLReepProjectile::FLReepProjectile(float x, float y, float vx, float vy)
@@ -64,3 +81,17 @@ FLReepProjectile::FLReepProjectile(float x, float y, float vx, float vy)
 	animators["body"]->set_st(256, 288);
 	life = 360;
 }
+
+FLFusionProjectile::FLFusionProjectile(float x, float y, float vx, float vy)
+	: FLProjectile(x, y, 16, 8, vx, vy, 50, fusion_animation_params) {
+	animators["body"]->set_st(544, 144);
+	life = 25;
+	hits_player = false;
+	physics_handler()->unbound_velocity();
+	fl_get_collider(colliders["body"])->add_target_collision_group("monsters");
+}
+
+bool FLProjectile::stationary() {
+	return physics_handler()->xvel() == 0 && physics_handler()->yvel() == 0;
+}
+

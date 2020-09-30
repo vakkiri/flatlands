@@ -39,16 +39,23 @@ bool FLPhysicsHandler::init(FLGameObject *owner, std::string collider_name) {
 		friction_factor = 1.0;
 		on_ground_timer = 0;
 		on_wall_timer = 0;
+		bounded_velocity = true;
 		_alive = true;
 	}
 
 	return success;
 }
 
+void FLPhysicsHandler::unbound_velocity() {
+	bounded_velocity = false;
+}
+
 void FLPhysicsHandler::update() {
 	apply_gravity();
 	apply_friction();
-	bound_velocity();
+	if (bounded_velocity) {
+		bound_velocity();
+	}
 	move();
 	on_ground_timer -= 1;
 	on_wall_timer -= 1;

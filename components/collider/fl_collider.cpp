@@ -28,6 +28,10 @@ bool FLCollider::init(FLGameObject *owner, std::string shape_name) {
 	} else {
 		this->owner = owner;
 		this->shape_name = shape_name;
+		collision_groups.clear();
+		target_collision_groups.clear();
+		collisions.clear();
+		has_collision_method = false;
 		_alive = true;
 	}
 	return success;
@@ -168,11 +172,18 @@ void FLCollider::process_collisions() {
 }
 
 void FLCollider::set_collision_method(std::function<void(FLCollider *)> meth) {
+	if (has_collision_method) {
+		std::cout << "Warning: overriding collider collision method.\n";
+	}
 	on_collision = meth;
 	has_collision_method = true;
 }
 
 void FLCollider::add_collision(FLCollider *collision) {
 	collisions.push_back(collision);
+}
+
+bool FLCollider::is_in_group(std::string group) {
+	return collision_groups.count(group) > 0;
 }
 

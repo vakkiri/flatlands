@@ -20,6 +20,7 @@
 #include "../effect.h"
 #include "../physics_settings.h"
 #include "../monster/fl_monster.h"
+#include "../projectiles/fl_projectiles.h"
 
 #define MAX_FALL (180)
 #define INITIAL_WALK_ACCEL (0.39)
@@ -180,9 +181,9 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionPrimary(x() + 4, y() + 12, FL_RIGHT, FL_FORWARD);
+				new FLFusionProjectile(x() + 4, y() + 12, 7, 0);
 			} else {
-				new FLFusionPrimary(x() - 2, y() + 12, FL_LEFT, FL_FORWARD);
+				new FLFusionProjectile(x() - 18, y() + 12, -7, 0);
 			}
 		} else {
 			new FLFusionPrimary(x() - 2, y() + 8, FL_NONE, vertical_direction);

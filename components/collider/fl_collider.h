@@ -46,6 +46,8 @@ class FLCollider {
 
 	void set_collision_method(std::function<void(FLCollider *)> meth);
 
+	bool is_in_group(std::string group);
+
   protected:
 	FLGameObject *owner;
 	std::unordered_set<std::string> target_collision_groups;

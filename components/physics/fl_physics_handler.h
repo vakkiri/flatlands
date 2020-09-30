@@ -33,6 +33,7 @@ class FLPhysicsHandler {
 
 	void set_gravity_factor(float factor);
 	void set_friction_factor(float factor);
+	void unbound_velocity();
 
   protected:
 	void move();
@@ -48,6 +49,7 @@ class FLPhysicsHandler {
 	float friction_factor;
 	int on_ground_timer;
 	int on_wall_timer;
+	bool bounded_velocity;
 	bool _alive;
 };
 
