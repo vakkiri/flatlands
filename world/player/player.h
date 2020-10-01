@@ -137,6 +137,7 @@ class FLPlayer : public FLGameObject {
 	unsigned int dash_frames;
 	unsigned int pound_frames;
 	unsigned int falling_frames;
+	unsigned int invulnerable_frames;
 	int wall_jump_frames;
 
 	point reset_position;

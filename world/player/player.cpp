@@ -44,6 +44,8 @@
 
 #define MAX_HEALTH 100
 
+#define INVULN_TIME 30
+
 FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	FLShape *tex_position = new FLShape(x() - 9, y(), 48.f, 32.f);
 	shapes.insert(std::make_pair("texture_position", tex_position));
@@ -64,6 +66,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	dash_frames = 0;
 	pound_frames = 0;
 	falling_frames = 0;
+	invulnerable_frames = 0;
 
 	cur_ability = FL_DASH;
 	cur_weapon = FL_FUSION;
@@ -374,8 +377,21 @@ void FLPlayer::per_frame_update() {
 		falling_frames = 0;
 	}
 
-	if (wall_jump_frames > 0)
+	if (wall_jump_frames > 0) {
 		wall_jump_frames -= 1;
+	}
+
+	if (invulnerable_frames > 0) {
+		invulnerable_frames -= 1;
+		if (invulnerable_frames % 3 == 0) {
+			animators["body"]->set_visible(false);
+		} else {
+			animators["body"]->set_visible(true);
+		}
+	} else {
+		animators["body"]->set_visible(true);
+	}
+
 }
 
 void FLPlayer::update_camera() {
@@ -536,6 +552,7 @@ void FLPlayer::reset() {
 	// TODO: update health, ammo etc. based on reset values
 	health = max_health;
 	target_health = max_health;
+	invulnerable_frames = 0;
 }
 
 void FLPlayer::set_ability(FLPlayerAbility ability) { cur_ability = ability; }
@@ -617,7 +634,10 @@ void FLPlayer::handle_collision(FLCollider *collision) {
 }
 
 void FLPlayer::hit(int damage) {
-	target_health = std::max(0, target_health - damage);
+	if (invulnerable_frames <= 0) {
+		target_health = std::max(0, target_health - damage);
+		invulnerable_frames = INVULN_TIME;
+	}
 }
 
 bool FLPlayer::wall_sliding() {
