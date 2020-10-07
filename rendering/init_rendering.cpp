@@ -45,6 +45,8 @@ bool Renderer::init_shaders() {
 	world_camera[1][1] = 2.0;
 	ui_camera[0][0] = 2.0;
 	ui_camera[1][1] = 2.0;
+	background_camera[0][0] = 2.0;
+	background_camera[1][1] = 2.0;
 
 	textured_rect_shader.create_program("textured_rect_shader");
 	textured_rect_shader.bind();

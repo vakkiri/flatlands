@@ -3,6 +3,7 @@
  *
  */
 
+#include <algorithm>
 #include <iostream>
 #include <math.h>
 #include <stdlib.h>
@@ -18,6 +19,8 @@
 #define T 64
 #define W 8
 #define H 8
+
+static std::vector<FLXPOrb*> orbs;
 
 static FLAnimatedObjectParams animation_params = {1, 7, 4, W, H, true};
 
@@ -39,9 +42,12 @@ FLXPOrb::FLXPOrb(float x, float y) : FLGameObject(x, y, W, H) {
 	float vx = float((rand() % 80)) / 10.f - 2;
 	float vy = float(-(rand() % 30)) / 10.f;
 	physics_handler()->accelerate(vx, vy);
+
+	orbs.push_back(this);
 }
 
 FLXPOrb::~FLXPOrb() {
+	orbs.erase(std::remove(orbs.begin(), orbs.end(), this), orbs.end());
 	Renderer::getInstance().remove_from_world(animators["body"]);
 }
 
@@ -74,3 +80,10 @@ point FLXPOrb::distance_from_player() {
 	p.y = y() - player->y();
 	return p;
 }
+
+void clear_xp_orbs() {
+	while (!orbs.empty()) {
+		delete orbs.back();	// this will remove from the vector as well!!!
+	}
+}
+

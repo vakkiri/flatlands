@@ -21,13 +21,22 @@ struct texture;
 
 enum FLPlayerAbility { FL_NO_ABILITY, FL_DASH };
 
-enum FLPlayerState {
+enum FLPlayerAnimationState {
 	FL_PLAYER_IDLE,
 	FL_PLAYER_WALK,
 	FL_PLAYER_JUMP,
-	FL_PLAYER_POUND,
+	FL_PLAYER_FALL,
+	FL_PLAYER_WALL,
 	FL_PLAYER_DASH,
-	FL_PLAYER_WALL
+};
+
+enum FLPlayerAnimationAction {
+	FL_PLAYER_JUMP_ACTION,
+	FL_PLAYER_FALL_ACTION,
+	FL_PLAYER_ATTACK_ACTION,
+	FL_PLAYER_RUN_ACTION,
+	FL_PLAYER_DASH_ACTION,
+	FL_PLAYER_STOP_ACTION
 };
 
 enum FLPlayerWeapon { FL_NO_WEAPON, FL_FUSION, FL_NUM_WEAPONS };
@@ -97,8 +106,10 @@ class FLPlayer : public FLGameObject {
 	int get_ammo();
 	void add_chip();
 	void add_fragment();
+	bool attacking();
   protected:
 	virtual void handle_collision(FLCollider *collision);
+	virtual void transition_animation(FLPlayerAnimationAction action);
 
 	virtual void update_net();
 	virtual void update_health();
@@ -118,6 +129,7 @@ class FLPlayer : public FLGameObject {
 	FLPlayerWeapon cur_weapon;
 	FLVerticalDirection vertical_direction;
 	FLWeaponStats weapon_stats[FL_NUM_WEAPONS];
+	FLPlayerAnimationState animation_state;
 
 	int max_health;
 	int health;
@@ -127,7 +139,6 @@ class FLPlayer : public FLGameObject {
 
 	bool can_use_ability;
 	bool can_double_jump;
-	bool attacking;
 	bool right_held;
 	bool left_held;
 	bool up_held;
@@ -138,6 +149,8 @@ class FLPlayer : public FLGameObject {
 	unsigned int pound_frames;
 	unsigned int falling_frames;
 	unsigned int invulnerable_frames;
+	unsigned int post_attack_timer;
+	bool attack_held;
 	int wall_jump_frames;
 
 	point reset_position;

@@ -18,8 +18,8 @@ void main() {
 
 	gl_FragColor = texture( texUnit, coord );
 	gl_FragColor *= 1 + 0.01 * abs(sin(texCoord.x * time * 100));
-	gl_FragColor.b *= 1.25;
-	gl_FragColor.r *= 0.75;
+	gl_FragColor.b *= 1.1;
+	gl_FragColor.r *= 0.8;
 	gl_FragColor *= 0.9;
 	gl_FragColor.a = 1.0;
 }

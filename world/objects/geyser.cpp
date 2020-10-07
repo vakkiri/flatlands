@@ -8,6 +8,7 @@
 
 #include "geyser.h"
 #include "../effect.h"
+#include "../projectiles/fl_projectiles.h"
 #include "../../components/components.h"
 #include "../../rendering/renderer.h"
 
@@ -57,6 +58,7 @@ void FLGeyser::per_frame_update() {
 			FLTexturedObjectParams tex_params = {nullptr, x(), y() - h() - 16, 32, 48};
 			FLAnimatedObjectParams anim_params = {1, 8, 4, 32, 48, false};
 			new FLEffect(tex_params, anim_params, 544, 80);
+			new FLAoeBurst(x() + 4, y() - 24, 24, 24, 25, true);
 
 			animators["body"]->reset_animation();
 			animators["body"]->stop_animation();

@@ -23,5 +23,7 @@ class FLXPOrb : public FLGameObject {
 		point distance_from_player();
 };
 
+void clear_xp_orbs();
+
 #endif
 

@@ -59,10 +59,15 @@ void main_loop() {
 
 		// TODO: would probably be better to just run server and client in a
 		// separate thread
+		if (SDL_GetTicks() < end_time) {
+			SDL_Delay(end_time - SDL_GetTicks());
+		}
+		/*
 		while (SDL_GetTicks() < end_time) {
 			// fl_update_server();
 			// fl_update_client();
 		}
+		*/
 	}
 }
 

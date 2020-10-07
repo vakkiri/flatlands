@@ -68,7 +68,10 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	falling_frames = 0;
 	invulnerable_frames = 0;
 
-	cur_ability = FL_DASH;
+	post_attack_timer = 0;
+	attack_held = false;
+
+	cur_ability = FL_NO_ABILITY;
 	cur_weapon = FL_FUSION;
 	vertical_direction = FL_FORWARD;
 
@@ -79,7 +82,6 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	down_held = false;
 	right_held = false;
 	left_held = false;
-	attacking = false;
 	wall_jump_frames = 0;
 
 	// Network
@@ -103,6 +105,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 
 	chips = 0;
 	fragments = 0;
+	animation_state = FL_PLAYER_IDLE;
 }
 
 FLPlayer::~FLPlayer() {
@@ -170,7 +173,7 @@ void FLPlayer::bind_actions() {
 
 // TODO: this should be named differently, it's really the entry point for an attack.
 void FLPlayer::drain_ammo() {
-	if (attacking) {
+	if (attack_held) {
 		--weapon_stats[cur_weapon].ammo;
 		play_sound("fusion_shoot");
 		if (weapon_stats[cur_weapon].ammo <= 0) {
@@ -184,15 +187,15 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionProjectile(x() + 8, y() + 10, 9, 0);
+				new FLFusionProjectile(x() + 8, y() + 10, 11, 0);
 			} else {
-				new FLFusionProjectile(x() - 18, y() + 10, -9, 0);
+				new FLFusionProjectile(x() - 18, y() + 10, -11, 0);
 			}
 		} else {
 			if (vertical_direction == FL_UP) {
-				new FLFusionProjectile(x() + 8, y() - 2, 0, -9);
+				new FLFusionProjectile(x() + 8, y() - 2, 0, -11);
 			} else {
-				new FLFusionProjectile(x() + 8, y() + 20, 0, 9);
+				new FLFusionProjectile(x() + 8, y() + 20, 0, 11);
 			}
 		}
 	}
@@ -248,14 +251,15 @@ void FLPlayer::use_ability() {
 
 void FLPlayer::attack() {
 	if (can_attack()) {
-		if (!attacking) {
+		if (!attack_held) {
 			animators["body"]->reset_animation();
 		}
-		attacking = true;
+		attack_held = true;
+		post_attack_timer = 20;
 	}
 }
 
-void FLPlayer::stop_attack() { attacking = false; }
+void FLPlayer::stop_attack() { attack_held = false; }
 
 void FLPlayer::double_jump() {
 	physics_handler()->accelerate(0, DOUBLE_JUMP_ACCEL -
@@ -298,7 +302,7 @@ bool FLPlayer::can_dash() { return (!dashing()); }
 
 bool FLPlayer::can_attack() {
 	return (cur_weapon != FL_NO_WEAPON && !dashing() &&
-			weapon_stats[cur_weapon].ammo > 0);
+			weapon_stats[cur_weapon].ammo > 0 && post_attack_timer < 10);
 }
 
 void FLPlayer::move_right() {
@@ -392,6 +396,9 @@ void FLPlayer::per_frame_update() {
 		animators["body"]->set_visible(true);
 	}
 
+	if (post_attack_timer > 0) {
+		post_attack_timer -= 1;
+	}
 }
 
 void FLPlayer::update_camera() {
@@ -425,17 +432,24 @@ void FLPlayer::animation_update() {
 		}
 	}
 
-	if (dashing()) {
-		animators["body"]->set_animation(7);
-	} else if (wall_sliding()) {
-		animators["body"]->set_animation(5);
-		if (!facing_right()) {
-			shapes["texture_position"]->set_pos(x(), y());
-		} else {
-			shapes["texture_position"]->set_pos(x() - 32, y());
-		}
-	} else if (!physics_handler()->on_ground()) {
-		if (attacking && vertical_direction != FL_FORWARD) {
+	// TODO implement animations based on a fsm
+	switch (animation_state) {
+		case FL_PLAYER_IDLE:
+			break;
+		case FL_PLAYER_WALK:
+			break;
+		case FL_PLAYER_JUMP:
+			break;
+		case FL_PLAYER_FALL:
+			break;
+		case FL_PLAYER_WALL:
+			break;
+		case FL_PLAYER_DASH:
+			break;
+	}
+
+	if (!physics_handler()->on_ground()) {
+		if (attacking() && vertical_direction != FL_FORWARD) {
 			if (vertical_direction == FL_UP) {
 				animators["body"]->set_animation(19);
 			} else {
@@ -444,14 +458,14 @@ void FLPlayer::animation_update() {
 		}
 		else {
 			if (physics_handler()->yvel() <= -0.5) {
-				if (attacking) {
+				if (attacking()) {
 					animators["body"]->set_animation(9);
 				} else {
 					animators["body"]->set_animation(3);
 				}
 			} else if (falling_frames >= 5) {
 				// We check falling frames to avoid jittery animation changes
-				if (attacking) {
+				if (attacking()) {
 					animators["body"]->set_animation(10);
 				} else {
 					animators["body"]->set_animation(4);
@@ -459,7 +473,7 @@ void FLPlayer::animation_update() {
 			}
 		}
 	} else if (running()) {
-		if (attacking) {
+		if (attacking()) {
 			if (vertical_direction == FL_FORWARD) {
 				animators["body"]->set_animation(8);
 			} else if (vertical_direction == FL_UP) {
@@ -477,7 +491,7 @@ void FLPlayer::animation_update() {
 			}
 		}
 	} else {	// stationary
-		if (attacking) {
+		if (attacking()) {
 			if (vertical_direction == FL_FORWARD) {
 				animators["body"]->set_animation(6);
 			} else if (vertical_direction == FL_UP) {
@@ -629,7 +643,7 @@ void FLPlayer::handle_collision(FLCollider *collision) {
 		hit(10);
 	}
 	if (groups.find("projectiles") != groups.end()) {
-		collision->add_collision(nullptr);
+		collision->add_collision(get_collider("tilemap"));
 	}
 }
 
@@ -682,5 +696,33 @@ void FLPlayer::add_fragment() {
 
 int FLPlayer::get_ammo() {
 	return (weapon_stats[cur_weapon].ammo - 1) / weapon_stats[cur_weapon].clip_size;
+}
+
+void FLPlayer::transition_animation(FLPlayerAnimationAction action) {
+	// TODO this is unfinished
+	switch(action) {
+		case FL_PLAYER_JUMP_ACTION:
+			if (animation_state != FL_PLAYER_WALL) {
+				animation_state = FL_PLAYER_JUMP;
+			}
+			break;
+		case FL_PLAYER_FALL_ACTION:
+			if (animation_state != FL_PLAYER_WALL) {
+				animation_state = FL_PLAYER_FALL;
+			}
+			break;
+		case FL_PLAYER_ATTACK_ACTION:
+			break;
+		case FL_PLAYER_RUN_ACTION:
+			break;
+		case FL_PLAYER_DASH_ACTION:
+			break;
+		case FL_PLAYER_STOP_ACTION:
+			break;
+	}
+}
+
+bool FLPlayer::attacking() {
+	return post_attack_timer > 0;
 }
 

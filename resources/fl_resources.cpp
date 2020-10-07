@@ -22,6 +22,7 @@
 #include "../world/scenery.h"
 #include "../world/teleporter.h"
 #include "../world/water.h"
+#include "../world/misc/xp_orb.h"
 #include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
@@ -249,6 +250,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		clear_teleporters();
 		clear_geysers();
 		clear_water();
+		clear_xp_orbs();
 
 		std::vector<char> buffer;
 		file.seekg(0, file.end);

@@ -15,7 +15,7 @@ class FLProjectile : public FLGameObject {
 	FLProjectile() = delete;
 	FLProjectile(float x, float y, float w, float h, float vx, float vy,
 				 int damage, FLAnimatedObjectParams animation_params);
-
+	FLProjectile(float x, float y, float w, float h, float vx, float vy, int damage);
 	virtual ~FLProjectile();
 
 	void on_collision(FLCollider *obj);
@@ -38,6 +38,11 @@ class FLFusionProjectile : public FLProjectile {
 	public:
 		FLFusionProjectile(float x, float y, float vx, float vy);
 		virtual ~FLFusionProjectile();
+};
+
+class FLAoeBurst : public FLProjectile {
+	public:
+		FLAoeBurst(float x, float y, float w, float h, int damage, bool hits_player);
 };
 
 #endif

@@ -3,6 +3,7 @@
  *
  */
 
+#include <iostream>
 #include <stdlib.h>
 #include <functional>
 
@@ -19,15 +20,20 @@ FLAnimatedObjectParams fusion_animation_params = {1, 1, 1, 16, 8, true};
 
 FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 						   float vy, int damage,
-						   FLAnimatedObjectParams animation_params)
-	: FLGameObject(x, y, w, h) {
+						   FLAnimatedObjectParams animation_params) 
+	: FLProjectile(x, y, w, h, vx, vy, damage) {
 
 	FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
 	Renderer::getInstance().add_to_world(animators["body"]);
 
-	FLShape *collision_shape =
-		new FLShape(x + (0.25 * w), y + (0.25 * h), w * 0.5, h * 0.5);
+}
+
+FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
+						   float vy, int damage)
+	: FLGameObject(x, y, w, h) {
+
+	FLShape *collision_shape = new FLShape(x + (0.25 * w), y + (0.25 * h), w * 0.5, h * 0.5);
 	shapes.insert(std::make_pair("collision", collision_shape));
 
 	updator_handle = new_updator(this);
@@ -48,7 +54,9 @@ FLProjectile::FLProjectile(float x, float y, float w, float h, float vx,
 }
 
 FLProjectile::~FLProjectile() {
-	Renderer::getInstance().remove_from_world(animators["body"]);
+	if (animators["body"] != nullptr) {
+		Renderer::getInstance().remove_from_world(animators["body"]);
+	}
 }
 
 void FLProjectile::per_frame_update() {
@@ -78,6 +86,10 @@ void FLProjectile::on_collision(FLCollider *obj) {
 	}
 }
 
+bool FLProjectile::stationary() {
+	return physics_handler()->xvel() == 0 && physics_handler()->yvel() == 0;
+}
+
 FLReepProjectile::FLReepProjectile(float x, float y, float vx, float vy)
 	: FLProjectile(x, y, 16, 16, vx, vy, 50, reep_animation_params) {
 	animators["body"]->set_st(256, 288);
@@ -94,7 +106,7 @@ FLFusionProjectile::FLFusionProjectile(float x, float y, float vx, float vy)
 		animators["body"]->set_w(8);
 		animators["body"]->set_h(16);
 	}
-	life = 22;
+	life = 15;
 	hits_player = false;
 	physics_handler()->unbound_velocity();
 	fl_get_collider(colliders["body"])->add_target_collision_group("monsters");
@@ -115,7 +127,10 @@ FLFusionProjectile::~FLFusionProjectile() {
 	}
 }
 
-bool FLProjectile::stationary() {
-	return physics_handler()->xvel() == 0 && physics_handler()->yvel() == 0;
+FLAoeBurst::FLAoeBurst(float x, float y, float w, float h, int damage, bool hits_player)
+	: FLProjectile(x, y, w, h, 0, 0, damage) {
+	this->hits_player = hits_player;
+	life = 5;
+	die_on_stop = false;
 }
 
