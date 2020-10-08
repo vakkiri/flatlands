@@ -106,6 +106,8 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	chips = 0;
 	fragments = 0;
 	animation_state = FL_PLAYER_IDLE;
+
+	Renderer::getInstance().get_world_camera()->set_parent(this);
 }
 
 FLPlayer::~FLPlayer() {
@@ -349,7 +351,6 @@ void FLPlayer::update_health() {
 
 void FLPlayer::per_frame_update() {
 	update_net();
-	update_camera();
 	update_health();
 
 	// This gives the player a bit more control over their jump
@@ -399,28 +400,6 @@ void FLPlayer::per_frame_update() {
 	if (post_attack_timer > 0) {
 		post_attack_timer -= 1;
 	}
-}
-
-void FLPlayer::update_camera() {
-	Renderer &r = Renderer::getInstance();
-	float xamt = 0;
-	float yamt = 0;
-	float xoffset;
-	if (animators["body"]->reversed())
-		xoffset = 8;
-	else
-		xoffset = 48;
-
-	float yoffset = -48;
-
-	float dx = (r.world_camera_x() / 2) + x() + xoffset;
-	float dy = (r.world_camera_y() / 2) + y() + yoffset;
-
-	// TODO: replace hardcoded values with screen width/height * camera scale
-	xamt = (dx / 50) * -5.0;
-	yamt = (dy / 50) * -5.0;
-
-	r.translate_world_camera(glm::vec3(xamt, yamt, 0));
 }
 
 void FLPlayer::animation_update() {
@@ -670,12 +649,8 @@ bool FLPlayer::running() {
 }
 
 void FLPlayer::reset_camera() {
-	Renderer &r = Renderer::getInstance();
-	float dx = (r.world_camera_x() / 2) + x();
-	float dy = (r.world_camera_y() / 2) + y();
-
-	r.translate_world_camera(glm::vec3(-dx, -dy, 0));
-
+	// TODO: wherever this is called, just call this line instead
+	Renderer::getInstance().get_world_camera()->reset();
 }
 
 int FLPlayer::get_chips() {

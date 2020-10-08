@@ -70,6 +70,7 @@ void Renderer::prepare_to_render() {
 }
 
 void Renderer::render() {
+	world_camera.update();
 
 	prepare_to_render();
 
@@ -86,42 +87,42 @@ void Renderer::render() {
 	background_surface->set_shader(&textured_rect_shader);
 
 	// this should obviously be factored into a class lol
-	background_camera[3][0] = world_camera[3][0] * 0.01f; // parallax x
-	background_camera[3][1] = world_camera[3][1] * 0.0f + 0.f; // parallax y
+	background_camera[3][0] = world_camera.x() * 0.01f; // parallax x
+	background_camera[3][1] = world_camera.y() * 0.0f + 0.f; // parallax y
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background2"));
 	background_surface->render();
 
-	background_camera[3][0] = world_camera[3][0] * 0.1f; // parallax x
-	background_camera[3][1] = world_camera[3][1] * -0.001f; // parallax y
+	background_camera[3][0] = world_camera.x() * 0.1f; // parallax x
+	background_camera[3][1] = world_camera.y() * -0.001f; // parallax y
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background1"));
 	background_surface->render();
 
-	background_camera[3][0] = world_camera[3][0] * 0.05f; // parallax x
-	background_camera[3][1] = world_camera[3][1] * 0.01f; // parallax y
+	background_camera[3][0] = world_camera.x() * 0.05f; // parallax x
+	background_camera[3][1] = world_camera.y() * 0.01f; // parallax y
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background3"));
 	background_surface->render();
 
-	background_camera[3][0] = world_camera[3][0] * 0.001f; // parallax x
+	background_camera[3][0] = world_camera.x() * 0.001f; // parallax x
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background4"));
 	background_surface->render();
 
-	background_camera[3][0] = world_camera[3][0] * 0.25f; // parallax x
-	background_camera[3][1] = world_camera[3][1] * 0.0; // parallax y
+	background_camera[3][0] = world_camera.x() * 0.25f; // parallax x
+	background_camera[3][1] = world_camera.y() * 0.0; // parallax y
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background6"));
 	background_surface->render();
 
-	background_camera[3][0] = world_camera[3][0] * 0.2f; // parallax x
-	background_camera[3][1] = world_camera[3][1] * 0.0; // parallax y
+	background_camera[3][0] = world_camera.x() * 0.2f; // parallax x
+	background_camera[3][1] = world_camera.y() * 0.0; // parallax y
 	textured_rect_shader.set_camera(background_camera);
 	textured_rect_shader.update_pc_matrix();
 	background_surface->set_tex(FLResources::getInstance().get_image("background5"));
@@ -129,7 +130,7 @@ void Renderer::render() {
 
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();
-	textured_rect_shader.set_camera(world_camera);
+	textured_rect_shader.set_camera(world_camera.mat());
 	textured_rect_shader.update_pc_matrix();
 
 	for (FLRenderable *r : world_renderables)
@@ -145,7 +146,7 @@ void Renderer::render() {
 
 	// draw custom ... things.... like water
 	water_shader.bind();
-	water_shader.set_camera(world_camera);
+	water_shader.set_camera(world_camera.mat());
 	water_shader.update_pc_matrix();
 
 	for (FLRenderable *r : custom_renderables)
@@ -191,20 +192,9 @@ void Renderer::clear_null_renderables() {
 	}
 }
 
-void Renderer::translate_world_camera(glm::vec3 translation) {
-	world_camera = glm::translate(world_camera, translation);
-}
-
-float Renderer::world_camera_x() {
-	return world_camera[3][0] - (screen_width / 2);
-}
-
-float Renderer::world_camera_y() {
-	return world_camera[3][1] - (screen_height / 2);
-}
-
 point Renderer::screen_pos(float x, float y) {
-	return point{x + (world_camera[3][0] / 2.f), y + (world_camera[3][1] / 2.f)};
+	return point{	x + (world_camera.x() / world_camera.x_scale()), 
+			y + (world_camera.y() / world_camera.y_scale())};
 }
 
 FLTexturedRectShader *Renderer::get_textured_rect_shader() {
@@ -281,5 +271,9 @@ unsigned int Renderer::get_screen_height() { return screen_height; }
 
 FLFramebufferShader *Renderer::get_water_shader() {
 	return &water_shader;
+}
+
+FLCamera* Renderer::get_world_camera() {
+	return &world_camera;
 }
 

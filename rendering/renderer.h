@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "../common/basic_types.h"
+#include "fl_camera.h"
 #include "fl_colored_poly_shader.h"
 #include "fl_framebuffer_shader.h"
 #include "fl_textured_rect_shader.h"
@@ -92,7 +93,8 @@ class Renderer {
 	texture *alt_framebuffer_texture;
 
 	glm::mat4 projection_matrix;
-	glm::mat4 world_camera;
+	FLCamera world_camera;
+	
 	glm::mat4 ui_camera;
 	glm::mat4 framebuffer_camera;
 	glm::mat4 background_camera;
@@ -104,10 +106,9 @@ class Renderer {
 	// Public methods
 	texture *screen_texture();
 	glm::mat4 get_projection_matrix();
-	void translate_world_camera(glm::vec3 translation);
-	float world_camera_x();
-	float world_camera_y();
 	point screen_pos(float x, float y);
+
+	FLCamera* get_world_camera();
 
 	unsigned int get_screen_width();
 	unsigned int get_screen_height();

@@ -23,6 +23,8 @@
 #include "../world/teleporter.h"
 #include "../world/water.h"
 #include "../world/misc/xp_orb.h"
+#include "../rendering/fl_camera.h"
+#include "../rendering/renderer.h"
 #include "../rendering/text/fl_font.h"
 
 #include "../tilemap/tilemap.h"
@@ -267,6 +269,8 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 		// TODO: encode width/height in map format
 		tilemap->reset(4096 * 2, 4096);
+		Renderer::getInstance().get_world_camera()->set_max_x(4096*4);
+		Renderer::getInstance().get_world_camera()->set_max_y(2300);
 
 		while (val != -1) {
 			if (val == -2) {

@@ -7,6 +7,7 @@
 
 #include "../common/game_object.h"
 #include "../rendering/renderer.h"
+#include "../rendering/fl_camera.h"
 #include "../rendering/fl_text_surface.h"
 #include "../rendering/textured_object.h"
 #include "fl_dialogue_box.h"
@@ -58,8 +59,8 @@ std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
 	FLTextSurface* text_surface = r.get_text_surface();
 
 	fl_message msg = messages.back();
-	float cx = r.world_camera_x() / -2.f;
-	float cy = r.world_camera_y() / -2.f;
+	float cx = r.get_world_camera()->x() / -2.f;
+	float cy = r.get_world_camera()->y() / -2.f;
 	float _x = msg.speaker->x() - cx + r.get_screen_width() / 4.f;
 	float _y = msg.speaker->y() - height - cy + r.get_screen_height() / 4.f;
 	if (!msg.flipped) {
