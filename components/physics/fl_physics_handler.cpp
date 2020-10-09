@@ -160,10 +160,6 @@ void FLPhysicsHandler::move() {
 				vel.y = 0;
 				moved_y = true;
 			}
-			// anti-jitter
-			if (moved_y) {
-				owner->set_y(int(owner->y()) - 1);
-			}
 		}
 	}
 	if (bot_touches_wall && top_touches_wall) {
