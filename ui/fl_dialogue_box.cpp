@@ -24,8 +24,8 @@ FLDialogueBox::FLDialogueBox(std::vector<fl_message> text)
 		text.pop_back();
 	}
 
-	width = 192;
-	height = 64;
+	width = 208;
+	height = 48;
 	border_size = 12;
 
 	init_textures();
@@ -47,7 +47,11 @@ void FLDialogueBox::init_textures() {
 	background = new FLTexturedObject(offset.x, offset.y, width, height);
 	background->set_st(0.f, 32.f);
 	
+	portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
+	portrait->set_st(0.f, 128.f);
+
 	textured_objects.push_back(background);
+	textured_objects.push_back(portrait);
 }
 
 // TODO: this should be replaced with a render() function instead of returning verts wtf lmao
@@ -59,24 +63,24 @@ std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
 	FLTextSurface* text_surface = r.get_text_surface();
 
 	fl_message msg = messages.back();
-	float cx = r.get_world_camera()->x() / -2.f;
-	float cy = r.get_world_camera()->y() / -2.f;
-	float _x = msg.speaker->x() - cx + r.get_screen_width() / 4.f;
-	float _y = msg.speaker->y() - height - cy + r.get_screen_height() / 4.f;
-	if (!msg.flipped) {
-		_x -= width;
-	} else {
-		_x += msg.speaker->w();
-	}
+
+	// calculate the screen position (not world position) of the speaker by
+	// subtracting the camera position
+	float cx = r.get_world_camera()->x() / -r.get_world_camera()->x_scale();
+	float cy = r.get_world_camera()->y() / -r.get_world_camera()->y_scale();
+	float _x = msg.speaker->x() - width - cx;
+	float _y = msg.speaker->y() - height - cy;
 
 	set_pos(_x, _y);
 
 	background->set_x(_x);
 	background->set_y(_y);
-	background->set_reverse(msg.flipped);
 
-	float left = offset.x + border_size;
-	float right = offset.x + width - border_size - 5;
+	portrait->set_x(_x + 8);
+	portrait->set_y(_y + 6);
+
+	float left = offset.x + border_size + 52;
+	float right = offset.x + width - border_size;
 	float x = offset.x + border_size;
 	float y = offset.y + 6;
 	float charw = 5;	// this should be grabbed from font lol

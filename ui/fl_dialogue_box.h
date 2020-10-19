@@ -36,6 +36,7 @@ class FLDialogueBox : public FLUIElement {
 	unsigned int border_size;
 
 	FLTexturedObject* background;
+	FLTexturedObject* portrait;
 	std::vector<fl_message> messages;
 };
 

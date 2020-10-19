@@ -100,7 +100,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	// stats
 	max_health = MAX_HEALTH;
 	health = max_health;
-	target_health = max_health - 50;
+	target_health = max_health;
 	init_weapon_stats();
 
 	chips = 0;
