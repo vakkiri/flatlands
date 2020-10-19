@@ -16,10 +16,6 @@
 #include "../../ui/fl_dialogue_box.h"
 #include "../../ui/fl_ui_manager.h"
 #include "../../components/components.h"
-#define NUM_ANIMATIONS 1
-#define NUM_STEPS 2
-#define FRAMES_PER_STEP 10
-#define REPEATS true
 
 static std::vector<FLNpc*> npcs;
 

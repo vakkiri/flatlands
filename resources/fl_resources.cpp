@@ -253,6 +253,8 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		clear_geysers();
 		clear_water();
 		clear_xp_orbs();
+		clear_savepoints();
+		clear_healthpoints();
 
 		std::vector<char> buffer;
 		file.seekg(0, file.end);
@@ -389,6 +391,31 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 2;
 
 				new FLGeyser(x, y);
+			} else if (val == 9) {
+				int16_t x;
+				int16_t y;
+
+				// geyser
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				new FLSavePoint(x, y);
+
+			} else if (val == 10) {
+				int16_t x;
+				int16_t y;
+
+				// geyser
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				new FLHealthPoint(x, y);
 			} else if (val >= 101 && val < 300) {
 				// scenery
 

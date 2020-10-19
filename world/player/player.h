@@ -95,8 +95,6 @@ class FLPlayer : public FLGameObject {
 	virtual void drain_ammo();
 	virtual void add_ammo(int weapon, int num_clips);
 
-	virtual void hit(int damage);
-
 	float health_ratio();
 	float clip_ratio();
 
@@ -106,6 +104,10 @@ class FLPlayer : public FLGameObject {
 	void add_chip();
 	void add_fragment();
 	bool attacking();
+
+	virtual void hit(int damage);
+	void heal(int amount);
+	void heal();
   protected:
 	virtual void handle_collision(FLCollider *collision);
 	virtual void transition_animation(FLPlayerAnimationAction action);

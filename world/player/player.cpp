@@ -88,7 +88,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	last_update_tick = SDL_GetTicks();
 
 	// Add to renderer and input mapping
-	FLAnimatedObjectParams animation_params = {5, 6, 3, 48.f, 32.f, true};
+	FLAnimatedObjectParams animation_params = {5, 6, 4, 48.f, 32.f, true};
 	FLTexturedObjectParams tex_params = {tex_position, 0, 0, 48.f, 32.f};
 
 	animators["body"] = new FLAnimatedObject(tex_params, animation_params);
@@ -100,7 +100,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	// stats
 	max_health = MAX_HEALTH;
 	health = max_health;
-	target_health = max_health;
+	target_health = max_health - 50;
 	init_weapon_stats();
 
 	chips = 0;
@@ -699,5 +699,16 @@ void FLPlayer::transition_animation(FLPlayerAnimationAction action) {
 
 bool FLPlayer::attacking() {
 	return post_attack_timer > 0;
+}
+
+void FLPlayer::heal() {
+	target_health = max_health;
+}
+
+void FLPlayer::heal(int amount) {
+	target_health = target_health + amount;
+	if (target_health > max_health) {
+		target_health = max_health;
+	}
 }
 
