@@ -6,6 +6,8 @@
 #include <iostream>
 
 #include "../common/game_object.h"
+#include "../environment/fl_environment.h"
+#include "../game/fl_game.h"
 #include "../rendering/renderer.h"
 #include "../rendering/fl_camera.h"
 #include "../rendering/fl_text_surface.h"
@@ -47,11 +49,15 @@ void FLDialogueBox::init_textures() {
 	background = new FLTexturedObject(offset.x, offset.y, width, height);
 	background->set_st(0.f, 32.f);
 	
-	portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
-	portrait->set_st(0.f, 128.f);
+	player_portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
+	player_portrait->set_st(0.f, 128.f);
+
+	npc_portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
+	npc_portrait->set_st(32.f, 128.f);
 
 	textured_objects.push_back(background);
-	textured_objects.push_back(portrait);
+	textured_objects.push_back(player_portrait);
+	textured_objects.push_back(npc_portrait);
 }
 
 // TODO: this should be replaced with a render() function instead of returning verts wtf lmao
@@ -76,8 +82,14 @@ std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
 	background->set_x(_x);
 	background->set_y(_y);
 
-	portrait->set_x(_x + 8);
-	portrait->set_y(_y + 6);
+	player_portrait->set_x(_x + 8);
+	player_portrait->set_y(_y + 6);
+
+	npc_portrait->set_x(_x + 8);
+	npc_portrait->set_y(_y + 6);
+
+	player_portrait->set_visible(msg.speaker == (FLGameObject*) FLGame::instance().environment()->player());
+	npc_portrait->set_visible(msg.speaker != (FLGameObject*) FLGame::instance().environment()->player());
 
 	float left = offset.x + border_size + 52;
 	float right = offset.x + width - border_size;
