@@ -237,7 +237,7 @@ void Renderer::init_surface_textures() {
 	tilemap_fg_surface->set_tex(FLResources::getInstance().get_image("tiles"));
 
 	// background shape and texture
-	background_surface->set_tex(FLResources::getInstance().get_image("background1"));
+	background_surface->set_tex(FLResources::getInstance().get_image("night1-1"));
 
 	// TODO: set background to repeat tile
 	FLTexturedObject *background_shape =

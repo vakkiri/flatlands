@@ -23,6 +23,7 @@
 #include "../world/teleporter.h"
 #include "../world/water.h"
 #include "../world/misc/xp_orb.h"
+#include "../rendering/background.h"
 #include "../rendering/fl_camera.h"
 #include "../rendering/renderer.h"
 #include "../rendering/text/fl_font.h"
@@ -42,8 +43,9 @@ bool FLResources::init() {
 
 	init_il();
 
-	if (!init_images() || !init_sfx())
+	if (!init_images() || !init_sfx() || !init_backgrounds()) {
 		success = false;
+	}
 
 	init_fonts();
 
@@ -97,6 +99,22 @@ bool FLResources::init_images() {
 
 	return load_images(IMAGE_RESOURCE_PATH);
 }
+
+bool FLResources::init_backgrounds() {
+	// TODO: load from file
+	add_background("night1");
+	add_background("sunset1");
+
+	add_background_layer("night1", "night1-2", 0.01, 0.0);
+	add_background_layer("night1", "night1-1", 0.1, -0.001);
+	add_background_layer("night1", "night1-3", 0.05, 0.01);
+	add_background_layer("night1", "night1-4", 0.001, 0.01);
+	add_background_layer("night1", "night1-6", 0.25, 0.0);
+	add_background_layer("night1", "night1-5", 0.2, 0.0);
+
+	return true;
+}
+
 
 bool FLResources::init_sfx() {
 	log_progress("Initializing sfx");

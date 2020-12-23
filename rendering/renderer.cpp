@@ -15,6 +15,7 @@
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
 #include "animated_object.h"
+#include "background.h"
 #include "renderable.h"
 #include "rendered_surface.h"
 #include "renderer.h"
@@ -86,47 +87,15 @@ void Renderer::render() {
 	textured_rect_shader.bind();
 	background_surface->set_shader(&textured_rect_shader);
 
-	// this should obviously be factored into a class lol
-	background_camera[3][0] = world_camera.x() * 0.01f; // parallax x
-	background_camera[3][1] = world_camera.y() * 0.0f + 0.f; // parallax y
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background2"));
-	background_surface->render();
+	for (auto layer : get_background_layers("night1")) {
+		background_camera[3][0] = world_camera.x() * layer.px; // parallax x
+		background_camera[3][1] = world_camera.y() * layer.py; // parallax y
+		textured_rect_shader.set_camera(background_camera);
+		textured_rect_shader.update_pc_matrix();
 
-	background_camera[3][0] = world_camera.x() * 0.1f; // parallax x
-	background_camera[3][1] = world_camera.y() * -0.001f; // parallax y
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background1"));
-	background_surface->render();
-
-	background_camera[3][0] = world_camera.x() * 0.05f; // parallax x
-	background_camera[3][1] = world_camera.y() * 0.01f; // parallax y
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background3"));
-	background_surface->render();
-
-	background_camera[3][0] = world_camera.x() * 0.001f; // parallax x
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background4"));
-	background_surface->render();
-
-	background_camera[3][0] = world_camera.x() * 0.25f; // parallax x
-	background_camera[3][1] = world_camera.y() * 0.0; // parallax y
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background6"));
-	background_surface->render();
-
-	background_camera[3][0] = world_camera.x() * 0.2f; // parallax x
-	background_camera[3][1] = world_camera.y() * 0.0; // parallax y
-	textured_rect_shader.set_camera(background_camera);
-	textured_rect_shader.update_pc_matrix();
-	background_surface->set_tex(FLResources::getInstance().get_image("background5"));
-	background_surface->render();
+		background_surface->set_tex(FLResources::getInstance().get_image(layer.tex));
+		background_surface->render();
+	}
 
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();

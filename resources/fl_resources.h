@@ -34,6 +34,7 @@ class FLResources {
 	float get_image_transparency(std::string image_name, float s, float t);
 	Mix_Chunk *get_sound(std::string effect_name);
 
+
   protected:
 	std::unordered_map<std::string, texture *> image_dict;
 	std::unordered_map<std::string, float *> image_pixel_dict;
@@ -46,6 +47,7 @@ class FLResources {
 	FLResources &operator=(FLResources const &) = delete;
 
 	bool init_images();
+	bool init_backgrounds();
 	bool init_sfx();
 	void init_il();
 	void init_physics();
