@@ -11,6 +11,8 @@
 #include <algorithm>
 
 #include "../common/basic_types.h"
+#include "../environment/fl_environment.h"
+#include "../game/fl_game.h"
 #include "../logging/logging.h"
 #include "../resources/fl_resources.h"
 #include "../ui/fl_ui_manager.h"
@@ -86,6 +88,8 @@ void Renderer::render() {
 	// draw background to framebuffer
 	textured_rect_shader.bind();
 	background_surface->set_shader(&textured_rect_shader);
+
+	std::string background = FLGame::instance().environment()->get_background();
 
 	for (auto layer : get_background_layers("night1")) {
 		background_camera[3][0] = world_camera.x() * layer.px; // parallax x

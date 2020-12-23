@@ -53,3 +53,11 @@ void FLEnvironment::set_level_id(int id) {
 	level_id = id;
 }
 
+void FLEnvironment::set_background(std::string name) {
+	background = name;
+}
+
+std::string FLEnvironment::get_background() {
+	return background;
+}
+

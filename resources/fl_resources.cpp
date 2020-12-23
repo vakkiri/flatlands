@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "../environment/fl_environment.h"
+#include "../game/fl_game.h"
 #include "../logging/logging.h"
 #include "../net/fl_net.h"
 #include "../world/monster/fl_monster_types.h"
@@ -111,7 +112,8 @@ bool FLResources::init_backgrounds() {
 	add_background_layer("night1", "night1-4", 0.001, 0.01);
 	add_background_layer("night1", "night1-6", 0.25, 0.0);
 	add_background_layer("night1", "night1-5", 0.2, 0.0);
-
+	
+	add_background_layer("sunset1", "sunset1-1", 0.0, 0.0);
 	return true;
 }
 
@@ -291,6 +293,10 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		tilemap->reset(4096 * 2, 4096);
 		Renderer::getInstance().get_world_camera()->set_max_x(4096*4);
 		Renderer::getInstance().get_world_camera()->set_max_y(2300);
+
+		// TODO: load background from map file
+		FLGame::instance().environment()->set_background("night1");
+
 
 		while (val != -1) {
 			if (val == -2) {
