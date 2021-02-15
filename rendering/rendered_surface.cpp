@@ -209,8 +209,8 @@ void FLTexturedSurface::update_buffers(
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBindVertexArray(0);
 
-	delete[] vbuf;
-	delete[] ibuf;
+	delete [] vbuf;
+	delete [] ibuf;
 }
 
 void FLTexturedSurface::update_buffers(FLTexturedObject *object) {

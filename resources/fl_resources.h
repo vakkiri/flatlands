@@ -53,6 +53,8 @@ class FLResources {
 	void init_physics();
 	void init_fonts();
 
+	void clear_level();
+
 	bool load_sfx(std::string csv_path);
 };
 

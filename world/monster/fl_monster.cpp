@@ -35,6 +35,7 @@ FLMonster::FLMonster(float x, float y, float w, float h,
 	facing_right = true;
 
 	movement_tick = 0;
+	vision_radius = 0;
 	attack_tick = 0;
 	stun_tick = 0;
 	health = 0;

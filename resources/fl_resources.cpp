@@ -53,9 +53,26 @@ bool FLResources::init() {
 	return success;
 }
 
+void FLResources::clear_level() {
+	clear_npcs();
+	clear_scenery();
+	clear_portals();
+	clear_monsters();
+	clear_teleporters();
+	clear_geysers();
+	clear_water();
+	clear_xp_orbs();
+	clear_savepoints();
+	clear_healthpoints();
+}
+
 void FLResources::close() {
+	clear_level();
+
 	for (auto &it : image_dict)
 		delete it.second;
+	for (auto &it : image_pixel_dict)
+		delete [] it.second;
 	for (auto &it : sfx_dict)
 		Mix_FreeChunk(it.second);
 }
@@ -265,16 +282,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		log_progress("Loading map");
 		tilemap->reset();
 
-		clear_npcs();
-		clear_scenery();
-		clear_portals();
-		clear_monsters();
-		clear_teleporters();
-		clear_geysers();
-		clear_water();
-		clear_xp_orbs();
-		clear_savepoints();
-		clear_healthpoints();
+		clear_level();
 
 		std::vector<char> buffer;
 		file.seekg(0, file.end);
@@ -419,7 +427,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				int16_t x;
 				int16_t y;
 
-				// geyser
+				// save thing
 				cur += 2;
 				std::memcpy(&x, cur, sizeof(int16_t));
 				cur += 2;
@@ -432,7 +440,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				int16_t x;
 				int16_t y;
 
-				// geyser
+				// health thing
 				cur += 2;
 				std::memcpy(&x, cur, sizeof(int16_t));
 				cur += 2;
@@ -440,6 +448,19 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				cur += 2;
 
 				new FLHealthPoint(x, y);
+			} else if (val == 11) {
+				int16_t x;
+				int16_t y;
+
+				// terminal/teleporter
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				//new FLHealthPoint(x, y);
+
 			} else if (val >= 101 && val < 300) {
 				// scenery
 
