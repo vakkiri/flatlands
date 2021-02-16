@@ -46,27 +46,52 @@ void FLDialogueBox::accept() {
 }
 
 void FLDialogueBox::init_textures() {
-	background = new FLTexturedObject(offset.x, offset.y, width, height);
-	background->set_st(0.f, 32.f);
-	
-	player_portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
-	player_portrait->set_st(0.f, 128.f);
+	bg_id = new_texturer();
+	player_portrait_id = new_texturer();
+	npc_portrait_id = new_texturer();
 
-	npc_portrait = new FLTexturedObject(offset.x + 8, offset.y + 8, 31, 37);
-	npc_portrait->set_st(32.f, 128.f);
+	if (bg_id > 0) {
+		FLTexturedObject *bg = get_texturer(bg_id);
+		bg->set_x(offset.x);
+		bg->set_y(offset.y);
+		bg->set_w(width);
+		bg->set_h(height);
+		bg->set_st(0.f, 32.f);
+		textured_objects.push_back(bg_id);
+	}
+	if (player_portrait_id > 0) {
+		FLTexturedObject* p = get_texturer(player_portrait_id);
+		p->set_x(offset.x + 8);
+		p->set_y(offset.y + 8);
+		p->set_w(31);
+		p->set_h(37);
+		p->set_st(0.f, 128.f);
+		textured_objects.push_back(player_portrait_id);
+	}
+	if (npc_portrait_id > 0) {
+		FLTexturedObject* npc = get_texturer(npc_portrait_id);
+		npc->set_x(offset.x + 8);
+		npc->set_y(offset.y + 8);
+		npc->set_w(31);
+		npc->set_h(37);
+		npc->set_st(32.f, 128.f);
+		textured_objects.push_back(npc_portrait_id);
+	}
 
-	textured_objects.push_back(background);
-	textured_objects.push_back(player_portrait);
-	textured_objects.push_back(npc_portrait);
+
 }
 
 // TODO: this should be replaced with a render() function instead of returning verts wtf lmao
 // i see why i thought this may have been a good idea
 // but it was quite a bad idea
 
-std::vector<FLTexturedObject*>& FLDialogueBox::get_textured_objects() {
+std::vector<int>& FLDialogueBox::get_textured_objects() {
 	Renderer &r = Renderer::getInstance();
 	FLTextSurface* text_surface = r.get_text_surface();
+
+	FLTexturedObject* background = get_texturer(bg_id);
+	FLTexturedObject* player_portrait = get_texturer(player_portrait_id);
+	FLTexturedObject* npc_portrait = get_texturer(npc_portrait_id);
 
 	fl_message msg = messages.back();
 

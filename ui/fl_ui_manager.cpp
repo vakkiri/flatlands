@@ -17,6 +17,7 @@
 #include "../rendering/fl_colored_poly_shader.h"
 #include "../rendering/rendered_surface.h"
 #include "../rendering/renderer.h"
+#include "../rendering/textured_object.h"
 
 FLUIManager::FLUIManager() { active_element = nullptr; }
 
@@ -172,11 +173,13 @@ void FLUIManager::render() {
 
 	std::vector<FLTexturedObject *> textures_to_draw;
 	for (FLUIElement *element : elements) {
-		std::vector<FLTexturedObject *> new_textures =
+		std::vector<int> new_textures =
 			element->get_textured_objects();
 		textures_to_draw.reserve(textures_to_draw.size() + new_textures.size());
-		textures_to_draw.insert(textures_to_draw.end(), new_textures.begin(),
-								new_textures.end());
+
+		for (auto id : new_textures) {
+			textures_to_draw.push_back(get_texturer(id));
+		}
 	}
 	image_surface->update_buffers(textures_to_draw);
 	image_surface->render();

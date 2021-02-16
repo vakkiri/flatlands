@@ -87,13 +87,13 @@ void FLHealthbar::init_vertices() {
 }
 
 void FLHealthbar::init_textures() {
-	icon = new FLTexturedObject(offset.x, offset.y, 16, 16);
-	icon->set_st(0, 0);
+	icon_id = new_texturer(offset.x, offset.y, 16, 16, 0, 0);
+	bar_image_id = new_texturer(offset.x + 22, offset.y, 96, 16, 16, 0);
 
-	textured_objects.push_back(icon);
-
-	bar_image = new FLTexturedObject(offset.x + 22, offset.y, 96, 16);
-	bar_image->set_st(16, 0);
-
-	textured_objects.push_back(bar_image);
+	if (icon_id > 0) {
+		textured_objects.push_back(icon_id);
+	}
+	if (bar_image_id > 0) {
+		textured_objects.push_back(bar_image_id);
+	}
 }

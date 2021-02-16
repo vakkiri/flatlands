@@ -116,6 +116,18 @@ void FLTexturedSurface::set_tex(std::string name) {
 }
 
 void FLTexturedSurface::update_buffers(
+	std::vector<int> &ids) {
+	// TODO: this is just an easy way of doing things while refactoring,
+	// this is super inefficient and should be written
+	std::vector<FLTexturedObject *> objs;
+	for (auto id : ids) {
+		objs.push_back(get_texturer(id));
+	}
+
+	update_buffers(objs);
+}
+
+void FLTexturedSurface::update_buffers(
 	std::vector<FLTexturedObject *> &objects) {
 	unsigned int vert_size = 4; // location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;

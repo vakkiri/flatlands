@@ -20,7 +20,7 @@ FLChipbar::FLChipbar() : FLUIElement(X_POS, Y_POS) {
 }
 
 /* same as in fl_dialogue_box, this sort of thing should be refactored into a render() method */
-std::vector<FLTexturedObject*>& FLChipbar::get_textured_objects() {
+std::vector<int>& FLChipbar::get_textured_objects() {
 	// add text showing number of chips and fragments
 	Renderer& r = Renderer::getInstance();
 	FLTextSurface* text_surface = r.get_text_surface();
@@ -39,14 +39,14 @@ std::vector<FLTexturedObject*>& FLChipbar::get_textured_objects() {
 }
 
 void FLChipbar::init_textures() {
-	icon = new FLTexturedObject(offset.x, offset.y, 16, 16);
-	icon->set_st(128, 0);
+	icon_id = new_texturer(offset.x, offset.y, 16, 16, 128, 0);
+	fragment_icon_id = new_texturer(offset.x, offset.y + 18, 16, 16, 128, 16);
 
-	textured_objects.push_back(icon);
-
-	fragment_icon = new FLTexturedObject(offset.x, offset.y + 18, 16, 16);
-	fragment_icon->set_st(128, 16);
-
-	textured_objects.push_back(fragment_icon);
+	if (icon_id > 0) {
+		textured_objects.push_back(icon_id);
+	}
+	if (fragment_icon_id > 0) {
+		textured_objects.push_back(fragment_icon_id);
+	}
 }
 

@@ -27,7 +27,7 @@ class FLDialogueBox : public FLUIElement {
 	FLDialogueBox(std::vector<fl_message> text);
 
 	virtual void accept();
-	std::vector<FLTexturedObject*>& get_textured_objects() override;
+	std::vector<int>& get_textured_objects() override;
   protected:
 	virtual void init_textures();
 
@@ -35,9 +35,10 @@ class FLDialogueBox : public FLUIElement {
 	unsigned int height;
 	unsigned int border_size;
 
-	FLTexturedObject* background;
-	FLTexturedObject* player_portrait;
-	FLTexturedObject* npc_portrait;
+	int bg_id;
+	int player_portrait_id;
+	int npc_portrait_id;
+
 	std::vector<fl_message> messages;
 };
 

@@ -20,8 +20,8 @@ class FLHealthbar : public FLUIElement {
   protected:
 	virtual void init_textures();
 	virtual void init_vertices();
-	FLTexturedObject *icon;
-	FLTexturedObject *bar_image;
+	int icon_id;
+	int bar_image_id;
 };
 
 #endif

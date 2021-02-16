@@ -13,6 +13,13 @@
 #include "../common/fl_shape.h"
 #include <vector>
 
+class FLTexturedObject;
+
+int new_texturer();
+int new_texturer(float x, float y, float w, float h, float s, float t);
+FLTexturedObject* get_texturer(int handle);
+void delete_texturer(int handle);
+
 struct FLTexturedObjectParams {
 	FLShape *parent;
 	float x;
@@ -23,9 +30,7 @@ struct FLTexturedObjectParams {
 
 class FLTexturedObject {
   public:
-	FLTexturedObject() = delete;
-	FLTexturedObject(FLShape *parent, float w, float h);
-	FLTexturedObject(FLShape *parent, float x, float y, float w, float h);
+	FLTexturedObject();
 	FLTexturedObject(float x, float y, float w, float h);
 	FLTexturedObject(FLTexturedObjectParams &params);
 
@@ -50,6 +55,10 @@ class FLTexturedObject {
 	void set_visible(bool visible);
 	bool is_visible();
 
+	void set_alive();
+	void kill();
+	bool alive();
+
   protected:
 	FLShape *parent;
 	float _x;
@@ -60,6 +69,7 @@ class FLTexturedObject {
 	float _t;
 	bool reverse;
 	bool visible;
+	bool _alive;
 };
 
 #endif

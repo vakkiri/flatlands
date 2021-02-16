@@ -17,7 +17,7 @@ FLUIElement::FLUIElement(float x, float y) {
 
 FLUIElement::~FLUIElement() {
 	while (!textured_objects.empty()) {
-		delete textured_objects.back();
+		delete_texturer(textured_objects.back());
 		textured_objects.pop_back();
 	}
 }
@@ -27,7 +27,7 @@ FLUIElement::get_primitive_vertices() {
 	return primitive_vertices;
 }
 
-std::vector<FLTexturedObject *> &FLUIElement::get_textured_objects() {
+std::vector<int> &FLUIElement::get_textured_objects() {
 	return textured_objects;
 }
 

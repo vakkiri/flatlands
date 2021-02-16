@@ -43,21 +43,22 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	FLResources &res = FLResources::getInstance();
 	float _s = index * cell_size;
 	float _t = 16 * tileset;
-	FLTexturedObject *t = new FLTexturedObject(x, y, w, h);
-	t->set_st(_s, _t);
+	int tex_id = new_texturer(x, y, w, h, _s, _t);
 
-	if (layer == 0) {
-		bg_tiles.push_back(t);
-	} else if (layer == 1) {
-		fg_tiles.push_back(t);
-	}
+	if (tex_id > 0) {
+		if (layer == 0) {
+			bg_tiles.push_back(tex_id);
+		} else if (layer == 1) {
+			fg_tiles.push_back(tex_id);
+		}
 
-	if (solid) {
-		// TODO: create pixel-level collision map for solid tiles based on alpha
-		for (int i = 0; i < 16; ++i) {
-			for (int j = 0; j < 16; ++j) {
-				if (res.get_image_transparency("tiles", _s + i, _t + j) > 0.0) {
-					set_solid_at(x + i, y + j);
+		if (solid) {
+			// TODO: create pixel-level collision map for solid tiles based on alpha
+			for (int i = 0; i < 16; ++i) {
+				for (int j = 0; j < 16; ++j) {
+					if (res.get_image_transparency("tiles", _s + i, _t + j) > 0.0) {
+						set_solid_at(x + i, y + j);
+					}
 				}
 			}
 		}
@@ -82,11 +83,11 @@ void FLTilemap::reset() {
 	reset_collision_map();
 
 	while (!bg_tiles.empty()) {
-		delete bg_tiles.back();
+		delete_texturer(bg_tiles.back());
 		bg_tiles.pop_back();
 	}
 	while (!fg_tiles.empty()) {
-		delete fg_tiles.back();
+		delete_texturer(fg_tiles.back());
 		fg_tiles.pop_back();
 	}
 }

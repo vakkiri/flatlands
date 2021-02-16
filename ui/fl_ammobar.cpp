@@ -63,13 +63,26 @@ void FLAmmobar::init_vertices() {
 }
 
 void FLAmmobar::init_textures() {
-	icon = new FLTexturedObject(offset.x, offset.y, 16, 16);
-	icon->set_st(0, 16);
+	icon_id = new_texturer();
+	bar_image_id = new_texturer();
 
-	textured_objects.push_back(icon);
+	if (icon_id > 0) {
+		FLTexturedObject* icon = get_texturer(icon_id);
+		icon->set_x(offset.x);
+		icon->set_y(offset.y);
+		icon->set_w(16);
+		icon->set_h(16);
+		icon->set_st(0, 16);
+		textured_objects.push_back(icon_id);
+	}
 
-	bar_image = new FLTexturedObject(offset.x + 22, offset.y, 64, 16);
-	bar_image->set_st(16, 16);
-
-	textured_objects.push_back(bar_image);
+	if (bar_image_id > 0) {
+		FLTexturedObject* bar_image = get_texturer(bar_image_id);
+		bar_image->set_x(offset.x + 22);
+		bar_image->set_y(offset.y);
+		bar_image->set_w(64);
+		bar_image->set_h(16);
+		bar_image->set_st(16, 16);
+		textured_objects.push_back(bar_image_id);
+	}
 }

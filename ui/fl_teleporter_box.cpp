@@ -58,22 +58,23 @@ void FLTeleporterBox::right() {
 
 void FLTeleporterBox::init_textures() {
 	for (auto id : area_ids) { 
-		FLTexturedObject* tex = new FLTexturedObject(x, y, W, H);
-		tex->set_st(16 * id, 96);
-		
-		textured_objects.push_back(tex);
+		int tex = new_texturer(x, y, W, H, 16 * id, 96);
+		if (tex > 0) {
+			textured_objects.push_back(tex);
+		}
 	}
 }
 
-std::vector<FLTexturedObject*>& FLTeleporterBox::get_textured_objects() {
+std::vector<int>& FLTeleporterBox::get_textured_objects() {
 	point p = Renderer::getInstance().screen_pos(x, y);
 	for (unsigned int i = 0; i < textured_objects.size(); ++i) {
-		textured_objects[i]->set_x(p.x - 32.f + (32.f * i));
-		textured_objects[i]->set_y(p.y - 32.f);
+		FLTexturedObject* obj = get_texturer(textured_objects[i]);
+		obj->set_x(p.x - 32.f + (32.f * i));
+		obj->set_y(p.y - 32.f);
 		if (i == active_id) {
-			textured_objects[i]->set_st(16 * area_ids[i], 112);
+			obj->set_st(16 * area_ids[i], 112);
 		} else {
-			textured_objects[i]->set_st(16 * area_ids[i], 96);
+			obj->set_st(16 * area_ids[i], 96);
 		}
 	}
 

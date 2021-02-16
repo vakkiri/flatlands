@@ -12,8 +12,6 @@
 #include "../common/basic_types.h"
 #include <vector>
 
-class FLTexturedObject;
-
 class FLUIElement {
   public:
 	FLUIElement();
@@ -32,7 +30,7 @@ class FLUIElement {
 	// rendering
 	virtual std::vector<std::vector<fl_colored_vertex>> &
 	get_primitive_vertices();
-	virtual std::vector<FLTexturedObject *> &get_textured_objects();
+	virtual std::vector<int> &get_textured_objects();
 
 	//setters
 	void set_pos(float x, float y);
@@ -41,7 +39,7 @@ class FLUIElement {
 	// the element geometry
 	point offset;
 	std::vector<std::vector<fl_colored_vertex>> primitive_vertices;
-	std::vector<FLTexturedObject *> textured_objects;
+	std::vector<int> textured_objects;
 };
 
 #endif

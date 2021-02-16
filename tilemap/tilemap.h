@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-class FLTexturedObject;
 class FLTexturedSurface;
 struct texture;
 
@@ -38,8 +37,8 @@ class FLTilemap {
 	float get_cell_size();
 
   protected:
-	std::vector<FLTexturedObject *> bg_tiles;
-	std::vector<FLTexturedObject *> fg_tiles;
+	std::vector<int> bg_tiles;
+	std::vector<int> fg_tiles;
 	std::vector<std::vector<bool>> collision_map;
 	unsigned int w;
 	unsigned int h;

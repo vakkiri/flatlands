@@ -14,12 +14,12 @@ class FLChipbar : public FLUIElement {
   public:
 	FLChipbar();
 
-	std::vector<FLTexturedObject*> &get_textured_objects() override;
+	std::vector<int> &get_textured_objects() override;
   protected:
 	virtual void init_textures();
 
-	FLTexturedObject *icon;
-	FLTexturedObject *fragment_icon;
+	int icon_id;
+	int fragment_icon_id;
 };
 
 #endif

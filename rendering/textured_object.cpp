@@ -6,27 +6,96 @@
 #include "textured_object.h"
 #include <iostream>
 
-FLTexturedObject::FLTexturedObject(FLShape *parent, float x, float y,
-								   float w, float h) {
+#define NUM_TEXTURERS 10000
+
+static std::vector<FLTexturedObject> texturers(NUM_TEXTURERS);
+
+int new_texturer() {
+	// TODO: optimize by keeping track of last used position, instead of starting from 0
+	int handle = -1;
+
+	for (unsigned int i = 0; i < texturers.size(); ++i) {
+		if (!texturers[i].alive()) {
+			texturers[i].set_alive();
+			handle = i;
+			break;
+		}
+	}
+
+	return handle;
+}
+
+int new_texturer(float x, float y, float w, float h, float s, float t) {
+	int handle = new_texturer();
+	if (handle >= 0) {
+		FLTexturedObject* obj = get_texturer(handle);
+		obj->set_x(x);
+		obj->set_y(y);
+		obj->set_w(w);
+		obj->set_h(h);
+		obj->set_st(s, t);
+	}
+	return handle;
+}
+
+FLTexturedObject* get_texturer(int handle) {
+	if (handle < 0) {
+		std::cout << "WARNING: get_texturer called with negative handle.\n";
+		return nullptr;
+	}
+	if (texturers[handle].alive()) {
+		return &texturers[handle];
+	} else {
+		return nullptr;
+	}
+}
+
+void delete_texturer(int handle) {
+	if (handle > 0) {
+		texturers[handle].kill();
+	} else {
+		std::cout << "WARNING: get_texturer called with negative handle.\n";
+	}
+}
+
+FLTexturedObject::FLTexturedObject() {
+	parent = nullptr;
+	_alive = false;
+	reverse = false;
+	visible = true;
+	_s = 0;
+	_t = 0;
+}
+
+FLTexturedObject::FLTexturedObject(FLTexturedObjectParams &params) 
+	: FLTexturedObject() {
+	parent = params.parent;
+	_x = params.x;
+	_y = params.y;
+	_w = params.w;
+	_h = params.h;
+}
+
+FLTexturedObject::FLTexturedObject(float x, float y, float w, float h) 
+	: FLTexturedObject() {
 	_x = x;
 	_y = y;
 	_w = w;
 	_h = h;
-	_s = 0;
-	_t = 0;
-	reverse = false;
-	visible = true;
-	this->parent = parent;
 }
 
-FLTexturedObject::FLTexturedObject(float x, float y, float w, float h)
-	: FLTexturedObject(nullptr, x, y, w, h) {}
+bool FLTexturedObject::alive() {
+	return _alive;
+}
 
-FLTexturedObject::FLTexturedObject(FLShape *parent, float w, float h)
-	: FLTexturedObject(parent, 0, 0, w, h) {}
+void FLTexturedObject::kill() {
+	parent = nullptr;
+	_alive = false;
+}
 
-FLTexturedObject::FLTexturedObject(FLTexturedObjectParams &params)
-	: FLTexturedObject(params.parent, params.x, params.y, params.w, params.h) {}
+void FLTexturedObject::set_alive() {
+	_alive = true;
+}
 
 void FLTexturedObject::set_st(float s, float t) {
 	_s = s;
