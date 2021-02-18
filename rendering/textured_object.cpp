@@ -97,6 +97,18 @@ void FLTexturedObject::set_alive() {
 	_alive = true;
 }
 
+void FLTexturedObject::init(float x, float y, float w, float h, float s, float t) {
+	_x = x;
+	_y = y;
+	_w = w;
+	_h = h;
+	_s = s;
+	_t = t;
+	visible = true;
+	reverse = false;
+	parent = nullptr;
+}
+
 void FLTexturedObject::set_st(float s, float t) {
 	_s = s;
 	_t = t;

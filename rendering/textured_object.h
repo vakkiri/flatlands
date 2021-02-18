@@ -43,6 +43,7 @@ class FLTexturedObject {
 	virtual float s();
 	virtual float t();
 
+	void init(float x, float y, float w, float h, float s, float t);
 	void set_st(float s, float t);
 	void set_x(float x);
 	void set_y(float y);

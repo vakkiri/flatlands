@@ -58,6 +58,7 @@ class FLTexturedSurface : public FLRenderedSurface {
 	FLTexturedSurface();
 	virtual void render();
 	virtual void update_buffers(std::vector<FLTexturedObject *> &objects);
+	virtual void update_buffers(std::vector<FLTexturedObject> &objects);
 	virtual void update_buffers(std::vector<int> &ids);
 	virtual void update_buffers(FLTexturedObject *object);
 

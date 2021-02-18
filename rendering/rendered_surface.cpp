@@ -128,6 +128,105 @@ void FLTexturedSurface::update_buffers(
 }
 
 void FLTexturedSurface::update_buffers(
+	std::vector<FLTexturedObject> &objects) {
+	unsigned int vert_size = 4; // location x, location y, tex x, tex y
+	num_verts = objects.size() * 4;
+	num_indices = objects.size() * 5;  // 4 verts + RESTART
+	unsigned int step = vert_size * 4; // vert_size * 4 verts per quad
+
+	float *vbuf =
+		new float[num_verts * vert_size]; // position verts + tex verts
+	unsigned int *ibuf = new unsigned int[num_indices];
+
+	float tleft;
+	float tright;
+	float ttop;
+	float tbot;
+
+	for (unsigned int i = 0; i < objects.size(); i++) {
+		if (!objects[i].is_visible()) {
+			tleft = 0.f;
+			tright = 0.f;
+			ttop = 0.f;
+			tbot = 0.f;
+		} else if (!objects[i].reversed()) {
+			tleft = (objects[i].s() / tex->w);
+			tright = tleft + (objects[i].w() / tex->w);
+			ttop = (objects[i].t() / tex->h);
+			tbot = ttop + (objects[i].h() / tex->h);
+		} else {
+			tright = (objects[i].s() / tex->w);
+			tleft = tright + (objects[i].w() / tex->w);
+			ttop = (objects[i].t() / tex->h);
+			tbot = ttop + (objects[i].h() / tex->h);
+		}
+
+		// vertex position
+		vbuf[(i * step)] = objects[i].x();
+		vbuf[(i * step) + 1] = objects[i].y();
+		vbuf[(i * step) + 4] = objects[i].x() + objects[i].w();
+		vbuf[(i * step) + 5] = objects[i].y();
+		vbuf[(i * step) + 8] = objects[i].x() + objects[i].w();
+		vbuf[(i * step) + 9] = objects[i].y() + objects[i].h();
+		vbuf[(i * step) + 12] = objects[i].x();
+		vbuf[(i * step) + 13] = objects[i].y() + objects[i].h();
+
+		// vertex texture position
+		vbuf[(i * step) + 2] = tleft;
+		vbuf[(i * step) + 3] = ttop;
+		vbuf[(i * step) + 6] = tright;
+		vbuf[(i * step) + 7] = ttop;
+		vbuf[(i * step) + 10] = tright;
+		vbuf[(i * step) + 11] = tbot;
+		vbuf[(i * step) + 14] = tleft;
+		vbuf[(i * step) + 15] = tbot;
+
+		// indicies
+		ibuf[(i * 5)] = i * 4;
+		ibuf[(i * 5) + 1] = (i * 4) + 1;
+		ibuf[(i * 5) + 2] = (i * 4) + 2;
+		ibuf[(i * 5) + 3] = (i * 4) + 3;
+		ibuf[(i * 5) + 4] = RESTART;
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, num_verts * vert_size * sizeof(float), vbuf,
+				 GL_STATIC_DRAW);
+
+	if (glGetError() != GL_NO_ERROR)
+		log_error("Error buffering vbo");
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, num_indices * sizeof(unsigned int),
+				 ibuf, GL_STATIC_DRAW);
+
+	if (glGetError() != GL_NO_ERROR)
+		log_error("Error buffering ibo");
+
+	glBindVertexArray(vao);
+
+	if (glGetError() != GL_NO_ERROR)
+		log_error("Error while binding VAO");
+
+	glPrimitiveRestartIndex(RESTART);
+
+	shader->enable_vertex_pointer();
+	shader->enable_tex_coord_pointer();
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	shader->set_vertex_pointer(4 * sizeof(float), NULL);
+	shader->set_tex_coord_pointer(4 * sizeof(float),
+								  (const void *)(2 * sizeof(float)));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBindVertexArray(0);
+
+	delete [] vbuf;
+	delete [] ibuf;
+}
+
+
+void FLTexturedSurface::update_buffers(
 	std::vector<FLTexturedObject *> &objects) {
 	unsigned int vert_size = 4; // location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;

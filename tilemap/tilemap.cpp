@@ -13,7 +13,8 @@
 #include "../rendering/textured_object.h"
 #include "../resources/fl_resources.h"
 
-FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
+FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) 
+	: bg_tiles(10000), fg_tiles(10000) {
 	tileset = 0;
 	this->w = w;
 	this->h = h;
@@ -31,8 +32,8 @@ FLTilemap::~FLTilemap() {
 }
 
 void FLTilemap::update_surface() {
-	bgsurface->update_buffers(bg_tiles);
-	fgsurface->update_buffers(fg_tiles);
+	bgsurface->update_buffers(bg_tiles.buf());
+	fgsurface->update_buffers(fg_tiles.buf());
 }
 
 void FLTilemap::set_solid_at(float x, float y) { collision_map[y][x] = true; }
@@ -41,22 +42,31 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 						 bool solid, int layer) {
 	// TODO: cell size should be loaded from a config file
 	FLResources &res = FLResources::getInstance();
-	float _s = index * cell_size;
-	float _t = 16 * tileset;
-	int tex_id = new_texturer(x, y, w, h, _s, _t);
+	float s = index * cell_size;
+	float t = 16 * tileset;
+	int id = -1;
 
-	if (tex_id > 0) {
-		if (layer == 0) {
-			bg_tiles.push_back(tex_id);
-		} else if (layer == 1) {
-			fg_tiles.push_back(tex_id);
+	if (layer == 0) {
+		id = bg_tiles.create();
+
+		if (id >= 0) {
+			bg_tiles[id].init(x, y, w, h, s, t);
 		}
+	} else if (layer == 1) {
+		id = fg_tiles.create();
 
+		if (id >= 0) {
+			fg_tiles[id].init(x, y, w, h, s, t);
+		}
+	} else {
+		std::cout << "ERROR: Invalid layer\n";
+	}
+
+	if (id >= 0) {
 		if (solid) {
-			// TODO: create pixel-level collision map for solid tiles based on alpha
 			for (int i = 0; i < 16; ++i) {
 				for (int j = 0; j < 16; ++j) {
-					if (res.get_image_transparency("tiles", _s + i, _t + j) > 0.0) {
+					if (res.get_image_transparency("tiles", s + i, t + j) > 0.0) {
 						set_solid_at(x + i, y + j);
 					}
 				}
@@ -82,14 +92,16 @@ bool FLTilemap::solid_at(float x, float y) {
 void FLTilemap::reset() {
 	reset_collision_map();
 
-	while (!bg_tiles.empty()) {
-		delete_texturer(bg_tiles.back());
-		bg_tiles.pop_back();
+	// TODO: this should not be necessary but requires refactoring
+	for (unsigned int i = 0; i < bg_tiles.size(); ++i) {
+		bg_tiles[i].set_visible(false);
 	}
-	while (!fg_tiles.empty()) {
-		delete_texturer(fg_tiles.back());
-		fg_tiles.pop_back();
+	for (unsigned int i = 0; i < fg_tiles.size(); ++i) {
+		fg_tiles[i].set_visible(false);
 	}
+
+	bg_tiles.clear();
+	fg_tiles.clear();
 }
 
 void FLTilemap::reset(unsigned int new_w, unsigned int new_h) {
