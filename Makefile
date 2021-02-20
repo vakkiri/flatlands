@@ -2,7 +2,7 @@ OBJS = *.cpp */*.cpp */*/*.cpp
 
 CC = g++
 
-COMPILER_FLAGS = -std=c++11 -Wall -Wextra -Werror -Wpedantic
+COMPILER_FLAGS = -std=c++17 -Wall -Wextra -Werror -Wpedantic
 
 DEBUG = -g -pg
 

@@ -7,7 +7,25 @@
 
 #include <iostream>
 
+#include "fl_static_buffer.h"
 #include "fl_shape.h"
+
+namespace FLShapes {
+	FLStaticBuffer<FLShape> shapes(10000);
+
+	FLAccessor<FLShape> create(float x, float y, float w, float h) {
+		FLAccessor<FLShape> ret = shapes.create();
+
+		if (!ret.null()) {
+			ret->init(x, y, w, h);
+		}
+
+		return ret;
+	}
+}
+
+// Default to a 0x0 rect
+FLShape::FLShape() : FLShape(0, 0, 0, 0) {}
 
 // Rect constructor
 FLShape::FLShape(float x, float y, float w, float h) {
@@ -56,6 +74,13 @@ FLShape::FLShape(std::vector<point> vertices) {
 		_w = max_x - min_x;
 		_h = max_y - min_y;
 	}
+}
+
+// This init function assumes a rect
+void FLShape::init(float x, float y, float w, float h) {
+	set_pos(x, y);
+	_w = w;
+	_h = h;
 }
 
 float FLShape::x() { return _x; }

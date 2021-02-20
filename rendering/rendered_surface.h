@@ -9,7 +9,7 @@
 #ifndef RENDERED_SURFACE_H_
 #define RENDERED_SURFACE_H_
 
-#include "../common/basic_types.h"
+#include "../common/common.h"
 
 #include "renderable.h"
 
@@ -58,8 +58,7 @@ class FLTexturedSurface : public FLRenderedSurface {
 	FLTexturedSurface();
 	virtual void render();
 	virtual void update_buffers(std::vector<FLTexturedObject *> &objects);
-	virtual void update_buffers(std::vector<FLTexturedObject> &objects);
-	virtual void update_buffers(std::vector<int> &ids);
+	virtual void update_buffers(FLStaticBuffer<FLTexturedObject> &objects);
 	virtual void update_buffers(FLTexturedObject *object);
 
 	void set_tex(texture *tex);

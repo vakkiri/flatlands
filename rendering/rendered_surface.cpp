@@ -116,19 +116,7 @@ void FLTexturedSurface::set_tex(std::string name) {
 }
 
 void FLTexturedSurface::update_buffers(
-	std::vector<int> &ids) {
-	// TODO: this is just an easy way of doing things while refactoring,
-	// this is super inefficient and should be written
-	std::vector<FLTexturedObject *> objs;
-	for (auto id : ids) {
-		objs.push_back(get_texturer(id));
-	}
-
-	update_buffers(objs);
-}
-
-void FLTexturedSurface::update_buffers(
-	std::vector<FLTexturedObject> &objects) {
+	FLStaticBuffer<FLTexturedObject> &objects) {
 	unsigned int vert_size = 4; // location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;
 	num_indices = objects.size() * 5;  // 4 verts + RESTART
@@ -143,33 +131,34 @@ void FLTexturedSurface::update_buffers(
 	float ttop;
 	float tbot;
 
-	for (unsigned int i = 0; i < objects.size(); i++) {
-		if (!objects[i].is_visible()) {
+	unsigned int i = 0;
+	for (auto obj : objects) {
+		if (!obj.is_visible()) {
 			tleft = 0.f;
 			tright = 0.f;
 			ttop = 0.f;
 			tbot = 0.f;
-		} else if (!objects[i].reversed()) {
-			tleft = (objects[i].s() / tex->w);
-			tright = tleft + (objects[i].w() / tex->w);
-			ttop = (objects[i].t() / tex->h);
-			tbot = ttop + (objects[i].h() / tex->h);
+		} else if (!obj.reversed()) {
+			tleft = (obj.s() / tex->w);
+			tright = tleft + (obj.w() / tex->w);
+			ttop = (obj.t() / tex->h);
+			tbot = ttop + (obj.h() / tex->h);
 		} else {
-			tright = (objects[i].s() / tex->w);
-			tleft = tright + (objects[i].w() / tex->w);
-			ttop = (objects[i].t() / tex->h);
-			tbot = ttop + (objects[i].h() / tex->h);
+			tright = (obj.s() / tex->w);
+			tleft = tright + (obj.w() / tex->w);
+			ttop = (obj.t() / tex->h);
+			tbot = ttop + (obj.h() / tex->h);
 		}
 
 		// vertex position
-		vbuf[(i * step)] = objects[i].x();
-		vbuf[(i * step) + 1] = objects[i].y();
-		vbuf[(i * step) + 4] = objects[i].x() + objects[i].w();
-		vbuf[(i * step) + 5] = objects[i].y();
-		vbuf[(i * step) + 8] = objects[i].x() + objects[i].w();
-		vbuf[(i * step) + 9] = objects[i].y() + objects[i].h();
-		vbuf[(i * step) + 12] = objects[i].x();
-		vbuf[(i * step) + 13] = objects[i].y() + objects[i].h();
+		vbuf[(i * step)] = obj.x();
+		vbuf[(i * step) + 1] = obj.y();
+		vbuf[(i * step) + 4] = obj.x() + obj.w();
+		vbuf[(i * step) + 5] = obj.y();
+		vbuf[(i * step) + 8] = obj.x() + obj.w();
+		vbuf[(i * step) + 9] = obj.y() + obj.h();
+		vbuf[(i * step) + 12] = obj.x();
+		vbuf[(i * step) + 13] = obj.y() + obj.h();
 
 		// vertex texture position
 		vbuf[(i * step) + 2] = tleft;
@@ -187,6 +176,8 @@ void FLTexturedSurface::update_buffers(
 		ibuf[(i * 5) + 2] = (i * 4) + 2;
 		ibuf[(i * 5) + 3] = (i * 4) + 3;
 		ibuf[(i * 5) + 4] = RESTART;
+
+		i += 1;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

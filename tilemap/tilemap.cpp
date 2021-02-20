@@ -32,8 +32,8 @@ FLTilemap::~FLTilemap() {
 }
 
 void FLTilemap::update_surface() {
-	bgsurface->update_buffers(bg_tiles.buf());
-	fgsurface->update_buffers(fg_tiles.buf());
+	bgsurface->update_buffers(bg_tiles);
+	fgsurface->update_buffers(fg_tiles);
 }
 
 void FLTilemap::set_solid_at(float x, float y) { collision_map[y][x] = true; }
@@ -44,25 +44,25 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	FLResources &res = FLResources::getInstance();
 	float s = index * cell_size;
 	float t = 16 * tileset;
-	int id = -1;
+	FLAccessor<FLTexturedObject> tex;
 
 	if (layer == 0) {
-		id = bg_tiles.create();
+		tex = bg_tiles.create();
 
-		if (id >= 0) {
-			bg_tiles[id].init(x, y, w, h, s, t);
+		if (!tex.null()) {
+			tex->init(x, y, w, h, s, t);
 		}
 	} else if (layer == 1) {
-		id = fg_tiles.create();
+		tex = fg_tiles.create();
 
-		if (id >= 0) {
-			fg_tiles[id].init(x, y, w, h, s, t);
+		if (!tex.null()) {
+			tex->init(x, y, w, h, s, t);
 		}
 	} else {
 		std::cout << "ERROR: Invalid layer\n";
 	}
 
-	if (id >= 0) {
+	if (!tex.null()) {
 		if (solid) {
 			for (int i = 0; i < 16; ++i) {
 				for (int j = 0; j < 16; ++j) {
@@ -91,14 +91,6 @@ bool FLTilemap::solid_at(float x, float y) {
 
 void FLTilemap::reset() {
 	reset_collision_map();
-
-	// TODO: this should not be necessary but requires refactoring
-	for (unsigned int i = 0; i < bg_tiles.size(); ++i) {
-		bg_tiles[i].set_visible(false);
-	}
-	for (unsigned int i = 0; i < fg_tiles.size(); ++i) {
-		fg_tiles[i].set_visible(false);
-	}
 
 	bg_tiles.clear();
 	fg_tiles.clear();

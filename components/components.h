@@ -8,6 +8,11 @@
 #ifndef FL_COMPONENTS_H_
 #define FL_COMPONENTS_H_
 
+#include <unordered_map>
+#include <variant>
+
+#include "../common/fl_accessor.h"
+
 #include "collider/fl_collider.h"
 #include "collider/fl_collider_manager.h"
 #include "interactable/fl_interactable.h"

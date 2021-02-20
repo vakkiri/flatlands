@@ -8,11 +8,11 @@
 #ifndef FL_STATIC_BUFFER_H_
 #define FL_STATIC_BUFFER_H_
 
-#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <cinttypes>
-#include "fl_static_buffer.h"
+
+#include "fl_accessor.h"
 
 template <typename T>
 class FLStaticBuffer {
@@ -75,7 +75,7 @@ class FLStaticBuffer {
 			uint8_t* used_ptr;
 		};
 
-                int create();
+                FLAccessor<T> create();
                 size_t size();
                 void destroy(int handle);
                 void clear();
@@ -91,6 +91,7 @@ class FLStaticBuffer {
                 std::vector<T> buffer;
                 std::vector<uint8_t> used;	// avoiding bool for now to allow regular vector access
                 unsigned int last_added_pos;
+		unsigned int buffer_size;
 
 };
 
@@ -103,8 +104,8 @@ FLStaticBuffer<T>::FLStaticBuffer(unsigned int size) {
 }
 
 template <typename T>
-int FLStaticBuffer<T>::create() {
-	int slot = -1;
+FLAccessor<T> FLStaticBuffer<T>::create() {
+	FLAccessor<T> ret = FLAccessor<T>();
 	int pos = last_added_pos + 1;
 	int end = last_added_pos;
 	
@@ -115,8 +116,9 @@ int FLStaticBuffer<T>::create() {
 	do {
 		if (!used[pos]) {
 			last_added_pos = pos;
-			slot = pos;
+			ret.create(pos, this);
 			used[pos] = true;
+			buffer_size += 1;
 			break;
 		}
 
@@ -127,13 +129,14 @@ int FLStaticBuffer<T>::create() {
 		}
 	} while (pos != end);
 
-	return slot;
+	return ret;
 }
 
 template <typename T>
 void FLStaticBuffer<T>::destroy(int handle) {
-	if (handle >= 0 && handle < buffer.size()) {
+	if (handle >= 0 && handle < buffer.size() && used[handle]) {
 		used[handle] = false;
+		buffer_size -= 1;
 	}
 }
 
@@ -141,11 +144,12 @@ template <typename T>
 void FLStaticBuffer<T>::clear() {
 	std::fill(used.begin(), used.end(), false);
 	last_added_pos = 0;
+	buffer_size = 0;
 }
 
 template <typename T>
 size_t FLStaticBuffer<T>::size() {
-	return buffer.size();
+	return buffer_size;
 }
 
 template <typename T>
