@@ -9,7 +9,7 @@
 #define TILEMAP_H_
 
 #include "../common/common.h"
-#include "../rendering/textured_object.h"
+#include "../components/texture/fl_texture.h"
 
 #include <string>
 #include <vector>
@@ -39,8 +39,8 @@ class FLTilemap {
 	float get_cell_size();
 
   protected:
-	FLStaticBuffer<FLTexturedObject> bg_tiles;
-	FLStaticBuffer<FLTexturedObject> fg_tiles;
+	std::vector<FLAccessor<FLTexture>> bg_tiles;
+	std::vector<FLAccessor<FLTexture>> fg_tiles;
 	std::vector<std::vector<bool>> collision_map;
 	unsigned int w;
 	unsigned int h;

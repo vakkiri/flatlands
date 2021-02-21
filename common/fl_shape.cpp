@@ -10,17 +10,24 @@
 #include "fl_static_buffer.h"
 #include "fl_shape.h"
 
-namespace FLShapes {
-	FLStaticBuffer<FLShape> shapes(10000);
+#define DEFAULT_NUM_SHAPES 10000
 
-	FLAccessor<FLShape> create(float x, float y, float w, float h) {
+namespace FLShapes {
+	FLStaticBuffer<FLShape> shapes(DEFAULT_NUM_SHAPES);
+
+	FLAccessor<FLShape> create(FLShape* parent, float x, float y, float w, float h) {
 		FLAccessor<FLShape> ret = shapes.create();
 
 		if (!ret.null()) {
 			ret->init(x, y, w, h);
+			ret->set_parent(parent);
 		}
 
 		return ret;
+	}
+
+	FLAccessor<FLShape> create(float x, float y, float w, float h) {
+		return create(nullptr, x, y, w, h);
 	}
 }
 
@@ -29,6 +36,8 @@ FLShape::FLShape() : FLShape(0, 0, 0, 0) {}
 
 // Rect constructor
 FLShape::FLShape(float x, float y, float w, float h) {
+	parent = nullptr;
+
 	_x = x;
 	_y = y;
 	_w = w;
@@ -83,8 +92,22 @@ void FLShape::init(float x, float y, float w, float h) {
 	_h = h;
 }
 
-float FLShape::x() { return _x; }
-float FLShape::y() { return _y; }
+float FLShape::x() { 
+	float out = _x;
+	if (parent != nullptr) {
+		out += parent->x();
+	}
+	return out; 
+}
+
+float FLShape::y() { 
+	float out = _y;
+	if (parent != nullptr) {
+		out += parent->y();
+	}
+	return out; 
+}
+
 float FLShape::w() { return _w; }
 float FLShape::h() { return _h; }
 
@@ -99,6 +122,8 @@ void FLShape::translate(const point &amt) {
 	_x += amt.x;
 	_y += amt.y;
 }
+
+void FLShape::set_parent(FLShape *parent) { this->parent = parent; }
 
 void FLShape::set_pos(float x, float y) { set_pos(point(x, y)); }
 

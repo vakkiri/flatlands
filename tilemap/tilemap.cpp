@@ -13,8 +13,10 @@
 #include "../rendering/textured_object.h"
 #include "../resources/fl_resources.h"
 
-FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) 
-	: bg_tiles(10000), fg_tiles(10000) {
+FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
+	bg_tiles.reserve(10000);
+	fg_tiles.reserve(10000);
+
 	tileset = 0;
 	this->w = w;
 	this->h = h;
@@ -44,22 +46,16 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	FLResources &res = FLResources::getInstance();
 	float s = index * cell_size;
 	float t = 16 * tileset;
-	FLAccessor<FLTexturedObject> tex;
+	FLAccessor<FLTexture> tex = FLTextures::create(x, y, w, h, s, t);
 
-	if (layer == 0) {
-		tex = bg_tiles.create();
-
-		if (!tex.null()) {
-			tex->init(x, y, w, h, s, t);
+	if (!tex.null()) {
+		if (layer == 0) {
+			bg_tiles.push_back(tex);
+		} else if (layer == 1) {
+			fg_tiles.push_back(tex);
+		} else {
+			std::cout << "ERROR: Invalid layer\n";
 		}
-	} else if (layer == 1) {
-		tex = fg_tiles.create();
-
-		if (!tex.null()) {
-			tex->init(x, y, w, h, s, t);
-		}
-	} else {
-		std::cout << "ERROR: Invalid layer\n";
 	}
 
 	if (!tex.null()) {
@@ -91,6 +87,13 @@ bool FLTilemap::solid_at(float x, float y) {
 
 void FLTilemap::reset() {
 	reset_collision_map();
+
+	for (auto tile : bg_tiles) {
+		FLTextures::destroy(tile);
+	}
+	for (auto tile : fg_tiles) {
+		FLTextures::destroy(tile);
+	}
 
 	bg_tiles.clear();
 	fg_tiles.clear();

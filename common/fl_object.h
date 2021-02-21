@@ -31,8 +31,8 @@ class FLObject {
 		*/
 
 		FLAccessor<FLShape> shape(std::string name);
-		/*
 		FLAccessor<FLTexture> texture(std::string name);
+		/*
 		FLAccessor<FLAnimation> animation(std::string name);
 		FLAccessor<FLCollider> collider(std::string name);
 		FLAccessor<FLPhysics> physics(std::string name);
@@ -40,9 +40,14 @@ class FLObject {
 	private:
 		//std::unordered_map<std:string, FLAccessor<FLObject>> children;
 		std::unordered_map<std::string, FLAccessor<FLShape>> shapes;
+		std::unordered_map<std::string, FLAccessor<FLTexture>> textures;
 		std::function<void()> update; // TODO: accept a timedelta?
 
 };
+
+namespace FLObjects {
+	FLAccessor<FLObject> create();
+}
 
 #endif
 

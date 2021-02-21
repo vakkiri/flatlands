@@ -134,7 +134,7 @@ FLAccessor<T> FLStaticBuffer<T>::create() {
 
 template <typename T>
 void FLStaticBuffer<T>::destroy(int handle) {
-	if (handle >= 0 && handle < buffer.size() && used[handle]) {
+	if (handle >= 0 && handle < (int) buffer.size() && used[handle]) {
 		used[handle] = false;
 		buffer_size -= 1;
 	}

@@ -26,12 +26,14 @@ class FLShape {
 		void translate(const point &amt);
 		void set_pos(float x, float y);
 		void set_pos(const point &p);
+		void set_parent(FLShape *parent);
 		float x();
 		float y();
 		float w();
 		float h();
 
 	protected:
+		FLShape* parent;
 		std::vector<point> vertices;
 		float _x;
 		float _y;
@@ -41,6 +43,7 @@ class FLShape {
 
 namespace FLShapes {
 	FLAccessor<FLShape> create(float x, float y, float w, float h);
+	FLAccessor<FLShape> create(FLShape* parent, float x, float y, float w, float h);
 }
 
 #endif

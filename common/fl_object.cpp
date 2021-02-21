@@ -3,12 +3,27 @@
  *
  */
 
+#include "fl_static_buffer.h"
 #include "fl_object.h"
+
+#define DEFAULT_NUM_OBJECTS 10000
+
+namespace FLObjects {
+	FLStaticBuffer<FLObject> objects(DEFAULT_NUM_OBJECTS);
+
+	FLAccessor<FLObject> create() {
+		return objects.create();
+	}
+}
 
 FLObject::FLObject() {
 }
 
 void FLObject::destroy() {
+	for (auto shape : shapes) {
+		shape.second.destroy();
+	}
+	shapes.clear();
 }
 
 void FLObject::add_shape(std::string name, float x, float y, float w, float h) {
@@ -30,9 +45,8 @@ FLAccessor<FLShape> FLObject::shape(std::string name) {
 	return shapes[name];
 }
 
-/*
 FLAccessor<FLTexture> FLObject::texture(std::string name) {
-	return std::get<FLAccessor<FLTexture>>(components[name]);
+	return textures[name];
 }
-*/
+
 
