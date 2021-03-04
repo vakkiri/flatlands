@@ -27,6 +27,7 @@ class FLColoredPolyShader;
 class FLRenderedSurface : public FLRenderable {
   public:
 	FLRenderedSurface();
+	~FLRenderedSurface();
 	virtual void render() = 0;
 
   protected:

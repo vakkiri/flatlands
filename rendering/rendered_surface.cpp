@@ -36,6 +36,12 @@ FLRenderedSurface::FLRenderedSurface() : FLRenderable() {
 	num_indices = 0;
 }
 
+FLRenderedSurface::~FLRenderedSurface() {
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+	glDeleteVertexArrays(1, &vao);
+}
+
 FLColoredSurface::FLColoredSurface() : FLRenderedSurface() { shader = nullptr; }
 
 void FLColoredSurface::render() {

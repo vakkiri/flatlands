@@ -62,12 +62,6 @@ void main_loop() {
 		if (SDL_GetTicks() < end_time) {
 			SDL_Delay(end_time - SDL_GetTicks());
 		}
-		/*
-		while (SDL_GetTicks() < end_time) {
-			// fl_update_server();
-			// fl_update_client();
-		}
-		*/
 	}
 }
 

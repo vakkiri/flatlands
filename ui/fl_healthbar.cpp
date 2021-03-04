@@ -90,10 +90,10 @@ void FLHealthbar::init_textures() {
 	icon_id = new_texturer(offset.x, offset.y, 16, 16, 0, 0);
 	bar_image_id = new_texturer(offset.x + 22, offset.y, 96, 16, 16, 0);
 
-	if (icon_id > 0) {
+	if (icon_id >= 0) {
 		textured_objects.push_back(icon_id);
 	}
-	if (bar_image_id > 0) {
+	if (bar_image_id >= 0) {
 		textured_objects.push_back(bar_image_id);
 	}
 }
