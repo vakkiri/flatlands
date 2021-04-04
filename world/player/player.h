@@ -91,7 +91,9 @@ class FLPlayer : public FLGameObject {
 	bool can_dash();
 	bool can_attack();
 	bool facing_right();
+	bool facing_down();
 
+	virtual void recoil();
 	virtual void drain_ammo();
 	virtual void add_ammo(int weapon, int num_clips);
 

@@ -174,6 +174,29 @@ void FLPlayer::bind_actions() {
 	animators["body"]->set_animation_update_method(animation_update);
 }
 
+void FLPlayer::recoil() {
+	float recoil = 0;
+	if (facing_down() || facing_right()) {
+		recoil = -weapon_stats[cur_weapon].recoil;
+	} else {
+		recoil = weapon_stats[cur_weapon].recoil;
+	}
+
+	if (facing_down()) {
+		recoil *= 1.25;
+		if (physics_handler()->yvel() > 0) {
+			physics_handler()->stopy();
+		}
+		falling_frames = 0;
+	}	
+
+	if (vertical_direction == FL_FORWARD) {
+		physics_handler()->accelerate(recoil, 0);
+	} else {
+		physics_handler()->accelerate(0, recoil);
+	}
+}
+
 // TODO: this should be named differently, it's really the entry point for an attack.
 void FLPlayer::drain_ammo() {
 	if (attack_held) {
@@ -182,11 +205,8 @@ void FLPlayer::drain_ammo() {
 		if (weapon_stats[cur_weapon].ammo <= 0) {
 			stop_attack();
 		}
-		if (facing_right()) {
-			physics_handler()->accelerate(-weapon_stats[cur_weapon].recoil, 0);
-		} else {
-			physics_handler()->accelerate(weapon_stats[cur_weapon].recoil, 0);
-		}
+
+		recoil();
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
@@ -558,6 +578,10 @@ void FLPlayer::interact() {
 void FLPlayer::enable_ability() { can_use_ability = true; }
 
 bool FLPlayer::facing_right() { return (!animators["body"]->reversed()); }
+
+bool FLPlayer::facing_down() { 
+	return (vertical_direction == FL_DOWN);
+}
 
 void FLPlayer::update_net() {
 	Uint32 tick = SDL_GetTicks();

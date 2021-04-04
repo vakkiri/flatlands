@@ -70,9 +70,6 @@ void FLCamera::bound() {
 	camera[3][0] = std::max(camera[3][0], -max_x);
 	camera[3][1] = std::min(camera[3][1], -min_y);
 	camera[3][1] = std::max(camera[3][1], -max_y);
-	std::cout << -max_x << std::endl;
-	std::cout << -max_y << std::endl;
-	std::cout << "-" << std::endl;
 }
 
 void FLCamera::update() {
