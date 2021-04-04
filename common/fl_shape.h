@@ -9,7 +9,6 @@
 #define FL_SHAPE_H_
 
 #include "basic_types.h"
-#include "fl_accessor.h"
 #include <vector>
 
 
@@ -42,8 +41,9 @@ class FLShape {
 };
 
 namespace FLShapes {
-	FLAccessor<FLShape> create(float x, float y, float w, float h);
-	FLAccessor<FLShape> create(FLShape* parent, float x, float y, float w, float h);
+	FLShape* create(float x, float y, float w, float h);
+	FLShape* create(FLShape* parent, float x, float y, float w, float h);
+	void destroy(FLShape* shape);
 }
 
 #endif

@@ -78,6 +78,16 @@ struct fl_textured_vertex {
 	float t;
 };
 
+struct fl_textured_quad {
+	float x;
+	float y;
+	float w;
+	float h;
+	float s;
+	float t;
+	bool reverse;
+};
+
 struct fl_line {
 	point u;
 	point v;

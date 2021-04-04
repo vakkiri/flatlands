@@ -62,6 +62,13 @@ void FLUIGroup::set_active_element(FLUIBasicElement *element) {
 }
 
 void FLUIGroup::render() {
+	for (auto [name, element] : elements) {
+		element->render();
+	}
+
+	vector_surface.render();
+	texture_surface.render();
+	text_surface.render();
 }
 
 void FLUIGroup::handle_up() {

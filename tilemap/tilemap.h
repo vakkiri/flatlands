@@ -11,10 +11,10 @@
 #include "../common/common.h"
 #include "../components/texture/fl_texture.h"
 
-#include <string>
 #include <vector>
+#include <string>
 
-class FLTexturedSurface;
+class FLTextureSurface;
 struct texture;
 
 class FLTilemap {
@@ -39,15 +39,15 @@ class FLTilemap {
 	float get_cell_size();
 
   protected:
-	std::vector<FLAccessor<FLTexture>> bg_tiles;
-	std::vector<FLAccessor<FLTexture>> fg_tiles;
 	std::vector<std::vector<bool>> collision_map;
 	unsigned int w;
 	unsigned int h;
 	unsigned int tileset;
 	float cell_size;
-	FLTexturedSurface *bgsurface;
-	FLTexturedSurface *fgsurface;
+	FLTextureSurface *bgsurface;
+	FLTextureSurface *fgsurface;
+	std::vector<FLTexture*> bg_tiles;
+	std::vector<FLTexture*> fg_tiles;
 };
 
 #endif

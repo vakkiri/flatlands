@@ -8,7 +8,7 @@
 #include <math.h>
 
 #include "../logging/logging.h"
-#include "../rendering/rendered_surface.h"
+#include "../rendering/fl_texture_surface.h"
 #include "../rendering/renderer.h"
 #include "../rendering/textured_object.h"
 #include "../resources/fl_resources.h"
@@ -22,8 +22,8 @@ FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
 	this->h = h;
 	this->cell_size = cell_size;
 
-	bgsurface = Renderer::getInstance().get_tilemap_bg_surface();
-	fgsurface = Renderer::getInstance().get_tilemap_fg_surface();
+	bgsurface = FLRenderer::get_texture_surface("bg_tiles");
+	fgsurface = FLRenderer::get_texture_surface("fg_tiles");
 
 	reset_collision_map();
 }
@@ -31,11 +31,6 @@ FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
 FLTilemap::~FLTilemap() {
 	log_progress("Deleting tilemap");
 	reset();
-}
-
-void FLTilemap::update_surface() {
-	bgsurface->update_buffers(bg_tiles);
-	fgsurface->update_buffers(fg_tiles);
 }
 
 void FLTilemap::set_solid_at(float x, float y) { collision_map[y][x] = true; }
@@ -46,19 +41,25 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	FLResources &res = FLResources::getInstance();
 	float s = index * cell_size;
 	float t = 16 * tileset;
-	FLAccessor<FLTexture> tex = FLTextures::create(x, y, w, h, s, t);
+	std::string surface = layer == 0 ? "bg_tiles" : "fg_tiles";
 
-	if (!tex.null()) {
+	FLTexture* tex = FLTextures::create(
+		surface, x, y, w, h, s, t
+	);
+
+	if (tex) {
 		if (layer == 0) {
 			bg_tiles.push_back(tex);
+			bgsurface->push(tex);
 		} else if (layer == 1) {
 			fg_tiles.push_back(tex);
+			fgsurface->push(tex);
 		} else {
 			std::cout << "ERROR: Invalid layer\n";
 		}
 	}
 
-	if (!tex.null()) {
+	if (tex) {
 		if (solid) {
 			for (int i = 0; i < 16; ++i) {
 				for (int j = 0; j < 16; ++j) {

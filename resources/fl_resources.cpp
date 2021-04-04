@@ -301,6 +301,8 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 		tilemap->reset(4096 * 2, 4096);
 		Renderer::getInstance().get_world_camera()->set_max_x(4096*4);
 		Renderer::getInstance().get_world_camera()->set_max_y(2300);
+		FLRenderer::get_world_camera()->set_max_x(4096*4);
+		FLRenderer::get_world_camera()->set_max_y(2300);
 
 		// TODO: load background from map file
 		FLGame::instance().environment()->set_background("night1");
@@ -530,8 +532,6 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&val, cur, sizeof(int16_t));
 			}
 		}
-
-		tilemap->update_surface();
 	}
 }
 

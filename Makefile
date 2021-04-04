@@ -14,5 +14,5 @@ all: $(OBJS)
 	$(CC) $(COMPILER_FLAGS) $(OBJS) $(LINKER_FLAGS) -o $(OBJ_NAME)
 
 debug: $(OBJS)
-	$(CC) $(OBJS) $(LINKER_FLAGS) $(DEBUG) -o $(OBJ_NAME)
+	$(CC) $(COMPILER_FLAGS) $(OBJS) $(LINKER_FLAGS) $(DEBUG) -o $(OBJ_NAME)
 

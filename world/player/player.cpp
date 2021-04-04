@@ -108,6 +108,7 @@ FLPlayer::FLPlayer() : FLGameObject(32, 64, 14, 32) {
 	animation_state = FL_PLAYER_IDLE;
 
 	Renderer::getInstance().get_world_camera()->set_parent(this);
+	FLRenderer::get_world_camera()->set_parent(this);
 }
 
 FLPlayer::~FLPlayer() {
@@ -651,6 +652,7 @@ bool FLPlayer::running() {
 void FLPlayer::reset_camera() {
 	// TODO: wherever this is called, just call this line instead
 	Renderer::getInstance().get_world_camera()->reset();
+	FLRenderer::get_world_camera()->reset();
 }
 
 int FLPlayer::get_chips() {

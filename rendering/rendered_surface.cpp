@@ -122,7 +122,7 @@ void FLTexturedSurface::set_tex(std::string name) {
 }
 
 void FLTexturedSurface::update_buffers(
-	std::vector<FLAccessor<FLTexture>> &objects) {
+	std::vector<FLTexture*> &objects) {
 	unsigned int vert_size = 4; // location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;
 	num_indices = objects.size() * 5;  // 4 verts + RESTART

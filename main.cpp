@@ -72,6 +72,7 @@ int main() {
 
 	if (renderer.init() && init_audio() && fl_init_net()) {
 		if (resources.init()) {
+			FLRenderer::init();
 			fl_start_server();
 			fl_start_client();
 			main_loop();

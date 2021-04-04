@@ -3,6 +3,8 @@
  *
  */
 
+#include "rendering/renderer.h"
+#include "rendering/fl_texture_surface.h"
 #include "../../common/fl_static_buffer.h"
 #include "../../common/fl_shape.h"
 #include "fl_texture.h"
@@ -12,39 +14,68 @@
 namespace FLTextures {
 	FLStaticBuffer<FLTexture> textures(DEFAULT_NUM_TEXTURES);
 
-	FLAccessor<FLTexture> create(FLAccessor<FLShape> shape, float s, float t, bool reverse) {
-		FLAccessor<FLTexture> ret = textures.create();
+	FLTexture* create(
+			std::string surface,
+			FLShape* shape,
+			float s,
+			float t,
+			bool reverse
+	) {
+		FLTexture* ret = textures.create();
 
-		if (!ret.null()) {
-			ret->init(shape, s, t, reverse);
+		if (ret) {
+			ret->init(surface, shape, s, t, reverse);
 		}
 
 		return ret;
 	}
 
-	FLAccessor<FLTexture> create(FLAccessor<FLShape> shape, float s, float t) {
-		return create(shape, s, t, false);
+	FLTexture* create(
+			std::string surface,
+			FLShape *shape, 
+			float s, 
+			float t
+	) {
+		return create(surface, shape, s, t, false);
 	}
 
-	FLAccessor<FLTexture> create(float x, float y, float w, float h, float s, float t, bool reverse) {
-		FLAccessor<FLShape> shape = FLShapes::create(x, y, w, h);
+	FLTexture* create(
+			std::string surface,
+			float x,
+			float y,
+			float w,
+			float h,
+			float s,
+			float t,
+			bool reverse
+	) {
+		FLShape* shape = FLShapes::create(x, y, w, h);
 
-		return create(shape, s, t, reverse);
+		return create(surface, shape, s, t, reverse);
 	}
 
-	FLAccessor<FLTexture> create(float x, float y, float w, float h, float s, float t) {
-		return create(x, y, w, h, s, t, false);
+	FLTexture* create(
+			std::string surface,
+			float x,
+			float y,
+			float w,
+			float h,
+			float s,
+			float t
+	) {
+		return create(surface, x, y, w, h, s, t, false);
 	}
 
-	void destroy(FLAccessor<FLTexture> tex) {
+	void destroy(FLTexture * tex) {
 		tex->destroy();	// call the texture destructor (free shape if necessary)
-		tex.destroy();	// call the accessor destructor (free texture)
+		textures.destroy(tex);
 	}
 }
 
 FLTexture::FLTexture() {}
 
-void FLTexture::init(FLAccessor<FLShape> shape, float s, float t, bool reverse) {
+void FLTexture::init(std::string surface, FLShape* shape, float s, float t, bool reverse) {
+	this->surface = FLRenderer::get_texture_surface(surface);
 	this->shape = shape;
 	_s = s;
 	_t = t;
@@ -54,7 +85,13 @@ void FLTexture::init(FLAccessor<FLShape> shape, float s, float t, bool reverse) 
 
 void FLTexture::destroy() {
 	if (!external_shape) {
-		shape.destroy();
+		FLShapes::destroy(shape);
+	}
+}
+
+void FLTexture::render() {
+	if (_visible) {
+		surface->push(this);
 	}
 }
 

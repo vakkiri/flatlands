@@ -27,6 +27,7 @@
 class FLAnimatedObject;
 class FLRenderable;
 class FLTexturedSurface;
+class FLTextureSurface;
 class FLTextSurface;
 class FLDistortionSurface;
 class FLWorldSurface;
@@ -140,5 +141,14 @@ class Renderer {
 	bool init();
 	void init_surface_textures();
 };
+
+// TODO: this should eventually replace the entire Renderer class
+namespace FLRenderer {
+	void init();
+	void render();
+	FLCamera* get_world_camera();
+	FLTextureSurface *get_texture_surface(std::string name);
+	FLTexturedRectShader& get_texture_shader();
+}
 
 #endif

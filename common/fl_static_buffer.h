@@ -8,11 +8,10 @@
 #ifndef FL_STATIC_BUFFER_H_
 #define FL_STATIC_BUFFER_H_
 
+#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <cinttypes>
-
-#include "fl_accessor.h"
 
 template <typename T>
 class FLStaticBuffer {
@@ -75,9 +74,10 @@ class FLStaticBuffer {
 			uint8_t* used_ptr;
 		};
 
-                FLAccessor<T> create();
+                T* create();
                 size_t size();
                 void destroy(int handle);
+                void destroy(T* object);
                 void clear();
                 std::vector<T> &buf();
 
@@ -104,8 +104,8 @@ FLStaticBuffer<T>::FLStaticBuffer(unsigned int size) {
 }
 
 template <typename T>
-FLAccessor<T> FLStaticBuffer<T>::create() {
-	FLAccessor<T> ret = FLAccessor<T>();
+T* FLStaticBuffer<T>::create() {
+	T* ret = nullptr;
 	int pos = last_added_pos + 1;
 	int end = last_added_pos;
 	
@@ -116,7 +116,7 @@ FLAccessor<T> FLStaticBuffer<T>::create() {
 	do {
 		if (!used[pos]) {
 			last_added_pos = pos;
-			ret.create(pos, this);
+			ret = &(buffer[pos]);
 			used[pos] = true;
 			buffer_size += 1;
 			break;
@@ -137,6 +137,21 @@ void FLStaticBuffer<T>::destroy(int handle) {
 	if (handle >= 0 && handle < (int) buffer.size() && used[handle]) {
 		used[handle] = false;
 		buffer_size -= 1;
+	}
+}
+
+template <typename T>
+void FLStaticBuffer<T>::destroy(T* object) {
+	if (object >= &(buffer[0]) && object <= &(buffer.back())) {
+		auto handle = object - &(buffer[0]);
+		if (used[handle]) {
+			used[handle] = false;
+			buffer_size -= 1;
+		} else {
+			std::cout << "Warning: tried to free unused handle.\n";
+		}
+	} else {
+		std::cout << "Warning: tried to free out of range handle.\n";
 	}
 }
 

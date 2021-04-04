@@ -11,7 +11,7 @@
 namespace FLObjects {
 	FLStaticBuffer<FLObject> objects(DEFAULT_NUM_OBJECTS);
 
-	FLAccessor<FLObject> create() {
+	FLObject* create() {
 		return objects.create();
 	}
 }
@@ -20,8 +20,11 @@ FLObject::FLObject() {
 }
 
 void FLObject::destroy() {
-	for (auto shape : shapes) {
-		shape.second.destroy();
+	for (auto [name, shape] : shapes) {
+		FLShapes::destroy(shape);
+	}
+	for (auto [name, tex] : textures) {
+		FLTextures::destroy(tex);
 	}
 	shapes.clear();
 }
@@ -41,12 +44,10 @@ void FLObject::add_texture(std::string name, std::string image, float x, float y
 	(void) t;
 }
 
-FLAccessor<FLShape> FLObject::shape(std::string name) {
+FLShape* FLObject::shape(std::string name) {
 	return shapes[name];
 }
 
-FLAccessor<FLTexture> FLObject::texture(std::string name) {
+FLTexture* FLObject::texture(std::string name) {
 	return textures[name];
 }
-
-

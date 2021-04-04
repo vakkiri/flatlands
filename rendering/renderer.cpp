@@ -9,6 +9,7 @@
 #include <glm/ext.hpp>
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
 
 #include "../common/basic_types.h"
 #include "../environment/fl_environment.h"
@@ -22,7 +23,94 @@
 #include "rendered_surface.h"
 #include "renderer.h"
 #include "fl_text_surface.h"
+#include "fl_texture_surface.h"
 #include "world_surface.h"
+
+namespace FLRenderer {
+	std::unordered_map<std::string, FLTextureSurface*> texture_surfaces;
+
+	FLTexturedRectShader texture_shader;
+
+	glm::mat4 projection_matrix;
+	FLCamera world_camera;
+
+	FLCamera* get_world_camera() {
+		return &world_camera;
+	}
+
+	void init_cameras() {
+		// TODO: move this internally
+		unsigned int screen_width = Renderer::getInstance().get_screen_width();
+		unsigned int screen_height = Renderer::getInstance().get_screen_height();
+        	projection_matrix = glm::ortho<GLfloat>(
+				0.0,
+				screen_width,
+				screen_height,
+				0.0, 1.0, -1.0
+		);
+
+		world_camera.set_scale(2.0);
+	}
+
+	void init_shaders() {
+		texture_shader.create_program("textured_rect_shader");
+		texture_shader.bind();
+		texture_shader.set_projection(projection_matrix);
+		texture_shader.update_pc_matrix();
+	}
+
+	void init_surfaces() {
+		FLTextureSurface *world_surface = new FLTextureSurface(
+			false,
+			"world"
+		);
+		FLTextureSurface *bg_tile_surface = new FLTextureSurface(
+			true,
+			"tiles"
+		);
+		FLTextureSurface *fg_tile_surface = new FLTextureSurface(
+			true,
+			"tiles"
+		);
+
+		world_surface->set_camera(&world_camera);
+		bg_tile_surface->set_camera(&world_camera);
+		fg_tile_surface->set_camera(&world_camera);
+
+		texture_surfaces["world"] = world_surface;
+		texture_surfaces["bg_tiles"] = bg_tile_surface;
+		texture_surfaces["fg_tiles"] = fg_tile_surface;
+	}
+
+	void init() {
+		init_cameras();
+		init_shaders();
+		init_surfaces();
+	}
+
+	void render() {
+		// TODO: create some kind of surface priorty so we can remove
+		// individual surface calls/dynamically add custom shader surfs
+		world_camera.update();
+
+		texture_surfaces["bg_tiles"]->render();
+		texture_surfaces["fg_tiles"]->render();
+		texture_surfaces["world"]->render();
+	}
+
+	FLTextureSurface *get_texture_surface(std::string name) {
+		if (texture_surfaces.contains(name)) {
+			return texture_surfaces[name];
+		} else {
+			std::cout << "Error: Texture surface " << name << " does not exist.\n";
+			return nullptr;
+		}
+	}
+
+	FLTexturedRectShader &get_texture_shader() {
+		return texture_shader;
+	}
+}
 
 void Renderer::flip_framebuffer() {
 	if (current_rendered_texture == &alt_rendered_texture) {
@@ -100,6 +188,8 @@ void Renderer::render() {
 		background_surface->set_tex(FLResources::getInstance().get_image(layer.tex));
 		background_surface->render();
 	}
+
+	FLRenderer::render();
 
 	// draw world -----------------------------------------
 	textured_rect_shader.bind();
