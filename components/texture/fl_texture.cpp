@@ -9,7 +9,7 @@
 #include "../../common/fl_shape.h"
 #include "fl_texture.h"
 
-#define DEFAULT_NUM_TEXTURES 10000
+#define DEFAULT_NUM_TEXTURES 40000
 
 namespace FLTextures {
 	FLStaticBuffer<FLTexture> textures(DEFAULT_NUM_TEXTURES);
@@ -22,7 +22,6 @@ namespace FLTextures {
 			bool reverse
 	) {
 		FLTexture* ret = textures.create();
-
 		if (ret) {
 			ret->init(surface, shape, s, t, reverse);
 		}
@@ -51,7 +50,12 @@ namespace FLTextures {
 	) {
 		FLShape* shape = FLShapes::create(x, y, w, h);
 
-		return create(surface, shape, s, t, reverse);
+		if (shape) {
+			return create(surface, shape, s, t, reverse);
+		} else {
+			std::cout << "Warning: Could not create shape for texture.\n";
+			return nullptr;
+		}
 	}
 
 	FLTexture* create(

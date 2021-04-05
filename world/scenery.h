@@ -8,8 +8,8 @@
 #ifndef SCENERY_H_
 #define SCENERY_H_
 
-#include "../common/game_object.h"
-#include "../rendering/animated_object.h"
+#include "common/game_object.h"
+#include "rendering/animated_object.h"
 
 class FLScenery : virtual public FLGameObject {
 	public:

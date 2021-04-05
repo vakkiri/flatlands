@@ -46,8 +46,7 @@ class FLTilemap {
 	float cell_size;
 	FLTextureSurface *bgsurface;
 	FLTextureSurface *fgsurface;
-	std::vector<FLTexture*> bg_tiles;
-	std::vector<FLTexture*> fg_tiles;
+	std::vector<FLTexture*> tiles;
 };
 
 #endif

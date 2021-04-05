@@ -14,8 +14,7 @@
 #include "../resources/fl_resources.h"
 
 FLTilemap::FLTilemap(unsigned int w, unsigned int h, unsigned int cell_size) {
-	bg_tiles.reserve(10000);
-	fg_tiles.reserve(10000);
+	tiles.reserve(20000);
 
 	tileset = 0;
 	this->w = w;
@@ -48,15 +47,10 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	);
 
 	if (tex) {
-		if (layer == 0) {
-			bg_tiles.push_back(tex);
-			bgsurface->push(tex);
-		} else if (layer == 1) {
-			fg_tiles.push_back(tex);
-			fgsurface->push(tex);
-		} else {
-			std::cout << "ERROR: Invalid layer\n";
-		}
+		tiles.push_back(tex);
+		tex->render();
+	} else {
+		std::cout << "Warning: could not create tile texture\n";
 	}
 
 	if (tex) {
@@ -89,15 +83,11 @@ bool FLTilemap::solid_at(float x, float y) {
 void FLTilemap::reset() {
 	reset_collision_map();
 
-	for (auto tile : bg_tiles) {
-		FLTextures::destroy(tile);
-	}
-	for (auto tile : fg_tiles) {
+	for (auto tile : tiles) {
 		FLTextures::destroy(tile);
 	}
 
-	bg_tiles.clear();
-	fg_tiles.clear();
+	tiles.clear();
 }
 
 void FLTilemap::reset(unsigned int new_w, unsigned int new_h) {

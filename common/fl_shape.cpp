@@ -10,7 +10,7 @@
 #include "fl_static_buffer.h"
 #include "fl_shape.h"
 
-#define DEFAULT_NUM_SHAPES 10000
+#define DEFAULT_NUM_SHAPES 40000
 
 namespace FLShapes {
 	FLStaticBuffer<FLShape> shapes(DEFAULT_NUM_SHAPES);
