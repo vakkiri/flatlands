@@ -5,8 +5,9 @@
 
 #include "rendering/renderer.h"
 #include "rendering/fl_texture_surface.h"
-#include "../../common/fl_static_buffer.h"
-#include "../../common/fl_shape.h"
+#include "common/fl_static_buffer.h"
+#include "common/fl_shape.h"
+#include "components/animator/fl_animator.h"
 #include "fl_texture.h"
 
 #define DEFAULT_NUM_TEXTURES 40000
@@ -85,6 +86,7 @@ void FLTexture::init(std::string surface, FLShape* shape, float s, float t, bool
 	_t = t;
 	_reverse = reverse;
 	_visible = true;
+	animator = NO_ANIMATOR;
 }
 
 void FLTexture::destroy() {
@@ -95,6 +97,11 @@ void FLTexture::destroy() {
 
 void FLTexture::render() {
 	if (_visible) {
+		if (animator != NO_ANIMATOR) {
+			_s = FLAnimators::s(animator);
+			_t = FLAnimators::t(animator);
+		}
+
 		surface->push(this);
 	}
 }

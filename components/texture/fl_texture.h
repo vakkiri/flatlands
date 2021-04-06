@@ -9,9 +9,11 @@
 #define FL_TEXTURE_H_
 
 #include <string>
-#include "../../common/fl_shape.h"
+#include "common/fl_shape.h"
+#include "common/basic_types.h"
 
 class FLTextureSurface;
+class FLAnimator;
 
 class FLTexture {
 	public:
@@ -43,6 +45,7 @@ class FLTexture {
 		bool _visible;
 		float _s;
 		float _t;
+		fl_handle animator;
 };
 
 namespace FLTextures {

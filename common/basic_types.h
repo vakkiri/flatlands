@@ -8,6 +8,10 @@
 #ifndef BASIC_TYPES_H_
 #define BASIC_TYPES_H_
 
+#define NULL_HANDLE -1
+
+typedef int fl_handle;
+
 struct point {
 	float x;
 	float y;
