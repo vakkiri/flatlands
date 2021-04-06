@@ -13,48 +13,30 @@
 #include "common/basic_types.h"
 
 class FLTextureSurface;
-class FLAnimator;
 
-class FLTexture {
-	public:
-		FLTexture();
-
-		void init(std::string surface, FLShape* shape, float s, float t, bool reverse);
-		void destroy();
-
-		void render();
-
-		void set_reverse(bool reverse);
-		bool reversed();
-
-		void set_visible(bool visible);
-		bool visible();
-
-		float x();
-		float y();
-		float w();
-		float h();
-		float s();
-		float t();
-
-	private:
-		FLTextureSurface *surface;
-		FLShape* shape;
-		bool external_shape;
-		bool _reverse;
-		bool _visible;
-		float _s;
-		float _t;
-		fl_handle animator;
+struct FLTexture {
+	FLTextureSurface *surface;
+	FLShape* shape;
+	bool external_shape;
+	bool reversed;
+	bool visible;
+	float s;
+	float t;
+	fl_handle animator;
 };
 
 namespace FLTextures {
-	FLTexture* create(std::string surface, float x, float y, float w, float h, float s, float t);
-	FLTexture* create(std::string surface, float x, float y, float w, float h, float s, float t, bool reverse);
-	FLTexture* create(std::string surface, FLShape *shape, float s, float t);
-	FLTexture* create(std::string surface, FLShape *shape, float s, float t, bool reverse);
+	fl_handle create(std::string surface, float x, float y, float w, float h, float s, float t);
+	fl_handle create(std::string surface, float x, float y, float w, float h, float s, float t, bool reversed);
+	fl_handle create(std::string surface, FLShape *shape, float s, float t);
+	fl_handle create(std::string surface, FLShape *shape, float s, float t, bool reversed);
+
+	FLTexture* get(fl_handle handle);
 
 	void destroy(FLTexture* tex);
+	void destroy(fl_handle handle);
+
+	void render(fl_handle handle);
 }
 
 #endif

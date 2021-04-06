@@ -79,26 +79,33 @@ void FLTextureSurface::update_buffers() {
 	unsigned int step = vert_size * 4; // 4 verts per quad
 
 	for (auto element : elements) {
-		tex_top = element->t() / tex.h;
-		tex_bot = tex_top + element->h() / tex.h;
+		float x = element->shape->x();
+		float y = element->shape->y();
+		float w = element->shape->w();
+		float h = element->shape->h();
+		float s = element->s;
+		float t = element->t;
 
-		if (!element->reversed()) {
-			tex_left = element->s() / tex.w;
-			tex_right = tex_left + element->w() / tex.w;
+		tex_top = t / tex.h;
+		tex_bot = tex_top + h / tex.h;
+
+		if (!element->reversed) {
+			tex_left = s / tex.w;
+			tex_right = tex_left + w / tex.w;
 		} else {
-			tex_right = element->s() / tex.w;
-			tex_left = tex_left + element->w() / tex.w;
+			tex_right = s / tex.w;
+			tex_left = tex_left + w / tex.w;
 		}
 
                 // vertex position
-                vbuf[(i * step)] = element->x();
-                vbuf[(i * step) + 1] = element->y();
-                vbuf[(i * step) + 4] = element->x() + element->w();
-                vbuf[(i * step) + 5] = element->y();
-                vbuf[(i * step) + 8] = element->x() + element->w();
-                vbuf[(i * step) + 9] = element->y() + element->h();
-                vbuf[(i * step) + 12] = element->x();
-                vbuf[(i * step) + 13] = element->y() + element->h();
+                vbuf[(i * step)] = x;
+                vbuf[(i * step) + 1] = y;
+                vbuf[(i * step) + 4] = x + w;
+                vbuf[(i * step) + 5] = y;
+                vbuf[(i * step) + 8] = x + w;
+                vbuf[(i * step) + 9] = y + h;
+                vbuf[(i * step) + 12] = x;
+                vbuf[(i * step) + 13] = y + h;
 
                 // vertex texture position
                 vbuf[(i * step) + 2] = tex_left;

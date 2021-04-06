@@ -16,9 +16,11 @@ namespace FLShapes {
 	FLStaticBuffer<FLShape> shapes(DEFAULT_NUM_SHAPES);
 
 	FLShape* create(FLShape* parent, float x, float y, float w, float h) {
-		FLShape* ret = shapes.create();
+		fl_handle handle = shapes.create();
+		FLShape* ret = nullptr;
 
-		if (ret) {
+		if (handle != NULL_HANDLE) {
+			ret = &shapes[handle];
 			ret->init(x, y, w, h);
 			ret->set_parent(parent);
 		}

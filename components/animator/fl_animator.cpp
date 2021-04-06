@@ -14,12 +14,10 @@ namespace FLAnimators {
 
 	fl_handle create(std::string animation_name) {
 		(void) animation_name;
-		fl_handle handle = NULL_HANDLE;
+		fl_handle handle = animators.create();
 
-		FLAnimator* animator = animators.create();
-
-		if (animator) {
-			handle = animator - &animators[0];
+		if (handle != NULL_HANDLE) {
+			// initialize...
 		}
 
 		return handle;
@@ -31,10 +29,17 @@ namespace FLAnimators {
 
 	void update() {
 		for (auto animator : animators) {
-			if (++animator.tick >= animator.num_ticks) {
-				animator.tick = 0;
-				if (++animator.frame >= animator.num_frames) {
-					animator.frame = 0;
+			if (!animator.paused) {
+				if (++animator.tick >= animator.num_ticks) {
+					animator.tick = 0;
+					if (++animator.frame >= animator.num_frames) {
+						if (animator.repeats) {
+							animator.frame = 0;
+						} else {
+							animator.finished = true;
+							animator.paused = true;
+						}
+					}
 				}
 			}
 		}

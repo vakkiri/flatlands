@@ -15,22 +15,43 @@
 namespace FLTextures {
 	FLStaticBuffer<FLTexture> textures(DEFAULT_NUM_TEXTURES);
 
-	FLTexture* create(
+	void init(
+		fl_handle handle,
+		std::string surface,
+		FLShape *shape,
+		float s,
+		float t,
+		bool reversed
+	) {
+		FLTexture * tex = get(handle);
+
+		tex->surface = FLRenderer::get_texture_surface(surface);
+		tex->shape = shape;
+		tex->s = s;
+		tex->t = t;
+		tex->reversed = reversed;
+		tex->visible = true;
+		tex->animator = NO_ANIMATOR;
+	}
+
+
+	fl_handle create(
 			std::string surface,
 			FLShape* shape,
 			float s,
 			float t,
-			bool reverse
+			bool reversed
 	) {
-		FLTexture* ret = textures.create();
-		if (ret) {
-			ret->init(surface, shape, s, t, reverse);
+		fl_handle handle = textures.create();
+
+		if (handle != NULL_HANDLE) {
+			init(handle, surface, shape, s, t, reversed);
 		}
 
-		return ret;
+		return handle;
 	}
 
-	FLTexture* create(
+	fl_handle create(
 			std::string surface,
 			FLShape *shape, 
 			float s, 
@@ -39,7 +60,7 @@ namespace FLTextures {
 		return create(surface, shape, s, t, false);
 	}
 
-	FLTexture* create(
+	fl_handle create(
 			std::string surface,
 			float x,
 			float y,
@@ -47,19 +68,19 @@ namespace FLTextures {
 			float h,
 			float s,
 			float t,
-			bool reverse
+			bool reversed
 	) {
 		FLShape* shape = FLShapes::create(x, y, w, h);
 
 		if (shape) {
-			return create(surface, shape, s, t, reverse);
+			return create(surface, shape, s, t, reversed);
 		} else {
 			std::cout << "Warning: Could not create shape for texture.\n";
-			return nullptr;
+			return NULL_HANDLE;
 		}
 	}
 
-	FLTexture* create(
+	fl_handle create(
 			std::string surface,
 			float x,
 			float y,
@@ -72,57 +93,31 @@ namespace FLTextures {
 	}
 
 	void destroy(FLTexture * tex) {
-		tex->destroy();	// call the texture destructor (free shape if necessary)
-		textures.destroy(tex);
-	}
-}
-
-FLTexture::FLTexture() {}
-
-void FLTexture::init(std::string surface, FLShape* shape, float s, float t, bool reverse) {
-	this->surface = FLRenderer::get_texture_surface(surface);
-	this->shape = shape;
-	_s = s;
-	_t = t;
-	_reverse = reverse;
-	_visible = true;
-	animator = NO_ANIMATOR;
-}
-
-void FLTexture::destroy() {
-	if (!external_shape) {
-		FLShapes::destroy(shape);
-	}
-}
-
-void FLTexture::render() {
-	if (_visible) {
-		if (animator != NO_ANIMATOR) {
-			_s = FLAnimators::s(animator);
-			_t = FLAnimators::t(animator);
+		if (!tex->external_shape) {
+			FLShapes::destroy(tex->shape);
 		}
 
-		surface->push(this);
+		textures.destroy(tex);
+	}
+
+	void destroy(fl_handle handle) {
+		FLTexture * tex = get(handle);
+		destroy(tex);
+	}
+
+	FLTexture *get(fl_handle handle) {
+		return &textures[handle];
+	}
+
+	void render(fl_handle handle) {
+		FLTexture * tex = get(handle);
+		if (tex->visible) {
+			if (tex->animator != NO_ANIMATOR) {
+				tex->s = FLAnimators::s(tex->animator);
+				tex->t = FLAnimators::t(tex->animator);
+			}
+
+			tex->surface->push(tex);
+		}
 	}
 }
-
-void FLTexture::set_reverse(bool reverse) { _reverse = reverse; }
-
-void FLTexture::set_visible(bool visible) { _visible = visible; }
-
-bool FLTexture::reversed() { return _reverse; }
-
-bool FLTexture::visible() { return _visible; }
-
-float FLTexture::x() { return shape->x(); }
-
-float FLTexture::y() { return shape->y(); }
-
-float FLTexture::w() { return shape->w(); }
-
-float FLTexture::h() { return shape->h(); }
-
-float FLTexture::s() { return _s; }
-
-float FLTexture::t() { return _t; }
-

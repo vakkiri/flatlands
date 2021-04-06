@@ -12,7 +12,15 @@ namespace FLObjects {
 	FLStaticBuffer<FLObject> objects(DEFAULT_NUM_OBJECTS);
 
 	FLObject* create() {
-		return objects.create();
+		FLObject* obj = nullptr;
+
+		fl_handle handle = objects.create();
+
+		if (handle != NULL_HANDLE) {
+			obj = &objects[handle];
+		} 
+
+		return obj;
 	}
 }
 

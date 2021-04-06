@@ -139,32 +139,39 @@ void FLTexturedSurface::update_buffers(
 
 	unsigned int i = 0;
 	for (auto obj : objects) {
-		if (!obj->visible()) {
+		float x = obj->shape->x();
+		float y = obj->shape->y();
+		float w = obj->shape->w();
+		float h = obj->shape->h();
+		float s = obj->s;
+		float t = obj->t;
+
+		if (!obj->visible) {
 			tleft = 0.f;
 			tright = 0.f;
 			ttop = 0.f;
 			tbot = 0.f;
-		} else if (!obj->reversed()) {
-			tleft = (obj->s() / tex->w);
-			tright = tleft + (obj->w() / tex->w);
-			ttop = (obj->t() / tex->h);
-			tbot = ttop + (obj->h() / tex->h);
+		} else if (!obj->reversed) {
+			tleft = (s / tex->w);
+			tright = tleft + (w / tex->w);
+			ttop = (t / tex->h);
+			tbot = ttop + (h / tex->h);
 		} else {
-			tright = (obj->s() / tex->w);
-			tleft = tright + (obj->w() / tex->w);
-			ttop = (obj->t() / tex->h);
-			tbot = ttop + (obj->h() / tex->h);
+			tright = (s / tex->w);
+			tleft = tright + (w / tex->w);
+			ttop = (t / tex->h);
+			tbot = ttop + (h / tex->h);
 		}
 
 		// vertex position
-		vbuf[(i * step)] = obj->x();
-		vbuf[(i * step) + 1] = obj->y();
-		vbuf[(i * step) + 4] = obj->x() + obj->w();
-		vbuf[(i * step) + 5] = obj->y();
-		vbuf[(i * step) + 8] = obj->x() + obj->w();
-		vbuf[(i * step) + 9] = obj->y() + obj->h();
-		vbuf[(i * step) + 12] = obj->x();
-		vbuf[(i * step) + 13] = obj->y() + obj->h();
+		vbuf[(i * step)] = x;
+		vbuf[(i * step) + 1] = y;
+		vbuf[(i * step) + 4] = x + w;
+		vbuf[(i * step) + 5] = y;
+		vbuf[(i * step) + 8] = x + w;
+		vbuf[(i * step) + 9] = y + h;
+		vbuf[(i * step) + 12] = x;
+		vbuf[(i * step) + 13] = y + h;
 
 		// vertex texture position
 		vbuf[(i * step) + 2] = tleft;

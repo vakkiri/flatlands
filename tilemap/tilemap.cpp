@@ -42,18 +42,18 @@ void FLTilemap::add_tile(float x, float y, float w, float h, float index,
 	float t = 16 * tileset;
 	std::string surface = layer == 0 ? "bg_tiles" : "fg_tiles";
 
-	FLTexture* tex = FLTextures::create(
+	fl_handle tex = FLTextures::create(
 		surface, x, y, w, h, s, t
 	);
 
-	if (tex) {
+	if (tex != NULL_HANDLE) {
 		tiles.push_back(tex);
-		tex->render();
+		FLTextures::render(tex);
 	} else {
 		std::cout << "Warning: could not create tile texture\n";
 	}
 
-	if (tex) {
+	if (tex != NULL_HANDLE) {
 		if (solid) {
 			for (int i = 0; i < 16; ++i) {
 				for (int j = 0; j < 16; ++j) {

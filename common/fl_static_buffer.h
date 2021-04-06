@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <cinttypes>
 
+#include "common/basic_types.h"
+
 template <typename T>
 class FLStaticBuffer {
         public:
@@ -74,9 +76,9 @@ class FLStaticBuffer {
 			uint8_t* used_ptr;
 		};
 
-                T* create();
+                fl_handle create();
                 size_t size();
-                void destroy(int handle);
+                void destroy(fl_handle handle);
                 void destroy(T* object);
                 void clear();
                 std::vector<T> &buf();
@@ -104,8 +106,8 @@ FLStaticBuffer<T>::FLStaticBuffer(unsigned int size) {
 }
 
 template <typename T>
-T* FLStaticBuffer<T>::create() {
-	T* ret = nullptr;
+fl_handle FLStaticBuffer<T>::create() {
+	fl_handle ret = NULL_HANDLE;
 	int pos = last_added_pos + 1;
 	int end = last_added_pos;
 	
@@ -116,7 +118,7 @@ T* FLStaticBuffer<T>::create() {
 	do {
 		if (!used[pos]) {
 			last_added_pos = pos;
-			ret = &(buffer[pos]);
+			ret = pos;
 			used[pos] = true;
 			buffer_size += 1;
 			break;
@@ -133,8 +135,8 @@ T* FLStaticBuffer<T>::create() {
 }
 
 template <typename T>
-void FLStaticBuffer<T>::destroy(int handle) {
-	if (handle >= 0 && handle < (int) buffer.size() && used[handle]) {
+void FLStaticBuffer<T>::destroy(fl_handle handle) {
+	if (handle >= 0 && handle < (fl_handle) buffer.size() && used[handle]) {
 		used[handle] = false;
 		buffer_size -= 1;
 	}
