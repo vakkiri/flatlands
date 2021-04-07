@@ -56,7 +56,9 @@ FLMonster::~FLMonster() {
 		if (num_explosions < 1) {
 			num_explosions = 1;
 		}
+
 		srand(FLGame::instance().environment()->player()->x()); // idk this is kind of an odd choice
+
 		for (int i = 0; i < num_explosions; ++i) {
 			float _x = x() + (w() / 2.f);
 			float _y = y() + (h() / 2.f);

@@ -6,7 +6,7 @@
  */
 
 #ifndef FL_HOPPER_H_
-#define FL_HOOPER_H_
+#define FL_HOPPER_H_
 
 #include "fl_monster.h"
 

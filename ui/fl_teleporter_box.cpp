@@ -18,7 +18,7 @@ FLTeleporterBox::FLTeleporterBox(float x, float y, std::vector<int>& area_ids)
 	: FLUIElement(0, 0) {
 	this->x = x;
 	this->y = y;
-	this->area_id = area_id;
+	this->area_id = area_ids[0];
 	this->area_ids = area_ids;
 
 	width = 16;

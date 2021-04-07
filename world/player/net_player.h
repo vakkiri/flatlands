@@ -22,7 +22,6 @@ class FLNetPlayer : public FLGameObject {
 	point vel;
 	point target;
 	uint32_t last_position_update;
-	bool reverse_last_frame;
 };
 
 #endif

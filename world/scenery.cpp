@@ -58,6 +58,7 @@ FLScenery::FLScenery(float x, float y, int index)
 			h = 81;
 		} else {
 			std::cout << "Warning: unknown scenery <" << index << ">" << std::endl;
+            return;
 		}
 
 		FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};

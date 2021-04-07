@@ -3,11 +3,12 @@ uniform sampler2D texUnit;
 
 in vec4 textColor;
 in vec2 texCoord;
+out vec4 fragColor;
 
 void main() {
-	gl_FragColor = texture( texUnit, texCoord );
-	if (gl_FragColor.a != 0.f) {
-		gl_FragColor = textColor;
+	fragColor = texture( texUnit, texCoord );
+	if (fragColor.a != 0.f) {
+		fragColor = textColor;
 	}
 }
 

@@ -31,7 +31,7 @@ FLUIGroup::~FLUIGroup() {
 }
 
 void FLUIGroup::add_vector(std::string name, FLUIVectorElement *vec) {
-	if (!elements.contains(name)) {
+	if (elements.find(name) == elements.end()) {
 		elements[name] = vec;
 		vectors.push_back(vec);
 	} else {
@@ -40,7 +40,7 @@ void FLUIGroup::add_vector(std::string name, FLUIVectorElement *vec) {
 }
 
 void FLUIGroup::add_texture(std::string name, FLUITextureElement *tex) {
-	if (!elements.contains(name)) {
+	if (elements.find(name) == elements.end()) {
 		elements[name] = tex;
 		textures.push_back(tex);
 	} else {
@@ -49,7 +49,7 @@ void FLUIGroup::add_texture(std::string name, FLUITextureElement *tex) {
 }
 
 void FLUIGroup::add_text(std::string name, FLUITextElement *text) {
-	if (!elements.contains(name)) {
+	if (elements.find(name) == elements.end()) {
 		elements[name] = text;
 		this->text.push_back(text);
 	} else {

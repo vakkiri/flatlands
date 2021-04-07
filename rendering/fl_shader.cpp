@@ -28,8 +28,7 @@ bool FLShader::bind() {
 
 	error = glGetError();
 	if (error != GL_NO_ERROR) {
-		log_error("Error binding shader.");
-		std::cout << error;
+        std::cout << "Error " << error << " while binding shader " << name << std::endl;
 		return false;
 	}
 
@@ -82,6 +81,7 @@ GLuint FLShader::load_shader(std::string path, GLenum shader_type) {
 }
 
 bool FLShader::create_program(std::string program_name) {
+    name = program_name;
 	std::string v_path = "shaders/" + program_name + ".glvs";
 	std::string f_path = "shaders/" + program_name + ".glfs";
 

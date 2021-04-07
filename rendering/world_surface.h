@@ -15,6 +15,7 @@ class FLWorldSurface : public FLTexturedSurface {
   public:
 	FLWorldSurface();
 
+    using FLTexturedSurface::update_buffers;
 	virtual void update_buffers();
 	virtual void add_object(FLTexturedObject *object);
 	virtual void remove_object(FLTexturedObject *object);

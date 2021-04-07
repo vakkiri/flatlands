@@ -15,6 +15,7 @@ class FLWaterSurface : public FLTexturedSurface {
 	public:
 		FLWaterSurface(float x, float y, float w, float h);
 		virtual void render() override;
+        using FLTexturedSurface::update_buffers;
 		virtual void update_buffers();
 	protected:
 		float x, y, w, h;

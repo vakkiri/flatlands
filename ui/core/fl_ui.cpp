@@ -25,7 +25,7 @@ namespace FLUI {
 
 	FLUIGroup *create_group(std::string name, bool active) {
 		FLUIGroup* group = nullptr;
-		if (element_groups.contains(name)) {
+		if (element_groups.find(name) != element_groups.end()) {
 			std::cout << "Error: ui group " << name << " already exists\n";
 		} else {
 			group = new FLUIGroup(name);
@@ -40,7 +40,7 @@ namespace FLUI {
 	}
 
 	void remove_group(std::string name) {
-		if (element_groups.contains(name)) {
+		if (element_groups.find(name) != element_groups.end()) {
 			FLUIGroup *group = element_groups[name];
 			element_groups.erase(element_groups.find(name));
 

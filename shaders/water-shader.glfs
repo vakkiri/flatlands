@@ -3,6 +3,7 @@ uniform sampler2D texUnit;
 uniform float time;
 
 in vec2 texCoord;
+out vec4 fragColor;
 
 void main() {
 	vec2 coord;
@@ -16,11 +17,11 @@ void main() {
 	coord.y += 0.005 * cos((time * 3) * sin(coord.x));
 	coord.y = max(coord.y, 0);
 
-	gl_FragColor = texture( texUnit, coord );
-	gl_FragColor *= 1 + 0.01 * abs(sin(texCoord.x * time * 100));
-	gl_FragColor.b *= 1.1;
-	gl_FragColor.r *= 0.8;
-	gl_FragColor *= 0.9;
-	gl_FragColor.a = 1.0;
+	fragColor = texture( texUnit, coord );
+	fragColor *= 1 + 0.01 * abs(sin(texCoord.x * time * 100));
+	fragColor.b *= 1.1;
+	fragColor.r *= 0.8;
+	fragColor *= 0.9;
+	fragColor.a = 1.0;
 }
 

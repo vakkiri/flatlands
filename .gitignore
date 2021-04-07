@@ -1,4 +1,5 @@
 flatlands
+flatlands.dSYM/
 test-assets/*
 assets/*
 *.swp

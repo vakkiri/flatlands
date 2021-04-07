@@ -26,7 +26,7 @@ class FLDialogueBox : public FLUIElement {
 	FLDialogueBox() = delete;
 	FLDialogueBox(std::vector<fl_message> text);
 
-	virtual void accept();
+	virtual void accept() override;
 	std::vector<int>& get_textured_objects() override;
   protected:
 	virtual void init_textures();

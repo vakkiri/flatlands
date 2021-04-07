@@ -248,7 +248,7 @@ void FLClient::handle_packet() {
 		break;
 	}
 
-	delete data;
+	delete [] data;
 }
 
 void FLClient::update_player_pos(int slot, float x, float y, int animation) {

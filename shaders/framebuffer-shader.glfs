@@ -3,9 +3,10 @@ uniform sampler2D texUnit;
 uniform float time;
 
 in vec2 texCoord;
+out vec4 fragColor;
 
 void main() {
 	vec2 coord = texCoord;
-	gl_FragColor = texture( texUnit, texCoord );
+	fragColor = texture( texUnit, texCoord );
 }
 

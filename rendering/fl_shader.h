@@ -40,6 +40,8 @@ class FLShader {
 	glm::mat4 projection_matrix;
 	glm::mat4 camera_matrix;
 	GLint pc_matrix_location;
+
+    std::string name;
 };
 
 #endif

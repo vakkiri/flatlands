@@ -99,7 +99,7 @@ namespace FLRenderer {
 	}
 
 	FLTextureSurface *get_texture_surface(std::string name) {
-		if (texture_surfaces.contains(name)) {
+		if (texture_surfaces.find(name) != texture_surfaces.end()) {
 			return texture_surfaces[name];
 		} else {
 			std::cout << "Error: Texture surface " << name << " does not exist.\n";

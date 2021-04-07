@@ -21,6 +21,7 @@ class FLTextSurface : public FLTexturedSurface {
 		virtual void render();
 		virtual void add_character(fl_character& c);
 		virtual void add_character(float x, float y, char c);
+        using FLTexturedSurface::update_buffers;
 		virtual void update_buffers();
 
 		virtual void set_font(FLBitmapFont *font);

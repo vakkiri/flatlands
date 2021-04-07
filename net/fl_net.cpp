@@ -122,6 +122,6 @@ void destroy_net_obj(uint16_t id, bool synchronize) {
 		Uint8 *data = new Uint8[2];
 		memcpy(data, &id, sizeof(uint16_t));
 		send_udp_to_server(FL_MSG_DEL_OBJ, data, synchronize);
-		delete data;
+		delete [] data;
 	}
 }
