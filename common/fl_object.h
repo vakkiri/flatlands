@@ -12,7 +12,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "../components/components.h"
+#include "common/basic_types.h"
+#include "components/components.h"
 
 class FLObject {
 	public:
@@ -27,10 +28,10 @@ class FLObject {
 		FLTexture* texture(std::string name);
 
 	private:
+		std::unordered_map<std::string, fl_state> states;
 		std::unordered_map<std::string, FLShape*> shapes;
 		std::unordered_map<std::string, FLTexture*> textures;
-		std::function<void()> update; // TODO: accept a timedelta?
-
+		std::function<void()> update;
 };
 
 namespace FLObjects {

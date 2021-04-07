@@ -12,6 +12,11 @@
 namespace FLAnimators {
 	FLStaticBuffer<FLAnimator> animators(DEFAULT_NUM_ANIMATORS);
 
+	void init(fl_handle handle) {
+		(void) handle;
+		// ...
+	}
+
 	fl_handle create(std::string animation_name) {
 		(void) animation_name;
 		fl_handle handle = animators.create();
@@ -48,7 +53,8 @@ namespace FLAnimators {
 	float s(fl_handle handle) {
 		if (handle != NULL_HANDLE) {
 			FLAnimator* animator = &animators[handle];
-			return animator->s[animator->frame];
+			FLAnimation* animation = animator->animation;
+			return animation->s[animator->frame];
 		} else {
 			std::cout << "Warning: Tried to access animator with null handle.\n";
 			return 0;
@@ -58,7 +64,8 @@ namespace FLAnimators {
 	float t(fl_handle handle) {
 		if (handle != NULL_HANDLE) {
 			FLAnimator* animator = &animators[handle];
-			return animator->t[animator->frame];
+			FLAnimation* animation = animator->animation;
+			return animation->t[animator->frame];
 		} else {
 			std::cout << "Warning: Tried to access animator with null handle.\n";
 			return 0;

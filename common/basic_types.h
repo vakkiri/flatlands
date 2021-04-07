@@ -11,6 +11,7 @@
 #define NULL_HANDLE -1
 
 typedef int fl_handle;
+typedef unsigned int fl_state;
 
 struct point {
 	float x;
