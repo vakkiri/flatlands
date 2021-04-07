@@ -8,6 +8,7 @@
 #ifndef FL_ANIMATOR_H_
 #define FL_ANIMATOR_H_
 
+#include <functional>
 #include <vector>
 
 #include "common/basic_types.h"
@@ -18,18 +19,14 @@
 struct FLAnimation {
 	float s[MAX_STEPS];
 	float t[MAX_STEPS];
-	float w[MAX_STEPS];
-	float h[MAX_STEPS];
 	unsigned int num_ticks;
 	unsigned int num_frames;
 	bool repeats;
 };
 
 struct FLAnimator {
-	float s[MAX_STEPS];
-	float t[MAX_STEPS];
-	float w[MAX_STEPS];
-	float h[MAX_STEPS];
+	FLAnimation *animation;
+	std::vector<std::function<void()>> callbacks[MAX_STEPS];
 	unsigned int tick;
 	unsigned int num_ticks;
 	unsigned int frame;
@@ -48,7 +45,6 @@ namespace FLAnimators {
 
 	float s(fl_handle handle);
 	float t(fl_handle handle);
-
 }
 
 #endif
