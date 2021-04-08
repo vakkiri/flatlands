@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "components/texture/fl_texture.h"
 #include "logging/logging.h"
 #include "resources/fl_resources.h"
 #include "fl_texture_surface.h"
@@ -28,7 +29,7 @@ FLTextureSurface::FLTextureSurface(bool persistent, texture tex) :
 	persistent(persistent),
 	tex(tex) {}
 
-void FLTextureSurface::push(FLTexture *element) {
+void FLTextureSurface::push(fl_handle element) {
 	elements.push_back(element);
 	dirty = true;
 }
@@ -79,17 +80,17 @@ void FLTextureSurface::update_buffers() {
 	unsigned int step = vert_size * 4; // 4 verts per quad
 
 	for (auto element : elements) {
-		float x = element->shape->x();
-		float y = element->shape->y();
-		float w = element->shape->w();
-		float h = element->shape->h();
-		float s = element->s;
-		float t = element->t;
+		float x = FLTextures::x(element);
+		float y = FLTextures::y(element);
+		float w = FLTextures::w(element);
+		float h = FLTextures::h(element);
+		float s = FLTextures::s(element);
+		float t = FLTextures::t(element);
 
 		tex_top = t / tex.h;
 		tex_bot = tex_top + h / tex.h;
 
-		if (!element->reversed) {
+		if (!FLTextures::reversed(element)) {
 			tex_left = s / tex.w;
 			tex_right = tex_left + w / tex.w;
 		} else {

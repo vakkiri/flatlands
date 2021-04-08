@@ -1,61 +1,121 @@
 /*
- * 	fl_game_object
+ * 	fl_game_object.cpp
  *
  */
 
+#include <iostream>
 #include "fl_static_buffer.h"
 #include "fl_object.h"
+#include "components/components.h"
 
 #define DEFAULT_NUM_OBJECTS 10000
 
 namespace FLObjects {
 	FLStaticBuffer<FLObject> objects(DEFAULT_NUM_OBJECTS);
 
-	FLObject* create() {
-		FLObject* obj = nullptr;
+	void pass() {} // pass function for objects with no update
 
+	fl_handle create(fl_handle parent) {
 		fl_handle handle = objects.create();
 
+		// Resetting attributes is done lazilly, so it is here
+		// instead of destroy
 		if (handle != NULL_HANDLE) {
-			obj = &objects[handle];
-		} 
+			objects[handle].handle = handle;
+			objects[handle].parent = parent;
+			objects[handle].x = 0;
+			objects[handle].y = 0;
+			objects[handle].states.clear();
+			objects[handle].textures.clear();
+			objects[handle].update = pass;
+		}
 
-		return obj;
+		return handle;
 	}
-}
 
-FLObject::FLObject() {
-}
-
-void FLObject::destroy() {
-	for (auto [name, shape] : shapes) {
-		FLShapes::destroy(shape);
+	fl_handle create() {
+		return create(NULL_HANDLE);
 	}
-	for (auto [name, tex] : textures) {
-		FLTextures::destroy(tex);
+
+	FLObject* get(fl_handle handle) {
+		if (handle != NULL_HANDLE) {
+			return &objects[handle];
+		} else {
+			std::cout << "Tried to access null object handle.\n";
+			return nullptr;
+		}
 	}
-	shapes.clear();
-}
 
-void FLObject::add_shape(std::string name, float x, float y, float w, float h) {
-	shapes[name] = FLShapes::create(x, y, w, h);
-}
+	void destroy(fl_handle handle) {
+		// TODO: should we keep track of children, so they
+		// can be destroyed as well?
+		for (auto [name, texture] : objects[handle].textures) {
+			FLTextures::destroy(texture);
+		}
 
-void FLObject::add_texture(std::string name, std::string image, float x, float y, float w, float h, float s, float t) {
-	(void) name;
-	(void) image;
-	(void) x;
-	(void) y;
-	(void) w;
-	(void) h;
-	(void) s;
-	(void) t;
-}
+		objects.destroy(handle);
+	}
 
-FLShape* FLObject::shape(std::string name) {
-	return shapes[name];
-}
+	void update() {
+		for (auto obj : objects) {
+			obj.update();
+		}
+	}
 
-FLTexture* FLObject::texture(std::string name) {
-	return textures[name];
+	void set_pos(fl_handle handle, float x, float y) {
+		if (handle != NULL_HANDLE) {
+			objects[handle].x = x;
+			objects[handle].y = y;
+		} else {
+			std::cout << "Error: tried to position of object with null handle.";
+		}
+	}
+
+        void add_texture(
+                fl_handle handle,
+		std::string name,
+                std::string surface,
+                float s,
+                float t,
+		float w,
+		float h,
+		bool reversed
+        ) {
+		fl_handle texture = FLTextures::create(surface, handle, s, t, w, h, reversed);
+
+		objects[handle].textures[name] = texture;
+	}
+
+        void add_texture(
+                fl_handle handle,
+		std::string name,
+                std::string surface,
+                float s,
+                float t,
+		float w,
+		float h
+        ) {
+		add_texture(handle, name, surface, s, t, w, h, false);
+	}
+
+	float x(fl_handle handle) {
+		float x = objects[handle].x;
+
+		if (objects[handle].parent != NULL_HANDLE) {
+			x += objects[objects[handle].parent].x;
+		}
+
+		return x;
+	}
+
+	float y(fl_handle handle) {
+		float y = objects[handle].y;
+
+		if (objects[handle].parent != NULL_HANDLE) {
+			y += objects[objects[handle].parent].y;
+		}
+
+		return y;
+	}
+
 }

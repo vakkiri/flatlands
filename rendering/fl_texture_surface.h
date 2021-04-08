@@ -10,7 +10,6 @@
 
 #include <string>
 
-#include "components/texture/fl_texture.h"
 #include "common/basic_types.h"
 #include "rendering/rendered_surface.h"
 #include "rendering/texture.h"
@@ -24,7 +23,7 @@ class FLTextureSurface : public FLRenderedSurface {
 		FLTextureSurface(bool persistent, texture tex);
 		FLTextureSurface(bool persistent, std::string tex);
 
-		void push(FLTexture* element);
+		void push(fl_handle element);
 		void render();
 		void set_tex(texture tex);
 		void set_tex(std::string name);
@@ -37,7 +36,7 @@ class FLTextureSurface : public FLRenderedSurface {
 		bool dirty;
 		int rendered_indices;
 		texture tex;
-		std::vector<FLTexture*> elements;
+		std::vector<fl_handle> elements;
 };
 
 #endif

@@ -6,8 +6,42 @@
 #include <vector>
 #include <iostream>
 
+#include "common/basic_types.h"
 #include "scenery.h"
 #include "../rendering/renderer.h"
+
+/*
+namespace FLScenery {
+	std::vector<fl_handle> scenery;
+
+	void init(fl_handle handle, float x, float y, int type) {
+		// TODO: grab w/h/s/t from file
+		float s = 0;
+		float t = 0;
+		float w = 256;
+		float h = 256;
+
+		FLObjects::set_shape(handle, x, y, w, h);
+		FLObjects::add_texture(handle, "", "world", s, t);
+	}
+
+	void create(float x, float y, int type) {
+		fl_handle new_scenery = FLObjects::create();
+
+		if (new_scenery != NULL_HANDLE) {
+			init(handle, x, y, type);
+		} else {
+			std::cout << "Warning: could not create scenery.\n";
+		}
+	}
+
+	void clear() {
+		while (!scenery.empty()) {
+			FLObjects::destroy(scenery.back());
+			scenery.pop_back();
+		}
+	}
+}*/
 
 static std::vector<FLScenery*> scenery;
 

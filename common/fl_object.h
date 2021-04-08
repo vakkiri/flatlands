@@ -13,29 +13,52 @@
 #include <unordered_map>
 
 #include "common/basic_types.h"
-#include "components/components.h"
 
-class FLObject {
-	public:
-		FLObject();
-
-		void destroy();
-
-		void add_shape(std::string name, float x, float y, float w, float h);
-		void add_texture(std::string name, std::string image, float x, float y, float w, float h, float s, float t);
-
-		FLShape* shape(std::string name);
-		FLTexture* texture(std::string name);
-
-	private:
-		std::unordered_map<std::string, fl_state> states;
-		std::unordered_map<std::string, FLShape*> shapes;
-		std::unordered_map<std::string, FLTexture*> textures;
-		std::function<void()> update;
+struct FLObject {
+	// TODO: keep track of children via a map?
+	fl_handle handle;
+	fl_handle parent;
+	float x;
+	float y;
+	std::unordered_map<std::string, fl_state> states;
+	std::unordered_map<std::string, fl_handle> textures;
+	std::function<void()> update;
 };
 
 namespace FLObjects {
-	FLObject* create();
+	fl_handle create();
+	fl_handle create(fl_handle parent);
+	FLObject* get(fl_handle handle);
+	void destroy(fl_handle handle);
+	void update();
+
+	// member modification
+	void set_pos(fl_handle handle, float x, float y);
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		float s,
+		float t,
+		float w,
+		float h,
+		bool reversed
+	);
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		float s,
+		float t,
+		float w,
+		float h
+	);
+
+	// member access
+	float x(fl_handle handle);
+	float y(fl_handle handle);
 }
 
 #endif

@@ -9,8 +9,9 @@
 #define FL_UI_TEXTURE_ELEMENT_H_
 
 #include "common/basic_types.h"
-#include "components/texture/fl_texture.h"
 #include "fl_ui_basic_element.h"
+
+class FLTextureSurface;
 
 class FLUITextureElement : public FLUIBasicElement {
 	public:
@@ -20,7 +21,7 @@ class FLUITextureElement : public FLUIBasicElement {
 		virtual void render();
 
 	private:
-		FLTexture* texture;
+		fl_handle texture;
 		FLTextureSurface *surface;
 };
 

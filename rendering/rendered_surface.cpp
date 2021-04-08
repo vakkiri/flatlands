@@ -122,7 +122,8 @@ void FLTexturedSurface::set_tex(std::string name) {
 }
 
 void FLTexturedSurface::update_buffers(
-	std::vector<FLTexture*> &objects) {
+	std::vector<fl_handle> &objects) {
+	/*
 	unsigned int vert_size = 4; // location x, location y, tex x, tex y
 	num_verts = objects.size() * 4;
 	num_indices = objects.size() * 5;  // 4 verts + RESTART
@@ -139,12 +140,12 @@ void FLTexturedSurface::update_buffers(
 
 	unsigned int i = 0;
 	for (auto obj : objects) {
-		float x = obj->shape->x();
-		float y = obj->shape->y();
-		float w = obj->shape->w();
-		float h = obj->shape->h();
-		float s = obj->s;
-		float t = obj->t;
+		float x = FLTextures::x(obj);
+		float y = FLTextures::y(obj);
+		float w = FLTextures::w(obj);
+		float h = FLTextures::h(obj);
+		float s = FLTextures::s(obj);
+		float t = FLTextures::t(obj);
 
 		if (!obj->visible) {
 			tleft = 0.f;
@@ -227,6 +228,8 @@ void FLTexturedSurface::update_buffers(
 
 	delete [] vbuf;
 	delete [] ibuf;
+	*/
+	(void) objects;
 }
 
 
