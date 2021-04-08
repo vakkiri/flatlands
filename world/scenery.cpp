@@ -10,26 +10,66 @@
 #include "scenery.h"
 #include "../rendering/renderer.h"
 
-/*
 namespace FLScenery {
 	std::vector<fl_handle> scenery;
 
 	void init(fl_handle handle, float x, float y, int type) {
-		// TODO: grab w/h/s/t from file
-		float s = 0;
-		float t = 0;
-		float w = 256;
-		float h = 256;
+		// TODO: LOAD FROM FILE LOL RIGHT NOW B4 I DO ANYTHING ELSE
+		float s, t, w, h;
 
-		FLObjects::set_shape(handle, x, y, w, h);
-		FLObjects::add_texture(handle, "", "world", s, t);
+		if (type == 101) {
+			s = 0;
+			t = 0;
+			w = 98;
+			h = 88;
+		} else if (type == 102) {
+			s = 99;
+			t = 0;
+			w = 35;
+			h = 27;
+		} else if (type == 103) {
+			s = 0;
+			t = 96;
+			w = 245;
+			h = 68;
+		} else if (type == 104) {
+			s = 144;
+			t = 0;
+			w = 32;
+			h = 71;
+		} else if (type == 105) {
+			s = 256;
+			t = 0;
+			w = 51;
+			h = 98;
+		} else if (type == 106) {
+			s = 320;
+			t = 0;
+			w = 48;
+			h = 64;
+		} else if (type == 107) {
+			s = 368;
+			t = 0;
+			w = 53;
+			h = 70;
+		} else if (type == 108) {
+			s = 176;
+			t = 0;
+			w = 32;
+			h = 81;
+		} else {
+            		return;
+		}
+
+		FLObjects::set_pos(handle, x, y);
+		FLObjects::add_texture(handle, "", "scenery", s, t, w, h);
 	}
 
 	void create(float x, float y, int type) {
 		fl_handle new_scenery = FLObjects::create();
 
 		if (new_scenery != NULL_HANDLE) {
-			init(handle, x, y, type);
+			init(new_scenery, x, y, type);
 		} else {
 			std::cout << "Warning: could not create scenery.\n";
 		}
@@ -41,77 +81,4 @@ namespace FLScenery {
 			scenery.pop_back();
 		}
 	}
-}*/
-
-static std::vector<FLScenery*> scenery;
-
-FLScenery::FLScenery(float x, float y, int index) 
-	: FLGameObject(x, y, 1, 1) {
-		float s, t, w, h;
-		// FIXME this is stupid and should be read from a file, and then
-		// grabbed from the resources class lol
-		if (index == 101) {
-			s = 0;
-			t = 0;
-			w = 98;
-			h = 88;
-		} else if (index == 102) {
-			s = 99;
-			t = 0;
-			w = 35;
-			h = 27;
-		} else if (index == 103) {
-			s = 0;
-			t = 96;
-			w = 245;
-			h = 68;
-		} else if (index == 104) {
-			s = 144;
-			t = 0;
-			w = 32;
-			h = 71;
-		} else if (index == 105) {
-			s = 256;
-			t = 0;
-			w = 51;
-			h = 98;
-		} else if (index == 106) {
-			s = 320;
-			t = 0;
-			w = 48;
-			h = 64;
-		} else if (index == 107) {
-			s = 368;
-			t = 0;
-			w = 53;
-			h = 70;
-		} else if (index == 108) {
-			s = 176;
-			t = 0;
-			w = 32;
-			h = 81;
-		} else {
-			std::cout << "Warning: unknown scenery <" << index << ">" << std::endl;
-            return;
-		}
-
-		FLTexturedObjectParams tex_params = {shapes["position"], 0, 0, w, h};
-		FLAnimatedObjectParams animation_params = {1, 1, 1, 0, 0, false};
-		animators["body"] = new FLAnimatedObject(tex_params, animation_params);
-		animators["body"]->set_st(s, t);
-		Renderer::getInstance().add_to_world(animators["body"], true);
-
-		scenery.push_back(this);
 }
-
-FLScenery::~FLScenery() {
-	Renderer::getInstance().remove_from_world(animators["body"]);
-}
-
-void clear_scenery() {
-	while (!scenery.empty()) {
-		delete scenery.back();
-		scenery.pop_back();
-	}
-}
-

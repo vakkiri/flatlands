@@ -31,6 +31,7 @@ namespace FLObjects {
 	FLObject* get(fl_handle handle);
 	void destroy(fl_handle handle);
 	void update();
+	void render();
 
 	// member modification
 	void set_pos(fl_handle handle, float x, float y);

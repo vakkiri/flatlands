@@ -54,8 +54,8 @@ bool FLResources::init() {
 }
 
 void FLResources::clear_level() {
+	FLScenery::clear();
 	clear_npcs();
-	clear_scenery();
 	clear_portals();
 	clear_monsters();
 	clear_teleporters();
@@ -475,7 +475,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&y, cur, sizeof(int16_t));
 
 				// create it ...
-				new FLScenery(x, y, val);
+				FLScenery::create(x, y, val);
 
 				cur += 2;
 

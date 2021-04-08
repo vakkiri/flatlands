@@ -62,6 +62,14 @@ namespace FLObjects {
 		}
 	}
 
+	void render() {
+		for (auto obj : objects) {
+			for (auto [name, handle] : obj.textures) {
+				FLTextures::render(handle);
+			}
+		}
+	}
+
 	void set_pos(fl_handle handle, float x, float y) {
 		if (handle != NULL_HANDLE) {
 			objects[handle].x = x;

@@ -11,12 +11,13 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include "../common/basic_types.h"
-#include "../environment/fl_environment.h"
-#include "../game/fl_game.h"
-#include "../logging/logging.h"
-#include "../resources/fl_resources.h"
-#include "../ui/fl_ui_manager.h"
+#include "common/basic_types.h"
+#include "common/fl_object.h"
+#include "environment/fl_environment.h"
+#include "game/fl_game.h"
+#include "logging/logging.h"
+#include "resources/fl_resources.h"
+#include "ui/fl_ui_manager.h"
 #include "animated_object.h"
 #include "background.h"
 #include "renderable.h"
@@ -64,6 +65,10 @@ namespace FLRenderer {
 			false,
 			"world"
 		);
+		FLTextureSurface *scenery_surface = new FLTextureSurface(
+			false,
+			"scenery"
+		);
 		FLTextureSurface *bg_tile_surface = new FLTextureSurface(
 			true,
 			"tiles"
@@ -74,10 +79,12 @@ namespace FLRenderer {
 		);
 
 		world_surface->set_camera(&world_camera);
+		scenery_surface->set_camera(&world_camera);
 		bg_tile_surface->set_camera(&world_camera);
 		fg_tile_surface->set_camera(&world_camera);
 
 		texture_surfaces["world"] = world_surface;
+		texture_surfaces["scenery"] = scenery_surface;
 		texture_surfaces["bg_tiles"] = bg_tile_surface;
 		texture_surfaces["fg_tiles"] = fg_tile_surface;
 	}
@@ -93,9 +100,12 @@ namespace FLRenderer {
 		// individual surface calls/dynamically add custom shader surfs
 		world_camera.update();
 
+		FLObjects::render();
+
 		texture_surfaces["bg_tiles"]->render();
 		texture_surfaces["fg_tiles"]->render();
 		texture_surfaces["world"]->render();
+		texture_surfaces["scenery"]->render();
 	}
 
 	FLTextureSurface *get_texture_surface(std::string name) {

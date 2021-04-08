@@ -12,19 +12,10 @@
 #include "common/game_object.h"
 #include "rendering/animated_object.h"
 
-class FLScenery : virtual public FLGameObject {
-	public:
-		FLScenery(float x, float y, int type);
-		virtual ~FLScenery();
-};
-
-void clear_scenery();
-
-/*
 namespace FLScenery {
 	void create(float x, float y, int type);
 	void clear();
-}*/
+}
 
 #endif
 
