@@ -9,10 +9,12 @@
 #ifndef FL_RESOURCES_H_
 #define FL_RESOURCES_H_
 
-#include "../rendering/texture.h"
+#include "rendering/texture.h"
+#include "resources/fl_collections.h"
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 class FLEnvironment;
 
@@ -52,6 +54,8 @@ class FLResources {
 	void init_il();
 	void init_physics();
 	void init_fonts();
+	void add_collection(std::string name, std::vector<FLCollectionElement>& elements);
+	void init_collections();
 
 	void clear_level();
 

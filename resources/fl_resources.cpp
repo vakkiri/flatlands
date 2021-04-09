@@ -7,29 +7,30 @@
 #include <IL/ilu.h>
 #include <SDL2/SDL_opengl.h>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <cstring>
 
-#include "../environment/fl_environment.h"
-#include "../game/fl_game.h"
-#include "../logging/logging.h"
-#include "../net/fl_net.h"
-#include "../world/monster/fl_monster_types.h"
-#include "../world/npcs/npcs.h"
-#include "../world/objects/objects.h"
-#include "../world/physics_settings.h"
-#include "../world/player/player.h"
-#include "../world/portal.h"
-#include "../world/scenery.h"
-#include "../world/teleporter.h"
-#include "../world/water.h"
-#include "../world/misc/xp_orb.h"
-#include "../rendering/background.h"
-#include "../rendering/fl_camera.h"
-#include "../rendering/renderer.h"
-#include "../rendering/text/fl_font.h"
+#include "environment/fl_environment.h"
+#include "game/fl_game.h"
+#include "logging/logging.h"
+#include "net/fl_net.h"
+#include "world/monster/fl_monster_types.h"
+#include "world/npcs/npcs.h"
+#include "world/objects/objects.h"
+#include "world/physics_settings.h"
+#include "world/player/player.h"
+#include "world/portal.h"
+#include "world/scenery.h"
+#include "world/teleporter.h"
+#include "world/water.h"
+#include "world/misc/xp_orb.h"
+#include "rendering/background.h"
+#include "rendering/fl_camera.h"
+#include "rendering/renderer.h"
+#include "rendering/text/fl_font.h"
 
-#include "../tilemap/tilemap.h"
+#include "tilemap/tilemap.h"
 #include "fl_resources.h"
 
 #define IMAGE_RESOURCE_PATH "assets/image-resources.csv"
@@ -49,6 +50,8 @@ bool FLResources::init() {
 	}
 
 	init_fonts();
+
+	init_collections();
 
 	return success;
 }
@@ -75,6 +78,65 @@ void FLResources::close() {
 		delete [] it.second;
 	for (auto &it : sfx_dict)
 		Mix_FreeChunk(it.second);
+}
+
+void FLResources::add_collection(std::string name, std::vector<FLCollectionElement>& elements) {
+	FLCollections::add_collection(name, elements.size());
+	
+	for (unsigned int i = 0; i < elements.size(); ++i) {
+		FLCollections::set_element(
+				name, 
+				i, 
+				elements[i].s,
+				elements[i].t,
+				elements[i].w,
+				elements[i].h
+		);
+	}
+}
+
+void FLResources::init_collections() {
+	std::string config_path = "assets/collections.conf";
+	std::ifstream config_file;
+	std::string line;
+	std::string token;
+	std::stringstream stream;
+	std::vector<std::string> tokens;
+	std::vector<FLCollectionElement> elements;
+	config_file.open(config_path);
+
+	std::string name;
+	float s, t, w, h;
+
+	if (config_file.is_open()) {
+		while (!config_file.eof()) {
+			tokens.clear();
+			getline(config_file, line);
+			stream = std::stringstream(line);
+
+			while(getline(stream, token, ' ')) {
+				tokens.push_back(token);
+			}
+
+			if (tokens.size() == 1) {
+				name = tokens[0];
+			} else if (tokens.size() == 4) {
+				s = std::stof(tokens[0]);
+				t = std::stof(tokens[1]);
+				w = std::stof(tokens[2]);
+				h = std::stof(tokens[3]);
+				elements.push_back(FLCollectionElement{
+						s, t, w, h
+				});
+			} else {
+				if (!elements.empty()) {
+					add_collection(name, elements);
+				}
+				elements.clear();
+			}
+		}
+		config_file.close();
+	}
 }
 
 void FLResources::init_physics() {
