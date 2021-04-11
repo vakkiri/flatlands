@@ -3,24 +3,36 @@
  *
  */
 
+#include <iostream>
 #include "effect.h"
 
-#include "../rendering/renderer.h"
+#include "common/fl_object.h"
+#include "components/animator/fl_animator.h"
 
-FLEffect::FLEffect(FLTexturedObjectParams tex_params,
-				   FLAnimatedObjectParams anim_params, float s, float t)
-	: FLAnimatedObject(tex_params, anim_params) {
-	set_st(s, t);
 
-	Renderer::getInstance().add_to_world(this);
-}
+namespace FLEffects {
 
-FLEffect::~FLEffect() { Renderer::getInstance().remove_from_world(this); }
+	void destroy(fl_handle handle) {
+		FLObjects::destroy(handle);
+	}
 
-void FLEffect::update_animation() {
-	FLAnimatedObject::update_animation();
+	void update(FLObject& effect) {
+		if (FLAnimators::finished(effect.animators["animator"])) {
+			destroy(effect.handle);
+		}
+	}
 
-	if (animation_finished)
-		delete this;
+	void create(float x, float y, std::string collection, unsigned int ticks_per_frame) {
+		fl_handle handle = FLObjects::create();
+
+		if (handle != NULL_HANDLE) {
+			FLObjects::set_pos(handle, x, y);
+			FLObjects::add_texture(handle, "texture", "world", collection);
+			FLObjects::add_animator(handle, "animator", "texture", collection, ticks_per_frame, false);
+			FLObjects::add_script(handle, update);
+		} else {
+			std::cout << "Warning: could not create effect.\n";
+		}
+	}
 }
 

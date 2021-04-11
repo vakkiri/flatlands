@@ -154,7 +154,8 @@ namespace FLObjects {
 		std::string name,
 		std::string texture,
 		std::string collection,
-		unsigned int ticks_per_frame
+		unsigned int ticks_per_frame,
+		bool repeats
 	){
 		if (objects[handle].textures.find(texture) == objects[handle].textures.end()) {
 			std::cout << "Warning: tried to create animator for texture which does not exist: " << texture << "\n";
@@ -162,12 +163,22 @@ namespace FLObjects {
 		}
 
 		fl_handle texture_handle = objects[handle].textures[texture];
-		fl_handle animator_handle = FLAnimators::create(texture_handle, collection, ticks_per_frame);
+		fl_handle animator_handle = FLAnimators::create(texture_handle, collection, ticks_per_frame, repeats);
 		if (animator_handle != NULL_HANDLE) {
 			objects[handle].animators[name] = animator_handle;
 		} else {
 			std::cout << "Warning: could not create animator.\n";
 		}
+	}
+
+	void add_animator(
+		fl_handle handle,
+		std::string name,
+		std::string texture,
+		std::string collection,
+		unsigned int ticks_per_frame
+	){
+		add_animator(handle, name, texture, collection, ticks_per_frame, true);
 	}
 
 	void set_texture(

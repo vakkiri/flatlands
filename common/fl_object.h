@@ -121,6 +121,15 @@ namespace FLObjects {
 		unsigned int ticks_per_frame
 	);
 
+	void add_animator(
+		fl_handle handle,
+		std::string name,
+		std::string texture,
+		std::string collection,
+		unsigned int ticks_per_frame,
+		bool repeats
+	);
+
 	// member access
 	float x(fl_handle handle);
 	float y(fl_handle handle);

@@ -9,15 +9,10 @@
 #ifndef EFFECT_H_
 #define EFFECT_H_
 
-#include "../common/common.h"
-#include "../rendering/animated_object.h"
+#include <string>
 
-class FLEffect : virtual public FLAnimatedObject {
-  public:
-	FLEffect(FLTexturedObjectParams tex_params,
-			 FLAnimatedObjectParams anim_params, float s, float t);
-	virtual ~FLEffect();
-	void update_animation();
-};
+namespace FLEffects {
+	void create(float x, float y, std::string collection, unsigned int ticks_per_frame);
+}
 
 #endif

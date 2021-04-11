@@ -65,11 +65,7 @@ FLMonster::~FLMonster() {
 			unsigned int speed = 3 + rand() % 4;
 			_x += (rand() % 32) - 16;
 			_y += (rand() % 32) - 16;
-			// TODO I should really just have a struct that contains these settings defined
-			// ie. effects.h can include them
-			FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
-			FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
-			new FLEffect(tex_params, anim_params, 560, 0);
+			FLEffects::create(x(), y() + h() - 16, "black_cloud", speed);
 		}
 		for (int i = 0; i < xp; ++i) {
 			int dx = (rand() % 16) - 8;

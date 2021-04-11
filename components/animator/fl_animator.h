@@ -34,8 +34,11 @@ namespace FLAnimators {
 	void update();
 
 	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks);
+	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks, bool repeats);
 	void set_collection(fl_handle handle, std::string collection);
 	void destroy(fl_handle handle);
+
+	bool finished(fl_handle handle);
 }
 
 #endif

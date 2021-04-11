@@ -20,9 +20,7 @@ FLReepSecondary::FLReepSecondary(float x, float y) : FLAttack(x, y, W, H, FL_NON
 
 void FLReepSecondary::pre_attack() {
 	if (tick == 0) {
-		FLTexturedObjectParams tex_params = {nullptr, x(), y(), W, H};
-		FLAnimatedObjectParams anim_params = {1, 14, 4, W, H, false};
-		new FLEffect(tex_params, anim_params, 0, 416);
+		// Create effect
 	}
 }
 

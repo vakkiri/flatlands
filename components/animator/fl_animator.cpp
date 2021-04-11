@@ -26,14 +26,14 @@ namespace FLAnimators {
 		}
 	}
 
-	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks) {
+	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks, bool repeats) {
 		fl_handle handle = animators.create();
 
 		if (handle != NULL_HANDLE) {
 			animators[handle].texture = texture;
 			animators[handle].paused = false;
 			animators[handle].finished = false;
-			animators[handle].repeats = true;
+			animators[handle].repeats = repeats;
 			animators[handle].tick = 0;
 			animators[handle].frame = 0;
 			animators[handle].num_ticks = num_ticks;
@@ -43,8 +43,16 @@ namespace FLAnimators {
 		return handle;
 	}
 
+	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks) {
+		return create(texture, collection, num_ticks, true);
+	}
+
 	void destroy(fl_handle handle) {
 		animators.destroy(handle);
+	}
+
+	bool finished(fl_handle handle) {
+		return (handle == NULL_HANDLE || animators[handle].finished);
 	}
 
 	void update() {

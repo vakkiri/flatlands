@@ -16,11 +16,10 @@
 #include "../../rendering/animated_object.h"
 #include "../../rendering/renderer.h"
 #include "../../rendering/world_surface.h"
-#include "../attack/fl_player_attacks.h"
-#include "../effect.h"
 #include "../physics_settings.h"
 #include "../monster/fl_monster.h"
 #include "../projectiles/fl_projectiles.h"
+#include "world/effect.h"
 
 #define MAX_FALL (180)
 #define INITIAL_WALK_ACCEL (0.39)
@@ -244,18 +243,12 @@ void FLPlayer::jump() {
 		falling_frames = 0;
 
 		// Create a visual smoke effect
-		// FIXME need dedicated subclasses of effects etc. with params ready
-		// cause this UGLY
-		FLTexturedObjectParams tex_params = {nullptr, x(), y() + h() - 16, 32, 16};
-		FLAnimatedObjectParams anim_params = {1, 7, 2, 32, 16, false};
-		new FLEffect(tex_params, anim_params, 800, 48);
+		FLEffects::create(x(), y() + h() - 16, "jump_cloud", 4);
 
 		// play sound effect
 		play_sound("player_jump");
 	} else if (can_double_jump) {
-		FLTexturedObjectParams tex_params = {nullptr, x(), y() + h(), 32, 16};
-		FLAnimatedObjectParams anim_params = {1, 7, 2, 32, 16, false};
-		new FLEffect(tex_params, anim_params, 800, 32);
+		FLEffects::create(x(), y() + h() - 16, "double_jump_cloud", 4);
 		falling_frames = 0;
 		double_jump();
 		can_double_jump = false;
@@ -300,14 +293,8 @@ void FLPlayer::dash() {
 	if (can_dash()) {
 		play_sound("player_dash");
 
-		// Again, ugly, should have factories or somethin'
-		FLTexturedObjectParams tex_params = {nullptr, x(), y(), 16, 32};
-		FLAnimatedObjectParams anim_params = {1, 7, 2, 16, 32, false};
-		FLEffect *effect = new FLEffect(tex_params, anim_params, 800, 0);
-
 		if (facing_right()) {
 			physics_handler()->accelerate(DASH_INITIAL_ACCEL, 0);
-			effect->set_reverse(true);
 		} else {
 			physics_handler()->accelerate(-DASH_INITIAL_ACCEL, 0);
 		}

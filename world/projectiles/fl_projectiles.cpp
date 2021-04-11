@@ -121,9 +121,7 @@ FLFusionProjectile::~FLFusionProjectile() {
 		unsigned int speed = 3 + rand() % 4;
 		_x += (rand() % 16) - 8;
 		_y += (rand() % 16) - 8;
-		FLAnimatedObjectParams anim_params = {1, 6, speed, 16, 16, false};
-		FLTexturedObjectParams tex_params = {nullptr, _x, _y, 16, 16};
-		new FLEffect(tex_params, anim_params, 544, 160);
+		FLEffects::create(_x, _y, "fusion_impact", speed);
 	}
 }
 
