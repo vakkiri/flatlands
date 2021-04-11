@@ -7,7 +7,6 @@
 #include "rendering/fl_texture_surface.h"
 #include "common/fl_object.h"
 #include "common/fl_static_buffer.h"
-#include "components/animator/fl_animator.h"
 #include "fl_texture.h"
 
 #define DEFAULT_NUM_TEXTURES 40000
@@ -39,7 +38,6 @@ namespace FLTextures {
 		tex->t = t;
 		tex->reversed = reversed;
 		tex->visible = true;
-		tex->animator = NO_ANIMATOR;
 	}
 
 	fl_handle create(
@@ -110,17 +108,17 @@ namespace FLTextures {
 	}
 
 	FLTexture *get(fl_handle handle) {
-		return &textures[handle];
+		if (handle != NULL_HANDLE) {
+			return &textures[handle];
+		} else {
+			std::cout << "Warning: tried to access texture with null handle.\n";
+			return nullptr;
+		}
 	}
 
 	void render(fl_handle handle) {
 		FLTexture * tex = get(handle);
 		if (tex->visible) {
-			if (tex->animator != NO_ANIMATOR) {
-				tex->s = FLAnimators::s(tex->animator);
-				tex->t = FLAnimators::t(tex->animator);
-			}
-
 			tex->surface->push(handle);
 		}
 	}

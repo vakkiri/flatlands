@@ -58,11 +58,11 @@ bool FLResources::init() {
 
 void FLResources::clear_level() {
 	FLScenery::clear();
+	FLGeysers::clear();
 	clear_npcs();
 	clear_portals();
 	clear_monsters();
 	clear_teleporters();
-	clear_geysers();
 	clear_water();
 	clear_xp_orbs();
 	clear_savepoints();
@@ -486,7 +486,7 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 				std::memcpy(&y, cur, sizeof(int16_t));
 				cur += 2;
 
-				new FLGeyser(x, y);
+				FLGeysers::create(x, y);
 			} else if (val == 9) {
 				int16_t x;
 				int16_t y;

@@ -13,6 +13,7 @@
 
 #include "common/basic_types.h"
 #include "common/fl_object.h"
+#include "components/animator/fl_animator.h"
 #include "environment/fl_environment.h"
 #include "game/fl_game.h"
 #include "logging/logging.h"
@@ -101,6 +102,7 @@ namespace FLRenderer {
 		world_camera.update();
 
 		FLObjects::render();
+		FLAnimators::update();
 
 		texture_surfaces["bg_tiles"]->render();
 		texture_surfaces["fg_tiles"]->render();

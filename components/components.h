@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <variant>
 
+#include "animator/fl_animator.h"
 #include "collider/fl_collider.h"
 #include "collider/fl_collider_manager.h"
 #include "interactable/fl_interactable.h"

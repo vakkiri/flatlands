@@ -22,6 +22,7 @@ struct FLObject {
 	float y;
 	std::unordered_map<std::string, fl_state> states;
 	std::unordered_map<std::string, fl_handle> textures;
+	std::unordered_map<std::string, fl_handle> animators;
 	std::function<void()> update;
 };
 
@@ -35,6 +36,34 @@ namespace FLObjects {
 
 	// member modification
 	void set_pos(fl_handle handle, float x, float y);
+
+	void set_texture(
+		fl_handle handle,
+		std::string name,
+		std::string collection,
+		int index
+	);
+
+	void set_texture(
+		fl_handle handle,
+		std::string name,
+		std::string collection
+	);
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection
+	);
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection,
+		int index
+	);
 
 	void add_texture(
 		fl_handle handle,
@@ -55,6 +84,14 @@ namespace FLObjects {
 		float t,
 		float w,
 		float h
+	);
+
+	void add_animator(
+		fl_handle handle,
+		std::string name,
+		std::string texture,
+		std::string collection,
+		unsigned int ticks_per_frame
 	);
 
 	// member access

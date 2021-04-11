@@ -16,17 +16,10 @@ enum FLGeyserState {
 	FL_GEYSER_PRE_BURST
 };
 
-class FLGeyser : virtual public FLGameObject {
-	public:
-		FLGeyser(float x, float y);
-		virtual ~FLGeyser();
-		virtual void per_frame_update();
-	protected:
-		FLGeyserState state;
-		int tick;
-};
-
-void clear_geysers();
+namespace FLGeysers {
+	void clear();
+	void create(float x, float y);
+}
 
 #endif
 

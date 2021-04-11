@@ -7,6 +7,7 @@
 #include "fl_static_buffer.h"
 #include "fl_object.h"
 #include "components/components.h"
+#include "resources/fl_collections.h"
 
 #define DEFAULT_NUM_OBJECTS 10000
 
@@ -52,6 +53,9 @@ namespace FLObjects {
 		for (auto [name, texture] : objects[handle].textures) {
 			FLTextures::destroy(texture);
 		}
+		for (auto [name, animator] : objects[handle].animators) {
+			FLAnimators::destroy(animator);
+		}
 
 		objects.destroy(handle);
 	}
@@ -77,6 +81,77 @@ namespace FLObjects {
 		} else {
 			std::cout << "Error: tried to position of object with null handle.";
 		}
+	}
+
+	void set_texture(
+		fl_handle handle,
+		std::string name,
+		std::string collection,
+		int index
+	) {
+		FLObject* obj = get(handle);
+		if (obj->textures.find(name) != obj->textures.end()) {
+			FLCollection& c = FLCollections::get(collection);
+			FLCollectionElement e = c.elements[index];
+			fl_handle tex_handle = obj->textures[name];
+			FLTexture * tex = FLTextures::get(tex_handle);
+			tex->s = e.s;
+			tex->t = e.t;
+			tex->w = e.w;
+			tex->h = e.h;
+		} else {
+			std::cout << "Warning: Texture " << name << " does not exist to modify.\n";
+		}
+	}
+
+	void add_animator(
+		fl_handle handle,
+		std::string name,
+		std::string texture,
+		std::string collection,
+		unsigned int ticks_per_frame
+	){
+		if (objects[handle].textures.find(texture) == objects[handle].textures.end()) {
+			std::cout << "Warning: tried to create animator for texture which does not exist: " << texture << "\n";
+			return;
+		}
+
+		fl_handle texture_handle = objects[handle].textures[texture];
+		fl_handle animator_handle = FLAnimators::create(texture_handle, collection, ticks_per_frame);
+		if (animator_handle != NULL_HANDLE) {
+			objects[handle].animators[name] = animator_handle;
+		} else {
+			std::cout << "Warning: could not create animator.\n";
+		}
+	}
+
+	void set_texture(
+		fl_handle handle,
+		std::string name,
+		std::string collection
+	) {
+		set_texture(handle, name, collection, 0);
+	}
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection,
+		int index
+	) {
+		FLCollection& c = FLCollections::get(collection);
+		FLCollectionElement e = c.elements[index];
+		add_texture(handle, name, surface, e.s, e.t, e.w, e.h);
+	}
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection
+	) {
+		add_texture(handle, name, surface, collection, 0);
 	}
 
         void add_texture(

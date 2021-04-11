@@ -6,23 +6,38 @@
 #include <iostream>
 #include "fl_animator.h"
 #include "common/fl_static_buffer.h"
+#include "components/texture/fl_texture.h"
+#include "resources/fl_collections.h"
 
 #define DEFAULT_NUM_ANIMATORS 2000
 
 namespace FLAnimators {
 	FLStaticBuffer<FLAnimator> animators(DEFAULT_NUM_ANIMATORS);
 
-	void init(fl_handle handle) {
-		(void) handle;
-		// ...
+	void set_collection(fl_handle handle, std::string collection) {
+		FLCollection& c = FLCollections::get(collection);
+
+		animators[handle].num_frames = c.num_elements;
+		animators[handle].collection = collection;
+
+		if (animators[handle].frame >= animators[handle].num_frames) {
+			animators[handle].frame = 0;
+			animators[handle].tick = 0;
+		}
 	}
 
-	fl_handle create(std::string animation_name) {
-		(void) animation_name;
+	fl_handle create(fl_handle texture, std::string collection, unsigned int num_ticks) {
 		fl_handle handle = animators.create();
 
 		if (handle != NULL_HANDLE) {
-			// initialize...
+			animators[handle].texture = texture;
+			animators[handle].paused = false;
+			animators[handle].finished = false;
+			animators[handle].repeats = true;
+			animators[handle].tick = 0;
+			animators[handle].frame = 0;
+			animators[handle].num_ticks = num_ticks;
+			set_collection(handle, collection);
 		}
 
 		return handle;
@@ -33,7 +48,20 @@ namespace FLAnimators {
 	}
 
 	void update() {
-		for (auto animator : animators) {
+		for (FLAnimator& animator : animators) {
+			FLTexture* tex = FLTextures::get(animator.texture);
+			FLCollection& collection = FLCollections::get(animator.collection);
+			FLCollectionElement element = collection.elements[animator.frame];
+
+			if (tex != nullptr) {
+				tex->s = element.s;
+				tex->t = element.t;
+				tex->w = element.w;
+				tex->h = element.h;
+			} else {
+				std::cout << "Warning: animator with no texture\n";
+			}
+
 			if (!animator.paused) {
 				if (++animator.tick >= animator.num_ticks) {
 					animator.tick = 0;
@@ -47,29 +75,8 @@ namespace FLAnimators {
 					}
 				}
 			}
+
+
 		}
 	}
-
-	float s(fl_handle handle) {
-		if (handle != NULL_HANDLE) {
-			FLAnimator* animator = &animators[handle];
-			FLAnimation* animation = animator->animation;
-			return animation->s[animator->frame];
-		} else {
-			std::cout << "Warning: Tried to access animator with null handle.\n";
-			return 0;
-		}
-	}
-
-	float t(fl_handle handle) {
-		if (handle != NULL_HANDLE) {
-			FLAnimator* animator = &animators[handle];
-			FLAnimation* animation = animator->animation;
-			return animation->t[animator->frame];
-		} else {
-			std::cout << "Warning: Tried to access animator with null handle.\n";
-			return 0;
-		}
-	}
-
 }

@@ -24,7 +24,6 @@ struct FLTexture {
 	float h;
 	float s;
 	float t;
-	fl_handle animator;
 };
 
 namespace FLTextures {
@@ -47,6 +46,7 @@ namespace FLTextures {
 	float h(fl_handle handle);
 	float s(fl_handle handle);
 	float t(fl_handle handle);
+
 	bool reversed(fl_handle handle);
 }
 
