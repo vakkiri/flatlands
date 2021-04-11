@@ -22,7 +22,7 @@
 #define FRAME_TICKS 4
 
 #define IDLE_TICKS 120
-#define PRE_TICKS FRAMES * FRAME_TICKS * 2
+#define ACTIVE_TICKS FRAMES * FRAME_TICKS * 2
 
 namespace FLGeysers {
 	std::vector<fl_handle> geysers;
@@ -34,13 +34,46 @@ namespace FLGeysers {
 		}
 	}
 
+	void update(FLObject& geyser) {
+		int tick = std::get<int>(geyser.vars["tick"]);
+		tick += 1;
+
+		if (geyser.states["state"] == FL_GEYSER_IDLE) {
+			if (tick >= IDLE_TICKS) {
+				tick = 0;
+				geyser.states["state"] = FL_GEYSER_ACTIVE;
+				FLObjects::set_animation(geyser.handle, "geyser", "geyser_active");
+			}
+		} else {
+			if (tick >= ACTIVE_TICKS) {
+				tick = 0;
+				geyser.states["state"] = FL_GEYSER_IDLE;
+				FLObjects::set_animation(geyser.handle, "geyser", "geyser_idle");
+
+				// TODO: port effect and aoeburst
+				float x = FLObjects::x(geyser.handle);
+				float y = FLObjects::y(geyser.handle);
+				FLTexturedObjectParams tex_params = {nullptr, x, y - 48, 32, 48};
+				FLAnimatedObjectParams anim_params = {1, 8, 4, 32, 48, false};
+				new FLEffect(tex_params, anim_params, 544, 80);
+				new FLAoeBurst(x + 4, y - 24, 24, 24, 25, true);
+
+			}
+		}
+
+		geyser.vars["tick"] = tick;
+	}
+
 	void init(fl_handle handle, float x, float y) {
 		std::string tex_name = "geyser";
 		std::string ani_name = "geyser";
 		std::string surface_name = "world";
 		FLObjects::set_pos(handle, x, y);
 		FLObjects::add_texture(handle, tex_name, surface_name, "geyser_idle");
-		FLObjects::add_animator(handle, ani_name, tex_name, "geyser_active", 4);
+		FLObjects::add_animator(handle, ani_name, tex_name, "geyser_idle", 4);
+		FLObjects::add_var(handle, "tick", 0);
+		FLObjects::add_state(handle, "state", FL_GEYSER_IDLE);
+		FLObjects::add_script(handle, update);
 	}
 
 	void create(float x, float y) {

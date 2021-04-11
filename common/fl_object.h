@@ -11,8 +11,14 @@
 #include <functional>
 #include <string>
 #include <unordered_map>
+#include <variant>
 
 #include "common/basic_types.h"
+
+struct FLObject;
+
+typedef std::variant<int,float> fl_var;
+typedef std::function<void(FLObject&)> fl_script;
 
 struct FLObject {
 	// TODO: keep track of children via a map?
@@ -23,7 +29,8 @@ struct FLObject {
 	std::unordered_map<std::string, fl_state> states;
 	std::unordered_map<std::string, fl_handle> textures;
 	std::unordered_map<std::string, fl_handle> animators;
-	std::function<void()> update;
+	std::unordered_map<std::string, fl_var> vars;
+	std::vector<fl_script> scripts;
 };
 
 namespace FLObjects {
@@ -36,6 +43,20 @@ namespace FLObjects {
 
 	// member modification
 	void set_pos(fl_handle handle, float x, float y);
+
+	void add_script(fl_handle handle, std::function<void(FLObject&)> f);
+
+	void add_var(
+		fl_handle handle,
+		std::string name,
+		fl_var value
+	);
+
+	void add_state(
+		fl_handle handle,
+		std::string name,
+		fl_state value
+	);
 
 	void set_texture(
 		fl_handle handle,
@@ -84,6 +105,12 @@ namespace FLObjects {
 		float t,
 		float w,
 		float h
+	);
+
+	void set_animation(
+		fl_handle handle,
+		std::string name,
+		std::string collection
 	);
 
 	void add_animator(

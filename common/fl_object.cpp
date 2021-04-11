@@ -14,8 +14,6 @@
 namespace FLObjects {
 	FLStaticBuffer<FLObject> objects(DEFAULT_NUM_OBJECTS);
 
-	void pass() {} // pass function for objects with no update
-
 	fl_handle create(fl_handle parent) {
 		fl_handle handle = objects.create();
 
@@ -28,7 +26,7 @@ namespace FLObjects {
 			objects[handle].y = 0;
 			objects[handle].states.clear();
 			objects[handle].textures.clear();
-			objects[handle].update = pass;
+			objects[handle].vars.clear();
 		}
 
 		return handle;
@@ -56,13 +54,16 @@ namespace FLObjects {
 		for (auto [name, animator] : objects[handle].animators) {
 			FLAnimators::destroy(animator);
 		}
-
+		
+		objects[handle].scripts.clear();
 		objects.destroy(handle);
 	}
 
 	void update() {
-		for (auto obj : objects) {
-			obj.update();
+		for (FLObject& obj : objects) {
+			for (auto s : obj.scripts) {
+				s(obj);
+			}
 		}
 	}
 
@@ -83,6 +84,13 @@ namespace FLObjects {
 		}
 	}
 
+	void add_script(
+		fl_handle handle,
+		std::function<void(FLObject&)> f
+	) {
+		objects[handle].scripts.push_back(f);
+	}
+
 	void set_texture(
 		fl_handle handle,
 		std::string name,
@@ -101,6 +109,43 @@ namespace FLObjects {
 			tex->h = e.h;
 		} else {
 			std::cout << "Warning: Texture " << name << " does not exist to modify.\n";
+		}
+	}
+
+	void add_var(
+		fl_handle handle,
+		std::string name,
+		fl_var value
+	) {
+		if (objects[handle].vars.find(name) == objects[handle].vars.end()) {
+			objects[handle].vars[name] = value;
+		} else {
+			std::cout << "Warning: tried to add duplicate var " << name << std::endl;
+		}
+	}
+
+	void add_state(
+		fl_handle handle,
+		std::string name,
+		fl_state state
+	) {
+		if (objects[handle].states.find(name) == objects[handle].states.end()) {
+			objects[handle].states[name] = state;
+		} else {
+			std::cout << "Warning: tried to add duplicate state " << name << std::endl;
+		}
+	}
+
+	void set_animation (
+		fl_handle handle,
+		std::string name,
+		std::string collection
+	) {
+		if (objects[handle].animators.find(name) != objects[handle].animators.end()) {
+			fl_handle animator = objects[handle].animators[name];
+			FLAnimators::set_collection(animator, collection);
+		} else {
+			std::cout << "Warning: tried to access missing animation " << name << std::endl;
 		}
 	}
 

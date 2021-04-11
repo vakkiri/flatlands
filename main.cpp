@@ -21,6 +21,7 @@
 #include "tilemap/tilemap.h"
 #include "ui/fl_ui_manager.h"
 #include "world/player/player.h"
+#include "common/fl_object.h"
 
 #define TARGET_FPS 60
 #define MS_PER_FRAME (1000 / TARGET_FPS)
@@ -49,6 +50,8 @@ void main_loop() {
 		end_time = start_time + MS_PER_FRAME;
 
 		quit = input_handler.input_loop();
+
+		FLObjects::update();
 
 		fl_update_components();
 

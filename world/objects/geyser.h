@@ -13,7 +13,7 @@
 
 enum FLGeyserState {
 	FL_GEYSER_IDLE,
-	FL_GEYSER_PRE_BURST
+	FL_GEYSER_ACTIVE
 };
 
 namespace FLGeysers {
