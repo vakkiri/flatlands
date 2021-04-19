@@ -100,10 +100,14 @@ namespace FLTextures {
 	}
 
 	void destroy(FLTexture * tex) {
+		// refresh is done to make sure dead elements don't linger
+		tex->surface->refresh();
 		textures.destroy(tex);
 	}
 
 	void destroy(fl_handle handle) {
+		FLTexture * tex = FLTextures::get(handle);
+		tex->surface->refresh();
 		textures.destroy(handle);
 	}
 
@@ -120,6 +124,10 @@ namespace FLTextures {
 		FLTexture * tex = get(handle);
 		if (tex->visible) {
 			tex->surface->push(handle);
+		} else {
+			// this is necessary to make sure an object turning
+			// invisible still updates the screen
+			tex->surface->refresh();
 		}
 	}
 

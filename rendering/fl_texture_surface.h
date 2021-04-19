@@ -24,6 +24,7 @@ class FLTextureSurface : public FLRenderedSurface {
 		FLTextureSurface(bool persistent, std::string tex);
 
 		void push(fl_handle element);
+		void refresh();
 		void render();
 		void set_tex(texture tex);
 		void set_tex(std::string name);

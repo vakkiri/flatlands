@@ -29,6 +29,10 @@ FLTextureSurface::FLTextureSurface(bool persistent, texture tex) :
 	persistent(persistent),
 	tex(tex) {}
 
+void FLTextureSurface::refresh() {
+	dirty = true;
+}
+
 void FLTextureSurface::push(fl_handle element) {
 	elements.push_back(element);
 	dirty = true;

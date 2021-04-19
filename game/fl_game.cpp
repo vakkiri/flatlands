@@ -8,7 +8,7 @@
 #include "../environment/fl_environment.h"
 
 // FIXME: this should be from a config file instead
-#define START_LEVEL 0
+#define START_LEVEL 2
 
 void FLGame::init() { _environment = new FLEnvironment(); }
 

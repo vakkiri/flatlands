@@ -13,6 +13,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "common/basic_types.h"
+
 class FLGameObject;
 class FLShape;
 class FLTilemap;

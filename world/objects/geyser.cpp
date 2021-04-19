@@ -53,7 +53,7 @@ namespace FLGeysers {
 				float x = FLObjects::x(geyser.handle);
 				float y = FLObjects::y(geyser.handle);
 
-				FLEffects::create(x + 4, y - 24, "geyser_burst", 4);
+				FLEffects::create(x, y - 34, "geyser_burst", 3);
 				new FLAoeBurst(x + 4, y - 24, 24, 24, 25, true);
 
 			}
@@ -79,6 +79,8 @@ namespace FLGeysers {
 
 		if (new_geyser != NULL_HANDLE) {
 			init(new_geyser, x, y);
+
+			geysers.push_back(new_geyser);
 		} else {
 			std::cout << "Warning: could not create geyser.\n";
 		}

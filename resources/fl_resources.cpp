@@ -183,7 +183,7 @@ bool FLResources::init_images() {
 bool FLResources::init_backgrounds() {
 	// TODO: load from file
 	add_background("night1");
-	add_background("sunset1");
+	add_background("dusk1");
 
 	add_background_layer("night1", "night1-2", 0.01, 0.0);
 	add_background_layer("night1", "night1-1", 0.1, -0.001);
@@ -192,7 +192,8 @@ bool FLResources::init_backgrounds() {
 	add_background_layer("night1", "night1-6", 0.25, 0.0);
 	add_background_layer("night1", "night1-5", 0.2, 0.0);
 	
-	add_background_layer("sunset1", "sunset1-1", 0.0, 0.0);
+	add_background_layer("dusk1", "dusk1-3", 0.001, 0.0);
+	add_background_layer("dusk1", "dusk1-2", 0.02, 0.0);
 	return true;
 }
 

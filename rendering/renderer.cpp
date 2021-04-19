@@ -106,8 +106,8 @@ namespace FLRenderer {
 
 		texture_surfaces["bg_tiles"]->render();
 		texture_surfaces["fg_tiles"]->render();
-		texture_surfaces["world"]->render();
 		texture_surfaces["scenery"]->render();
+		texture_surfaces["world"]->render();
 	}
 
 	FLTextureSurface *get_texture_surface(std::string name) {
@@ -191,7 +191,7 @@ void Renderer::render() {
 
 	std::string background = FLGame::instance().environment()->get_background();
 
-	for (auto layer : get_background_layers("night1")) {
+	for (auto layer : get_background_layers("dusk1")) {
 		background_camera[3][0] = world_camera.x() * layer.px; // parallax x
 		background_camera[3][1] = world_camera.y() * layer.py; // parallax y
 		textured_rect_shader.set_camera(background_camera);

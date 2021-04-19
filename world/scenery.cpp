@@ -36,6 +36,7 @@ namespace FLScenery {
 
 		if (new_scenery != NULL_HANDLE) {
 			init(new_scenery, x, y, type);
+			scenery.push_back(new_scenery);
 		} else {
 			std::cout << "Warning: could not create scenery.\n";
 		}
