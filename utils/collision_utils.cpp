@@ -8,6 +8,28 @@
 #include "../common/fl_shape.h"
 #include "../common/basic_types.h"
 
+bool rect_collision(
+	float ax,
+	float ay,
+	float aw,
+	float ah,
+	float bx,
+	float by,
+	float bw,
+	float bh
+) {
+	if (
+		ax > bx + bw ||
+		bx > ax + aw ||
+		ay > by + bh ||
+		by > ay + ah
+	) {
+		return false;
+	}
+
+	return true;
+}
+
 bool rect_collision(FLShape *a, FLShape *b) {
 	if (a == nullptr) {
 		return false;

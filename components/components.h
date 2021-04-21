@@ -13,6 +13,7 @@
 
 #include "animator/fl_animator.h"
 #include "collider/fl_collider.h"
+#include "collider/fl_colliders.h"
 #include "collider/fl_collider_manager.h"
 #include "interactable/fl_interactable.h"
 #include "interactable/fl_interactable_manager.h"

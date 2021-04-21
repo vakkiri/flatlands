@@ -19,6 +19,7 @@
 #include "../physics_settings.h"
 #include "../monster/fl_monster.h"
 #include "../projectiles/fl_projectiles.h"
+#include "world/fl_projectiles.h"
 #include "world/effect.h"
 
 #define MAX_FALL (180)
@@ -209,15 +210,40 @@ void FLPlayer::drain_ammo() {
 
 		if (vertical_direction == FL_FORWARD) {
 			if (facing_right()) {
-				new FLFusionProjectile(x() + 8, y() + 10, 11, 0);
+				FLProjectiles::create(
+					x() + 8,
+					y() + 10,
+					"fusion_horizontal",
+					true,
+					DIR_RIGHT
+				);
 			} else {
-				new FLFusionProjectile(x() - 18, y() + 10, -11, 0);
+				FLProjectiles::create(
+					x() + 8,
+					y() + 10,
+					"fusion_horizontal",
+					true,
+					DIR_LEFT
+				);
+
 			}
 		} else {
 			if (vertical_direction == FL_UP) {
-				new FLFusionProjectile(x() + 8, y() - 2, 0, -11);
+				FLProjectiles::create(
+					x() + 8,
+					y() - 2,
+					"fusion_vertical",
+					true,
+					DIR_UP
+				);
 			} else {
-				new FLFusionProjectile(x() + 8, y() + 20, 0, 11);
+				FLProjectiles::create(
+					x() + 8,
+					y() + 20,
+					"fusion_vertical",
+					true,
+					DIR_DOWN
+				);
 			}
 		}
 	}

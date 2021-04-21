@@ -100,5 +100,6 @@ struct fl_line {
 
 enum FLVerticalDirection { FL_FORWARD, FL_UP, FL_DOWN };
 enum FLHorizontalDirection { FL_NONE, FL_LEFT, FL_RIGHT };
+enum FLDirection {DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT};
 
 #endif

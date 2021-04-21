@@ -54,6 +54,7 @@ class FLResources {
 	void init_il();
 	void init_physics();
 	void init_fonts();
+	void init_projectiles();
 	void add_collection(std::string name, std::vector<FLCollectionElement>& elements);
 	void init_collections();
 

@@ -27,9 +27,30 @@ namespace FLObjects {
 			objects[handle].states.clear();
 			objects[handle].textures.clear();
 			objects[handle].vars.clear();
+			objects[handle].colliders.clear();
 		}
 
 		return handle;
+	}
+
+	void add_collision_target(
+		fl_handle handle,
+		std::string collider_name,
+		std::string group_name
+	) {
+		if (handle == NULL_HANDLE) {
+			std::cout << "Warning: Tried to add null object to collision group.\n";
+			return;
+		}
+		if (objects[handle].colliders.find(collider_name) == objects[handle].colliders.end()) {
+			std::cout << "Warning: Tried to add non-existant collider " << collider_name << " to group " << group_name << std::endl;
+			return;
+		}
+
+		FLColliders::add_target_group(
+			objects[handle].colliders[collider_name],
+			group_name
+		);
 	}
 
 	fl_handle create() {
@@ -53,6 +74,8 @@ namespace FLObjects {
 		}
 		for (auto [name, animator] : objects[handle].animators) {
 			FLAnimators::destroy(animator);
+		} for (auto [name, collider] : objects[handle].colliders) {
+			FLColliders::destroy(collider);
 		}
 		
 		objects[handle].scripts.clear();
@@ -89,6 +112,28 @@ namespace FLObjects {
 		std::function<void(FLObject&)> f
 	) {
 		objects[handle].scripts.push_back(f);
+	}
+
+	void add_collider(
+		fl_handle handle,
+		std::string name,
+		float x,
+		float y,
+		float w,
+		float h
+	) {
+		if (handle == NULL_HANDLE) {
+			std::cout << "Warning: tried to add collider to null object.\n";
+			return;
+		}
+
+		fl_handle collider = FLColliders::create(handle, x, y, w, h);
+
+		if (collider != NULL_HANDLE) {
+			objects[handle].colliders[name] = collider;
+		} else {
+			std::cout << "Warning: could not create new collider for object.\n";
+		}
 	}
 
 	void set_texture(

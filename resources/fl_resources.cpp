@@ -23,6 +23,7 @@
 #include "world/portal.h"
 #include "world/scenery.h"
 #include "world/teleporter.h"
+#include "world/fl_projectiles.h"
 #include "world/water.h"
 #include "world/misc/xp_orb.h"
 #include "rendering/background.h"
@@ -50,8 +51,8 @@ bool FLResources::init() {
 	}
 
 	init_fonts();
-
 	init_collections();
+	init_projectiles();
 
 	return success;
 }
@@ -133,6 +134,50 @@ void FLResources::init_collections() {
 					add_collection(name, elements);
 				}
 				elements.clear();
+			}
+		}
+		config_file.close();
+	}
+}
+
+void FLResources::init_projectiles() {
+	std::string config_path = "assets/projectiles.conf";
+	std::ifstream config_file;
+	std::string line;
+	std::string token;
+	std::stringstream stream;
+	std::vector<std::string> tokens;
+	config_file.open(config_path);
+
+	float v, x, y, w, h;
+	int damage, life;
+	std::string name, collection;
+
+	if (config_file.is_open()) {
+		while (!config_file.eof()) {
+			tokens.clear();
+			getline(config_file, line);
+			stream = std::stringstream(line);
+
+			while(getline(stream, token, ' ')) {
+				tokens.push_back(token);
+			}
+
+			if (tokens.size() == 1) {
+				name = tokens[0];
+			} else if (tokens.size() == 8) {
+				v = std::stof(tokens[0]);
+				x = std::stof(tokens[1]);
+				y = std::stof(tokens[2]);
+				w = std::stof(tokens[3]);
+				h = std::stof(tokens[4]);
+				damage = std::stoi(tokens[5]);
+				life = std::stoi(tokens[6]);
+				collection = tokens[7];
+				FLProjectiles::define(
+					name, v, x, y, w, h, damage, life, collection
+				);
+				std::cout << "Added " << name << std::endl;
 			}
 		}
 		config_file.close();

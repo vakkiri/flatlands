@@ -29,6 +29,7 @@ struct FLObject {
 	std::unordered_map<std::string, fl_state> states;
 	std::unordered_map<std::string, fl_handle> textures;
 	std::unordered_map<std::string, fl_handle> animators;
+	std::unordered_map<std::string, fl_handle> colliders;
 	std::unordered_map<std::string, fl_var> vars;
 	std::vector<fl_script> scripts;
 };
@@ -56,6 +57,21 @@ namespace FLObjects {
 		fl_handle handle,
 		std::string name,
 		fl_state value
+	);
+
+	void add_collision_target(
+		fl_handle handle,
+		std::string collider_name,
+		std::string group_name
+	);
+
+	void add_collider(
+		fl_handle handle,
+		std::string name,
+		float x,
+		float y,
+		float w,
+		float h
 	);
 
 	void set_texture(

@@ -11,6 +11,17 @@
 
 class FLShape;
 
+bool rect_collision(
+	float ax,
+	float ay,
+	float aw,
+	float ah,
+	float bx,
+	float by,
+	float bw,
+	float bh
+);
+
 bool rect_collision(FLShape *a, FLShape *b);
 bool point_in_shape(FLShape *shape, point *p);
 point intersection(fl_line* l1, fl_line* l2);

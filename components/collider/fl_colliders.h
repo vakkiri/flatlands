@@ -28,6 +28,9 @@ struct FLCollisionBox {
 };
 
 namespace FLColliders {
+	void find_collisions();
+	bool touches_tilemap(fl_handle handle);
+
 	void add_to_group(fl_handle handle, std::string group);
 	void add_target_group(fl_handle handle, std::string group);
 	void destroy(fl_handle handle);
