@@ -3,9 +3,9 @@
  *
  */
 
-#include "fl_physicsbody.h"
 #include "common/fl_object.h"
 #include "common/fl_static_buffer.h"
+#include "components/components.h"
 
 #define INITIAL_BODIES 5000
 
@@ -19,6 +19,7 @@ namespace FLPhysicsBodies {
 		parent->y += body.vy;
 		
 		// TODO gravity, friction, tilemap, collisions
+		body.touched_tilemap = FLColliders::touches_tilemap(body.collider);
 	}
 
 	void update() {
@@ -40,6 +41,7 @@ namespace FLPhysicsBodies {
 		bodies[handle].gravity_scale = gravity_scale;
 		bodies[handle].vx = 0.f;
 		bodies[handle].vy = 0.f;
+		bodies[handle].touched_tilemap = false;
 	}
 
 	void destroy(fl_handle handle) {
@@ -59,6 +61,10 @@ namespace FLPhysicsBodies {
 	void accelerate(fl_handle handle, float x, float y) {
 		bodies[handle].vx += x;
 		bodies[handle].vy += y;
+	}
+
+	bool touched_tilemap(fl_handle handle) {
+		return bodies[handle].touched_tilemap;
 	}
 }
 

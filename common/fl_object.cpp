@@ -68,6 +68,14 @@ namespace FLObjects {
 	}
 
 	void destroy(fl_handle handle) {
+		// TODO: should have a global gamestate, with a "RESET"
+		// flag which prevents on_death scripts from running
+		if (objects[handle].on_death) {
+			objects[handle].on_death(objects[handle]);
+		}
+
+		objects[handle].on_death = std::function<void(FLObject&)>();
+
 		// TODO: should we keep track of children, so they
 		// can be destroyed as well?
 		for (auto [name, texture] : objects[handle].textures) {
@@ -116,6 +124,13 @@ namespace FLObjects {
 		std::function<void(FLObject&)> f
 	) {
 		objects[handle].scripts.push_back(f);
+	}
+
+	void add_death_script(
+		fl_handle handle,
+		std::function<void(FLObject&)> f
+	) {
+		objects[handle].on_death = f;
 	}
 
 	void add_collider(

@@ -17,6 +17,7 @@ struct FLPhysicsBody {
 	float vy;
 	float mass;
 	float gravity_scale;
+	bool touched_tilemap;
 };
 
 namespace FLPhysicsBodies {
@@ -26,6 +27,8 @@ namespace FLPhysicsBodies {
 
 	void destroy(fl_handle handle);
 	fl_handle create(fl_handle parent, fl_handle collider);
+
+	bool touched_tilemap(fl_handle handle);
 }
 
 #endif

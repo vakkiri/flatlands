@@ -33,6 +33,7 @@ struct FLObject {
 	std::unordered_map<std::string, fl_handle> colliders;
 	std::unordered_map<std::string, fl_var> vars;
 	std::vector<fl_script> scripts;
+	fl_script on_death;
 };
 
 namespace FLObjects {
@@ -47,6 +48,7 @@ namespace FLObjects {
 	void set_pos(fl_handle handle, float x, float y);
 
 	void add_script(fl_handle handle, std::function<void(FLObject&)> f);
+	void add_death_script(fl_handle handle, std::function<void(FLObject&)> f);
 
 	void add_var(
 		fl_handle handle,

@@ -4,10 +4,29 @@
  */
 
 #include <iostream>
+#include <stdlib.h>
 #include <unordered_map>
 #include "common/fl_object.h"
 #include "components/components.h"
 #include "fl_projectiles.h"
+#include "world/effect.h"
+
+// TODO: move this somewhere else
+// TODO: on death should even probably be moved to FLObject
+void fusion_impact(FLObject& projectile) {
+	float x = FLObjects::x(projectile.handle);
+	float y = FLObjects::y(projectile.handle);
+	float w = 8;
+	float h = 4;
+	for (int i = 0; i < 5; ++i) {
+		float _x = x + w;
+		float _y = y + h;
+		unsigned int speed = 3 + rand() % 4;
+		_x += (rand() % 16) - 8;
+		_y += (rand() % 16) - 8;
+		FLEffects::create(_x, _y, "fusion_impact", speed);
+	}
+}
 
 namespace FLProjectiles {
 	// Pre-defined projectile "templates" from assets/projectiles.conf
@@ -28,11 +47,13 @@ namespace FLProjectiles {
 			v, x, y, w, h, damage, life, collection
 		};
 	}
+
 	void update(FLObject& projectile) {
 		int life = std::get<int>(projectile.vars["life"]);
+		fl_handle body = projectile.physics_body;
 		life -= 1;
 
-		if (life <= 0) {
+		if (life <= 0 || FLPhysicsBodies::touched_tilemap(body)) {
 			FLObjects::destroy(projectile.handle);
 			return;
 		}
@@ -69,6 +90,9 @@ namespace FLProjectiles {
 		FLObjects::accelerate(handle, vx, vy);
 
 		FLObjects::add_script(handle, update);
+
+		// TODO: death script name should be taken from config
+		FLObjects::add_death_script(handle, fusion_impact);
 
 		if (!player_is_source) {
 			FLObjects::add_collision_target(handle, col_name, "player");

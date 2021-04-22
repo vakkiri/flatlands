@@ -19,28 +19,36 @@ namespace FLColliders {
 	std::unordered_map<std::string, std::unordered_set<fl_handle>> groups;
 
 	bool collides(FLCollisionBox& a, FLCollisionBox& b) {
-		float ax = a.x + FLObjects::x(a.handle);
-		float ay = a.y + FLObjects::y(a.handle);
+		float ax = a.x + FLObjects::x(a.parent);
+		float ay = a.y + FLObjects::y(a.parent);
 		float aw = a.w;
 		float ah = a.h;
-		float bx = b.x + FLObjects::x(b.handle);
-		float by = b.y + FLObjects::y(b.handle);
+		float bx = b.x + FLObjects::x(b.parent);
+		float by = b.y + FLObjects::y(b.parent);
 		float bw = b.w;
 		float bh = b.h;
 
 		return rect_collision(ax, ay, aw, ah, bx, by, bw, bh);
 	}
 
+	float x(fl_handle handle) {
+		return colliders[handle].x + FLObjects::x(colliders[handle].parent);
+	}
+
+	float y(fl_handle handle) {
+		return colliders[handle].y + FLObjects::y(colliders[handle].parent);
+	}
 	bool touches_tilemap(fl_handle handle) {
-		float endx = colliders[handle].x + colliders[handle].w;
-		float endy = colliders[handle].y + colliders[handle].h;
+		// TODO: this alg could be refactored into collision utils
+		float endx = x(handle) + colliders[handle].w;
+		float endy = y(handle) + colliders[handle].h;
 		FLTilemap* tilemap = FLGame::instance().environment()->tilemap();
 	
 		// TODO: 16 should be based on tile size and not hardcoded	
-		for (float x = colliders[handle].x; x <= endx; x += 16) {
-			for (float y = colliders[handle].y; y <= endy; y += 16) {
-				float _x = std::min(x, endx);
-				float _y = std::min(y, endy);
+		for (float startx = x(handle); startx <= endx; startx += 16) {
+			for (float starty = y(handle); starty <= endy; starty += 16) {
+				float _x = std::min(startx, endx);
+				float _y = std::min(starty, endy);
 
 				// This won't rly work with the per pixel
 				// solid maps, but should hit all normal tiles
