@@ -22,6 +22,7 @@
 #include "ui/fl_ui_manager.h"
 #include "world/player/player.h"
 #include "common/fl_object.h"
+#include "components/physics/fl_physicsbody.h"
 
 #define TARGET_FPS 60
 #define MS_PER_FRAME (1000 / TARGET_FPS)
@@ -52,6 +53,7 @@ void main_loop() {
 		quit = input_handler.input_loop();
 
 		FLObjects::update();
+		FLPhysicsBodies::update();
 
 		fl_update_components();
 

@@ -17,6 +17,7 @@
 #include "collider/fl_collider_manager.h"
 #include "interactable/fl_interactable.h"
 #include "interactable/fl_interactable_manager.h"
+#include "physics/fl_physicsbody.h"
 #include "physics/fl_physics_handler.h"
 #include "physics/fl_physics_handler_manager.h"
 #include "texture/fl_texture.h"

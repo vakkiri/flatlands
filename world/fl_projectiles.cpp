@@ -10,6 +10,7 @@
 #include "fl_projectiles.h"
 
 namespace FLProjectiles {
+	// Pre-defined projectile "templates" from assets/projectiles.conf
 	std::unordered_map<std::string, FLProjectileInfo> projectiles;
 
 	void define(
@@ -30,13 +31,6 @@ namespace FLProjectiles {
 	void update(FLObject& projectile) {
 		int life = std::get<int>(projectile.vars["life"]);
 		life -= 1;
-
-		// TODO: this should be done by the physics body
-		float vx = std::get<float>(projectile.vars["vx"]);
-		float vy = std::get<float>(projectile.vars["vy"]);
-		
-		projectile.x += vx;
-		projectile.y += vy;
 
 		if (life <= 0) {
 			FLObjects::destroy(projectile.handle);
@@ -71,13 +65,11 @@ namespace FLProjectiles {
 		FLObjects::add_collider(handle, col_name, info.x, info.y, info.w, info.h);
 		FLObjects::add_var(handle, "damage", info.damage + bonus_damage);
 		FLObjects::add_var(handle, "life", info.life);
-		// TODO: this should be replaced by a physics body
-		FLObjects::add_var(handle, "vx", vx);
-		FLObjects::add_var(handle, "vy", vy);
+		FLObjects::add_physics_body(handle, "collider");
+		FLObjects::accelerate(handle, vx, vy);
 
 		FLObjects::add_script(handle, update);
 
-		// TODO: setup collider info
 		if (!player_is_source) {
 			FLObjects::add_collision_target(handle, col_name, "player");
 		} else {

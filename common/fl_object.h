@@ -24,6 +24,7 @@ struct FLObject {
 	// TODO: keep track of children via a map?
 	fl_handle handle;
 	fl_handle parent;
+	fl_handle physics_body;
 	float x;
 	float y;
 	std::unordered_map<std::string, fl_state> states;
@@ -144,6 +145,17 @@ namespace FLObjects {
 		std::string collection,
 		unsigned int ticks_per_frame,
 		bool repeats
+	);
+
+	void add_physics_body(
+		fl_handle handle,
+		std::string collider_name
+	);
+
+	void accelerate(
+		fl_handle handle,
+		float x,
+		float y
 	);
 
 	// member access

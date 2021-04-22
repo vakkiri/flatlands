@@ -22,6 +22,7 @@ namespace FLObjects {
 		if (handle != NULL_HANDLE) {
 			objects[handle].handle = handle;
 			objects[handle].parent = parent;
+			objects[handle].physics_body = NULL_HANDLE;
 			objects[handle].x = 0;
 			objects[handle].y = 0;
 			objects[handle].states.clear();
@@ -77,7 +78,10 @@ namespace FLObjects {
 		} for (auto [name, collider] : objects[handle].colliders) {
 			FLColliders::destroy(collider);
 		}
-		
+		if (objects[handle].physics_body != NULL_HANDLE) {
+			FLPhysicsBodies::destroy(objects[handle].physics_body);
+		}	
+
 		objects[handle].scripts.clear();
 		objects.destroy(handle);
 	}
@@ -280,6 +284,39 @@ namespace FLObjects {
 		float h
         ) {
 		add_texture(handle, name, surface, s, t, w, h, false);
+	}
+
+	void add_physics_body(
+		fl_handle handle,
+		std::string collider_name
+	) {
+		if (handle == NULL_HANDLE) {
+			std::cout << "Warning: tried to add physics body to null object.\n";
+			return;
+		}
+		
+		if (objects[handle].colliders.find(collider_name) == objects[handle].colliders.end()) {
+			std::cout << "Warning: tried to add physics body using non existant collider " << collider_name << std::endl;
+			return;
+		}
+		
+		fl_handle collider = objects[handle].colliders[collider_name];
+
+		fl_handle body = FLPhysicsBodies::create(
+			handle,
+			collider
+		);
+
+		objects[handle].physics_body = body;
+	}
+
+	void accelerate(fl_handle handle, float x, float y) {
+		if (objects[handle].physics_body == NULL_HANDLE) {
+			std::cout << "Warning: tried to accelerate object with no physics body." << std::endl;
+			return;
+		}
+
+		FLPhysicsBodies::accelerate(objects[handle].physics_body, x, y);
 	}
 
 	float x(fl_handle handle) {
