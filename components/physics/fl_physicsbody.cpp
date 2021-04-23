@@ -40,16 +40,27 @@ namespace FLPhysicsBodies {
 		// TODO: account for potential collisions which are "jumped over"
 
 		while (FLColliders::touches_tilemap(body.collider)) {
-			if (body.vx > 0 && parent->x > original_x) {
+			if (body.vx > 0) {
 				parent->x -= 1;
-			} else if (body.vx < 0 && parent->x < original_x) {
+			} else if (body.vx < 0) {
 				parent->x += 1;
 			}
-			if (body.vy > 0 && parent->y > original_y) {
+			if (body.vy > 0) {
 				parent->y -= 1;
-			} else if (body.vy < 0 && parent->y < original_y) {
+			} else if (body.vy < 0) {
 				parent->y += 1;
 			}
+		}
+
+		// Correct if we moved too far back in one direction
+		if (body.vx > 0 && parent->x < original_x) {
+			parent->x = original_x;
+		} else if (body.vx < 0 && parent->x > original_x) {
+			parent->x = original_x;
+		} else if (body.vy < 0 && parent->y > original_y) {
+			parent->y = original_y;
+		} else if (body.vy > 0 && parent->y < original_y) {
+			parent->y = original_y;
 		}
 
 		// Check if we should stop due to running into a side

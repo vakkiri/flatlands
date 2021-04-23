@@ -109,11 +109,13 @@ void FLResources::init_collections() {
 
 	std::string name;
 	float s, t, w, h;
+	int line_num = 0;
 
 	if (config_file.is_open()) {
 		while (!config_file.eof()) {
 			tokens.clear();
 			getline(config_file, line);
+			line_num += 1;
 			stream = std::stringstream(line);
 
 			while(getline(stream, token, ' ')) {
@@ -123,10 +125,16 @@ void FLResources::init_collections() {
 			if (tokens.size() == 1) {
 				name = tokens[0];
 			} else if (tokens.size() == 4) {
-				s = std::stof(tokens[0]);
-				t = std::stof(tokens[1]);
-				w = std::stof(tokens[2]);
-				h = std::stof(tokens[3]);
+				try {
+					s = std::stof(tokens[0]);
+					t = std::stof(tokens[1]);
+					w = std::stof(tokens[2]);
+					h = std::stof(tokens[3]);
+				} catch(const std::exception& e) {
+					std::cout << "Line " << line_num
+						<< " invalid: "
+						<< line << std::endl;
+				}
 				elements.push_back(FLCollectionElement{
 						s, t, w, h
 				});
