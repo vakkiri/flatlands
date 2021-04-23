@@ -19,11 +19,12 @@ struct FLProjectileInfo {
 	float h;
 	int damage;
 	int life;
+	float gravity_scale;
 	std::string collection;
 };
 
 namespace FLProjectiles {
-	void define(std::string name, float v, float x, float y, float w, float h, int damage, int life, std::string collection);
+	void define(std::string name, float v, float x, float y, float w, float h, int damage, int life, float gravity_scale, std::string collection);
 	void create(float x, float y, std::string type, bool player_is_source, FLDirection direction);
 }
 

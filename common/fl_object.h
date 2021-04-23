@@ -154,6 +154,12 @@ namespace FLObjects {
 		std::string collider_name
 	);
 
+	void add_physics_body(
+		fl_handle handle,
+		std::string collider_name,
+		float gravity_scale
+	);
+
 	void accelerate(
 		fl_handle handle,
 		float x,

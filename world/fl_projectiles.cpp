@@ -41,10 +41,11 @@ namespace FLProjectiles {
 		float h,
 		int damage,
 		int life,
+		float gravity_scale,
 		std::string collection
 	){
 		projectiles[name] = FLProjectileInfo {
-			v, x, y, w, h, damage, life, collection
+			v, x, y, w, h, damage, life, gravity_scale, collection
 		};
 	}
 
@@ -86,7 +87,7 @@ namespace FLProjectiles {
 		FLObjects::add_collider(handle, col_name, info.x, info.y, info.w, info.h);
 		FLObjects::add_var(handle, "damage", info.damage + bonus_damage);
 		FLObjects::add_var(handle, "life", info.life);
-		FLObjects::add_physics_body(handle, "collider");
+		FLObjects::add_physics_body(handle, "collider", info.gravity_scale);
 		FLObjects::accelerate(handle, vx, vy);
 
 		FLObjects::add_script(handle, update);

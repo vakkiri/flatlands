@@ -19,6 +19,7 @@
 #include "world/npcs/npcs.h"
 #include "world/objects/objects.h"
 #include "world/physics_settings.h"
+#include "components/physics/fl_physicsbody.h"
 #include "world/player/player.h"
 #include "world/portal.h"
 #include "world/scenery.h"
@@ -149,7 +150,7 @@ void FLResources::init_projectiles() {
 	std::vector<std::string> tokens;
 	config_file.open(config_path);
 
-	float v, x, y, w, h;
+	float v, x, y, w, h, gravity_scale;
 	int damage, life;
 	std::string name, collection;
 
@@ -165,7 +166,7 @@ void FLResources::init_projectiles() {
 
 			if (tokens.size() == 1) {
 				name = tokens[0];
-			} else if (tokens.size() == 8) {
+			} else if (tokens.size() == 9) {
 				v = std::stof(tokens[0]);
 				x = std::stof(tokens[1]);
 				y = std::stof(tokens[2]);
@@ -173,11 +174,20 @@ void FLResources::init_projectiles() {
 				h = std::stof(tokens[4]);
 				damage = std::stoi(tokens[5]);
 				life = std::stoi(tokens[6]);
-				collection = tokens[7];
+				gravity_scale = std::stof(tokens[7]);
+				collection = tokens[8];
 				FLProjectiles::define(
-					name, v, x, y, w, h, damage, life, collection
+					name,
+					v,
+					x,
+					y,
+					w,
+					h,
+					damage,
+					life,
+					gravity_scale,
+					collection
 				);
-				std::cout << "Added " << name << std::endl;
 			}
 		}
 		config_file.close();
@@ -207,6 +217,8 @@ void FLResources::init_physics() {
 				name = line.substr(0, pos);
 				value = std::stof(line.substr(pos + 1, line.size() - pos));
 				physics.set_attribute(name, value);
+				// TODO: remove above
+				FLPhysicsBodies::set_global(name, value);
 			}
 		}
 	}

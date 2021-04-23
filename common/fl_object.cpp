@@ -303,7 +303,8 @@ namespace FLObjects {
 
 	void add_physics_body(
 		fl_handle handle,
-		std::string collider_name
+		std::string collider_name,
+		float gravity_scale
 	) {
 		if (handle == NULL_HANDLE) {
 			std::cout << "Warning: tried to add physics body to null object.\n";
@@ -319,11 +320,20 @@ namespace FLObjects {
 
 		fl_handle body = FLPhysicsBodies::create(
 			handle,
-			collider
+			collider,
+			gravity_scale
 		);
 
 		objects[handle].physics_body = body;
 	}
+
+	void add_physics_body(
+		fl_handle handle,
+		std::string collider_name
+	) {
+		add_physics_body(handle, collider_name, 1.0);
+	}
+
 
 	void accelerate(fl_handle handle, float x, float y) {
 		if (objects[handle].physics_body == NULL_HANDLE) {
