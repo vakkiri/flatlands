@@ -54,6 +54,7 @@ void main_loop() {
 
 		FLObjects::update();
 		FLPhysicsBodies::update();
+		FLColliders::find_collisions();
 
 		fl_update_components();
 

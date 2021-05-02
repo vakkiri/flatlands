@@ -48,6 +48,8 @@ namespace FLTextures {
 	float t(fl_handle handle);
 
 	bool reversed(fl_handle handle);
+
+	void set_pos(fl_handle handle, float x, float y);
 }
 
 #endif

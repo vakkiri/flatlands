@@ -68,6 +68,12 @@ namespace FLObjects {
 		std::string group_name
 	);
 
+	void add_collision_group(
+		fl_handle handle,
+		std::string collider_name,
+		std::string group_name
+	);
+
 	void add_collider(
 		fl_handle handle,
 		std::string name,
@@ -102,6 +108,15 @@ namespace FLObjects {
 		std::string name,
 		std::string surface,
 		std::string collection,
+		float x,
+		float y
+	);
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection,
 		int index
 	);
 
@@ -112,8 +127,7 @@ namespace FLObjects {
 		float s,
 		float t,
 		float w,
-		float h,
-		bool reversed
+		float h
 	);
 
 	void add_texture(
@@ -123,7 +137,8 @@ namespace FLObjects {
 		float s,
 		float t,
 		float w,
-		float h
+		float h,
+		bool reverse
 	);
 
 	void set_animation(

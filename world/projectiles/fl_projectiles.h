@@ -8,6 +8,8 @@
 #ifndef FL_PROJECTILE_H_
 #define FL_PROJECTILE_H_
 
+#include "common/common.h"
+
 #include "../../rendering/animated_object.h"
 
 class FLProjectile : public FLGameObject {

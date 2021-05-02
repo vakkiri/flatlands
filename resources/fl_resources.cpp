@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cstring>
 
+#include "custom_objects/monsters/spor.h"
 #include "environment/fl_environment.h"
 #include "game/fl_game.h"
 #include "logging/logging.h"
@@ -61,6 +62,7 @@ bool FLResources::init() {
 void FLResources::clear_level() {
 	FLScenery::clear();
 	FLGeysers::clear();
+	Spor::clear();
 	clear_npcs();
 	clear_portals();
 	clear_monsters();
@@ -591,6 +593,18 @@ void FLResources::load_level(int id, FLEnvironment *environment) {
 
 				//new FLHealthPoint(x, y);
 
+			} else if (val == 12) {
+				int16_t x;
+				int16_t y;
+
+				// terminal/teleporter
+				cur += 2;
+				std::memcpy(&x, cur, sizeof(int16_t));
+				cur += 2;
+				std::memcpy(&y, cur, sizeof(int16_t));
+				cur += 2;
+
+				Spor::create(x, y);
 			} else if (val >= 101 && val < 300) {
 				// scenery
 

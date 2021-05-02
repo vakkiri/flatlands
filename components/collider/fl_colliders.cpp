@@ -63,6 +63,7 @@ namespace FLColliders {
 
 	void find_collisions() {
 		for (FLCollisionBox& a : colliders) {
+			a.collisions.clear();
 			for (auto group_name : a.target_groups) {
 				for (auto handle : groups[group_name]) {
 					FLCollisionBox& b = colliders[handle];
@@ -140,6 +141,10 @@ namespace FLColliders {
 
 			colliders[handle].target_groups.insert(group);
 		}
+	}
+
+	FLCollisionBox* get(fl_handle handle) {
+		return &colliders[handle];
 	}
 }
 

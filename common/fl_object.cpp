@@ -44,11 +44,31 @@ namespace FLObjects {
 			return;
 		}
 		if (objects[handle].colliders.find(collider_name) == objects[handle].colliders.end()) {
-			std::cout << "Warning: Tried to add non-existant collider " << collider_name << " to group " << group_name << std::endl;
+			std::cout << "Warning: Tried to give non-existant collider " << collider_name << " target " << group_name << std::endl;
 			return;
 		}
 
 		FLColliders::add_target_group(
+			objects[handle].colliders[collider_name],
+			group_name
+		);
+	}
+
+	void add_collision_group(
+		fl_handle handle,
+		std::string collider_name,
+		std::string group_name
+	) {
+		if (handle == NULL_HANDLE) {
+			std::cout << "Warning: Tried to add null object to collision group.\n";
+			return;
+		}
+		if (objects[handle].colliders.find(collider_name) == objects[handle].colliders.end()) {
+			std::cout << "Warning: Tried to add non-existant collider " << collider_name << " to group " << group_name << std::endl;
+			return;
+		}
+
+		FLColliders::add_to_group(
 			objects[handle].colliders[collider_name],
 			group_name
 		);
@@ -272,6 +292,19 @@ namespace FLObjects {
 		std::string collection
 	) {
 		add_texture(handle, name, surface, collection, 0);
+	}
+
+	void add_texture(
+		fl_handle handle,
+		std::string name,
+		std::string surface,
+		std::string collection,
+		float x,
+		float y
+	) {
+		add_texture(handle, name, surface, collection, 0);
+
+		FLTextures::set_pos(objects[handle].textures[name], x, y);
 	}
 
         void add_texture(

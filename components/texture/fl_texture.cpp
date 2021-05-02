@@ -170,4 +170,9 @@ namespace FLTextures {
 	bool reversed(fl_handle handle) {
 		return textures[handle].reversed;
 	}
+
+	void set_pos(fl_handle handle, float x, float y) {
+		textures[handle].x = x;
+		textures[handle].y = y;
+	}
 }

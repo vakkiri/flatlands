@@ -54,10 +54,17 @@ namespace FLProjectiles {
 		fl_handle body = projectile.physics_body;
 		life -= 1;
 
+		fl_handle collider = projectile.colliders["collider"];
+		for (auto object : FLColliders::get(collider)->collisions) {
+			(void) object;
+			FLObjects::destroy(projectile.handle);
+			return;
+		}
 		if (life <= 0 || FLPhysicsBodies::touched_tilemap(body)) {
 			FLObjects::destroy(projectile.handle);
 			return;
 		}
+
 
 		projectile.vars["life"] = life;
 	}
