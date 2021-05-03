@@ -50,6 +50,7 @@ namespace FLTextures {
 	bool reversed(fl_handle handle);
 
 	void set_pos(fl_handle handle, float x, float y);
+	void set_visible(fl_handle handle, bool visible);
 }
 
 #endif

@@ -153,6 +153,18 @@ namespace FLObjects {
 		objects[handle].on_death = f;
 	}
 
+	void remove_collider(
+			fl_handle handle,
+			std::string name
+	) {
+		if (objects[handle].colliders.find(name) != objects[handle].colliders.end()) {
+			FLColliders::destroy(objects[handle].colliders[name]);
+			objects[handle].colliders.erase(name);
+		} else {
+			std::cout << "Warning: collider " << name << " could not be removed: does not exist.\n";
+		}
+	}
+
 	void add_collider(
 		fl_handle handle,
 		std::string name,

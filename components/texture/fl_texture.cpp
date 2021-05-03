@@ -175,4 +175,8 @@ namespace FLTextures {
 		textures[handle].x = x;
 		textures[handle].y = y;
 	}
+
+	void set_visible(fl_handle handle, bool visible) {
+		textures[handle].visible = visible;
+	}
 }

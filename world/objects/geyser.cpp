@@ -79,7 +79,6 @@ namespace FLGeysers {
 
 		if (new_geyser != NULL_HANDLE) {
 			init(new_geyser, x, y);
-
 			geysers.push_back(new_geyser);
 		} else {
 			std::cout << "Warning: could not create geyser.\n";

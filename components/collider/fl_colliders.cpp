@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include "fl_colliders.h"
 #include "common/fl_static_buffer.h"
 #include "utils/collision_utils.h"
@@ -68,7 +69,8 @@ namespace FLColliders {
 				for (auto handle : groups[group_name]) {
 					FLCollisionBox& b = colliders[handle];
 					if (collides(a, b)) {
-						a.collisions.insert(handle);
+						fl_handle body = colliders[handle].parent;
+						a.collisions.insert(body);
 					}
 				}
 			}
@@ -117,8 +119,8 @@ namespace FLColliders {
 	}
 
 	void destroy(fl_handle handle) {
-		for (auto [name, group] : groups) {
-			group.erase(handle);
+		for (std::pair<const std::string, std::unordered_set<fl_handle>>& group : groups) {
+			group.second.erase(handle);
 		}
 		colliders.destroy(handle);
 	}

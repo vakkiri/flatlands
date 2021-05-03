@@ -74,6 +74,11 @@ namespace FLObjects {
 		std::string group_name
 	);
 
+	void remove_collider(
+		fl_handle handle,
+		std::string name
+	);
+
 	void add_collider(
 		fl_handle handle,
 		std::string name,

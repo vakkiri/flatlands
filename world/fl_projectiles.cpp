@@ -49,14 +49,21 @@ namespace FLProjectiles {
 		};
 	}
 
+	void hit(FLObject* target, int damage) {
+		int health = std::get<int>(target->vars["health"]);
+		health -= damage;
+		target->vars["health"] = health;
+	}
+
 	void update(FLObject& projectile) {
 		int life = std::get<int>(projectile.vars["life"]);
+		int damage = std::get<int>(projectile.vars["damage"]);
 		fl_handle body = projectile.physics_body;
 		life -= 1;
 
 		fl_handle collider = projectile.colliders["collider"];
 		for (auto object : FLColliders::get(collider)->collisions) {
-			(void) object;
+			hit(FLObjects::get(object), damage);
 			FLObjects::destroy(projectile.handle);
 			return;
 		}
